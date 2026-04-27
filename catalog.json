@@ -2,43 +2,43 @@
   {
     "name": "systematic-debugging",
     "type": "skill",
-    "summary": "Enforces root-cause investigation before any fix attempt. The iron law: no fixes without completed Phase 1 investigation.",
+    "summary": "Find root cause before proposing or implementing a bug fix.",
     "path": "skills/systematic-debugging",
     "compatible_with": ["claude-code", "codex", "generic"],
-    "tags": ["debugging", "root-cause", "methodology", "testing"],
+    "tags": ["debugging", "root-cause", "testing"],
     "maturity": "stable"
   },
   {
     "name": "no-fluff",
     "type": "skill",
-    "summary": "Ultra-compressed communication mode reducing token usage by ~75% while preserving all technical accuracy.",
+    "summary": "Compress responses while keeping technical content intact.",
     "path": "skills/no-fluff",
     "compatible_with": ["claude-code", "codex", "generic"],
-    "tags": ["communication", "tokens", "brevity"],
+    "tags": ["communication", "brevity", "tokens"],
     "maturity": "stable"
   },
   {
     "name": "writing-plans",
     "type": "skill",
-    "summary": "Turns a spec into a detailed, executable multi-step implementation plan with exact file paths, actual code, and no placeholders.",
+    "summary": "Turn a spec into an explicit implementation plan with exact paths and checks.",
     "path": "skills/writing-plans",
     "compatible_with": ["claude-code", "codex", "generic"],
-    "tags": ["planning", "implementation", "tdd", "spec"],
+    "tags": ["planning", "implementation", "spec"],
     "maturity": "beta"
   },
   {
     "name": "ai-slop-cleaner",
     "type": "skill",
-    "summary": "Reduces AI-generated code bloat through regression-tests-first, smell-by-smell cleanup that preserves behavior.",
+    "summary": "Clean up AI-generated code with tests-first, smell-by-smell discipline.",
     "path": "skills/ai-slop-cleaner",
     "compatible_with": ["claude-code", "codex", "generic"],
-    "tags": ["refactoring", "code-quality", "cleanup", "ai-output"],
+    "tags": ["cleanup", "refactoring", "code-quality"],
     "maturity": "beta"
   },
   {
     "name": "requesting-code-review",
     "type": "skill",
-    "summary": "Dispatches a focused code-reviewer subagent with precise context to catch issues before merging.",
+    "summary": "Request a focused review using plan context and an explicit change scope.",
     "path": "skills/requesting-code-review",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["code-review", "quality", "merging"],
@@ -47,34 +47,34 @@
   {
     "name": "receiving-code-review",
     "type": "skill",
-    "summary": "Evaluates code review feedback with technical rigor — verify before implementing, push back when wrong.",
+    "summary": "Evaluate review feedback before implementing it.",
     "path": "skills/receiving-code-review",
     "compatible_with": ["claude-code", "codex", "generic"],
-    "tags": ["code-review", "collaboration", "feedback"],
+    "tags": ["code-review", "feedback", "collaboration"],
     "maturity": "beta"
   },
   {
     "name": "pr-triage",
     "type": "skill",
-    "summary": "Identifies the pull requests that most deserve attention by urgency, business impact, and merge risk.",
+    "summary": "Rank pull requests by urgency, impact, and merge risk.",
     "path": "skills/pr-triage",
     "compatible_with": ["claude-code", "codex", "generic"],
-    "tags": ["git", "pull-requests", "triage", "project-management"],
+    "tags": ["git", "pull-requests", "triage"],
     "maturity": "beta"
   },
   {
     "name": "repo-map",
     "type": "skill",
-    "summary": "Produces a structured architecture overview of an unfamiliar codebase before making any changes.",
+    "summary": "Map an unfamiliar codebase before making changes.",
     "path": "skills/repo-map",
     "compatible_with": ["claude-code", "codex", "generic"],
-    "tags": ["architecture", "onboarding", "codebase-exploration"],
+    "tags": ["architecture", "onboarding", "exploration"],
     "maturity": "beta"
   },
   {
     "name": "bug-hunt",
     "type": "skill",
-    "summary": "Reproduces, isolates, and fixes a bug with the smallest safe change — root cause first, symptom never.",
+    "summary": "Reproduce, isolate, and fix a bug with minimal scope.",
     "path": "skills/bug-hunt",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["debugging", "testing", "bug-fix"],
@@ -83,7 +83,7 @@
   {
     "name": "safe-refactor",
     "type": "skill",
-    "summary": "Restructures code in small, safe, independently reversible steps without changing observable behavior.",
+    "summary": "Restructure code in small steps without changing behavior.",
     "path": "skills/safe-refactor",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["refactoring", "safety", "testing"],
@@ -92,19 +92,54 @@
   {
     "name": "defuddle",
     "type": "skill",
-    "summary": "Extracts clean markdown from web pages using Defuddle CLI, removing navigation and clutter to save tokens.",
+    "summary": "Extract clean Markdown from web pages using Defuddle CLI.",
     "path": "skills/defuddle",
-    "compatible_with": ["claude-code", "codex", "generic"],
-    "tags": ["web", "content-extraction", "tokens", "markdown"],
-    "maturity": "beta"
+    "compatible_with": ["generic"],
+    "tags": ["web", "markdown", "content-extraction"],
+    "maturity": "beta",
+    "requires": {
+      "commands": ["defuddle"],
+      "npm_packages": ["defuddle"]
+    }
   },
   {
     "name": "markitdown-file-intake",
     "type": "skill",
-    "summary": "Converts PDF, Office docs, images, audio, and other formats to Markdown before inspection.",
+    "summary": "Convert supported documents into Markdown context using Microsoft MarkItDown.",
     "path": "skills/markitdown-file-intake",
     "compatible_with": ["generic"],
-    "tags": ["file-intake", "documents", "conversion", "markdown"],
-    "maturity": "draft"
+    "tags": ["file-intake", "markdown", "documents"],
+    "maturity": "draft",
+    "requires": {
+      "commands": ["markitdown"],
+      "python_packages": ["markitdown"]
+    }
+  },
+  {
+    "name": "validate-skills",
+    "type": "script",
+    "summary": "Validate that every skill folder has a non-empty SKILL.md with required frontmatter.",
+    "path": "scripts/validate-skills.py",
+    "compatible_with": ["generic"],
+    "tags": ["validation", "skills", "metadata"],
+    "maturity": "beta"
+  },
+  {
+    "name": "validate-catalog",
+    "type": "script",
+    "summary": "Validate catalog structure, allowed values, and shipped asset coverage.",
+    "path": "scripts/validate-catalog.py",
+    "compatible_with": ["generic"],
+    "tags": ["validation", "catalog", "metadata"],
+    "maturity": "beta"
+  },
+  {
+    "name": "check-requirements",
+    "type": "script",
+    "summary": "Report availability of external commands and packages declared in catalog requirements.",
+    "path": "scripts/check-requirements.py",
+    "compatible_with": ["generic"],
+    "tags": ["validation", "dependencies", "tooling"],
+    "maturity": "beta"
   }
 ]
