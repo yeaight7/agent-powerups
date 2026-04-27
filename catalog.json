@@ -1,0 +1,110 @@
+[
+  {
+    "name": "systematic-debugging",
+    "type": "skill",
+    "summary": "Enforces root-cause investigation before any fix attempt. The iron law: no fixes without completed Phase 1 investigation.",
+    "path": "skills/systematic-debugging",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["debugging", "root-cause", "methodology", "testing"],
+    "maturity": "stable"
+  },
+  {
+    "name": "no-fluff",
+    "type": "skill",
+    "summary": "Ultra-compressed communication mode reducing token usage by ~75% while preserving all technical accuracy.",
+    "path": "skills/no-fluff",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["communication", "tokens", "brevity"],
+    "maturity": "stable"
+  },
+  {
+    "name": "writing-plans",
+    "type": "skill",
+    "summary": "Turns a spec into a detailed, executable multi-step implementation plan with exact file paths, actual code, and no placeholders.",
+    "path": "skills/writing-plans",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["planning", "implementation", "tdd", "spec"],
+    "maturity": "beta"
+  },
+  {
+    "name": "ai-slop-cleaner",
+    "type": "skill",
+    "summary": "Reduces AI-generated code bloat through regression-tests-first, smell-by-smell cleanup that preserves behavior.",
+    "path": "skills/ai-slop-cleaner",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["refactoring", "code-quality", "cleanup", "ai-output"],
+    "maturity": "beta"
+  },
+  {
+    "name": "requesting-code-review",
+    "type": "skill",
+    "summary": "Dispatches a focused code-reviewer subagent with precise context to catch issues before merging.",
+    "path": "skills/requesting-code-review",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["code-review", "quality", "merging"],
+    "maturity": "beta"
+  },
+  {
+    "name": "receiving-code-review",
+    "type": "skill",
+    "summary": "Evaluates code review feedback with technical rigor — verify before implementing, push back when wrong.",
+    "path": "skills/receiving-code-review",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["code-review", "collaboration", "feedback"],
+    "maturity": "beta"
+  },
+  {
+    "name": "pr-triage",
+    "type": "skill",
+    "summary": "Identifies the pull requests that most deserve attention by urgency, business impact, and merge risk.",
+    "path": "skills/pr-triage",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["git", "pull-requests", "triage", "project-management"],
+    "maturity": "beta"
+  },
+  {
+    "name": "repo-map",
+    "type": "skill",
+    "summary": "Produces a structured architecture overview of an unfamiliar codebase before making any changes.",
+    "path": "skills/repo-map",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["architecture", "onboarding", "codebase-exploration"],
+    "maturity": "beta"
+  },
+  {
+    "name": "bug-hunt",
+    "type": "skill",
+    "summary": "Reproduces, isolates, and fixes a bug with the smallest safe change — root cause first, symptom never.",
+    "path": "skills/bug-hunt",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["debugging", "testing", "bug-fix"],
+    "maturity": "beta"
+  },
+  {
+    "name": "safe-refactor",
+    "type": "skill",
+    "summary": "Restructures code in small, safe, independently reversible steps without changing observable behavior.",
+    "path": "skills/safe-refactor",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["refactoring", "safety", "testing"],
+    "maturity": "beta"
+  },
+  {
+    "name": "defuddle",
+    "type": "skill",
+    "summary": "Extracts clean markdown from web pages using Defuddle CLI, removing navigation and clutter to save tokens.",
+    "path": "skills/defuddle",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["web", "content-extraction", "tokens", "markdown"],
+    "maturity": "beta"
+  },
+  {
+    "name": "markitdown-file-intake",
+    "type": "skill",
+    "summary": "Converts PDF, Office docs, images, audio, and other formats to Markdown before inspection.",
+    "path": "skills/markitdown-file-intake",
+    "compatible_with": ["generic"],
+    "tags": ["file-intake", "documents", "conversion", "markdown"],
+    "maturity": "draft"
+  }
+]
