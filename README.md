@@ -23,21 +23,21 @@ Today, this repo ships a curated set of reusable skills plus validation and requ
 
 1. Inspect optional tool requirements:
 
-```powershell
-python scripts\check-requirements.py
+```sh
+python scripts/check-requirements.py
 ```
 
 2. Read or copy a shipped skill:
 
-```powershell
-Get-Content -Raw skills\systematic-debugging\SKILL.md
+```sh
+cat skills/systematic-debugging/SKILL.md
 ```
 
 3. Validate repo metadata:
 
-```powershell
-python scripts\validate-skills.py
-python scripts\validate-catalog.py
+```sh
+python scripts/validate-skills.py
+python scripts/validate-catalog.py
 ```
 
 4. Check the asset catalog:
