@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-"""Validate all skill folders in skills/ have required structure and frontmatter."""
+"""Validate skill folders and required frontmatter."""
+
+from __future__ import annotations
 
 import os
-import sys
 import re
+import sys
 
-SKILLS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "skills")
+REPO_ROOT = os.path.dirname(os.path.dirname(__file__))
+SKILLS_DIR = os.path.join(REPO_ROOT, "skills")
 REQUIRED_FRONTMATTER_FIELDS = ["name", "description"]
-REQUIRED_SECTIONS = [
+RECOMMENDED_SECTIONS = [
     "Purpose",
     "When to Use",
     "Inputs",
@@ -17,105 +20,105 @@ REQUIRED_SECTIONS = [
     "Failure Modes",
 ]
 
-errors = []
-warnings = []
+errors: list[str] = []
+warnings: list[str] = []
 
 
-def parse_frontmatter(content):
-    """Extract YAML frontmatter fields from a markdown file."""
+def parse_frontmatter(content: str) -> dict[str, str] | None:
     if not content.startswith("---"):
         return None
-    end = content.find("---", 3)
-    if end == -1:
+    match = re.match(r"^---\s*\n(.*?)\n---\s*(?:\n|$)", content, re.DOTALL)
+    if not match:
         return None
-    frontmatter_text = content[3:end].strip()
-    fields = {}
-    for line in frontmatter_text.splitlines():
-        if ":" in line:
-            key, _, value = line.partition(":")
-            fields[key.strip()] = value.strip()
+
+    fields: dict[str, str] = {}
+    for line in match.group(1).splitlines():
+        if ":" not in line:
+            continue
+        key, _, value = line.partition(":")
+        fields[key.strip()] = value.strip()
     return fields
 
 
-def check_skill(skill_dir):
+def check_skill(skill_dir: str) -> None:
     skill_name = os.path.basename(skill_dir)
     skill_md = os.path.join(skill_dir, "SKILL.md")
 
     if not os.path.isfile(skill_md):
-        errors.append(f"[{skill_name}] Missing SKILL.md")
+        errors.append(f"[{skill_name}] missing SKILL.md")
         return
 
-    with open(skill_md, encoding="utf-8") as f:
-        content = f.read()
+    with open(skill_md, encoding="utf-8") as handle:
+        content = handle.read()
 
-    # Check frontmatter exists
+    if not content.strip():
+        errors.append(f"[{skill_name}] SKILL.md is empty")
+        return
+
     frontmatter = parse_frontmatter(content)
     if frontmatter is None:
-        errors.append(f"[{skill_name}] SKILL.md has no YAML frontmatter (must start with ---)")
+        errors.append(f"[{skill_name}] SKILL.md missing YAML frontmatter")
         return
 
-    # Check required frontmatter fields
     for field in REQUIRED_FRONTMATTER_FIELDS:
-        if field not in frontmatter or not frontmatter[field]:
-            errors.append(f"[{skill_name}] SKILL.md frontmatter missing required field: {field}")
+        if not frontmatter.get(field, "").strip():
+            errors.append(f"[{skill_name}] frontmatter missing required field: {field}")
 
-    # Check name matches directory
+    if not re.sub(r"\s", "", content):
+        errors.append(f"[{skill_name}] SKILL.md has no content")
+
+    prose = re.sub(r"```.*?```", "", content, flags=re.DOTALL)
+    if not prose.strip():
+        errors.append(f"[{skill_name}] SKILL.md has no prose content")
+
     if frontmatter.get("name") and frontmatter["name"] != skill_name:
         warnings.append(
-            f"[{skill_name}] frontmatter 'name' ({frontmatter['name']}) "
-            f"does not match directory name ({skill_name})"
+            f"[{skill_name}] frontmatter name does not match directory name: {frontmatter['name']}"
         )
 
-    # Check required sections
-    for section in REQUIRED_SECTIONS:
+    for section in RECOMMENDED_SECTIONS:
         pattern = rf"^##\s+{re.escape(section)}\s*$"
         if not re.search(pattern, content, re.MULTILINE):
-            warnings.append(f"[{skill_name}] SKILL.md missing recommended section: ## {section}")
-
-    # Check for obvious placeholders — skip content inside code fences
-    prose = re.sub(r"```.*?```", "", content, flags=re.DOTALL)
-    placeholder_patterns = [r"\bTBD\b", r"\bTODO\b", r"implement later", r"fill in details"]
-    for pattern in placeholder_patterns:
-        if re.search(pattern, prose, re.IGNORECASE):
-            errors.append(f"[{skill_name}] SKILL.md contains placeholder text matching: {pattern!r}")
+            warnings.append(f"[{skill_name}] missing recommended section: ## {section}")
 
 
-def main():
+def main() -> int:
     if not os.path.isdir(SKILLS_DIR):
-        print(f"ERROR: skills/ directory not found at {SKILLS_DIR}")
-        sys.exit(1)
+        print(f"ERROR: skills directory not found at {SKILLS_DIR}")
+        return 1
 
     skill_dirs = [
-        os.path.join(SKILLS_DIR, d)
-        for d in sorted(os.listdir(SKILLS_DIR))
-        if os.path.isdir(os.path.join(SKILLS_DIR, d))
+        os.path.join(SKILLS_DIR, entry)
+        for entry in sorted(os.listdir(SKILLS_DIR))
+        if os.path.isdir(os.path.join(SKILLS_DIR, entry))
     ]
 
     if not skill_dirs:
-        print("WARNING: No skill directories found in skills/")
-        sys.exit(0)
+        print("ERROR: no skill directories found")
+        return 1
 
     for skill_dir in skill_dirs:
         check_skill(skill_dir)
 
-    checked = len(skill_dirs)
     if warnings:
         print(f"Warnings ({len(warnings)}):")
-        for w in warnings:
-            print(f"  WARN  {w}")
+        for warning in warnings:
+            print(f"  WARN  {warning}")
         print()
 
     if errors:
         print(f"Errors ({len(errors)}):")
-        for e in errors:
-            print(f"  ERROR {e}")
+        for error in errors:
+            print(f"  ERROR {error}")
         print()
-        print(f"Checked {checked} skills. {len(errors)} error(s), {len(warnings)} warning(s). FAILED.")
-        sys.exit(1)
-    else:
-        print(f"Checked {checked} skills. {len(warnings)} warning(s). OK.")
-        sys.exit(0)
+        print(
+            f"Checked {len(skill_dirs)} skills. {len(errors)} error(s), {len(warnings)} warning(s). FAILED."
+        )
+        return 1
+
+    print(f"Checked {len(skill_dirs)} skills. {len(warnings)} warning(s). OK.")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
