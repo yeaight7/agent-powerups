@@ -1,63 +1,42 @@
 # Security Model
 
-## Assets Are Instructions, Not Code
+Agent Powerups is a repository of instructions and helper metadata. Risk comes from what an agent is allowed to do after loading those instructions.
 
-Every asset in Agent Powerups is a text file. Skills are Markdown. Commands are text. Hooks are configuration references.
+## Core Boundary
 
-None of them execute automatically. They describe behaviors for agents to follow when instructed. The agent executes — the skill just describes what to do.
+- Skills are text.
+- Catalog entries are metadata.
+- Scripts are executable code and should be inspected before running.
+- Hooks can execute code if the host agent supports hooks.
+- MCP configs can grant new tool or network access.
 
-## Trust Boundary
+## Practical Warnings
 
-```
-User / Operator
-      │
-      ▼
-   Agent (Claude Code, Codex, etc.)
-      │
-      ▼
-  Skill (text instructions)
-      │
-      ▼
-  Agent actions (file edits, shell commands, API calls)
-```
+- Hooks can execute code.
+- MCP configs can grant tool access.
+- Install scripts and install commands can modify the local environment.
+- Skills may process local files or direct an agent to do so.
+- Secrets should not be pasted into agent context unless strictly necessary.
+- Users should inspect assets before installing or running them.
 
-The skill is downstream of both the operator and the agent. It cannot grant permissions the agent does not already have. It cannot instruct the agent to bypass controls the operator has put in place.
+## Safe Use
 
-## What This Means in Practice
-
-**A skill that says "delete files" only causes deletion if:**
-1. The agent has permission to delete files in its environment.
-2. The agent follows the skill's instructions.
-3. A human or authorized system triggered the agent to run this skill.
-
-**A skill cannot:**
-- Escalate agent permissions.
-- Bypass operator-set restrictions.
-- Execute code without an agent running it.
-- Access credentials or secrets not already available to the agent.
+1. Read the asset before enabling it.
+2. Apply least privilege to the agent runtime.
+3. Check optional tool requirements before installing anything.
+4. Prefer sandbox or non-production environments for first use.
+5. Audit what the agent actually did, not what the asset promised.
 
 ## Content Rules
 
-All assets in this repository must follow these rules:
+Assets in this repo should not include:
 
-| Rule | Reason |
-|------|--------|
-| No API keys, tokens, or secrets | Supply chain risk |
-| No hardcoded machine-specific paths | Breaks portability; leaks system layout |
-| No personal or identifying information | Privacy |
-| No detection evasion techniques | Skills must not help agents evade security tooling |
-| Destructive operations must include explicit warnings | Users must know before agents act irreversibly |
-
-## Automated Context Risks
-
-When skills are loaded into an agent's context automatically (e.g., via always-on system prompts or hooks), review them carefully:
-
-1. **Scope** — What actions does this skill authorize or encourage?
-2. **Triggers** — Under what conditions will the agent follow this skill?
-3. **Blast radius** — If the agent follows this skill on the wrong input, what is the worst case?
-
-Skills that perform irreversible actions (file deletion, branch force-push, database changes) should require explicit user confirmation in the workflow step, not just instructions to "proceed if confident".
+- API keys, tokens, or credentials
+- hardcoded machine-specific paths
+- personal data
+- stealthy or destructive automation
+- instructions to bypass security controls
 
 ## Reporting
 
-See `SECURITY.md` at the root for how to report security concerns.
+Security concerns belong in [`SECURITY.md`](../SECURITY.md).
