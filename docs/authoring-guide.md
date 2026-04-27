@@ -1,115 +1,101 @@
 # Authoring Guide
 
-This guide explains how to write high-quality skills and other assets for Agent Powerups.
+Keep assets small, explicit, and honest.
 
 ## Skill Structure
 
-```
+```text
 skills/<skill-name>/
-├── SKILL.md          ← required entry point
-├── references/       ← supporting docs, scripts, templates
-└── examples/         ← usage examples and sample output
+  SKILL.md
+  references/    # optional
+  examples/      # optional
 ```
 
-## SKILL.md Requirements
-
-### Frontmatter
+## Required Frontmatter
 
 ```yaml
 ---
-name: <skill-name>
-description: <one sentence — this is what agents use to decide when to trigger>
+name: skill-name
+description: Use when ...
 ---
 ```
 
-The description is critical. It is the text an agent reads to decide whether this skill applies to the current situation. Write it as a trigger condition: "Use when X", "Apply after Y".
+Required keys:
 
-### Required Sections
+- `name`
+- `description`
 
-Every `SKILL.md` must have all seven sections in this order:
+## Preferred Skill Body
 
-```markdown
+```md
+# Skill Name
+
 ## Purpose
-## When to Use
-## Inputs
+## When to use
+## Requirements
+## Inputs expected
 ## Workflow
-## Output
-## Verification
-## Failure Modes
+## Output format
+## Verification checklist
+## Failure modes
+## Missing dependency behavior
 ```
 
-**Purpose** — One paragraph. What it does and why it exists. Not a sales pitch.
+Not every skill needs every section. Tool-dependent skills should include:
 
-**When to Use** — Specific conditions. Include "When NOT to use" if there are common misapplications.
+- `Requirements`
+- install guidance inside `Requirements` or `Workflow`
+- `Verification`
+- `Missing dependency behavior`
 
-**Inputs** — What the agent needs to start. Be specific: file path, git range, URL, description.
+## Tool Dependency Rules
 
-**Workflow** — Numbered steps. Precise enough that anyone can follow them without guessing. Code blocks for commands. Exact expected output for verification steps.
+If a skill depends on an external tool:
 
-**Output** — What the result looks like. Include format (Markdown, JSON, plain text) and structure.
-
-**Verification** — A checkbox list the agent uses to confirm the skill completed correctly. At least 3 items.
-
-**Failure Modes** — What goes wrong and what to do. Describe the failure, not just that failure is possible.
-
-### What to Avoid
-
-**Vague motivational text.** "Be a thoughtful engineer" is not actionable. Remove it.
-
-**Excessive caveats.** "You may want to consider potentially..." wastes tokens without adding information.
-
-**Cross-skill duplication.** If `systematic-debugging` already covers root cause tracing, reference it — do not copy the text.
-
-**Placeholders.** "TBD", "implement later", "add appropriate handling" are plan failures in a skill that is supposed to be complete.
-
-**Agent-specific syntax in generic skills.** If your skill uses Claude Code's `Agent` tool or Codex-specific commands, put it in the `claude-code/` or `codex/` subdirectory, not in the root skill.
-
-## References and Examples
-
-Long reference material (reference implementations, supporting scripts, template files) belongs in `references/`. The main `SKILL.md` references them by path.
-
-Usage examples belong in `examples/`. Named descriptively: `condition-based-waiting-example.ts`, not `example.ts`.
+- name the required command or package explicitly
+- show how to check for it
+- show how to install it
+- state that installation requires user approval
+- state fallback behavior if installation is declined
 
 ## Catalog Entry
 
-Every asset needs a catalog entry in `catalog.json`:
+Every shipped asset needs a `catalog.json` entry.
+
+Example:
 
 ```json
 {
-  "name": "skill-name",
+  "name": "markitdown-file-intake",
   "type": "skill",
-  "summary": "One sentence. What it does.",
-  "path": "skills/skill-name",
-  "compatible_with": ["claude-code", "codex", "generic"],
-  "tags": ["tag1", "tag2"],
-  "maturity": "draft"
+  "summary": "Convert supported files into Markdown context using Microsoft MarkItDown.",
+  "path": "skills/markitdown-file-intake",
+  "compatible_with": ["generic"],
+  "tags": ["file-intake", "markdown", "documents"],
+  "maturity": "draft",
+  "requires": {
+    "commands": ["markitdown"],
+    "python_packages": ["markitdown"]
+  }
 }
 ```
 
-Use real compatibility (`compatible_with`). If you have not tested a platform, leave it out.
-
-Use `maturity` honestly:
-- `draft` — you wrote it and it works for you
-- `beta` — tested on at least one real project
-- `stable` — tested across multiple projects and platforms with no significant issues
-
-## Writing Good Descriptions
-
-The description field is used by agents to auto-trigger skills. Write it to match the exact moment an agent should start using this skill:
-
-Good: `"Use when receiving code review feedback, before implementing suggestions."`
-
-Bad: `"A skill for handling code reviews."` (too vague)
-
-Bad: `"Use this skill to receive code reviews with technical rigor and proper validation because agents tend to blindly implement feedback without..."` (too long)
+Schema reference: [`docs/catalog-schema.md`](./catalog-schema.md)
 
 ## Validation
 
-Before submitting:
+Run:
 
-```bash
-python scripts/validate-skills.py
-python scripts/validate-catalog.py
+```powershell
+python scripts\validate-skills.py
+python scripts\validate-catalog.py
+python scripts\check-requirements.py
 ```
 
-Fix every error. Warnings are advisory.
+## What to Avoid
+
+- vague motivational prose
+- fake compatibility claims
+- hidden installers
+- placeholders such as `TODO` or `TBD`
+- machine-specific paths, secrets, or personal data
