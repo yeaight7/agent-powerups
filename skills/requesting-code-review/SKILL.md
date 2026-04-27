@@ -3,66 +3,76 @@ name: requesting-code-review
 description: Use when completing tasks, implementing major features, or before merging to verify work meets requirements.
 ---
 
+# Requesting Code Review
+
 ## Purpose
 
-Dispatch a focused code-reviewer subagent to catch issues before they cascade. The reviewer receives precisely crafted context — not session history — keeping it focused on the work product.
+Dispatch a focused reviewer with enough context to catch bugs, requirement gaps, and risky assumptions before merge.
 
 ## When to Use
 
-**Required:**
-- After completing a major feature.
-- Before merging to main.
-- After each task in multi-task subagent workflows.
+- After a major feature
+- Before merge
+- After a complex bug fix
+- During multi-task execution when review checkpoints matter
 
-**Optional but valuable:**
-- When stuck (fresh perspective).
-- Before refactoring (baseline check).
-- After fixing a complex bug.
+## Requirements
+
+Preferred inputs:
+
+- local git range
+- written requirements or plan
+
+Helpful check:
+
+```powershell
+git rev-parse --is-inside-work-tree
+```
 
 ## Inputs
 
-- What was implemented.
-- Requirements or plan the implementation should satisfy.
-- Git range: base SHA and head SHA.
+- What was implemented
+- Requirements or plan
+- Base and head revisions, if available
 
 ## Workflow
 
-1. **Get the git range:**
-   ```bash
-   BASE_SHA=$(git rev-parse origin/main)   # or the commit before your work
-   HEAD_SHA=$(git rev-parse HEAD)
-   ```
+1. Get the git range when local git is available.
 
-2. **Dispatch a code-reviewer subagent** using the template in `references/code-reviewer.md`. Fill in:
-   - `{WHAT_WAS_IMPLEMENTED}` — What was built.
-   - `{PLAN_OR_REQUIREMENTS}` — What it should do.
-   - `{BASE_SHA}` and `{HEAD_SHA}` — The git range.
-   - `{DESCRIPTION}` — Brief summary.
+```powershell
+git rev-parse origin/main
+git rev-parse HEAD
+```
 
-3. **Act on feedback:**
-   - Fix **Critical** issues immediately.
-   - Fix **Important** issues before proceeding.
-   - Note **Minor** issues for later.
-   - Push back with reasoning if reviewer is wrong.
+2. Dispatch a reviewer using `references/code-reviewer.md`.
+3. Include summary, requirements, and diff range.
+4. Fix critical issues first, then important ones.
 
 ## Output
 
-The reviewer returns:
-- **Strengths** — What is well done.
-- **Issues** — Categorized as Critical / Important / Minor, each with file:line reference, what is wrong, why it matters, and how to fix.
-- **Recommendations** — Improvements for quality, architecture, or process.
-- **Assessment** — Ready to merge / With fixes / Not ready.
+- strengths
+- critical, important, and minor issues
+- recommendations
+- merge readiness assessment
 
 ## Verification
 
-- [ ] Git range provided to reviewer
-- [ ] Requirements or plan included
-- [ ] Critical issues fixed before proceeding
-- [ ] Important issues resolved before merge
+- [ ] Reviewer received requirements or plan
+- [ ] Reviewer received a diff range or equivalent context
+- [ ] Critical issues were not ignored
+- [ ] Important issues were resolved or explicitly deferred
 
 ## Failure Modes
 
-- **Skipping review** — Issues compound across tasks. Review early and often.
-- **Ignoring Critical issues** — Never proceed with unfixed Critical issues.
-- **Incomplete context** — A reviewer without requirements or git range gives vague feedback.
-- **Not pushing back** — If reviewer feedback is technically wrong, push back with evidence.
+- skipping review
+- incomplete diff context
+- ignoring critical issues
+- accepting feedback blindly
+
+## Missing Dependency Behavior
+
+If local git range is unavailable:
+
+1. Say local git context is missing.
+2. Ask for an explicit diff, patch, or file list.
+3. Do not pretend a git-based review scope was provided.
