@@ -1,46 +1,74 @@
 ---
 name: defuddle
-description: Extract clean markdown content from web pages using Defuddle CLI, removing clutter and navigation to save tokens. Use instead of WebFetch when the user provides a URL to read or analyze, for online documentation, articles, blog posts, or any standard web page. Do NOT use for URLs ending in .md — those are already markdown, use WebFetch directly.
+description: Use when the user provides a URL to a standard web page and clean Markdown extraction with Defuddle would reduce clutter and token cost.
 ---
+
+# Defuddle
 
 ## Purpose
 
-Extract clean, readable content from web pages by stripping navigation, ads, and clutter. Reduces token usage compared to fetching raw HTML.
+Extract readable Markdown from ordinary web pages by stripping navigation, ads, and page chrome.
 
 ## When to Use
 
-- User provides a URL to a documentation page, article, or blog post.
-- Reading web content where navigation and clutter would waste tokens.
-- Analyzing any standard web page content.
+- User provides a documentation page, article, or blog post URL.
+- Clean Markdown extraction is preferable to noisy HTML.
+- Web page clutter would waste context.
 
-Do not use for:
-- URLs ending in `.md` — use WebFetch directly.
-- APIs returning JSON — fetch directly.
-- Pages that require authentication.
+Do not use when:
 
-## Inputs
+- URL already points to Markdown.
+- Response is an API payload.
+- Page requires authentication the tool cannot satisfy.
 
-- URL to parse.
+## Requirements
 
-## Workflow
+Required tool:
 
-Install if not present:
-```bash
+- Defuddle CLI
+
+Check:
+
+```powershell
+Get-Command defuddle -ErrorAction SilentlyContinue
+defuddle --version
+```
+
+Install:
+
+```powershell
 npm install -g defuddle
 ```
 
-Always use `--md` for markdown output:
-```bash
+Rules:
+
+- Do not assume Defuddle is installed.
+- Do not auto-install without user approval.
+- Show the install command before running it.
+
+## Inputs
+
+- URL to parse
+
+## Workflow
+
+1. Check whether Defuddle CLI is available.
+2. If missing, tell the user before attempting extraction.
+3. Prefer Markdown output:
+
+```powershell
 defuddle parse <url> --md
 ```
 
-Save to file:
-```bash
+4. Save to a file when needed:
+
+```powershell
 defuddle parse <url> --md -o content.md
 ```
 
-Extract specific metadata only:
-```bash
+5. For metadata-only needs, query a specific property:
+
+```powershell
 defuddle parse <url> -p title
 defuddle parse <url> -p description
 defuddle parse <url> -p domain
@@ -48,23 +76,27 @@ defuddle parse <url> -p domain
 
 ## Output
 
-| Flag | Format |
-|------|--------|
-| `--md` | Markdown (default choice) |
-| `--json` | JSON with both HTML and markdown |
-| (none) | HTML |
-| `-p <name>` | Specific metadata property |
-
-Clean markdown content from the page, with navigation and ads removed.
+- Clean Markdown content
+- Optional metadata fields
 
 ## Verification
 
-- [ ] Defuddle CLI installed (`defuddle --version`)
-- [ ] Output is clean (no navigation artifacts or cookie banners)
-- [ ] Content is the article/documentation body, not the page chrome
+- [ ] Defuddle availability was checked first
+- [ ] No extraction was claimed if the tool was missing
+- [ ] Output is the article or documentation body, not page chrome
 
 ## Failure Modes
 
-- **Page blocks automated access** — Try `--json` flag to get metadata only, or fall back to WebFetch.
-- **JavaScript-heavy content** — Single-page apps rendered entirely in JS may produce minimal or empty output. Note this to the user and fall back to WebFetch.
-- **Auth-gated content** — Defuddle cannot access pages requiring login. Use WebFetch with appropriate credentials.
+- Page blocks automated access
+- JavaScript-heavy page renders poorly
+- Auth-gated content is inaccessible
+
+## Missing Dependency Behavior
+
+If Defuddle is missing:
+
+1. Say extraction did not happen.
+2. Tell the user Defuddle CLI is required.
+3. Ask before installing it.
+4. Show the install command.
+5. Fall back to another web-reading method.
