@@ -1,60 +1,100 @@
 ---
 name: markitdown-file-intake
-description: Use when the user provides a MarkItDown-supported file or URL and converting it to Markdown first will make inspection easier, cheaper, or more reliable. Applies to PDF, Office documents, images, audio, HTML, CSV/JSON/XML, ZIP, EPUB, YouTube URLs, and similar formats.
+description: Use when the user provides a MarkItDown-supported file or URL and converting it to Markdown first will make inspection easier, cheaper, or more reliable.
 ---
+
+# MarkItDown File Intake
 
 ## Purpose
 
-Convert non-text files to Markdown before inspection. Reduces token cost and enables analysis of binary or structured file formats.
+Convert supported files or URLs into Markdown before inspection. This reduces token cost and makes binary or structured inputs easier to analyze.
 
 ## When to Use
 
-- The user provides a local file in a format MarkItDown supports (PDF, DOCX, XLSX, PPTX, images, audio, HTML, CSV, JSON, XML, ZIP, EPUB).
-- The user provides a supported URL (YouTube video, HTML page to analyze as text).
-- The source is binary or structurally complex and Markdown conversion will reduce token cost.
+- User provides a local file in a format Microsoft MarkItDown supports.
+- User provides a supported URL and Markdown conversion will improve inspection.
+- Source is binary or structurally noisy enough that direct inspection is inefficient.
 
 Do not use when:
-- The user explicitly asks for raw binary inspection or metadata-only handling.
-- Another tool is clearly better (e.g., OCR with pixel-level reasoning).
-- The file is already clean plain text.
+
+- File is already clean text.
+- User explicitly wants raw binary or metadata-only handling.
+- Another tool is clearly better for the task.
+
+## Requirements
+
+Required tool:
+
+- Microsoft MarkItDown
+
+Check:
+
+```powershell
+Get-Command markitdown -ErrorAction SilentlyContinue
+python -m markitdown --help
+```
+
+Install:
+
+```powershell
+python -m pip install markitdown
+```
+
+Rules:
+
+- Do not assume MarkItDown is installed.
+- Do not install it without user approval.
+- Show the install command before running it.
+- Prefer user-local or project-local installation when practical.
 
 ## Inputs
 
 - File path or URL to convert.
-- Optional: desired output path for the Markdown file.
+- Optional output path for the generated Markdown.
 
 ## Workflow
 
-1. **Convert the file** using the MarkItDown CLI or the helper script in `references/`:
-   ```bash
-   markitdown <path-or-url> -o output.md
-   ```
-   Or on Windows using the PowerShell helper (see `references/convert_with_markitdown.ps1`):
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File "convert_with_markitdown.ps1" -Source "<path-or-url>"
-   ```
+1. Check whether MarkItDown is available.
+2. If missing, tell the user before attempting conversion.
+3. Convert with Microsoft MarkItDown or the helper script in `references/`.
 
-2. **Check the output path** printed by the script.
+```powershell
+markitdown <path-or-url> -o output.md
+```
 
-3. **Inspect the Markdown** with narrow reads first (head, targeted search) before loading the full file.
+```powershell
+powershell -ExecutionPolicy Bypass -File "references\convert_with_markitdown.ps1" -Source "<path-or-url>"
+```
 
-4. **Note to the user** that MarkItDown was used for the conversion.
-
-5. If conversion fails, state the failure briefly and fall back to the original file only if necessary.
+4. Confirm output path exists and file is non-empty.
+5. Inspect the generated Markdown with narrow reads first.
+6. Tell the user MarkItDown was used.
 
 ## Output
 
-Path to the generated Markdown file, followed by the inspection results drawn from that Markdown.
+- Path to the generated Markdown file
+- Inspection results based on that Markdown
 
 ## Verification
 
-- [ ] MarkItDown installed and accessible
-- [ ] Conversion produced a non-empty Markdown file
-- [ ] Inspection uses the converted Markdown, not the original binary
+- [ ] MarkItDown availability was checked first
+- [ ] No conversion was claimed if the tool was missing
+- [ ] Generated Markdown file exists and is non-empty
+- [ ] Inspection used the generated Markdown, not the original binary
 
 ## Failure Modes
 
-- **MarkItDown not installed** — Install via `pip install markitdown`. Confirm the executable is on PATH.
-- **Audio conversion fails** — Some audio formats depend on `ffmpeg`. If audio conversion warns or fails, report it explicitly.
-- **Unsupported format** — Not all formats convert cleanly. If output is empty or garbled, note this and fall back to direct inspection if possible.
-- **URL not accessible** — For YouTube or web URLs, network access is required. Report failures explicitly.
+- Unsupported or weak conversion output
+- Audio formats needing extra tooling such as `ffmpeg`
+- Remote URL access failure
+- Empty or garbled Markdown output
+
+## Missing Dependency Behavior
+
+If MarkItDown is missing:
+
+1. Say conversion did not happen.
+2. Tell the user Microsoft MarkItDown is required.
+3. Ask before installing it.
+4. Show the install command.
+5. Fall back to manual inspection when practical.
