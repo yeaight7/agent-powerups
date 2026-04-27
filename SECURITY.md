@@ -1,51 +1,33 @@
 # Security
 
-## What Agent Powerups Is
+Agent Powerups ships instructions, metadata, and helper scripts. The risk surface comes from what an agent can do after loading them.
 
-Agent Powerups is a collection of text-based instructions for coding agents. Skills are Markdown files. They do not execute code, make network requests, or modify systems on their own.
+## High-Level Rules
 
-## What Agent Powerups Is Not
+- Review assets before enabling them.
+- Do not trust compatibility claims blindly.
+- Do not run install commands or scripts without understanding their effect.
+- Give agents least privilege.
 
-- Not a CLI tool
-- Not an agent runtime
-- Not a service or API
+## Repository Content Rules
 
-## Threat Model
+This repo should not contain:
 
-The security risk in agent powerups comes from what agents DO when following instructions, not from the instructions themselves.
+- tokens, API keys, or credentials
+- machine-specific paths
+- personal or customer data
+- destructive-only automation
+- instructions to bypass security controls
 
-**Trust the agent, not the skill.** A skill that says "delete files" only causes deletion if the agent has permission to delete files and a human (or automated system) has authorized that action. Skills cannot escalate permissions.
+## Operational Warnings
 
-## Content Policy
+- Hooks may execute code.
+- MCP configs may expand tool access.
+- Skills may direct an agent to read local files or run commands.
+- Install commands can modify the local environment.
 
-Every asset in this repository must follow these rules:
+More detail: [`docs/security-model.md`](./docs/security-model.md)
 
-| Rule | Rationale |
-|------|-----------|
-| No tokens or API keys | Credentials in version control are a supply chain risk |
-| No machine-specific paths | Breaks portability; could leak system layout |
-| No personal information | User data belongs nowhere near a public repo |
-| No destructive-only workflows | Skills may describe irreversible operations, but must warn clearly |
-| No detection evasion techniques | Skills must not help agents evade security tooling |
+## Reporting
 
-## Reporting Vulnerabilities
-
-If you find content in this repository that:
-- Contains a real credential or token
-- Could be used to cause unintended harm when followed by an agent
-- Encourages agents to bypass security controls
-
-Please open a GitHub issue with the label `security` or contact the maintainers directly. Do not include the sensitive content in a public issue if it contains real credentials.
-
-## Safe Deployment
-
-When using skills in an automated or high-trust context:
-
-1. **Review before deploying** — Read the skill. Understand what the agent will do.
-2. **Apply least privilege** — Give the agent only the permissions it needs for its tasks.
-3. **Audit agent actions** — Log what the agent does, especially for skills that modify files or call external tools.
-4. **Test in a sandbox first** — Run new skills in a non-production environment before live use.
-
-## Supply Chain
-
-All contributions go through pull request review. No assets are auto-published. There are no build steps, compiled artifacts, or external dependencies in this repository.
+If you find sensitive content or dangerous instructions, open a private maintainer contact or a GitHub issue without posting the sensitive material itself.
