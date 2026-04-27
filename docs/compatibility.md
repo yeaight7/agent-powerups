@@ -29,6 +29,8 @@ Use for plain text instructions or Python scripts that rely only on standard she
 
 Use only when the asset mentions or depends on a specific surface and the repo intends to support that use directly.
 
+Platform-specific labels (`claude-code`, `codex`) are additive signals. A skill that lists both `claude-code` and `generic` is signaling that it was considered for that surface, not that it is exclusive to it or has been formally tested on it. `generic` remains the baseline compatibility claim.
+
 ## Current Repo State
 
 | Surface | Concrete shipped assets | Claim level |
