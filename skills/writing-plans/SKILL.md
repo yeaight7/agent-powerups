@@ -64,15 +64,17 @@ If the spec covers multiple independent subsystems, break it into separate plans
    ````
 
 6. **No placeholders** — These are plan failures; never write them:
-   - "TBD", "TODO", "implement later", "fill in details"
-   - "Add appropriate error handling" / "handle edge cases"
-   - "Write tests for the above" (without actual test code)
-   - "Similar to Task N" (repeat the code — engineer may read tasks out of order)
-   - Steps that describe without showing how (code blocks required for code steps)
+   ```
+   TBD / TODO / implement later / fill in details
+   "Add appropriate error handling" / "handle edge cases"
+   "Write tests for the above" (without actual test code)
+   "Similar to Task N" (repeat the code — engineer may read tasks out of order)
+   Steps that describe without showing how (code blocks required for code steps)
+   ```
 
 7. **Self-review before saving:**
    - Spec coverage: Can you point to a task for every requirement?
-   - Placeholder scan: No TBD/TODO patterns?
+   - Placeholder scan: No undefined, deferred, or vague steps?
    - Type consistency: Do types and method names in later tasks match earlier definitions?
 
 8. **Save to** `docs/plans/YYYY-MM-DD-<feature-name>.md`.
@@ -87,7 +89,7 @@ A Markdown plan file with:
 ## Verification
 
 - [ ] All spec requirements covered (point to a task for each)
-- [ ] No placeholders (TBD, TODO, "fill in details", "implement later")
+- [ ] No undefined, deferred, or vague steps present
 - [ ] File paths are exact (not `path/to/file`)
 - [ ] Tasks are 2–5 minutes each
 - [ ] Code blocks contain actual code, not descriptions
@@ -98,5 +100,5 @@ A Markdown plan file with:
 
 - **Vague tasks** — A reader who cannot execute a step without guessing means the task is incomplete.
 - **Missing spec coverage** — Implementation diverges from requirements.
-- **Placeholder content** — Implementation stalls when engineer hits "TBD".
+- **Placeholder content** — Implementation stalls when an engineer hits an undefined or deferred step.
 - **Stale type references** — Function named `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug in the plan.
