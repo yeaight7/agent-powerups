@@ -2,125 +2,126 @@
 
 **Oh My Zsh for coding agents.**
 
-Reusable skills, slash commands, MCP configs, hooks, AGENTS.md templates, and workflows for serious software engineering — across Claude Code, Codex, Gemini CLI, Cursor, and any agent that follows text instructions.
+Agent Powerups is an Oh My Zsh-style collection of reusable skills, slash commands, MCP configs, hooks, AGENTS.md templates, and workflows for coding agents.
 
----
+Today, this repo ships a curated set of reusable skills plus validation and requirement-check scripts. The other top-level folders are reserved for future public assets, not full product surfaces yet.
 
-## What Is This?
+## What Is Here
 
-Agent Powerups is a curated, portable collection of agent behaviors. Think of it as a plugin library: pick what you need, drop it into your agent setup, and your agent works better immediately.
-
-Every asset is:
-- **Self-contained** — no hidden dependencies between assets
-- **Agent-portable** — written for any instruction-following agent unless explicitly tagged otherwise
-- **Opinionated** — designed for serious engineering, not demos
-
----
-
-## What's Included
-
-| Type | What | Examples |
-|------|------|---------|
-| `skills/` | Procedural workflows agents follow | `systematic-debugging`, `writing-plans`, `ai-slop-cleaner` |
-| `commands/` | Slash commands and agent commands | *(coming)* |
-| `mcp/` | MCP server configurations | *(coming)* |
-| `hooks/` | Event-driven agent triggers | *(coming)* |
-| `agents-md/` | AGENTS.md templates by project type | *(coming)* |
-| `workflows/` | Multi-step scenario guides | *(coming)* |
-| `examples/` | Example setups for specific platforms | *(coming)* |
-
----
+| Path | Status | Notes |
+|------|--------|-------|
+| `skills/` | shipped | Reusable agent workflows such as `systematic-debugging` and `writing-plans` |
+| `scripts/` | shipped | Validation and tool-check helpers for this repo |
+| `commands/` | planned | Placeholder for future command packs |
+| `mcp/` | planned | Placeholder for future MCP config recipes |
+| `hooks/` | planned | Placeholder for future hook examples |
+| `agents-md/` | planned | Placeholder for future AGENTS.md templates |
+| `workflows/` | planned | Placeholder for future scenario guides |
+| `examples/` | planned | Placeholder for future platform examples |
 
 ## Quickstart
 
-### Using a skill in Claude Code
+1. Inspect optional tool requirements:
 
-Copy the skill folder into your Claude plugins directory:
-
-```bash
-cp -r skills/systematic-debugging ~/.claude/skills/
+```powershell
+python scripts\check-requirements.py
 ```
 
-Then invoke it:
+2. Read or copy a shipped skill:
+
+```powershell
+Get-Content -Raw skills\systematic-debugging\SKILL.md
 ```
-/systematic-debugging
+
+3. Validate repo metadata:
+
+```powershell
+python scripts\validate-skills.py
+python scripts\validate-catalog.py
 ```
 
-### Using a skill in any agent
+4. Check the asset catalog:
+   [`catalog.json`](./catalog.json) indexes shipped skills and helper scripts, including maturity and any declared tool requirements.
 
-Copy the contents of `skills/<name>/SKILL.md` into your agent's system prompt or context, or reference it by path in your agent configuration.
+## Catalog Overview
 
-### Browsing the catalog
+Current shipped skills:
 
-All assets are indexed in [`catalog.json`](./catalog.json). Every entry includes compatibility, tags, and maturity.
+- `systematic-debugging`
+- `no-fluff`
+- `writing-plans`
+- `ai-slop-cleaner`
+- `requesting-code-review`
+- `receiving-code-review`
+- `pr-triage`
+- `repo-map`
+- `bug-hunt`
+- `safe-refactor`
+- `defuddle`
+- `markitdown-file-intake`
 
----
+Current shipped scripts:
 
-## Current Skills
+- `scripts/validate-skills.py`
+- `scripts/validate-catalog.py`
+- `scripts/check-requirements.py`
 
-| Skill | What It Does | Maturity |
-|-------|-------------|---------|
-| `systematic-debugging` | Enforces root-cause investigation before any fix | stable |
-| `no-fluff` | Ultra-compressed communication mode (~75% token reduction) | stable |
-| `writing-plans` | Turns specs into executable multi-step implementation plans | beta |
-| `ai-slop-cleaner` | Reduces AI-generated bloat through smell-by-smell cleanup | beta |
-| `requesting-code-review` | Dispatches a focused code-reviewer before merging | beta |
-| `receiving-code-review` | Evaluates feedback with technical rigor before implementing | beta |
-| `pr-triage` | Identifies the PRs that most deserve attention now | beta |
-| `repo-map` | Produces an architecture overview of an unfamiliar codebase | beta |
-| `bug-hunt` | Reproduces, isolates, and fixes a bug with minimal scope | beta |
-| `safe-refactor` | Restructures code without changing observable behavior | beta |
-| `defuddle` | Extracts clean markdown from web pages (requires Defuddle CLI) | beta |
-| `markitdown-file-intake` | Converts files to Markdown before inspection | draft |
-
----
+Schema details: [`docs/catalog-schema.md`](./docs/catalog-schema.md)
 
 ## Compatibility Matrix
 
-| Asset | Claude Code | Codex | Gemini CLI | Cursor | Generic |
-|-------|:-----------:|:-----:|:----------:|:------:|:-------:|
-| Skills (text-based) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Skills (tool-specific) | varies | varies | varies | varies | varies |
-| Commands | by platform | by platform | — | — | — |
-| MCP configs | ✅ | ✅ | ✅ | — | — |
+Compatibility claims in this repo are intentionally narrow:
 
-See [`docs/compatibility.md`](./docs/compatibility.md) for detailed compatibility notes per asset.
+| Asset class | Shipped today | Compatibility claim |
+|-------------|---------------|---------------------|
+| Root `skills/` | yes | Generic text-based skills; some also mention known agent surfaces |
+| `scripts/` | yes | Generic Python scripts |
+| `commands/` | no | No support claim yet |
+| `mcp/` | no | No support claim yet |
+| `hooks/` | no | No support claim yet |
+| `agents-md/` | no | No support claim yet |
+| `workflows/` | no | No support claim yet |
+| `examples/` | no | No support claim yet |
 
----
+More detail: [`docs/compatibility.md`](./docs/compatibility.md)
 
-## Safety
+## Tool Requirements
 
-Agent Powerups does not:
-- Include tokens, API keys, or credentials
-- Hardcode machine-specific paths
-- Make external network requests
-- Execute code automatically
+Most shipped skills are pure text and need no extra installation.
 
-Skills are text-based instructions. They only do what your agent does when following them. Review any skill before deploying it in an automated or high-trust context.
+Current optional external tools used by shipped skills:
 
-See [`SECURITY.md`](./SECURITY.md) and [`docs/security-model.md`](./docs/security-model.md) for the full security model.
+| Skill | Tool | Required | Install |
+|-------|------|----------|---------|
+| `markitdown-file-intake` | Microsoft MarkItDown (`markitdown`) | yes for conversion workflow | `python -m pip install markitdown` |
+| `defuddle` | Defuddle CLI (`defuddle`) | yes for Defuddle workflow | `npm install -g defuddle` |
+| `pr-triage` | GitHub CLI (`gh`) | optional | platform package manager |
 
----
+Tool policy:
+
+- Do not assume tools are installed.
+- Do not auto-install without user approval.
+- Show install command before running it.
+- Prefer user-local or project-local installation where practical.
+
+More detail: [`docs/tool-requirements.md`](./docs/tool-requirements.md) and [`docs/installation.md`](./docs/installation.md)
+
+## Safety Warning
+
+Review assets before loading them into a trusted agent environment.
+
+- Skills can instruct an agent to read local files or run commands.
+- Hooks can execute code when supported by the host agent.
+- MCP configs can expand tool access.
+- Install commands can modify the local environment.
+- Secrets should never be pasted into agent context unless strictly necessary.
+
+See [`SECURITY.md`](./SECURITY.md) and [`docs/security-model.md`](./docs/security-model.md).
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for how to add or improve assets.
+Contribution guide: [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 
-Short version:
-1. Follow the structure in `docs/authoring-guide.md`
-2. Skills must have YAML frontmatter with `name` and `description`
-3. Run `python scripts/validate-skills.py` and `python scripts/validate-catalog.py`
-4. Open a pull request
+Acknowledgements: [`ACKNOWLEDGEMENTS.md`](./ACKNOWLEDGEMENTS.md)
 
----
-
-## Roadmap
-
-See [`docs/roadmap.md`](./docs/roadmap.md) for planned additions.
-
-Short version:
-- AGENTS.md templates for common project types
-- Hook library (safety, quality, productivity)
-- Slash command library (Claude Code, Codex)
-- MCP configuration recipes
-- Workflow guides for common engineering scenarios
+Roadmap: [`docs/roadmap.md`](./docs/roadmap.md)
