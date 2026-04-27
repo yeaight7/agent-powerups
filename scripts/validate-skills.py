@@ -72,10 +72,11 @@ def check_skill(skill_dir):
         if not re.search(pattern, content, re.MULTILINE):
             warnings.append(f"[{skill_name}] SKILL.md missing recommended section: ## {section}")
 
-    # Check for obvious placeholders
+    # Check for obvious placeholders — skip content inside code fences
+    prose = re.sub(r"```.*?```", "", content, flags=re.DOTALL)
     placeholder_patterns = [r"\bTBD\b", r"\bTODO\b", r"implement later", r"fill in details"]
     for pattern in placeholder_patterns:
-        if re.search(pattern, content, re.IGNORECASE):
+        if re.search(pattern, prose, re.IGNORECASE):
             errors.append(f"[{skill_name}] SKILL.md contains placeholder text matching: {pattern!r}")
 
 
