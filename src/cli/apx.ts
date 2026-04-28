@@ -2,6 +2,7 @@
 import path from "node:path";
 
 import { runAgentsMdListCommand, runAgentsMdPrintCommand } from "./commands/agents-md.js";
+import { runTypedAssetListCommand, runTypedAssetPrintCommand } from "./commands/assets.js";
 import { runCheckCommand } from "./commands/check.js";
 import { runDoctorCommand } from "./commands/doctor.js";
 import { runInfoCommand } from "./commands/info.js";
@@ -28,7 +29,13 @@ apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--
 apx mcp list
 apx mcp print <config-name> --target <${INSTALL_TARGETS.join("|")}>
 apx agents-md list
-apx agents-md print <template-name>`;
+apx agents-md print <template-name>
+apx commands list
+apx commands print <command-name> --target <${INSTALL_TARGETS.join("|")}>
+apx hooks list
+apx hooks print <hook-name>
+apx workflows list
+apx workflows print <workflow-name>`;
 
 function getPackageVersion(): string {
   return "0.1.0";
@@ -145,6 +152,82 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
         return 0;
       }
       throw new Error("Unknown agents-md subcommand");
+    }
+
+    if (command === "commands") {
+      const subcommand = argv[1];
+      if (subcommand === "list") {
+        io.stdout(runTypedAssetListCommand(service, "command", "command packs"));
+        return 0;
+      }
+      if (subcommand === "print") {
+        const assetName = argv[2];
+        if (!assetName) {
+          throw new Error("Missing command name for commands print");
+        }
+        io.stdout(
+          await runTypedAssetPrintCommand(
+            service,
+            assetName,
+            "command",
+            "command",
+            "this prints a command prompt and does not run commands or mutate files",
+            parseTarget(argv),
+          ),
+        );
+        return 0;
+      }
+      throw new Error("Unknown commands subcommand");
+    }
+
+    if (command === "hooks") {
+      const subcommand = argv[1];
+      if (subcommand === "list") {
+        io.stdout(runTypedAssetListCommand(service, "hook", "hook examples"));
+        return 0;
+      }
+      if (subcommand === "print") {
+        const assetName = argv[2];
+        if (!assetName) {
+          throw new Error("Missing hook name for hooks print");
+        }
+        io.stdout(
+          await runTypedAssetPrintCommand(
+            service,
+            assetName,
+            "hook",
+            "hook",
+            "review-before-use only; this does not install hooks or edit agent config",
+          ),
+        );
+        return 0;
+      }
+      throw new Error("Unknown hooks subcommand");
+    }
+
+    if (command === "workflows") {
+      const subcommand = argv[1];
+      if (subcommand === "list") {
+        io.stdout(runTypedAssetListCommand(service, "workflow", "workflows"));
+        return 0;
+      }
+      if (subcommand === "print") {
+        const assetName = argv[2];
+        if (!assetName) {
+          throw new Error("Missing workflow name for workflows print");
+        }
+        io.stdout(
+          await runTypedAssetPrintCommand(
+            service,
+            assetName,
+            "workflow",
+            "workflow",
+            "reference workflow only; this does not execute steps",
+          ),
+        );
+        return 0;
+      }
+      throw new Error("Unknown workflows subcommand");
     }
 
     throw new Error(`Unknown command: ${command}`);

@@ -70,7 +70,7 @@ Rules:
 
 ## Optional `targets`
 
-Use `targets` when one logical asset has target-specific files:
+Use `targets` when one logical asset has target-specific files, such as MCP snippets or command prompts:
 
 ```json
 {

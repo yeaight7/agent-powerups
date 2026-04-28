@@ -114,3 +114,56 @@ test("agents-md print prints template content", async () => {
   assert.match(result.stdout, /AGENTS\.md/);
   assert.match(result.stdout, /TypeScript/);
 });
+
+test("commands list prints available command packs", async () => {
+  const result = await execute(["commands", "list"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /ship-check/);
+});
+
+test("commands print prints target command with safety note", async () => {
+  const result = await execute(["commands", "print", "ship-check", "--target", "generic"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /command: ship-check/);
+  assert.match(result.stdout, /Run targeted tests/);
+  assert.match(result.stdout, /does not run commands/i);
+});
+
+test("hooks list prints available hook examples", async () => {
+  const result = await execute(["hooks", "list"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /no-secrets-preflight/);
+});
+
+test("hooks print prints review-before-use hook content", async () => {
+  const result = await execute(["hooks", "print", "no-secrets-preflight"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /hook: no-secrets-preflight/);
+  assert.match(result.stdout, /review-before-use/i);
+});
+
+test("workflows list prints available workflows", async () => {
+  const result = await execute(["workflows", "list"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /feature-iteration/);
+});
+
+test("workflows print prints workflow content", async () => {
+  const result = await execute(["workflows", "print", "feature-iteration"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /workflow: feature-iteration/);
+  assert.match(result.stdout, /Plan/);
+});
+
+test("agents-md list includes first mocked template seeds", async () => {
+  const result = await execute(["agents-md", "list"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /python-library/);
+});

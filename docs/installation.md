@@ -34,6 +34,9 @@ node dist\cli\apx.js list
 ```powershell
 node dist\cli\apx.js install markitdown-file-intake --target codex --dry-run
 node dist\cli\apx.js mcp print github-local --target claude-code
+node dist\cli\apx.js commands print ship-check --target generic
+node dist\cli\apx.js hooks print no-secrets-preflight
+node dist\cli\apx.js workflows print feature-iteration
 ```
 
 - Run validators after editing repo content:
