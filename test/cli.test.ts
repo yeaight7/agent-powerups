@@ -34,6 +34,29 @@ function parseJson(stdout: string): any {
   return JSON.parse(stdout);
 }
 
+async function createStubCommand(dir: string, name: string, output: string): Promise<void> {
+  if (process.platform === "win32") {
+    await fs.writeFile(path.join(dir, `${name}.cmd`), `@echo off\r\necho ${output} %*\r\n`, "utf8");
+    return;
+  }
+
+  const filePath = path.join(dir, name);
+  await fs.writeFile(filePath, `#!/bin/sh\necho "${output} $*"\n`, { encoding: "utf8", mode: 0o755 });
+  await fs.chmod(filePath, 0o755);
+}
+
+async function executeWithPath(argv: string[], commandDir: string) {
+  const pathValue = `${commandDir}${path.delimiter}${process.env.PATH ?? ""}`;
+  const previousPath = process.env.PATH;
+
+  try {
+    process.env.PATH = pathValue;
+    return await execute(argv);
+  } finally {
+    process.env.PATH = previousPath;
+  }
+}
+
 test("list prints catalog assets", async () => {
   const result = await execute(["list"]);
 
@@ -190,6 +213,85 @@ test("doctor --json returns execution result shape", async () => {
   assert.ok(Array.isArray(json.warnings));
 });
 
+test("ask claude runs local CLI and writes artifact as json", async () => {
+  const commandDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-ask-bin-"));
+  const artifactDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-artifacts-"));
+  await createStubCommand(commandDir, "claude", "CLAUDE_STUB");
+
+  const result = await executeWithPath([
+    "ask",
+    "claude",
+    "Review this patch",
+    "--artifact-dir",
+    artifactDir,
+    "--json",
+  ], commandDir);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.exitCode, 0);
+  assert.equal(json.data.provider, "claude");
+  assert.equal(json.data.promptLength, "Review this patch".length);
+  assert.match(json.data.artifactPath, /claude-review-this-patch-\d{8}T\d{6}\d{3}Z\.md$/);
+  assert.match(json.stdout, /CLAUDE_STUB/);
+
+  const artifact = await fs.readFile(json.data.artifactPath, "utf8");
+  assert.match(artifact, /## Original user task/);
+  assert.match(artifact, /## Final prompt sent to Claude CLI/);
+  assert.match(artifact, /## Claude output \(raw\)/);
+  assert.match(artifact, /## Concise summary/);
+  assert.match(artifact, /## Action items \/ next steps/);
+});
+
+test("ask gemini runs local CLI and writes artifact", async () => {
+  const commandDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-ask-bin-"));
+  const artifactDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-artifacts-"));
+  await createStubCommand(commandDir, "gemini", "GEMINI_STUB");
+
+  const result = await executeWithPath([
+    "ask",
+    "gemini",
+    "Brainstorm test cases",
+    "--artifact-dir",
+    artifactDir,
+  ], commandDir);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /ask complete/);
+  assert.match(result.stdout, /provider: gemini/);
+  assert.match(result.stdout, /artifact:/);
+  assert.match(result.stdout, /GEMINI_STUB/);
+});
+
+test("ask requires a prompt", async () => {
+  const result = await execute(["ask", "claude"]);
+
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stderr, /Missing prompt/);
+});
+
+test("ask rejects unknown provider", async () => {
+  const result = await execute(["ask", "llama", "hello"]);
+
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stderr, /Unknown ask provider/);
+});
+
+test("ask reports missing local CLI without MCP fallback", async () => {
+  const previousPath = process.env.PATH;
+  try {
+    process.env.PATH = await fs.mkdtemp(path.join(os.tmpdir(), "apx-empty-path-"));
+    const result = await execute(["ask", "claude", "hello"]);
+
+    assert.equal(result.exitCode, 1);
+    assert.match(result.stderr, /Local Claude CLI is required/);
+    assert.match(result.stderr, /claude --version/);
+    assert.match(result.stderr, /MCP fallback is not used/);
+  } finally {
+    process.env.PATH = previousPath;
+  }
+});
+
 test("commands run ship-check executes safe checks as json", async () => {
   const result = await execute(["commands", "run", "ship-check", "--json"]);
 
@@ -299,6 +401,8 @@ test("plugin build --write mirrors catalog-backed assets", async () => {
   assert.equal(result.exitCode, 0);
   await fs.access(path.join(dest, ".codex-plugin", "plugin.json"));
   await fs.access(path.join(dest, "skills", "systematic-debugging", "SKILL.md"));
+  await fs.access(path.join(dest, "skills", "ask-claude", "SKILL.md"));
+  await fs.access(path.join(dest, "skills", "ask-gemini", "SKILL.md"));
   await fs.access(path.join(dest, "commands", "generic", "ship-check.md"));
   await fs.access(path.join(dest, "mcp", "generic", "github-local.json"));
   await fs.access(path.join(dest, "agents-md", "typescript-app", "AGENTS.md"));
