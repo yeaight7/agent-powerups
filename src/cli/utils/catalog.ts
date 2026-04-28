@@ -1,0 +1,132 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { z } from "zod";
+
+export const ALLOWED_TYPES = [
+  "skill",
+  "command",
+  "mcp-config",
+  "agents-md-template",
+  "hook",
+  "workflow",
+  "example",
+  "script",
+  "pack",
+] as const;
+
+const catalogEntrySchema = z.object({
+  name: z.string().min(1),
+  type: z.enum(ALLOWED_TYPES),
+  summary: z.string().min(1),
+  path: z.string().min(1),
+  compatible_with: z.array(z.enum(["claude-code", "codex", "gemini-cli", "cursor", "generic"])).min(1),
+  tags: z.array(z.string().min(1)),
+  maturity: z.enum(["draft", "beta", "stable"]),
+  requires: z
+    .object({
+      commands: z.array(z.string().min(1)).optional(),
+      python_packages: z.array(z.string().min(1)).optional(),
+      npm_packages: z.array(z.string().min(1)).optional(),
+    })
+    .optional(),
+});
+
+const catalogSchema = z.array(catalogEntrySchema);
+
+export type CatalogEntry = z.infer<typeof catalogEntrySchema>;
+
+export class CatalogError extends Error {}
+
+export class CatalogService {
+  constructor(
+    public readonly repoRoot: string,
+    private readonly assets: CatalogEntry[],
+  ) {}
+
+  listAssets(type?: string): CatalogEntry[] {
+    if (!type) {
+      return [...this.assets];
+    }
+    return this.assets.filter((asset) => asset.type === type);
+  }
+
+  getAsset(name: string): CatalogEntry {
+    const asset = this.assets.find((entry) => entry.name === name);
+    if (!asset) {
+      throw new CatalogError(`Asset not found: ${name}`);
+    }
+    return asset;
+  }
+
+  getCatalogPath(): string {
+    return path.resolve(this.repoRoot, "catalog.json");
+  }
+}
+
+async function pathExists(targetPath: string): Promise<boolean> {
+  try {
+    await fs.access(targetPath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function findRepoRoot(startPath: string): Promise<string> {
+  let currentPath = path.resolve(startPath);
+
+  while (true) {
+    const catalogPath = path.resolve(currentPath, "catalog.json");
+    if (await pathExists(catalogPath)) {
+      return currentPath;
+    }
+
+    const parentPath = path.dirname(currentPath);
+    if (parentPath === currentPath) {
+      throw new CatalogError(`catalog.json is missing at ${catalogPath}`);
+    }
+    currentPath = parentPath;
+  }
+}
+
+export async function createCatalogService(startPath: string): Promise<CatalogService> {
+  const repoRoot = await findRepoRoot(startPath);
+  const catalogPath = path.resolve(repoRoot, "catalog.json");
+
+  let raw: string;
+  try {
+    raw = await fs.readFile(catalogPath, "utf8");
+  } catch (error) {
+    throw new CatalogError(`catalog.json is missing at ${catalogPath}`);
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (error) {
+    throw new CatalogError("catalog.json is invalid JSON");
+  }
+
+  const result = catalogSchema.safeParse(parsed);
+  if (!result.success) {
+    const issue = result.error.issues[0];
+    throw new CatalogError(`catalog.json failed validation: ${issue.path.join(".") || "root"} ${issue.message}`);
+  }
+
+  const seenNames = new Set<string>();
+  for (const asset of result.data) {
+    if (seenNames.has(asset.name)) {
+      throw new CatalogError(`duplicate asset name in catalog.json: ${asset.name}`);
+    }
+    seenNames.add(asset.name);
+
+    const fullPath = path.resolve(repoRoot, asset.path);
+    try {
+      await fs.access(fullPath);
+    } catch {
+      throw new CatalogError(`referenced asset path is missing: ${asset.path}`);
+    }
+  }
+
+  return new CatalogService(repoRoot, result.data);
+}
