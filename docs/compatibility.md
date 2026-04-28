@@ -36,8 +36,8 @@ Platform-specific labels (`claude-code`, `codex`) are additive signals. A skill 
 | Surface | Concrete shipped assets | Claim level |
 |---------|-------------------------|-------------|
 | Claude Code | generic root skills, `github-local` MCP snippet, `ship-check` command variant | limited |
-| Codex | generic root skills, repo scripts, experimental `github-local` MCP snippet | limited |
-| Gemini CLI | generic root skills only | limited |
+| Codex | generic root skills, repo scripts, `ask-claude`/`ask-gemini` local CLI flow, experimental `github-local` MCP snippet | limited |
+| Gemini CLI | generic root skills only; `ask-gemini` invokes Gemini CLI from another local agent | limited |
 | Cursor | generic root skills only | limited |
 | Generic | root skills, Python scripts, AGENTS.md templates, generic MCP snippet, command prompts, hook recipes, workflows | primary |
 
