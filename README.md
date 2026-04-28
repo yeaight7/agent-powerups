@@ -10,7 +10,7 @@ Today, this repo ships:
 - safe local CLI (`apx`)
 - validation and requirement-check scripts
 - first local MCP config snippets
-- first AGENTS.md template
+- first command, hook, workflow, and AGENTS.md templates
 - experimental local plugin layout
 
 Everything else stays conservative. No global mutation. No hidden install hooks. No fake marketplace claims.
@@ -22,11 +22,11 @@ Everything else stays conservative. No global mutation. No hidden install hooks.
 | `skills/` | shipped | Reusable agent workflows such as `systematic-debugging` and `writing-plans` |
 | `mcp/` | shipped | Local-first MCP config snippets for manual review and copy |
 | `agents-md/` | shipped | Starter AGENTS.md templates |
+| `commands/` | shipped | Review-first command packs |
+| `hooks/` | shipped | Review-before-use hook examples |
+| `workflows/` | shipped | Scenario guides |
 | `plugins/` | experimental | Local-only plugin layout, not verified marketplace support |
 | `scripts/` | shipped | Validation and tool-check helpers for this repo |
-| `commands/` | planned | Placeholder for future command packs |
-| `hooks/` | planned | Placeholder for future hook examples |
-| `workflows/` | planned | Placeholder for future scenario guides |
 | `examples/` | planned | Placeholder for future platform examples |
 
 ## Quickstart
@@ -106,6 +106,22 @@ Current shipped MCP configs:
 Current shipped AGENTS.md templates:
 
 - `typescript-app`
+- `python-library`
+- `dbt-project`
+- `ml-project`
+- `open-source-maintainer`
+
+Current shipped command packs:
+
+- `ship-check`
+
+Current shipped hook examples:
+
+- `no-secrets-preflight`
+
+Current shipped workflows:
+
+- `feature-iteration`
 
 Schema details: [`docs/catalog-schema.md`](./docs/catalog-schema.md)
 
@@ -118,11 +134,11 @@ Compatibility claims in this repo are intentionally narrow:
 | Root `skills/` | yes | Generic text-based skills; some also mention known agent surfaces |
 | `mcp/` | yes | Manual-review config snippets only; Codex output experimental/local |
 | `agents-md/` | yes | Plain text templates |
+| `commands/` | yes | Review-first markdown command prompts; Claude Code target where provided |
+| `hooks/` | yes | Documentation recipes only; not installed automatically |
+| `workflows/` | yes | Plain text scenario guides |
 | `plugins/` | experimental | Local layout only; no official marketplace claim |
 | `scripts/` | yes | Generic Python scripts |
-| `commands/` | no | No support claim yet |
-| `hooks/` | no | No support claim yet |
-| `workflows/` | no | No support claim yet |
 | `examples/` | no | No support claim yet |
 
 More detail: [`docs/compatibility.md`](./docs/compatibility.md)
@@ -167,6 +183,12 @@ node dist/cli/apx.js mcp list
 node dist/cli/apx.js mcp print github-local --target claude-code
 node dist/cli/apx.js agents-md list
 node dist/cli/apx.js agents-md print typescript-app
+node dist/cli/apx.js commands list
+node dist/cli/apx.js commands print ship-check --target generic
+node dist/cli/apx.js hooks list
+node dist/cli/apx.js hooks print no-secrets-preflight
+node dist/cli/apx.js workflows list
+node dist/cli/apx.js workflows print feature-iteration
 ```
 
 ## Experimental Plugin Layout
