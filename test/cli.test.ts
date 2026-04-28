@@ -5,8 +5,10 @@ import os from "node:os";
 import path from "node:path";
 
 import { runCli } from "../src/cli/apx.js";
+import { resolveCheckExecutable } from "../src/cli/commands/run-command.js";
+import { checkRequirements } from "../src/cli/utils/requirements.js";
 
-const repoRoot = path.resolve(import.meta.dirname, "..");
+const repoRoot = path.resolve(import.meta.dirname, "..", "..");
 
 async function execute(argv: string[]) {
   const stdout: string[] = [];
@@ -43,6 +45,10 @@ async function createStubCommand(dir: string, name: string, output: string): Pro
   const filePath = path.join(dir, name);
   await fs.writeFile(filePath, `#!/bin/sh\necho "${output} $*"\n`, { encoding: "utf8", mode: 0o755 });
   await fs.chmod(filePath, 0o755);
+}
+
+async function copyDir(source: string, destination: string): Promise<void> {
+  await fs.cp(source, destination, { recursive: true });
 }
 
 async function executeWithPath(argv: string[], commandDir: string) {
@@ -86,6 +92,28 @@ test("check reports missing requirements without installing", async () => {
   assert.equal(result.exitCode, 1);
   assert.match(result.stdout, /markitdown/);
   assert.match(result.stdout, /python -m pip install markitdown/);
+});
+
+test("requirements report npm packages as declared rather than missing", () => {
+  const statuses = checkRequirements({ npm_packages: ["defuddle"] });
+
+  assert.deepEqual(statuses, [
+    {
+      label: "npm:defuddle",
+      status: "DECLARED",
+      ok: true,
+      installHint: "npm install -g defuddle",
+    },
+  ]);
+});
+
+test("check reports npm packages as declared and does not fail because of them", async () => {
+  const result = await execute(["check", "defuddle"]);
+
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stdout, /command:defuddle=MISSING/);
+  assert.match(result.stdout, /npm:defuddle=DECLARED/);
+  assert.doesNotMatch(result.stdout, /npm:defuddle=MISSING/);
 });
 
 test("doctor validates repo health", async () => {
@@ -132,6 +160,8 @@ test("mcp print prints target config with safety note", async () => {
   assert.match(result.stdout, /mcpServers/);
   assert.match(result.stdout, /GITHUB_TOKEN/);
   assert.match(result.stdout, /does not mutate/i);
+  assert.match(result.stdout, /deprecated/i);
+  assert.match(result.stdout, /github\/github-mcp-server/i);
 });
 
 test("agents-md list prints available templates", async () => {
@@ -209,8 +239,26 @@ test("doctor --json returns execution result shape", async () => {
   const json = parseJson(result.stdout);
   assert.equal(json.exitCode, 0);
   assert.equal(typeof json.stdout, "string");
+  assert.ok(json.data.checks.some((check: { name: string }) => check.name === "package/license consistency"));
+  assert.ok(json.data.checks.some((check: { name: string }) => check.name === "plugin mirror sync"));
   assert.deepEqual(json.actions, []);
   assert.ok(Array.isArray(json.warnings));
+});
+
+test("doctor --full --json reports build test and validator checks without recursive npm test", async () => {
+  const result = await execute(["doctor", "--full", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  const checkNames = json.data.checks.map((check: { name: string }) => check.name);
+  assert.ok(checkNames.includes("npm run build"));
+  assert.ok(checkNames.includes("npm test"));
+  assert.ok(checkNames.includes("python scripts/validate-skills.py"));
+  assert.ok(
+    json.data.checks.some(
+      (check: { name: string; skipped?: boolean }) => check.name === "npm test" && check.skipped,
+    ),
+  );
 });
 
 test("ask claude runs local CLI and writes artifact as json", async () => {
@@ -346,6 +394,8 @@ test("mcp check reports structured metadata", async () => {
   assert.equal(json.data.target, "generic");
   assert.ok(json.data.requiredEnv.some((entry: { name: string }) => entry.name === "GITHUB_TOKEN"));
   assert.ok(json.data.requiredCommands.some((entry: { name: string }) => entry.name === "npx"));
+  assert.match(json.warnings.join("\n"), /deprecated/i);
+  assert.match(json.data.warning, /github\/github-mcp-server/i);
 });
 
 test("mcp write requires explicit destination and refuses overwrite", async () => {
@@ -406,4 +456,24 @@ test("plugin build --write mirrors catalog-backed assets", async () => {
   await fs.access(path.join(dest, "commands", "generic", "ship-check.md"));
   await fs.access(path.join(dest, "mcp", "generic", "github-local.json"));
   await fs.access(path.join(dest, "agents-md", "typescript-app", "AGENTS.md"));
+});
+
+test("plugin diff detects mirrored asset drift", async () => {
+  const pluginDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-plugin-drift-"));
+  await copyDir(path.join(repoRoot, "plugins", "agent-powerups"), pluginDir);
+  await fs.rm(path.join(pluginDir, "skills", "systematic-debugging", "SKILL.md"));
+
+  const result = await execute(["plugin", "diff", pluginDir, "--json"]);
+
+  assert.equal(result.exitCode, 1);
+  const json = parseJson(result.stdout);
+  assert.match(json.stdout, /plugin diff failed/);
+  assert.ok(json.data.diffs.some((diff: string) => diff.includes("skills/systematic-debugging/SKILL.md")));
+});
+
+test("ship-check resolves npm through PATH on Windows instead of Node install layout", () => {
+  const resolved = resolveCheckExecutable("npm", ["test"], "win32");
+
+  assert.equal(resolved.command, "npm.cmd");
+  assert.deepEqual(resolved.args, ["test"]);
 });
