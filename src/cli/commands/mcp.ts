@@ -13,6 +13,7 @@ export interface McpCheckData {
   requiredEnv: Array<{ name: string; set: boolean }>;
   requiredCommands: Array<{ name: string; ok: boolean }>;
   serverPackage?: string;
+  warning?: string;
 }
 
 export function runMcpListCommand(service: CatalogService): string {
@@ -45,6 +46,10 @@ export async function runMcpPrintCommand(
 
   if (target === "codex") {
     notes.push("warning: Codex target output is experimental/local and should be reviewed before use.");
+  }
+
+  if (asset.mcp?.warning) {
+    notes.push(`warning: ${asset.mcp.warning}`);
   }
 
   notes.push("warning: replace placeholders such as ${GITHUB_TOKEN} or YOUR_TOKEN_HERE locally and do not commit real tokens.");
@@ -96,6 +101,10 @@ export async function runMcpCheckCommand(
     }
   }
 
+  if (asset.mcp?.warning) {
+    warnings.push(asset.mcp.warning);
+  }
+
   return createResult({
     stdout: `mcp check: ${asset.name} (${target})`,
     warnings,
@@ -107,6 +116,7 @@ export async function runMcpCheckCommand(
       requiredEnv,
       requiredCommands,
       serverPackage: asset.mcp?.server_package,
+      warning: asset.mcp?.warning,
     },
   });
 }
