@@ -40,3 +40,17 @@ test("catalog includes executable command and structured mcp metadata", async ()
   assert.deepEqual(mcp.mcp?.required_env, ["GITHUB_TOKEN"]);
   assert.equal(mcp.mcp?.server_package, "@modelcontextprotocol/server-github");
 });
+
+test("catalog includes local ask skills with command requirements", async () => {
+  const service = await createCatalogService(repoRoot);
+  const claude = service.getAsset("ask-claude");
+  const gemini = service.getAsset("ask-gemini");
+
+  assert.equal(claude.type, "skill");
+  assert.deepEqual(claude.requires?.commands, ["claude"]);
+  assert.ok(claude.compatible_with.includes("codex"));
+
+  assert.equal(gemini.type, "skill");
+  assert.deepEqual(gemini.requires?.commands, ["gemini"]);
+  assert.ok(gemini.compatible_with.includes("codex"));
+});
