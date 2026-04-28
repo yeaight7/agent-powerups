@@ -1,22 +1,41 @@
 # Installation
 
-Agent Powerups is a file collection, not a CLI. Installation currently means copying or referencing the assets you want.
+Agent Powerups ships both repo assets and a minimal local CLI. Installation stays local-first and review-first.
 
 ## Minimal Use
 
-1. Read the skill or script you want to use.
-2. Check optional tool requirements:
+1. Install Node deps:
 
 ```powershell
-python scripts\check-requirements.py
+npm install
 ```
 
-3. Copy the skill folder into your agent's skill location, or load the `SKILL.md` text into your agent context.
+2. Build CLI:
+
+```powershell
+npm run build
+```
+
+3. Inspect catalog and repo health:
+
+```powershell
+node dist\cli\apx.js doctor
+node dist\cli\apx.js list
+```
+
+4. Copy or print only what you need. Default `apx install` mode is dry-run.
 
 ## Recommended Workflow
 
-- Start with one skill at a time.
+- Start with one asset at a time.
 - Prefer project-local or user-local installs for optional tools.
+- Prefer dry-run first:
+
+```powershell
+node dist\cli\apx.js install markitdown-file-intake --target codex --dry-run
+node dist\cli\apx.js mcp print github-local --target claude-code
+```
+
 - Run validators after editing repo content:
 
 ```powershell
