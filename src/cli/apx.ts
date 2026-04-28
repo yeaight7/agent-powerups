@@ -11,7 +11,7 @@ import { runInfoCommand } from "./commands/info.js";
 import { runInstallCommand } from "./commands/install.js";
 import { runListCommand } from "./commands/list.js";
 import { runMcpCheckCommand, runMcpListCommand, runMcpPrintCommand, runMcpWriteCommand } from "./commands/mcp.js";
-import { runPluginBuildCommand, runPluginValidateCommand } from "./commands/plugin.js";
+import { runPluginBuildCommand, runPluginDiffCommand, runPluginValidateCommand } from "./commands/plugin.js";
 import { runShipCheckCommand } from "./commands/run-command.js";
 import { hasFlag, parseOption, parseOptions } from "./utils/args.js";
 import { ALLOWED_TYPES, CatalogError, createCatalogService } from "./utils/catalog.js";
@@ -30,7 +30,7 @@ apx list
 apx list --type <${ALLOWED_TYPES.join("|")}>
 apx info <asset-name>
 apx check [asset-name]
-apx doctor
+apx doctor [--full] [--json]
 apx ask <claude|gemini> <prompt> [--artifact-dir <path>] [--json]
 apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--dest <path>]
 apx mcp list
@@ -48,6 +48,7 @@ apx workflows print <workflow-name>
 apx mcp check <config-name> --target <${INSTALL_TARGETS.join("|")}> [--json]
 apx mcp write <config-name> --target <${INSTALL_TARGETS.join("|")}> --dest <path> [--force] [--json]
 apx plugin validate <plugin-path> [--json]
+apx plugin diff <plugin-path> [--json]
 apx plugin build --dest <path> (--dry-run|--write) [--json]`;
 
 function getPackageVersion(): string {
@@ -133,25 +134,7 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
     }
 
     if (command === "doctor") {
-      const output = await runDoctorCommand(service, io.cwd);
-      if (json) {
-        const warningsLine = output
-          .split("\n")
-          .find((line) => line.startsWith("warnings:") && line !== "warnings: none");
-        io.stdout(
-          formatResult(
-            createResult({
-              stdout: output,
-              warnings: warningsLine ? [warningsLine.replace("warnings: ", "")] : [],
-              actions: [],
-            }),
-            true,
-          ),
-        );
-      } else {
-        io.stdout(output);
-      }
-      return 0;
+      return writeExecutionResult(io, await runDoctorCommand(service, io.cwd, { full: hasFlag(argv, "--full") }), json);
     }
 
     if (command === "ask") {
@@ -333,6 +316,13 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
           throw new Error("Missing plugin path for plugin validate");
         }
         return writeExecutionResult(io, await runPluginValidateCommand(path.resolve(service.repoRoot, pluginPath)), json);
+      }
+      if (subcommand === "diff") {
+        const pluginPath = argv[2];
+        if (!pluginPath) {
+          throw new Error("Missing plugin path for plugin diff");
+        }
+        return writeExecutionResult(io, await runPluginDiffCommand(service, path.resolve(service.repoRoot, pluginPath)), json);
       }
       if (subcommand === "build") {
         const write = hasFlag(argv, "--write");
