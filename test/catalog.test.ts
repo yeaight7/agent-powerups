@@ -21,3 +21,12 @@ test("finds asset by name", async () => {
   assert.equal(asset.name, "markitdown-file-intake");
   assert.equal(asset.type, "skill");
 });
+
+test("catalog includes first promised asset coverage", async () => {
+  const service = await createCatalogService(repoRoot);
+
+  assert.equal(service.getAsset("ship-check").type, "command");
+  assert.equal(service.getAsset("no-secrets-preflight").type, "hook");
+  assert.equal(service.getAsset("feature-iteration").type, "workflow");
+  assert.equal(service.getAsset("python-library").type, "agents-md-template");
+});
