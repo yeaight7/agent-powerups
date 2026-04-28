@@ -30,3 +30,13 @@ test("catalog includes first promised asset coverage", async () => {
   assert.equal(service.getAsset("feature-iteration").type, "workflow");
   assert.equal(service.getAsset("python-library").type, "agents-md-template");
 });
+
+test("catalog includes executable command and structured mcp metadata", async () => {
+  const service = await createCatalogService(repoRoot);
+  const command = service.getAsset("ship-check");
+  const mcp = service.getAsset("github-local");
+
+  assert.equal(command.run?.kind, "ship-check");
+  assert.deepEqual(mcp.mcp?.required_env, ["GITHUB_TOKEN"]);
+  assert.equal(mcp.mcp?.server_package, "@modelcontextprotocol/server-github");
+});
