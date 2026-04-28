@@ -7,7 +7,9 @@ export interface RequirementStatus {
 }
 
 const INSTALL_HINTS: Record<string, string> = {
+  claude: "Install and configure Claude Code CLI, then run: claude --version",
   markitdown: "python -m pip install markitdown",
+  gemini: "Install and configure Gemini CLI, then run: gemini --version",
   defuddle: "npm install -g defuddle",
   gh: "Install GitHub CLI with your platform package manager.",
 };
