@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 
 export interface RequirementStatus {
   label: string;
+  status: "OK" | "MISSING" | "DECLARED";
   ok: boolean;
   installHint?: string;
 }
@@ -40,17 +41,21 @@ export function checkRequirements(requires?: {
   const statuses: RequirementStatus[] = [];
 
   for (const command of requires.commands ?? []) {
+    const ok = commandAvailable(command);
     statuses.push({
       label: `command:${command}`,
-      ok: commandAvailable(command),
+      status: ok ? "OK" : "MISSING",
+      ok,
       installHint: INSTALL_HINTS[command],
     });
   }
 
   for (const packageName of requires.python_packages ?? []) {
+    const ok = pythonPackageAvailable(packageName);
     statuses.push({
       label: `python:${packageName}`,
-      ok: pythonPackageAvailable(packageName),
+      status: ok ? "OK" : "MISSING",
+      ok,
       installHint: INSTALL_HINTS[packageName],
     });
   }
@@ -58,7 +63,8 @@ export function checkRequirements(requires?: {
   for (const packageName of requires.npm_packages ?? []) {
     statuses.push({
       label: `npm:${packageName}`,
-      ok: false,
+      status: "DECLARED",
+      ok: true,
       installHint: INSTALL_HINTS[packageName],
     });
   }
