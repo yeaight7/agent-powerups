@@ -28,6 +28,11 @@ export async function runInfoCommand(service: CatalogService, assetName: string)
     lines.push(`requirements:\n${formatList(requires)}`);
   }
 
+  if (asset.targets) {
+    const targets = Object.entries(asset.targets).map(([target, targetPath]) => `${target}:${targetPath}`);
+    lines.push(`targets:\n${formatList(targets)}`);
+  }
+
   if (asset.name === "markitdown-file-intake") {
     lines.push("note: uses Microsoft MarkItDown.");
   }
