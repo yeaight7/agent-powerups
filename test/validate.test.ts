@@ -4,8 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { createCatalogService } from "../src/cli/utils/catalog.js";
-import { runValidateSkillsCommand } from "../src/cli/commands/validate.js";
-import { runValidateCatalogCommand } from "../src/cli/commands/validate.js";
+import { runValidateCatalogCommand, runValidateSkillsCommand } from "../src/cli/commands/validate.js";
 
 async function makeTempRepo(): Promise<string> {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "apx-validate-test-"));
@@ -78,6 +77,7 @@ test("validate catalog: passes with consistent Apache-2.0 licenses", async () =>
   const service = await createCatalogService(root);
   const result = await runValidateCatalogCommand(service);
   assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /0 error/i);
 });
 
 test("validate catalog: fails when package.json license mismatches root LICENSE", async () => {

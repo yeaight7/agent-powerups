@@ -139,6 +139,10 @@ async function checkLicenseConsistency(repoRoot: string): Promise<string[]> {
     errors.push("LICENSE file missing");
     return errors;
   }
+  if (rootLicense === "UNKNOWN") {
+    errors.push("LICENSE file contains unrecognized license text");
+    return errors;
+  }
 
   const pkgLicense = await readJsonLicense(path.join(repoRoot, "package.json"));
   if (pkgLicense && pkgLicense !== rootLicense) {
@@ -168,20 +172,15 @@ export async function runValidateCatalogCommand(
   service: CatalogService,
 ): Promise<ExecutionResult> {
   const errors = await checkLicenseConsistency(service.repoRoot);
-  const warnings: string[] = [];
 
   const lines: string[] = [];
-  if (warnings.length) {
-    lines.push(`Warnings (${warnings.length}):`);
-    for (const w of warnings) lines.push(`  WARN  ${w}`);
-  }
   if (errors.length) {
     lines.push(`Errors (${errors.length}):`);
     for (const e of errors) lines.push(`  ERROR ${e}`);
   }
   const ok = errors.length === 0;
   lines.push(
-    `Checked catalog. ${errors.length} error(s), ${warnings.length} warning(s). ${ok ? "OK." : "FAILED."}`,
+    `Checked catalog. ${errors.length} error(s). ${ok ? "OK." : "FAILED."}`,
   );
 
   return createResult({ exitCode: ok ? 0 : 1, stdout: lines.join("\n") });
