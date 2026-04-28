@@ -67,3 +67,23 @@ Rules:
 - Omit `requires` when no external tool is needed.
 - Keep requirement names literal and machine-checkable.
 - Document matching check/install/fallback behavior in the asset itself when the dependency is workflow-critical.
+
+## Optional `targets`
+
+Use `targets` when one logical asset has target-specific files:
+
+```json
+{
+  "targets": {
+    "codex": "mcp/codex/github-local.toml",
+    "claude-code": "mcp/claude-code/github-local.json",
+    "generic": "mcp/generic/github-local.json"
+  }
+}
+```
+
+Rules:
+
+- Keys limited to `codex`, `claude-code`, and `generic`.
+- Values must point to existing files in repo.
+- `targets` does not imply automatic install or config mutation.
