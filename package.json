@@ -1,0 +1,23 @@
+{
+  "name": "agent-powerups",
+  "version": "0.1.0",
+  "description": "Minimal CLI for browsing, validating, and safely dry-run installing agent powerups.",
+  "type": "module",
+  "bin": {
+    "apx": "dist/src/cli/apx.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test dist/test/**/*.test.js"
+  },
+  "dependencies": {
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.2",
+    "typescript": "^5.9.3"
+  }
+}
