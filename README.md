@@ -7,7 +7,7 @@ Agent Powerups is an Oh My Zsh-style collection of reusable skills, slash comman
 Today, this repo ships:
 
 - reusable skills
-- safe local CLI (`apx`)
+- safe local CLI (`apx`) with runnable local checks
 - validation and requirement-check scripts
 - first local MCP config snippets
 - first command, hook, workflow, and AGENTS.md templates
@@ -20,12 +20,12 @@ Everything else stays conservative. No global mutation. No hidden install hooks.
 | Path | Status | Notes |
 |------|--------|-------|
 | `skills/` | shipped | Reusable agent workflows such as `systematic-debugging` and `writing-plans` |
-| `mcp/` | shipped | Local-first MCP config snippets for manual review and copy |
+| `mcp/` | shipped | Local-first MCP config snippets for checking and explicit writes |
 | `agents-md/` | shipped | Starter AGENTS.md templates |
-| `commands/` | shipped | Review-first command packs |
-| `hooks/` | shipped | Review-before-use hook examples |
+| `commands/` | shipped | Runnable local command packs |
+| `hooks/` | shipped | Runnable local hook checks |
 | `workflows/` | shipped | Scenario guides |
-| `plugins/` | experimental | Local-only plugin layout, not verified marketplace support |
+| `plugins/` | experimental | Local-only plugin layout with deterministic build/validate commands |
 | `scripts/` | shipped | Validation and tool-check helpers for this repo |
 | `examples/` | planned | Placeholder for future platform examples |
 
@@ -54,6 +54,9 @@ node dist/cli/apx.js doctor
 ```sh
 node dist/cli/apx.js list
 node dist/cli/apx.js info markitdown-file-intake
+node dist/cli/apx.js commands run ship-check
+node dist/cli/apx.js hooks run no-secrets-preflight --all
+node dist/cli/apx.js mcp check github-local --target generic
 ```
 
 5. Check deps without installing:
@@ -181,14 +184,20 @@ Extra surfaces:
 ```sh
 node dist/cli/apx.js mcp list
 node dist/cli/apx.js mcp print github-local --target claude-code
+node dist/cli/apx.js mcp check github-local --target claude-code --json
+node dist/cli/apx.js mcp write github-local --target generic --dest .agent-powerups/github-local.json
 node dist/cli/apx.js agents-md list
 node dist/cli/apx.js agents-md print typescript-app
 node dist/cli/apx.js commands list
 node dist/cli/apx.js commands print ship-check --target generic
+node dist/cli/apx.js commands run ship-check --full
 node dist/cli/apx.js hooks list
 node dist/cli/apx.js hooks print no-secrets-preflight
+node dist/cli/apx.js hooks run no-secrets-preflight --path README.md
 node dist/cli/apx.js workflows list
 node dist/cli/apx.js workflows print feature-iteration
+node dist/cli/apx.js plugin validate plugins/agent-powerups
+node dist/cli/apx.js plugin build --dest plugins/agent-powerups --dry-run
 ```
 
 ## Experimental Plugin Layout
@@ -197,7 +206,8 @@ Local-only. Experimental-only. Not verified marketplace support.
 
 - plugin files live under [`plugins/agent-powerups`](./plugins/agent-powerups)
 - local marketplace example lives under [`.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json)
-- review all files before use
+- use `apx plugin validate plugins/agent-powerups` before use
+- use `apx plugin build --dest plugins/agent-powerups --write` to refresh the local mirror from catalog assets
 - never commit real tokens
 
 ## Safety Warning
