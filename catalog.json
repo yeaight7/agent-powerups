@@ -126,6 +126,15 @@
     "requires": {
       "commands": ["npx"]
     },
+    "mcp": {
+      "required_env": ["GITHUB_TOKEN"],
+      "server_package": "@modelcontextprotocol/server-github",
+      "output_hints": {
+        "generic": ".mcp.json",
+        "claude-code": ".mcp.json",
+        "codex": "config.toml"
+      }
+    },
     "targets": {
       "codex": "mcp/codex/github-local.toml",
       "claude-code": "mcp/claude-code/github-local.json",
@@ -185,6 +194,9 @@
     "compatible_with": ["generic", "claude-code"],
     "tags": ["commands", "validation", "handoff"],
     "maturity": "draft",
+    "run": {
+      "kind": "ship-check"
+    },
     "targets": {
       "generic": "commands/generic/ship-check.md",
       "claude-code": "commands/claude-code/ship-check.md"
