@@ -2,6 +2,7 @@
   "name": "agent-powerups",
   "version": "0.1.0",
   "description": "Local-first CLI for browsing, validating, running, and explicitly writing agent powerups.",
+  "license": "Apache-2.0",
   "type": "module",
   "bin": {
     "apx": "dist/cli/apx.js"
