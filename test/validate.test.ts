@@ -54,3 +54,12 @@ test("validate skills: fails when backtick reference file is missing", async () 
   assert.equal(result.exitCode, 1);
   assert.match(result.stdout, /missing referenced support file/i);
 });
+
+test("validate skills: fails when skill directory has no SKILL.md", async () => {
+  const root = await makeTempRepo();
+  await fs.mkdir(path.join(root, "skills", "emptyskill"), { recursive: true });
+  const service = await createCatalogService(root);
+  const result = await runValidateSkillsCommand(service);
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stdout, /missing SKILL\.md/i);
+});

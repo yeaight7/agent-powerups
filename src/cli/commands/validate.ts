@@ -17,12 +17,12 @@ function parseFrontmatter(content: string): Record<string, string> | null {
 }
 
 function extractFileRefs(content: string): string[] {
-  const refs: string[] = [];
-  for (const m of content.matchAll(/`([^`]+\.[a-zA-Z0-9]+)`/g)) {
-    const ref = m[1];
-    if (ref.includes("/") || ref.includes(".")) refs.push(ref);
+  const refs = new Set<string>();
+  const refRe = /`([^`\s]+\.(?:md|ps1|sh|ts|js|py|json|toml|ya?ml))`/g;
+  for (const m of content.matchAll(refRe)) {
+    refs.add(m[1]);
   }
-  return refs;
+  return [...refs];
 }
 
 async function fileExists(p: string): Promise<boolean> {
@@ -36,25 +36,27 @@ async function fileExists(p: string): Promise<boolean> {
 
 async function validateSkills(
   skillsDir: string,
-): Promise<{ errors: string[]; warnings: string[] }> {
+): Promise<{ errors: string[]; warnings: string[]; checkedCount: number }> {
   const errors: string[] = [];
   const warnings: string[] = [];
+  let checkedCount = 0;
 
   let entries: string[];
   try {
     entries = await fs.readdir(skillsDir);
   } catch {
-    return { errors, warnings };
+    return { errors, warnings, checkedCount };
   }
 
   for (const entry of entries) {
     const skillDir = path.join(skillsDir, entry);
     const stat = await fs.stat(skillDir).catch(() => null);
     if (!stat?.isDirectory()) continue;
+    checkedCount++;
 
     const skillMdPath = path.join(skillDir, "SKILL.md");
     if (!(await fileExists(skillMdPath))) {
-      warnings.push(`[${entry}] missing SKILL.md`);
+      errors.push(`[${entry}] missing SKILL.md`);
       continue;
     }
 
@@ -80,14 +82,14 @@ async function validateSkills(
     }
   }
 
-  return { errors, warnings };
+  return { errors, warnings, checkedCount };
 }
 
 export async function runValidateSkillsCommand(
   service: CatalogService,
 ): Promise<ExecutionResult> {
   const skillsDir = path.join(service.repoRoot, "skills");
-  const { errors, warnings } = await validateSkills(skillsDir);
+  const { errors, warnings, checkedCount } = await validateSkills(skillsDir);
 
   const lines: string[] = [];
   if (warnings.length) {
@@ -100,7 +102,7 @@ export async function runValidateSkillsCommand(
   }
   const ok = errors.length === 0;
   lines.push(
-    `Checked skills. ${errors.length} error(s), ${warnings.length} warning(s). ${ok ? "OK." : "FAILED."}`,
+    `Checked ${checkedCount} skill(s). ${errors.length} error(s), ${warnings.length} warning(s). ${ok ? "OK." : "FAILED."}`,
   );
 
   return createResult({ exitCode: ok ? 0 : 1, stdout: lines.join("\n") });
