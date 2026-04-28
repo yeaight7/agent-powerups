@@ -5,12 +5,17 @@ import { runAgentsMdListCommand, runAgentsMdPrintCommand } from "./commands/agen
 import { runTypedAssetListCommand, runTypedAssetPrintCommand } from "./commands/assets.js";
 import { runCheckCommand } from "./commands/check.js";
 import { runDoctorCommand } from "./commands/doctor.js";
+import { runNoSecretsPreflightCommand } from "./commands/hooks.js";
 import { runInfoCommand } from "./commands/info.js";
 import { runInstallCommand } from "./commands/install.js";
 import { runListCommand } from "./commands/list.js";
-import { runMcpListCommand, runMcpPrintCommand } from "./commands/mcp.js";
+import { runMcpCheckCommand, runMcpListCommand, runMcpPrintCommand, runMcpWriteCommand } from "./commands/mcp.js";
+import { runPluginBuildCommand, runPluginValidateCommand } from "./commands/plugin.js";
+import { runShipCheckCommand } from "./commands/run-command.js";
+import { hasFlag, parseOption, parseOptions } from "./utils/args.js";
 import { ALLOWED_TYPES, CatalogError, createCatalogService } from "./utils/catalog.js";
 import { INSTALL_TARGETS, type InstallTarget } from "./utils/paths.js";
+import { createResult, formatResult, type ExecutionResult } from "./utils/result.js";
 
 export interface CliIO {
   cwd: string;
@@ -32,25 +37,19 @@ apx agents-md list
 apx agents-md print <template-name>
 apx commands list
 apx commands print <command-name> --target <${INSTALL_TARGETS.join("|")}>
+apx commands run ship-check [--full] [--json]
 apx hooks list
 apx hooks print <hook-name>
+apx hooks run no-secrets-preflight [--path <path> | --all] [--json]
 apx workflows list
-apx workflows print <workflow-name>`;
+apx workflows print <workflow-name>
+apx mcp check <config-name> --target <${INSTALL_TARGETS.join("|")}> [--json]
+apx mcp write <config-name> --target <${INSTALL_TARGETS.join("|")}> --dest <path> [--force] [--json]
+apx plugin validate <plugin-path> [--json]
+apx plugin build --dest <path> (--dry-run|--write) [--json]`;
 
 function getPackageVersion(): string {
   return "0.1.0";
-}
-
-function parseOption(argv: string[], name: string): string | undefined {
-  const index = argv.indexOf(name);
-  if (index === -1) {
-    return undefined;
-  }
-  return argv[index + 1];
-}
-
-function hasFlag(argv: string[], name: string): boolean {
-  return argv.includes(name);
 }
 
 function parseTarget(argv: string[]): InstallTarget {
@@ -61,10 +60,27 @@ function parseTarget(argv: string[]): InstallTarget {
   return target as InstallTarget;
 }
 
+function requireOption(argv: string[], name: string): string {
+  const value = parseOption(argv, name);
+  if (!value) {
+    throw new Error(`Missing required option: ${name}`);
+  }
+  return value;
+}
+
+function writeExecutionResult(io: CliIO, result: ExecutionResult, json: boolean): number {
+  io.stdout(formatResult(result, json));
+  if (!json && result.stderr) {
+    io.stderr(result.stderr);
+  }
+  return result.exitCode;
+}
+
 export async function runCli(argv: string[], io: CliIO): Promise<number> {
   try {
     const command = argv[0] ?? "help";
     const repoRoot = io.cwd;
+    const json = hasFlag(argv, "--json");
 
     if (command === "help" || hasFlag(argv, "--help")) {
       io.stdout(HELP_TEXT);
@@ -96,12 +112,43 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
     if (command === "check") {
       const assetName = argv[1];
       const result = await runCheckCommand(service, assetName);
-      io.stdout(result.output);
+      if (json) {
+        io.stdout(
+          formatResult(
+            createResult({
+              exitCode: result.exitCode,
+              stdout: result.output,
+              warnings: result.exitCode === 0 ? [] : ["missing requirements"],
+              actions: [],
+            }),
+            true,
+          ),
+        );
+      } else {
+        io.stdout(result.output);
+      }
       return result.exitCode;
     }
 
     if (command === "doctor") {
-      io.stdout(await runDoctorCommand(service, io.cwd));
+      const output = await runDoctorCommand(service, io.cwd);
+      if (json) {
+        const warningsLine = output
+          .split("\n")
+          .find((line) => line.startsWith("warnings:") && line !== "warnings: none");
+        io.stdout(
+          formatResult(
+            createResult({
+              stdout: output,
+              warnings: warningsLine ? [warningsLine.replace("warnings: ", "")] : [],
+              actions: [],
+            }),
+            true,
+          ),
+        );
+      } else {
+        io.stdout(output);
+      }
       return 0;
     }
 
@@ -133,6 +180,27 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
         }
         io.stdout(await runMcpPrintCommand(service, assetName, parseTarget(argv)));
         return 0;
+      }
+      if (subcommand === "check") {
+        const assetName = argv[2];
+        if (!assetName) {
+          throw new Error("Missing config name for mcp check");
+        }
+        return writeExecutionResult(io, await runMcpCheckCommand(service, assetName, parseTarget(argv)), json);
+      }
+      if (subcommand === "write") {
+        const assetName = argv[2];
+        if (!assetName) {
+          throw new Error("Missing config name for mcp write");
+        }
+        return writeExecutionResult(
+          io,
+          await runMcpWriteCommand(service, assetName, parseTarget(argv), {
+            dest: requireOption(argv, "--dest"),
+            force: hasFlag(argv, "--force"),
+          }),
+          json,
+        );
       }
       throw new Error("Unknown mcp subcommand");
     }
@@ -177,6 +245,13 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
         );
         return 0;
       }
+      if (subcommand === "run") {
+        const assetName = argv[2];
+        if (assetName !== "ship-check") {
+          throw new Error("Unknown runnable command");
+        }
+        return writeExecutionResult(io, await runShipCheckCommand(service, { full: hasFlag(argv, "--full") }), json);
+      }
       throw new Error("Unknown commands subcommand");
     }
 
@@ -201,6 +276,20 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
           ),
         );
         return 0;
+      }
+      if (subcommand === "run") {
+        const assetName = argv[2];
+        if (assetName !== "no-secrets-preflight") {
+          throw new Error("Unknown runnable hook");
+        }
+        return writeExecutionResult(
+          io,
+          await runNoSecretsPreflightCommand(service, {
+            all: hasFlag(argv, "--all"),
+            paths: parseOptions(argv, "--path"),
+          }),
+          json,
+        );
       }
       throw new Error("Unknown hooks subcommand");
     }
@@ -228,6 +317,33 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
         return 0;
       }
       throw new Error("Unknown workflows subcommand");
+    }
+
+    if (command === "plugin") {
+      const subcommand = argv[1];
+      if (subcommand === "validate") {
+        const pluginPath = argv[2];
+        if (!pluginPath) {
+          throw new Error("Missing plugin path for plugin validate");
+        }
+        return writeExecutionResult(io, await runPluginValidateCommand(path.resolve(service.repoRoot, pluginPath)), json);
+      }
+      if (subcommand === "build") {
+        const write = hasFlag(argv, "--write");
+        const dryRun = hasFlag(argv, "--dry-run");
+        if (write === dryRun) {
+          throw new Error("plugin build requires exactly one of --dry-run or --write");
+        }
+        return writeExecutionResult(
+          io,
+          await runPluginBuildCommand(service, {
+            dest: requireOption(argv, "--dest"),
+            write,
+          }),
+          json,
+        );
+      }
+      throw new Error("Unknown plugin subcommand");
     }
 
     throw new Error(`Unknown command: ${command}`);
