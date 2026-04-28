@@ -2,7 +2,7 @@
 
 This repository currently ships one local-first MCP config family: `github-local`.
 
-Use `apx mcp print <config-name> --target <target>` to print snippets for review. Do not paste real tokens into source-controlled files.
+Use `apx mcp print <config-name> --target <target>` to print snippets for review, `apx mcp check` to validate local requirements, and `apx mcp write` to write a snippet to an explicit destination. Do not paste real tokens into source-controlled files.
 
 ## `github-local`
 
@@ -27,18 +27,27 @@ Security implications:
 - review scope and permissions of the token before use
 
 Copy/install instructions:
-1. Print the snippet:
+1. Check local requirements:
+
+```sh
+node dist/cli/apx.js mcp check github-local --target claude-code
+```
+
+2. Print or write the snippet:
 
 ```sh
 node dist/cli/apx.js mcp print github-local --target claude-code
+node dist/cli/apx.js mcp write github-local --target generic --dest .agent-powerups/github-local.json
 ```
 
-2. Copy the printed snippet into your local MCP config by hand.
-3. Replace placeholder values locally.
-4. Keep real tokens out of git.
+3. Copy the printed or written snippet into your local MCP config by hand.
+4. Replace placeholder values locally.
+5. Keep real tokens out of git.
 
-Dry-run recommendation:
-- Prefer `apx mcp print` plus manual review over any automated config change.
+Write safety:
+- `apx mcp write` requires `--dest`.
+- Existing files are not overwritten unless `--force` is provided.
+- No global MCP config is modified by default.
 
 Claude Code note:
 - Native Windows setups may require `cmd /c npx ...` wrapping. The shipped Claude Code snippet already uses that conservative form.
