@@ -83,3 +83,34 @@ test("explicit dry-run reports planned copy", async () => {
   assert.match(result.stdout, /would copy/i);
   assert.match(result.stdout, /systematic-debugging/);
 });
+
+test("mcp list prints available configs", async () => {
+  const result = await execute(["mcp", "list"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /github-local/);
+});
+
+test("mcp print prints target config with safety note", async () => {
+  const result = await execute(["mcp", "print", "github-local", "--target", "claude-code"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /mcpServers/);
+  assert.match(result.stdout, /GITHUB_TOKEN/);
+  assert.match(result.stdout, /does not mutate/i);
+});
+
+test("agents-md list prints available templates", async () => {
+  const result = await execute(["agents-md", "list"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /typescript-app/);
+});
+
+test("agents-md print prints template content", async () => {
+  const result = await execute(["agents-md", "print", "typescript-app"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /AGENTS\.md/);
+  assert.match(result.stdout, /TypeScript/);
+});
