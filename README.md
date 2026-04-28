@@ -47,6 +47,7 @@ npm run build
 
 ```sh
 node dist/cli/apx.js doctor
+node dist/cli/apx.js doctor --full
 ```
 
 4. Browse catalog:
@@ -187,6 +188,7 @@ More detail: [`docs/tool-requirements.md`](./docs/tool-requirements.md) and [`do
 npm install
 npm run build
 node dist/cli/apx.js doctor
+node dist/cli/apx.js doctor --full --json
 node dist/cli/apx.js list
 node dist/cli/apx.js info markitdown-file-intake
 node dist/cli/apx.js check markitdown-file-intake
@@ -213,6 +215,7 @@ node dist/cli/apx.js hooks run no-secrets-preflight --path README.md
 node dist/cli/apx.js workflows list
 node dist/cli/apx.js workflows print feature-iteration
 node dist/cli/apx.js plugin validate plugins/agent-powerups
+node dist/cli/apx.js plugin diff plugins/agent-powerups
 node dist/cli/apx.js plugin build --dest plugins/agent-powerups --dry-run
 ```
 
@@ -229,6 +232,7 @@ Local-only. Experimental-only. Not verified marketplace support.
 - plugin files live under [`plugins/agent-powerups`](./plugins/agent-powerups)
 - local marketplace example lives under [`.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json)
 - use `apx plugin validate plugins/agent-powerups` before use
+- use `apx plugin diff plugins/agent-powerups` to detect drift from catalog-backed root assets
 - use `apx plugin build --dest plugins/agent-powerups --write` to refresh the local mirror from catalog assets
 - never commit real tokens
 
