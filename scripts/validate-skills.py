@@ -7,7 +7,7 @@ import os
 import re
 import sys
 
-REPO_ROOT = os.path.dirname(os.path.dirname(__file__))
+REPO_ROOT = os.environ.get("APX_REPO_ROOT", os.path.dirname(os.path.dirname(__file__)))
 SKILLS_DIR = os.path.join(REPO_ROOT, "skills")
 REQUIRED_FRONTMATTER_FIELDS = ["name", "description"]
 RECOMMENDED_SECTIONS = [
@@ -22,6 +22,32 @@ RECOMMENDED_SECTIONS = [
 
 errors: list[str] = []
 warnings: list[str] = []
+
+
+def referenced_support_files(content: str) -> list[str]:
+    refs: set[str] = set()
+    for match in re.finditer(
+        r"`([^`\r\n]+\.(?:md|ps1|sh|ts|js|py|json|toml|ya?ml))`",
+        content,
+        re.IGNORECASE,
+    ):
+        ref = match.group(1).replace("\\", "/")
+        ref = re.sub(r"^\./", "", ref)
+        if ref.startswith(("references/", "examples/")) or "/" not in ref:
+            refs.add(ref)
+    return sorted(refs)
+
+
+def support_ref_exists(skill_dir: str, ref: str) -> bool:
+    if "/" in ref:
+        candidates = [os.path.join(skill_dir, *ref.split("/"))]
+    else:
+        candidates = [
+            os.path.join(skill_dir, ref),
+            os.path.join(skill_dir, "references", ref),
+            os.path.join(skill_dir, "examples", ref),
+        ]
+    return any(os.path.exists(candidate) for candidate in candidates)
 
 
 def parse_frontmatter(content: str) -> dict[str, str] | None:
@@ -80,6 +106,10 @@ def check_skill(skill_dir: str) -> None:
         pattern = rf"^##\s+{re.escape(section)}\s*$"
         if not re.search(pattern, content, re.MULTILINE):
             warnings.append(f"[{skill_name}] missing recommended section: ## {section}")
+
+    for ref in referenced_support_files(content):
+        if not support_ref_exists(skill_dir, ref):
+            errors.append(f"[{skill_name}] missing referenced support file: {ref}")
 
 
 def main() -> int:
