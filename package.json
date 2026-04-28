@@ -1,7 +1,7 @@
 {
   "name": "agent-powerups",
   "version": "0.1.0",
-  "description": "Minimal CLI for browsing, validating, and safely dry-run installing agent powerups.",
+  "description": "Local-first CLI for browsing, validating, running, and explicitly writing agent powerups.",
   "type": "module",
   "bin": {
     "apx": "dist/cli/apx.js"
