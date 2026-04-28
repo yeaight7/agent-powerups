@@ -7,7 +7,7 @@ import json
 import os
 import sys
 
-REPO_ROOT = os.path.dirname(os.path.dirname(__file__))
+REPO_ROOT = os.environ.get("APX_REPO_ROOT", os.path.dirname(os.path.dirname(__file__)))
 CATALOG_PATH = os.path.join(REPO_ROOT, "catalog.json")
 SKILLS_DIR = os.path.join(REPO_ROOT, "skills")
 SCRIPTS_DIR = os.path.join(REPO_ROOT, "scripts")
@@ -15,6 +15,9 @@ COMMANDS_DIR = os.path.join(REPO_ROOT, "commands")
 HOOKS_DIR = os.path.join(REPO_ROOT, "hooks")
 WORKFLOWS_DIR = os.path.join(REPO_ROOT, "workflows")
 AGENTS_MD_DIR = os.path.join(REPO_ROOT, "agents-md")
+PACKAGE_JSON_PATH = os.path.join(REPO_ROOT, "package.json")
+LICENSE_PATH = os.path.join(REPO_ROOT, "LICENSE")
+PLUGIN_JSON_PATH = os.path.join(REPO_ROOT, "plugins", "agent-powerups", ".codex-plugin", "plugin.json")
 
 REQUIRED_FIELDS = ["name", "type", "summary", "path", "compatible_with", "tags", "maturity"]
 ALLOWED_TYPES = {
@@ -33,10 +36,28 @@ ALLOWED_COMPATIBLE = {"claude-code", "codex", "gemini-cli", "cursor", "generic"}
 ALLOWED_REQUIRE_KEYS = {"commands", "python_packages", "npm_packages"}
 ALLOWED_TARGET_KEYS = {"codex", "claude-code", "generic"}
 ALLOWED_RUN_KINDS = {"ship-check"}
-ALLOWED_MCP_KEYS = {"required_env", "server_package", "output_hints"}
+ALLOWED_MCP_KEYS = {"required_env", "server_package", "warning", "output_hints"}
 
 errors: list[str] = []
 warnings: list[str] = []
+
+
+def detect_root_license() -> str:
+    if not os.path.isfile(LICENSE_PATH):
+        return "MISSING"
+    with open(LICENSE_PATH, encoding="utf-8") as handle:
+        content = handle.read()
+    if "Apache License" in content and "Version 2.0" in content:
+        return "Apache-2.0"
+    return "UNKNOWN"
+
+
+def load_json_file(path: str) -> dict:
+    with open(path, encoding="utf-8") as handle:
+        data = json.load(handle)
+    if not isinstance(data, dict):
+        raise ValueError(f"{path} must contain a JSON object")
+    return data
 
 
 def load_catalog() -> list[dict]:
@@ -229,6 +250,34 @@ def validate_asset_coverage(catalog: list[dict]) -> None:
                 errors.append(f"[{entry}] AGENTS.md template exists but has no catalog entry")
 
 
+def validate_license_consistency() -> None:
+    root_license = detect_root_license()
+    if root_license != "Apache-2.0":
+        errors.append(f"[LICENSE] expected Apache-2.0-compatible LICENSE, found {root_license}")
+
+    if os.path.isfile(PACKAGE_JSON_PATH):
+        try:
+            package_json = load_json_file(PACKAGE_JSON_PATH)
+        except (json.JSONDecodeError, ValueError) as exc:
+            errors.append(f"[package.json] invalid JSON: {exc}")
+        else:
+            if package_json.get("license") != root_license:
+                errors.append(
+                    f"[package.json] license mismatch: expected {root_license}, found {package_json.get('license', 'missing')}"
+                )
+
+    if os.path.isfile(PLUGIN_JSON_PATH):
+        try:
+            plugin_json = load_json_file(PLUGIN_JSON_PATH)
+        except (json.JSONDecodeError, ValueError) as exc:
+            errors.append(f"[plugin.json] invalid JSON: {exc}")
+        else:
+            if plugin_json.get("license") != root_license:
+                errors.append(
+                    f"[plugin.json] license mismatch: expected {root_license}, found {plugin_json.get('license', 'missing')}"
+                )
+
+
 def main() -> int:
     if not os.path.isfile(CATALOG_PATH):
         print(f"ERROR: catalog.json not found at {CATALOG_PATH}")
@@ -245,6 +294,7 @@ def main() -> int:
         validate_entry(index, entry, seen_names)
 
     validate_asset_coverage(catalog)
+    validate_license_consistency()
 
     if warnings:
         print(f"Warnings ({len(warnings)}):")
