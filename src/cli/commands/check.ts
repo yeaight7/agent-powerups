@@ -24,11 +24,11 @@ export async function runCheckCommand(service: CatalogService, assetName?: strin
     }
 
     const details = statuses.map((status) => {
-      const suffix = status.ok ? "OK" : "MISSING";
+      const suffix = status.status;
       const hint = status.ok || !status.installHint ? "" : ` | install: ${status.installHint}`;
       return `${status.label}=${suffix}${hint}`;
     });
-    const hasFailures = statuses.some((status) => !status.ok);
+    const hasFailures = statuses.some((status) => status.status === "MISSING");
     if (hasFailures) {
       failures += 1;
     }
