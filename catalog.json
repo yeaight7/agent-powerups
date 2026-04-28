@@ -116,6 +116,30 @@
     }
   },
   {
+    "name": "ask-claude",
+    "type": "skill",
+    "summary": "Ask Claude through the local Claude CLI and save a reusable artifact.",
+    "path": "skills/ask-claude",
+    "compatible_with": ["codex", "generic"],
+    "tags": ["claude", "cli", "second-opinion", "artifacts"],
+    "maturity": "draft",
+    "requires": {
+      "commands": ["claude"]
+    }
+  },
+  {
+    "name": "ask-gemini",
+    "type": "skill",
+    "summary": "Ask Gemini through the local Gemini CLI and save a reusable artifact.",
+    "path": "skills/ask-gemini",
+    "compatible_with": ["codex", "generic"],
+    "tags": ["gemini", "cli", "second-opinion", "artifacts"],
+    "maturity": "draft",
+    "requires": {
+      "commands": ["gemini"]
+    }
+  },
+  {
     "name": "github-local",
     "type": "mcp-config",
     "summary": "Local GitHub MCP config snippets for Codex, Claude Code, and generic clients.",
