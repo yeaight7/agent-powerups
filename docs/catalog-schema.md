@@ -111,12 +111,13 @@ Use `mcp` to document machine-checkable MCP requirements:
 
 ```json
 {
-  "mcp": {
-    "required_env": ["GITHUB_TOKEN"],
-    "server_package": "@modelcontextprotocol/server-github",
-    "output_hints": {
-      "generic": ".mcp.json"
-    }
+    "mcp": {
+      "required_env": ["GITHUB_TOKEN"],
+      "server_package": "@modelcontextprotocol/server-github",
+      "warning": "Verify upstream package status before public use.",
+      "output_hints": {
+        "generic": ".mcp.json"
+      }
   }
 }
 ```
