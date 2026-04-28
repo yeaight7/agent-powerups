@@ -2,6 +2,7 @@
 import path from "node:path";
 
 import { runAgentsMdListCommand, runAgentsMdPrintCommand } from "./commands/agents-md.js";
+import { runAskCommand } from "./commands/ask.js";
 import { runTypedAssetListCommand, runTypedAssetPrintCommand } from "./commands/assets.js";
 import { runCheckCommand } from "./commands/check.js";
 import { runDoctorCommand } from "./commands/doctor.js";
@@ -30,6 +31,7 @@ apx list --type <${ALLOWED_TYPES.join("|")}>
 apx info <asset-name>
 apx check [asset-name]
 apx doctor
+apx ask <claude|gemini> <prompt> [--artifact-dir <path>] [--json]
 apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--dest <path>]
 apx mcp list
 apx mcp print <config-name> --target <${INSTALL_TARGETS.join("|")}>
@@ -150,6 +152,10 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
         io.stdout(output);
       }
       return 0;
+    }
+
+    if (command === "ask") {
+      return writeExecutionResult(io, await runAskCommand(service, argv), json);
     }
 
     if (command === "install") {
