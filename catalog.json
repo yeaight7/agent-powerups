@@ -116,6 +116,32 @@
     }
   },
   {
+    "name": "github-local",
+    "type": "mcp-config",
+    "summary": "Local GitHub MCP config snippets for Codex, Claude Code, and generic clients.",
+    "path": "mcp/generic/github-local.json",
+    "compatible_with": ["generic"],
+    "tags": ["mcp", "github", "local", "experimental"],
+    "maturity": "draft",
+    "requires": {
+      "commands": ["npx"]
+    },
+    "targets": {
+      "codex": "mcp/codex/github-local.toml",
+      "claude-code": "mcp/claude-code/github-local.json",
+      "generic": "mcp/generic/github-local.json"
+    }
+  },
+  {
+    "name": "typescript-app",
+    "type": "agents-md-template",
+    "summary": "Starter AGENTS.md template for a TypeScript application repository.",
+    "path": "agents-md/typescript-app/AGENTS.md",
+    "compatible_with": ["generic"],
+    "tags": ["agents-md", "typescript", "template"],
+    "maturity": "draft"
+  },
+  {
     "name": "validate-skills",
     "type": "script",
     "summary": "Validate that every skill folder has a non-empty SKILL.md with required frontmatter.",
