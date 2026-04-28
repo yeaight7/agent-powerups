@@ -13,6 +13,38 @@ Most assets in this repo are plain text and require no extra tooling. A small nu
 
 ## Current Tool-Dependent Skills
 
+### `ask-claude`
+
+Required tool:
+- Claude Code CLI (`claude`)
+
+Check:
+
+```powershell
+Get-Command claude -ErrorAction SilentlyContinue
+claude --version
+```
+
+Fallback:
+- Tell the user Claude CLI is missing or unauthenticated.
+- Do not route through MCP.
+
+### `ask-gemini`
+
+Required tool:
+- Gemini CLI (`gemini`)
+
+Check:
+
+```powershell
+Get-Command gemini -ErrorAction SilentlyContinue
+gemini --version
+```
+
+Fallback:
+- Tell the user Gemini CLI is missing or unauthenticated.
+- Do not route through MCP.
+
 ### `markitdown-file-intake`
 
 Required tool:
