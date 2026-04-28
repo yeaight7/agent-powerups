@@ -142,6 +142,73 @@
     "maturity": "draft"
   },
   {
+    "name": "python-library",
+    "type": "agents-md-template",
+    "summary": "Starter AGENTS.md template for a Python library repository.",
+    "path": "agents-md/python-library/AGENTS.md",
+    "compatible_with": ["generic"],
+    "tags": ["agents-md", "python", "template"],
+    "maturity": "draft"
+  },
+  {
+    "name": "dbt-project",
+    "type": "agents-md-template",
+    "summary": "Starter AGENTS.md template for a dbt project.",
+    "path": "agents-md/dbt-project/AGENTS.md",
+    "compatible_with": ["generic"],
+    "tags": ["agents-md", "dbt", "template"],
+    "maturity": "draft"
+  },
+  {
+    "name": "ml-project",
+    "type": "agents-md-template",
+    "summary": "Starter AGENTS.md template for a machine learning project.",
+    "path": "agents-md/ml-project/AGENTS.md",
+    "compatible_with": ["generic"],
+    "tags": ["agents-md", "ml", "template"],
+    "maturity": "draft"
+  },
+  {
+    "name": "open-source-maintainer",
+    "type": "agents-md-template",
+    "summary": "Starter AGENTS.md template for open source maintainer workflows.",
+    "path": "agents-md/open-source-maintainer/AGENTS.md",
+    "compatible_with": ["generic"],
+    "tags": ["agents-md", "maintainer", "template"],
+    "maturity": "draft"
+  },
+  {
+    "name": "ship-check",
+    "type": "command",
+    "summary": "Manual pre-handoff command checklist for validating and reporting changes.",
+    "path": "commands/generic/ship-check.md",
+    "compatible_with": ["generic", "claude-code"],
+    "tags": ["commands", "validation", "handoff"],
+    "maturity": "draft",
+    "targets": {
+      "generic": "commands/generic/ship-check.md",
+      "claude-code": "commands/claude-code/ship-check.md"
+    }
+  },
+  {
+    "name": "no-secrets-preflight",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for blocking obvious secret leaks.",
+    "path": "hooks/safety/no-secrets-preflight.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "safety", "secrets"],
+    "maturity": "draft"
+  },
+  {
+    "name": "feature-iteration",
+    "type": "workflow",
+    "summary": "Small test-first workflow for shipping one asset or CLI behavior at a time.",
+    "path": "workflows/feature-iteration.md",
+    "compatible_with": ["generic"],
+    "tags": ["workflows", "planning", "testing"],
+    "maturity": "draft"
+  },
+  {
     "name": "validate-skills",
     "type": "script",
     "summary": "Validate that every skill folder has a non-empty SKILL.md with required frontmatter.",
