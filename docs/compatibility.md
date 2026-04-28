@@ -1,6 +1,6 @@
 # Compatibility
 
-Agent Powerups currently ships generic skills and Python helper scripts. It does not yet ship public command packs, MCP recipes, hooks, AGENTS.md templates, workflows, or examples beyond placeholders.
+Agent Powerups currently ships generic skills, Python helper scripts, one local MCP config family, one AGENTS.md template, and an experimental local plugin layout. It still does not ship public command packs, hooks, workflows, or examples beyond placeholders.
 
 ## Compatibility Rules
 
@@ -35,11 +35,11 @@ Platform-specific labels (`claude-code`, `codex`) are additive signals. A skill 
 
 | Surface | Concrete shipped assets | Claim level |
 |---------|-------------------------|-------------|
-| Claude Code | generic root skills | limited |
-| Codex | generic root skills, repo scripts | limited |
+| Claude Code | generic root skills, `github-local` MCP snippet | limited |
+| Codex | generic root skills, repo scripts, experimental `github-local` MCP snippet | limited |
 | Gemini CLI | generic root skills only | limited |
 | Cursor | generic root skills only | limited |
-| Generic | root skills and Python scripts | primary |
+| Generic | root skills, Python scripts, AGENTS.md template, generic MCP snippet | primary |
 
 ## Tool Dependencies
 
@@ -50,3 +50,9 @@ Examples:
 - `markitdown-file-intake` depends on Microsoft MarkItDown
 - `defuddle` depends on Defuddle CLI
 - `pr-triage` can optionally use `gh`
+
+## Experimental Areas
+
+- `plugins/agent-powerups` is local-only and experimental.
+- `.agents/plugins/marketplace.json` is example metadata, not verified marketplace support.
+- `mcp/codex/github-local.toml` is manual-review output, not automatic Codex config integration.
