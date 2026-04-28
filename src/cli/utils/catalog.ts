@@ -36,6 +36,18 @@ const catalogEntrySchema = z.object({
       generic: z.string().min(1).optional(),
     })
     .optional(),
+  run: z
+    .object({
+      kind: z.enum(["ship-check"]),
+    })
+    .optional(),
+  mcp: z
+    .object({
+      required_env: z.array(z.string().min(1)).optional(),
+      server_package: z.string().min(1).optional(),
+      output_hints: z.record(z.string().min(1)).optional(),
+    })
+    .optional(),
 });
 
 const catalogSchema = z.array(catalogEntrySchema);
