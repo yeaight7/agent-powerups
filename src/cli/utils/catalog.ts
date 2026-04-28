@@ -45,6 +45,7 @@ const catalogEntrySchema = z.object({
     .object({
       required_env: z.array(z.string().min(1)).optional(),
       server_package: z.string().min(1).optional(),
+      warning: z.string().min(1).optional(),
       output_hints: z.record(z.string().min(1)).optional(),
     })
     .optional(),
