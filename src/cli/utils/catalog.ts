@@ -29,6 +29,13 @@ const catalogEntrySchema = z.object({
       npm_packages: z.array(z.string().min(1)).optional(),
     })
     .optional(),
+  targets: z
+    .object({
+      codex: z.string().min(1).optional(),
+      "claude-code": z.string().min(1).optional(),
+      generic: z.string().min(1).optional(),
+    })
+    .optional(),
 });
 
 const catalogSchema = z.array(catalogEntrySchema);
@@ -125,6 +132,15 @@ export async function createCatalogService(startPath: string): Promise<CatalogSe
       await fs.access(fullPath);
     } catch {
       throw new CatalogError(`referenced asset path is missing: ${asset.path}`);
+    }
+
+    for (const variantPath of Object.values(asset.targets ?? {})) {
+      const fullVariantPath = path.resolve(repoRoot, variantPath);
+      try {
+        await fs.access(fullVariantPath);
+      } catch {
+        throw new CatalogError(`referenced target asset path is missing: ${variantPath}`);
+      }
     }
   }
 
