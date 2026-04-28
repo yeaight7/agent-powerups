@@ -11,6 +11,10 @@ REPO_ROOT = os.path.dirname(os.path.dirname(__file__))
 CATALOG_PATH = os.path.join(REPO_ROOT, "catalog.json")
 SKILLS_DIR = os.path.join(REPO_ROOT, "skills")
 SCRIPTS_DIR = os.path.join(REPO_ROOT, "scripts")
+COMMANDS_DIR = os.path.join(REPO_ROOT, "commands")
+HOOKS_DIR = os.path.join(REPO_ROOT, "hooks")
+WORKFLOWS_DIR = os.path.join(REPO_ROOT, "workflows")
+AGENTS_MD_DIR = os.path.join(REPO_ROOT, "agents-md")
 
 REQUIRED_FIELDS = ["name", "type", "summary", "path", "compatible_with", "tags", "maturity"]
 ALLOWED_TYPES = {
@@ -129,6 +133,10 @@ def validate_entry(index: int, entry: dict, seen_names: dict[str, int]) -> None:
 
 def validate_asset_coverage(catalog: list[dict]) -> None:
     cataloged_paths = {entry.get("path") for entry in catalog if isinstance(entry, dict)}
+    for entry in catalog:
+        if not isinstance(entry, dict) or not isinstance(entry.get("targets"), dict):
+            continue
+        cataloged_paths.update(entry["targets"].values())
 
     if os.path.isdir(SKILLS_DIR):
         for entry in sorted(os.listdir(SKILLS_DIR)):
@@ -146,6 +154,29 @@ def validate_asset_coverage(catalog: list[dict]) -> None:
             expected = f"scripts/{entry}"
             if expected not in cataloged_paths:
                 warnings.append(f"[{entry}] script exists but has no catalog entry")
+
+    for root_dir, asset_type, suffix in [
+        (COMMANDS_DIR, "command", ".md"),
+        (HOOKS_DIR, "hook", ".md"),
+        (WORKFLOWS_DIR, "workflow", ".md"),
+    ]:
+        if not os.path.isdir(root_dir):
+            continue
+        for current_dir, _, files in os.walk(root_dir):
+            for filename in sorted(files):
+                if filename == ".gitkeep" or not filename.endswith(suffix):
+                    continue
+                full_path = os.path.join(current_dir, filename)
+                rel_path = os.path.relpath(full_path, REPO_ROOT).replace(os.sep, "/")
+                if rel_path not in cataloged_paths:
+                    errors.append(f"[{rel_path}] {asset_type} file exists but has no catalog entry")
+
+    if os.path.isdir(AGENTS_MD_DIR):
+        for entry in sorted(os.listdir(AGENTS_MD_DIR)):
+            expected = f"agents-md/{entry}/AGENTS.md"
+            full_path = os.path.join(REPO_ROOT, expected)
+            if os.path.isfile(full_path) and expected not in cataloged_paths:
+                errors.append(f"[{entry}] AGENTS.md template exists but has no catalog entry")
 
 
 def main() -> int:
