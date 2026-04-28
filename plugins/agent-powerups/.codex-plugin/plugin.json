@@ -1,32 +1,44 @@
 {
   "name": "agent-powerups",
   "version": "0.1.0",
-  "description": "Experimental local plugin layout for Agent Powerups.",
+  "description": "Local-first Agent Powerups bundle.",
   "author": {
     "name": "Agent Powerups",
-    "email": "YOUR_EMAIL_HERE",
+    "email": "maintainers@example.invalid",
     "url": "https://github.com/yeaight7/agent-powerups"
   },
   "homepage": "https://github.com/yeaight7/agent-powerups",
   "repository": "https://github.com/yeaight7/agent-powerups",
   "license": "MIT",
-  "keywords": ["codex", "skills", "mcp", "agents-md", "experimental"],
+  "keywords": [
+    "codex",
+    "skills",
+    "mcp",
+    "agents-md",
+    "commands"
+  ],
   "skills": "./skills/",
+  "commands": "./commands/",
+  "agentsMd": "./agents-md/",
+  "hooks": "./hooks/",
+  "workflows": "./workflows/",
   "mcpServers": "./mcp/",
   "interface": {
     "displayName": "Agent Powerups",
-    "shortDescription": "Experimental local powerups bundle",
-    "longDescription": "Local-only experimental plugin layout for reviewing Agent Powerups assets before any manual installation.",
+    "shortDescription": "Local-first powerups bundle",
+    "longDescription": "Local Agent Powerups assets for explicit review, validation, and manual installation.",
     "developerName": "Agent Powerups",
     "category": "Developer Tools",
-    "capabilities": ["Read"],
+    "capabilities": [
+      "Read"
+    ],
     "websiteURL": "https://github.com/yeaight7/agent-powerups",
     "privacyPolicyURL": "https://github.com/yeaight7/agent-powerups",
     "termsOfServiceURL": "https://github.com/yeaight7/agent-powerups",
     "defaultPrompt": [
-      "List the bundled skills in this local plugin.",
-      "Print the GitHub MCP config snippet.",
-      "Show the TypeScript AGENTS template."
+      "List bundled skills.",
+      "Run ship-check.",
+      "Check the GitHub MCP config."
     ],
     "brandColor": "#2563EB"
   }
