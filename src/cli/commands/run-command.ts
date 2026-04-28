@@ -1,5 +1,4 @@
 import { execFile } from "node:child_process";
-import path from "node:path";
 import { promisify } from "node:util";
 
 import type { CatalogService } from "../utils/catalog.js";
@@ -21,17 +20,25 @@ export interface ShipCheckData {
   checks: CheckRun[];
 }
 
+export function resolveCheckExecutable(
+  command: string,
+  args: string[],
+  platform: NodeJS.Platform = process.platform,
+): { command: string; args: string[] } {
+  if (platform === "win32" && command === "npm") {
+    return { command: "npm.cmd", args };
+  }
+  return { command, args };
+}
+
 async function runCheck(cwd: string, name: string, command: string, args: string[], env = process.env): Promise<CheckRun> {
-  const executable =
-    process.platform === "win32" && command === "npm"
-      ? process.execPath
-      : command;
-  const executableArgs =
-    process.platform === "win32" && command === "npm"
-      ? [path.join(path.dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js"), ...args]
-      : args;
+  const { command: executable, args: executableArgs } = resolveCheckExecutable(command, args);
+  const launchCommand = process.platform === "win32" && executable.endsWith(".cmd") ? "cmd.exe" : executable;
+  const launchArgs = process.platform === "win32" && executable.endsWith(".cmd")
+    ? ["/d", "/s", "/c", executable, ...executableArgs]
+    : executableArgs;
   try {
-    const result = await execFileAsync(executable, executableArgs, {
+    const result = await execFileAsync(launchCommand, launchArgs, {
       cwd,
       env: { ...process.env, ...env },
       shell: false,
