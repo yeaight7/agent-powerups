@@ -23,7 +23,14 @@ node dist\cli\apx.js doctor
 node dist\cli\apx.js list
 ```
 
-4. Copy or print only what you need. Default `apx install` mode is dry-run.
+4. Try local advisor skills when their CLIs are configured:
+
+```powershell
+node dist\cli\apx.js ask claude "Return OK only" --json
+node dist\cli\apx.js ask gemini "Return OK only" --json
+```
+
+5. Copy or print only what you need. Default `apx install` mode is dry-run.
 
 ## Recommended Workflow
 
@@ -33,6 +40,8 @@ node dist\cli\apx.js list
 
 ```powershell
 node dist\cli\apx.js install markitdown-file-intake --target codex --dry-run
+node dist\cli\apx.js install ask-claude --target codex --dry-run
+node dist\cli\apx.js install ask-gemini --target codex --dry-run
 node dist\cli\apx.js mcp print github-local --target claude-code
 node dist\cli\apx.js mcp check github-local --target claude-code --json
 node dist\cli\apx.js mcp write github-local --target generic --dest .agent-powerups\github-local.json
@@ -41,6 +50,8 @@ node dist\cli\apx.js commands run ship-check
 node dist\cli\apx.js hooks print no-secrets-preflight
 node dist\cli\apx.js hooks run no-secrets-preflight --all
 node dist\cli\apx.js workflows print feature-iteration
+node dist\cli\apx.js ask claude "Review this change" --artifact-dir .apx\artifacts --json
+node dist\cli\apx.js ask gemini "List edge cases" --artifact-dir .apx\artifacts --json
 node dist\cli\apx.js plugin validate plugins\agent-powerups
 ```
 
@@ -58,6 +69,8 @@ Install optional tools only when a specific skill requires them.
 Examples:
 
 ```powershell
+claude --version
+gemini --version
 python -m pip install markitdown
 npm install -g defuddle
 ```
@@ -70,6 +83,7 @@ Write-capable commands require an explicit destination or `--write` flag:
 
 ```powershell
 node dist\cli\apx.js mcp write github-local --target generic --dest .agent-powerups\github-local.json
+node dist\cli\apx.js install ask-claude --target codex --dest .agent-powerups\installed\ask-claude
 node dist\cli\apx.js plugin build --dest plugins\agent-powerups --write
 ```
 
