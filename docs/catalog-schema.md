@@ -87,3 +87,36 @@ Rules:
 - Keys limited to `codex`, `claude-code`, and `generic`.
 - Values must point to existing files in repo.
 - `targets` does not imply automatic install or config mutation.
+
+## Optional `run`
+
+Use `run` when a command asset has an executable CLI implementation:
+
+```json
+{
+  "run": {
+    "kind": "ship-check"
+  }
+}
+```
+
+Rules:
+
+- `run.kind` must match a runner implemented by `apx commands run`.
+- Runnable commands must be safe by default and must not commit, push, install tools, or mutate global config.
+
+## Optional `mcp`
+
+Use `mcp` to document machine-checkable MCP requirements:
+
+```json
+{
+  "mcp": {
+    "required_env": ["GITHUB_TOKEN"],
+    "server_package": "@modelcontextprotocol/server-github",
+    "output_hints": {
+      "generic": ".mcp.json"
+    }
+  }
+}
+```
