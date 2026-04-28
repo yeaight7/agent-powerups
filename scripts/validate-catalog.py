@@ -7,7 +7,9 @@ import json
 import os
 import sys
 
-REPO_ROOT = os.environ.get("APX_REPO_ROOT", os.path.dirname(os.path.dirname(__file__)))
+REPO_ROOT = os.environ.get("APX_REPO_ROOT") or os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))
+)
 CATALOG_PATH = os.path.join(REPO_ROOT, "catalog.json")
 SKILLS_DIR = os.path.join(REPO_ROOT, "skills")
 SCRIPTS_DIR = os.path.join(REPO_ROOT, "scripts")

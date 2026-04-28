@@ -7,7 +7,9 @@ import os
 import re
 import sys
 
-REPO_ROOT = os.environ.get("APX_REPO_ROOT", os.path.dirname(os.path.dirname(__file__)))
+REPO_ROOT = os.environ.get("APX_REPO_ROOT") or os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))
+)
 SKILLS_DIR = os.path.join(REPO_ROOT, "skills")
 REQUIRED_FRONTMATTER_FIELDS = ["name", "description"]
 RECOMMENDED_SECTIONS = [
