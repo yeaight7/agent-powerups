@@ -18,6 +18,10 @@ Required command/package:
 - `npx`
 - `@modelcontextprotocol/server-github`
 
+Upstream status:
+- `@modelcontextprotocol/server-github` is deprecated on npm. This config remains local/demo-compatible, but public docs and production setups should verify current guidance in `github/github-mcp-server`.
+- GitHub currently recommends the remote GitHub MCP server for most users when host support exists.
+
 Required environment variables:
 - `GITHUB_TOKEN=${GITHUB_TOKEN}`
 
