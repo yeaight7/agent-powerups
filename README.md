@@ -59,19 +59,29 @@ node dist/cli/apx.js hooks run no-secrets-preflight --all
 node dist/cli/apx.js mcp check github-local --target generic
 ```
 
-5. Check deps without installing:
+5. Try a local advisor CLI and save an artifact:
+
+```sh
+node dist/cli/apx.js ask claude "Return OK only" --json
+node dist/cli/apx.js ask gemini "Return OK only" --json
+```
+
+6. Check deps without installing:
 
 ```sh
 node dist/cli/apx.js check markitdown-file-intake
+node dist/cli/apx.js check ask-claude
+node dist/cli/apx.js check ask-gemini
 ```
 
-6. Dry-run safe install:
+7. Dry-run safe install:
 
 ```sh
 node dist/cli/apx.js install markitdown-file-intake --target codex --dry-run
+node dist/cli/apx.js install ask-claude --target codex --dry-run
 ```
 
-7. Keep repo validation in loop:
+8. Keep repo validation in loop:
 
 ```sh
 python scripts/validate-skills.py
@@ -95,6 +105,8 @@ Current shipped skills:
 - `safe-refactor`
 - `defuddle`
 - `markitdown-file-intake`
+- `ask-claude`
+- `ask-gemini`
 
 Current shipped scripts:
 
@@ -154,6 +166,8 @@ Current optional external tools used by shipped skills:
 
 | Skill | Tool | Required | Install |
 |-------|------|----------|---------|
+| `ask-claude` | Claude Code CLI (`claude`) | yes for local advisor workflow | install/configure Claude Code CLI |
+| `ask-gemini` | Gemini CLI (`gemini`) | yes for local advisor workflow | install/configure Gemini CLI |
 | `markitdown-file-intake` | Microsoft MarkItDown (`markitdown`) | yes for conversion workflow | `python -m pip install markitdown` |
 | `defuddle` | Defuddle CLI (`defuddle`) | yes for Defuddle workflow | `npm install -g defuddle` |
 | `pr-triage` | GitHub CLI (`gh`) | optional | platform package manager |
@@ -176,6 +190,8 @@ node dist/cli/apx.js doctor
 node dist/cli/apx.js list
 node dist/cli/apx.js info markitdown-file-intake
 node dist/cli/apx.js check markitdown-file-intake
+node dist/cli/apx.js ask claude "Review this patch" --json
+node dist/cli/apx.js ask gemini "Brainstorm test cases" --json
 node dist/cli/apx.js install markitdown-file-intake --target codex --dry-run
 ```
 
@@ -198,6 +214,12 @@ node dist/cli/apx.js workflows list
 node dist/cli/apx.js workflows print feature-iteration
 node dist/cli/apx.js plugin validate plugins/agent-powerups
 node dist/cli/apx.js plugin build --dest plugins/agent-powerups --dry-run
+```
+
+To explicitly copy a skill into a local Codex-visible folder, choose the destination yourself:
+
+```sh
+node dist/cli/apx.js install ask-claude --target codex --dest .agent-powerups/installed/ask-claude
 ```
 
 ## Experimental Plugin Layout
