@@ -18,6 +18,11 @@ export interface PluginBuildData {
   dryRun: boolean;
 }
 
+export interface PluginDiffData {
+  pluginPath: string;
+  diffs: string[];
+}
+
 async function readJson(filePath: string): Promise<any> {
   const raw = await fs.readFile(filePath, "utf8");
   return JSON.parse(raw);
@@ -43,6 +48,29 @@ async function hasFiles(dirPath: string): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+async function fileExists(filePath: string): Promise<boolean> {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function walkFiles(root: string): Promise<string[]> {
+  const entries = await fs.readdir(root, { withFileTypes: true });
+  const files: string[] = [];
+  for (const entry of entries) {
+    const fullPath = path.join(root, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await walkFiles(fullPath)));
+    } else if (entry.isFile()) {
+      files.push(fullPath);
+    }
+  }
+  return files;
 }
 
 function pluginJsonPath(pluginPath: string): string {
@@ -109,6 +137,17 @@ function pluginAssetCopies(service: CatalogService, dest: string): Array<{ sourc
       source: path.resolve(service.repoRoot, item.source),
       destination: path.resolve(dest, item.destination),
     }));
+}
+
+async function compareFiles(source: string, destination: string, label: string, diffs: string[]): Promise<void> {
+  if (!(await fileExists(destination))) {
+    diffs.push(`missing ${label}`);
+    return;
+  }
+  const [sourceContent, destinationContent] = await Promise.all([fs.readFile(source), fs.readFile(destination)]);
+  if (!sourceContent.equals(destinationContent)) {
+    diffs.push(`changed ${label}`);
+  }
 }
 
 export async function runPluginValidateCommand(pluginPathInput: string): Promise<ExecutionResult<PluginValidateData>> {
@@ -178,6 +217,53 @@ export async function runPluginBuildCommand(
     data: {
       dest,
       dryRun: !options.write,
+    },
+  });
+}
+
+export async function runPluginDiffCommand(
+  service: CatalogService,
+  pluginPathInput: string,
+): Promise<ExecutionResult<PluginDiffData>> {
+  const pluginPath = path.resolve(pluginPathInput);
+  const diffs: string[] = [];
+  const expectedPluginJson = `${JSON.stringify(defaultPluginJson(), null, 2)}\n`;
+  const actualPluginJsonPath = pluginJsonPath(pluginPath);
+
+  if (!(await fileExists(actualPluginJsonPath))) {
+    diffs.push("missing .codex-plugin/plugin.json");
+  } else {
+    const actualPluginJson = await fs.readFile(actualPluginJsonPath, "utf8");
+    if (actualPluginJson !== expectedPluginJson) {
+      diffs.push("changed .codex-plugin/plugin.json");
+    }
+  }
+
+  for (const copy of pluginAssetCopies(service, pluginPath)) {
+    const sourceStats = await fs.stat(copy.source);
+    if (sourceStats.isDirectory()) {
+      const sourceFiles = await walkFiles(copy.source);
+      for (const sourceFile of sourceFiles) {
+        const relativeFile = path.relative(copy.source, sourceFile);
+        const destinationFile = path.join(copy.destination, relativeFile);
+        const label = path.relative(pluginPath, destinationFile).replaceAll("\\", "/");
+        await compareFiles(sourceFile, destinationFile, label, diffs);
+      }
+      continue;
+    }
+
+    const label = path.relative(pluginPath, copy.destination).replaceAll("\\", "/");
+    await compareFiles(copy.source, copy.destination, label, diffs);
+  }
+
+  return createResult({
+    exitCode: diffs.length > 0 ? 1 : 0,
+    stdout: diffs.length > 0 ? `plugin diff failed: ${diffs.length} difference(s)` : "plugin diff clean",
+    warnings: [],
+    actions: [],
+    data: {
+      pluginPath,
+      diffs,
     },
   });
 }
