@@ -153,6 +153,7 @@
     "mcp": {
       "required_env": ["GITHUB_TOKEN"],
       "server_package": "@modelcontextprotocol/server-github",
+      "warning": "@modelcontextprotocol/server-github is deprecated on npm. For public docs, verify current guidance in github/github-mcp-server; GitHub recommends the remote MCP server for most users.",
       "output_hints": {
         "generic": ".mcp.json",
         "claude-code": ".mcp.json",
