@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 import path from "node:path";
 
+import { runAgentsMdListCommand, runAgentsMdPrintCommand } from "./commands/agents-md.js";
 import { runCheckCommand } from "./commands/check.js";
 import { runDoctorCommand } from "./commands/doctor.js";
 import { runInfoCommand } from "./commands/info.js";
 import { runInstallCommand } from "./commands/install.js";
 import { runListCommand } from "./commands/list.js";
+import { runMcpListCommand, runMcpPrintCommand } from "./commands/mcp.js";
 import { ALLOWED_TYPES, CatalogError, createCatalogService } from "./utils/catalog.js";
 import { INSTALL_TARGETS, type InstallTarget } from "./utils/paths.js";
 
@@ -22,7 +24,11 @@ apx list --type <${ALLOWED_TYPES.join("|")}>
 apx info <asset-name>
 apx check [asset-name]
 apx doctor
-apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--dest <path>]`;
+apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--dest <path>]
+apx mcp list
+apx mcp print <config-name> --target <${INSTALL_TARGETS.join("|")}>
+apx agents-md list
+apx agents-md print <template-name>`;
 
 function getPackageVersion(): string {
   return "0.1.0";
@@ -105,6 +111,40 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
       });
       io.stdout(result.output);
       return result.exitCode;
+    }
+
+    if (command === "mcp") {
+      const subcommand = argv[1];
+      if (subcommand === "list") {
+        io.stdout(runMcpListCommand(service));
+        return 0;
+      }
+      if (subcommand === "print") {
+        const assetName = argv[2];
+        if (!assetName) {
+          throw new Error("Missing config name for mcp print");
+        }
+        io.stdout(await runMcpPrintCommand(service, assetName, parseTarget(argv)));
+        return 0;
+      }
+      throw new Error("Unknown mcp subcommand");
+    }
+
+    if (command === "agents-md") {
+      const subcommand = argv[1];
+      if (subcommand === "list") {
+        io.stdout(runAgentsMdListCommand(service));
+        return 0;
+      }
+      if (subcommand === "print") {
+        const assetName = argv[2];
+        if (!assetName) {
+          throw new Error("Missing template name for agents-md print");
+        }
+        io.stdout(await runAgentsMdPrintCommand(service, assetName));
+        return 0;
+      }
+      throw new Error("Unknown agents-md subcommand");
     }
 
     throw new Error(`Unknown command: ${command}`);
