@@ -61,7 +61,7 @@ function defaultPluginJson() {
     },
     homepage: "https://github.com/yeaight7/agent-powerups",
     repository: "https://github.com/yeaight7/agent-powerups",
-    license: "MIT",
+    license: "Apache-2.0",
     keywords: ["codex", "skills", "mcp", "agents-md", "commands"],
     skills: "./skills/",
     commands: "./commands/",
