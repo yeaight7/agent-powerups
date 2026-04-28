@@ -32,6 +32,8 @@ ALLOWED_MATURITY = {"draft", "beta", "stable"}
 ALLOWED_COMPATIBLE = {"claude-code", "codex", "gemini-cli", "cursor", "generic"}
 ALLOWED_REQUIRE_KEYS = {"commands", "python_packages", "npm_packages"}
 ALLOWED_TARGET_KEYS = {"codex", "claude-code", "generic"}
+ALLOWED_RUN_KINDS = {"ship-check"}
+ALLOWED_MCP_KEYS = {"required_env", "server_package", "output_hints"}
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -70,7 +72,51 @@ def validate_targets(label: str, targets: object) -> None:
         if key not in ALLOWED_TARGET_KEYS:
             errors.append(f"[{label}] invalid target key '{key}'")
         if not isinstance(value, str) or not value.strip():
-            errors.append(f"[{label}] targets.{key} must be a non-empty string")
+                errors.append(f"[{label}] targets.{key} must be a non-empty string")
+
+
+def validate_run(label: str, run: object) -> None:
+    if not isinstance(run, dict):
+        errors.append(f"[{label}] run must be an object")
+        return
+
+    kind = run.get("kind")
+    if kind not in ALLOWED_RUN_KINDS:
+        errors.append(f"[{label}] invalid run.kind '{kind}'")
+
+
+def validate_mcp(label: str, mcp: object) -> None:
+    if not isinstance(mcp, dict):
+        errors.append(f"[{label}] mcp must be an object")
+        return
+
+    for key in mcp:
+        if key not in ALLOWED_MCP_KEYS:
+            warnings.append(f"[{label}] unknown mcp key: {key}")
+
+    required_env = mcp.get("required_env")
+    if required_env is not None:
+        if not isinstance(required_env, list):
+            errors.append(f"[{label}] mcp.required_env must be an array")
+        else:
+            for env_name in required_env:
+                if not isinstance(env_name, str) or not env_name.strip():
+                    errors.append(f"[{label}] mcp.required_env contains non-string or empty value")
+
+    server_package = mcp.get("server_package")
+    if server_package is not None and (not isinstance(server_package, str) or not server_package.strip()):
+        errors.append(f"[{label}] mcp.server_package must be a non-empty string")
+
+    output_hints = mcp.get("output_hints")
+    if output_hints is not None:
+        if not isinstance(output_hints, dict):
+            errors.append(f"[{label}] mcp.output_hints must be an object")
+        else:
+            for target, hint in output_hints.items():
+                if target not in ALLOWED_TARGET_KEYS:
+                    errors.append(f"[{label}] invalid mcp.output_hints target '{target}'")
+                if not isinstance(hint, str) or not hint.strip():
+                    errors.append(f"[{label}] mcp.output_hints.{target} must be a non-empty string")
 
 
 def validate_entry(index: int, entry: dict, seen_names: dict[str, int]) -> None:
@@ -129,6 +175,10 @@ def validate_entry(index: int, entry: dict, seen_names: dict[str, int]) -> None:
                     full_target_path = os.path.join(REPO_ROOT, target_path)
                     if not os.path.exists(full_target_path):
                         errors.append(f"[{label}] target path does not exist: {target_path}")
+    if "run" in entry:
+        validate_run(label, entry["run"])
+    if "mcp" in entry:
+        validate_mcp(label, entry["mcp"])
 
 
 def validate_asset_coverage(catalog: list[dict]) -> None:
