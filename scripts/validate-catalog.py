@@ -27,6 +27,7 @@ ALLOWED_TYPES = {
 ALLOWED_MATURITY = {"draft", "beta", "stable"}
 ALLOWED_COMPATIBLE = {"claude-code", "codex", "gemini-cli", "cursor", "generic"}
 ALLOWED_REQUIRE_KEYS = {"commands", "python_packages", "npm_packages"}
+ALLOWED_TARGET_KEYS = {"codex", "claude-code", "generic"}
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -54,6 +55,18 @@ def validate_requires(label: str, requires: object) -> None:
         for item in value:
             if not isinstance(item, str) or not item.strip():
                 errors.append(f"[{label}] requires.{key} contains non-string or empty value")
+
+
+def validate_targets(label: str, targets: object) -> None:
+    if not isinstance(targets, dict):
+        errors.append(f"[{label}] targets must be an object")
+        return
+
+    for key, value in targets.items():
+        if key not in ALLOWED_TARGET_KEYS:
+            errors.append(f"[{label}] invalid target key '{key}'")
+        if not isinstance(value, str) or not value.strip():
+            errors.append(f"[{label}] targets.{key} must be a non-empty string")
 
 
 def validate_entry(index: int, entry: dict, seen_names: dict[str, int]) -> None:
@@ -104,6 +117,14 @@ def validate_entry(index: int, entry: dict, seen_names: dict[str, int]) -> None:
 
     if "requires" in entry:
         validate_requires(label, entry["requires"])
+    if "targets" in entry:
+        validate_targets(label, entry["targets"])
+        if isinstance(entry["targets"], dict):
+            for target_path in entry["targets"].values():
+                if isinstance(target_path, str) and target_path:
+                    full_target_path = os.path.join(REPO_ROOT, target_path)
+                    if not os.path.exists(full_target_path):
+                        errors.append(f"[{label}] target path does not exist: {target_path}")
 
 
 def validate_asset_coverage(catalog: list[dict]) -> None:
