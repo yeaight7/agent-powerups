@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { createCatalogService } from "../src/cli/utils/catalog.js";
 import { runValidateSkillsCommand } from "../src/cli/commands/validate.js";
+import { runValidateCatalogCommand } from "../src/cli/commands/validate.js";
 
 async function makeTempRepo(): Promise<string> {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "apx-validate-test-"));
@@ -62,4 +63,30 @@ test("validate skills: fails when skill directory has no SKILL.md", async () => 
   const result = await runValidateSkillsCommand(service);
   assert.equal(result.exitCode, 1);
   assert.match(result.stdout, /missing SKILL\.md/i);
+});
+
+test("validate catalog: passes with consistent Apache-2.0 licenses", async () => {
+  const root = await makeTempRepo();
+  await fs.writeFile(path.join(root, "LICENSE"), "Apache License\nVersion 2.0\n", "utf8");
+  await fs.writeFile(path.join(root, "package.json"), JSON.stringify({ license: "Apache-2.0" }), "utf8");
+  await fs.mkdir(path.join(root, "plugins", "agent-powerups", ".codex-plugin"), { recursive: true });
+  await fs.writeFile(
+    path.join(root, "plugins", "agent-powerups", ".codex-plugin", "plugin.json"),
+    JSON.stringify({ license: "Apache-2.0" }),
+    "utf8",
+  );
+  const service = await createCatalogService(root);
+  const result = await runValidateCatalogCommand(service);
+  assert.equal(result.exitCode, 0);
+});
+
+test("validate catalog: fails when package.json license mismatches root LICENSE", async () => {
+  const root = await makeTempRepo();
+  await fs.writeFile(path.join(root, "LICENSE"), "Apache License\nVersion 2.0\n", "utf8");
+  await fs.writeFile(path.join(root, "package.json"), JSON.stringify({ license: "MIT" }), "utf8");
+  const service = await createCatalogService(root);
+  const result = await runValidateCatalogCommand(service);
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stdout, /license/i);
+  assert.match(result.stdout, /package\.json/i);
 });

@@ -107,3 +107,82 @@ export async function runValidateSkillsCommand(
 
   return createResult({ exitCode: ok ? 0 : 1, stdout: lines.join("\n") });
 }
+
+async function detectRootLicense(repoRoot: string): Promise<string> {
+  const licensePath = path.join(repoRoot, "LICENSE");
+  try {
+    const content = await fs.readFile(licensePath, "utf8");
+    if (content.includes("Apache License") && content.includes("Version 2.0")) return "Apache-2.0";
+    return "UNKNOWN";
+  } catch {
+    return "MISSING";
+  }
+}
+
+async function readJsonLicense(filePath: string): Promise<string | null> {
+  try {
+    const raw = await fs.readFile(filePath, "utf8");
+    const parsed = JSON.parse(raw) as unknown;
+    if (typeof parsed === "object" && parsed !== null && "license" in parsed) {
+      return String((parsed as Record<string, unknown>)["license"]);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function checkLicenseConsistency(repoRoot: string): Promise<string[]> {
+  const errors: string[] = [];
+  const rootLicense = await detectRootLicense(repoRoot);
+  if (rootLicense === "MISSING") {
+    errors.push("LICENSE file missing");
+    return errors;
+  }
+
+  const pkgLicense = await readJsonLicense(path.join(repoRoot, "package.json"));
+  if (pkgLicense && pkgLicense !== rootLicense) {
+    errors.push(`package.json license "${pkgLicense}" does not match root LICENSE "${rootLicense}"`);
+  }
+
+  const pluginJsonPath = path.join(
+    repoRoot,
+    "plugins",
+    "agent-powerups",
+    ".codex-plugin",
+    "plugin.json",
+  );
+  if (await fileExists(pluginJsonPath)) {
+    const pluginLicense = await readJsonLicense(pluginJsonPath);
+    if (pluginLicense && pluginLicense !== rootLicense) {
+      errors.push(
+        `plugins/agent-powerups/.codex-plugin/plugin.json license "${pluginLicense}" does not match root LICENSE "${rootLicense}"`,
+      );
+    }
+  }
+
+  return errors;
+}
+
+export async function runValidateCatalogCommand(
+  service: CatalogService,
+): Promise<ExecutionResult> {
+  const errors = await checkLicenseConsistency(service.repoRoot);
+  const warnings: string[] = [];
+
+  const lines: string[] = [];
+  if (warnings.length) {
+    lines.push(`Warnings (${warnings.length}):`);
+    for (const w of warnings) lines.push(`  WARN  ${w}`);
+  }
+  if (errors.length) {
+    lines.push(`Errors (${errors.length}):`);
+    for (const e of errors) lines.push(`  ERROR ${e}`);
+  }
+  const ok = errors.length === 0;
+  lines.push(
+    `Checked catalog. ${errors.length} error(s), ${warnings.length} warning(s). ${ok ? "OK." : "FAILED."}`,
+  );
+
+  return createResult({ exitCode: ok ? 0 : 1, stdout: lines.join("\n") });
+}
