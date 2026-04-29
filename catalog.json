@@ -356,5 +356,41 @@
     "compatible_with": ["generic"],
     "tags": ["validation", "dependencies", "tooling"],
     "maturity": "beta"
+  },
+  {
+    "name": "relay-gemini",
+    "type": "skill",
+    "summary": "Relay questions and tasks to a persistent local Gemini ACP session with cross-turn context.",
+    "path": "skills/relay-gemini",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["relay", "gemini", "acp", "artifacts"],
+    "maturity": "draft",
+    "requires": {
+      "commands": ["gemini"]
+    }
+  },
+  {
+    "name": "relay-claude",
+    "type": "skill",
+    "summary": "Relay questions and tasks to a local Claude CLI using one-shot subprocesses per ask.",
+    "path": "skills/relay-claude",
+    "compatible_with": ["codex", "gemini-cli", "generic"],
+    "tags": ["relay", "claude", "cli", "artifacts"],
+    "maturity": "draft",
+    "requires": {
+      "commands": ["claude"]
+    }
+  },
+  {
+    "name": "relay-codex",
+    "type": "skill",
+    "summary": "Relay questions and tasks to a local Codex CLI using one-shot subprocesses per ask.",
+    "path": "skills/relay-codex",
+    "compatible_with": ["claude-code", "gemini-cli", "generic"],
+    "tags": ["relay", "codex", "cli", "artifacts"],
+    "maturity": "draft",
+    "requires": {
+      "commands": ["codex"]
+    }
   }
 ]
