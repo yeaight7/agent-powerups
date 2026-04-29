@@ -1,6 +1,6 @@
 # Compatibility
 
-Agent Powerups currently ships generic skills, Python helper scripts, one local MCP config family, starter AGENTS.md templates, review-first command prompts, hook recipes, workflow guides, setup examples, and an experimental local plugin layout. It still does not ship executable hook installers or official platform integrations.
+Agent Powerups currently ships generic skills, Python helper scripts, one verified local GitHub MCP flow, starter AGENTS.md templates, review-first command prompts, hook recipes, workflow guides, setup examples, and an experimental local plugin layout. It still does not ship executable hook installers or broad platform integrations.
 
 ## Compatibility Rules
 
@@ -35,11 +35,11 @@ Platform-specific labels (`claude-code`, `codex`) are additive signals. A skill 
 
 | Surface | Concrete shipped assets | Claim level |
 |---------|-------------------------|-------------|
-| Claude Code | generic root skills, `using-powerups`, `github-local` MCP snippet, `ship-check` command variant, setup example | limited |
-| Codex | generic root skills, `using-powerups`, repo scripts, `ask-claude`/`ask-gemini` local CLI flow, experimental `github-local` MCP snippet, setup example | limited |
+| Claude Code | generic root skills, `using-powerups`, `github-local` MCP check/smoke/install flow, `ship-check` command variant, setup example | limited |
+| Codex | generic root skills, `using-powerups`, repo scripts, `ask-claude`/`ask-gemini` local CLI flow, `github-local` MCP check/smoke/install flow, setup example | limited |
 | Gemini CLI | generic root skills, `using-powerups`, generic setup example; `ask-gemini` invokes Gemini CLI from another local agent | limited |
 | Cursor | generic root skills only | limited |
-| Generic | root skills, Python scripts, AGENTS.md templates, generic MCP snippet, command prompts, hook recipes, workflows, setup examples | primary |
+| Generic | root skills, Python scripts, AGENTS.md templates, generic MCP explicit writes, command prompts, hook recipes, workflows, setup examples | primary |
 
 ## Tool Dependencies
 
@@ -55,5 +55,5 @@ Examples:
 
 - `plugins/agent-powerups` is local-only and experimental.
 - `.agents/plugins/marketplace.json` is example metadata, not verified marketplace support.
-- `mcp/codex/github-local.toml` is manual-review output, not automatic Codex config integration.
+- MCP support is intentionally limited to the Docker-backed official GitHub MCP server.
 - `hooks/` content is review-before-use documentation, not active hook installation.
