@@ -27,10 +27,14 @@ Use local Gemini CLI as an external advisor for brainstorming, design feedback, 
 Run through APX:
 
 ```bash
-apx ask gemini "Brainstorm edge cases for this CLI"
+apx ask-gemini "Brainstorm edge cases for this CLI"
 ```
 
-Equivalent direct CLI call:
+Equivalent nested APX and direct CLI calls:
+
+```bash
+apx ask gemini "Brainstorm edge cases for this CLI"
+```
 
 ```bash
 gemini -p "Brainstorm edge cases for this CLI"
@@ -61,7 +65,8 @@ Artifact sections:
 ## Verification
 
 ```bash
-apx ask gemini "Return OK only" --json
+apx check ask-gemini
+apx ask-gemini "Return OK only" --json
 ```
 
 Confirm JSON includes `provider`, `artifactPath`, `promptLength`, and raw output in `stdout`. Open the artifact before applying advice.
