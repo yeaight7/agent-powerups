@@ -32,9 +32,13 @@ Everything else stays conservative. No global mutation. No hidden install hooks.
 
 ## Quickstart
 
-1. Install deps:
+### Using Source Checkout (Development)
+
+1. Clone and install deps:
 
 ```sh
+git clone https://github.com/yeaight7/agent-powerups.git
+cd agent-powerups
 npm install
 ```
 
