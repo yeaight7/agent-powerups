@@ -30,4 +30,4 @@ More detail: [`docs/security-model.md`](./docs/security-model.md)
 
 ## Reporting
 
-If you find sensitive content or dangerous instructions, open a private maintainer contact or a GitHub issue without posting the sensitive material itself.
+If you find sensitive content or dangerous instructions, please report it privately via GitHub Security Advisories or email the maintainers directly. Do not post sensitive material in public issues.
