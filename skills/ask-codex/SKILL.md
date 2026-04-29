@@ -120,4 +120,11 @@ Artifact should contain:
 
 `apx check ask-codex` verifies whether `codex` is present in PATH.
 
-`apx ask codex` is not implemented in v1. The direct invocation above is the supported path. Wire-up via `apx ask` requires verification of Codex CLI's non-interactive output flag; see the catalog entry notes.
+`apx ask codex` is supported:
+
+```bash
+apx ask codex "Review this function for edge cases"
+apx ask codex "Return OK only" --json
+```
+
+APX passes the prompt as a positional argument (`codex "prompt"`, not `codex -p "prompt"`). This matches the Codex CLI's invocation convention. Verify the output mode with `codex --help` if the captured stdout is empty — some Codex versions open a TUI by default and may require a flag such as `--full-auto` or `-q` for non-interactive output. If that applies, invoke `codex` directly per the workflow above and redirect output manually.
