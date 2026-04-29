@@ -110,13 +110,15 @@ export async function runMcpCheckCommand(
     .map((status) => ({ name: status.label.replace("command:", ""), ok: status.ok }));
   const warnings: string[] = [];
 
-  for (const item of requiredEnv) {
-    if (!item.set) {
-      warnings.push(`missing env:${item.name}`);
-    }
-    const value = env[item.name];
-    if (value && content.includes(value)) {
-      warnings.push(`snippet contains actual env value:${item.name}`);
+  if (asset.name !== "github-local") {
+    for (const item of requiredEnv) {
+      if (!item.set) {
+        warnings.push(`missing env:${item.name}`);
+      }
+      const value = env[item.name];
+      if (value && content.includes(value)) {
+        warnings.push(`snippet contains actual env value:${item.name}`);
+      }
     }
   }
 
@@ -164,8 +166,9 @@ async function runProcessCheck(
   args: string[],
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<{ name: string; exitCode: number; stdout: string; stderr: string }> {
+  const executable = process.platform === "win32" && command === "docker" ? "docker.cmd" : command;
   try {
-    const result = await execFileAsync(command, args, {
+    const result = await execFileAsync(executable, args, {
       env,
       shell: false,
       windowsHide: true,
@@ -359,8 +362,10 @@ export async function runMcpInstallCommand(
     if (!options.dest) {
       throw new Error("mcp install --target generic requires --dest");
     }
-    const writeResult = await runMcpWriteCommand(service, assetName, target, { dest: options.dest, force: options.force });
-    destination = writeResult.data.destination;
+    destination = path.resolve(options.dest);
+    if (!dryRun) {
+      await runMcpWriteCommand(service, assetName, target, { dest: options.dest, force: options.force });
+    }
     result = {
       modifiedFiles: [destination],
       backupFiles: [],
