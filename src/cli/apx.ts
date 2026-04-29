@@ -65,7 +65,7 @@ apx plugin build --dest <path> (--dry-run|--write) [--json]
 apx validate skills
 apx validate catalog
 apx relay init <session-name>
-apx relay start <session-name> [--provider gemini] [--model <model>] [--json]
+apx relay start <session-name> [--provider <gemini|claude|codex>] [--model <model>] [--json]
 apx relay status <session-name> [--json]
 apx relay ask <session-name> <prompt> [--timeout-ms <ms>] [--json]
 apx relay stop <session-name> [--json]`;
