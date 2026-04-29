@@ -14,6 +14,7 @@ import { runMcpCheckCommand, runMcpListCommand, runMcpPrintCommand, runMcpWriteC
 import { runPluginBuildCommand, runPluginDiffCommand, runPluginValidateCommand } from "./commands/plugin.js";
 import { runRelayInitCommand } from "./commands/relay.js";
 import { runShipCheckCommand } from "./commands/run-command.js";
+import { parseSetupAgent, runSetupCommand } from "./commands/setup.js";
 import { runValidateCatalogCommand, runValidateSkillsCommand } from "./commands/validate.js";
 import { hasFlag, parseOption, parseOptions } from "./utils/args.js";
 import { ALLOWED_TYPES, CatalogError, createCatalogService } from "./utils/catalog.js";
@@ -35,6 +36,7 @@ apx check [asset-name]
 apx doctor [--full] [--json]
 apx ask <claude|gemini|codex> <prompt> [--artifact-dir <path>] [--json]
 apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--dest <path>]
+apx setup <codex|claude-code|gemini> [--dry-run|--yes] [--agent-root <path>] [--instructions-file <path>] [--json]
 apx mcp list
 apx mcp print <config-name> --target <${INSTALL_TARGETS.join("|")}>
 apx agents-md list
@@ -159,6 +161,20 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
       });
       io.stdout(result.output);
       return result.exitCode;
+    }
+
+    if (command === "setup") {
+      return writeExecutionResult(
+        io,
+        await runSetupCommand(service, {
+          agent: parseSetupAgent(argv[1]),
+          agentRoot: parseOption(argv, "--agent-root"),
+          instructionsFile: parseOption(argv, "--instructions-file"),
+          dryRun: hasFlag(argv, "--dry-run"),
+          yes: hasFlag(argv, "--yes"),
+        }),
+        json,
+      );
     }
 
     if (command === "mcp") {

@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { z } from "zod";
 
 export const ALLOWED_TYPES = [
@@ -109,8 +110,17 @@ async function findRepoRoot(startPath: string): Promise<string> {
   }
 }
 
+async function findBundledRoot(): Promise<string> {
+  return findRepoRoot(path.dirname(fileURLToPath(import.meta.url)));
+}
+
 export async function createCatalogService(startPath: string): Promise<CatalogService> {
-  const repoRoot = await findRepoRoot(startPath);
+  let repoRoot: string;
+  try {
+    repoRoot = await findRepoRoot(startPath);
+  } catch {
+    repoRoot = await findBundledRoot();
+  }
   const catalogPath = path.resolve(repoRoot, "catalog.json");
 
   let raw: string;

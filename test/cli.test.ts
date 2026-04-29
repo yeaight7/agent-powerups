@@ -27,6 +27,23 @@ async function execute(argv: string[]) {
   };
 }
 
+async function executeInCwd(argv: string[], cwd: string) {
+  const stdout: string[] = [];
+  const stderr: string[] = [];
+
+  const exitCode = await runCli(argv, {
+    cwd,
+    stdout: (line: string) => stdout.push(line),
+    stderr: (line: string) => stderr.push(line),
+  });
+
+  return {
+    exitCode,
+    stdout: stdout.join("\n"),
+    stderr: stderr.join("\n"),
+  };
+}
+
 async function tempPath(name: string): Promise<string> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-test-"));
   return path.join(dir, name);
@@ -65,6 +82,14 @@ async function executeWithPath(argv: string[], commandDir: string) {
 
 test("list prints catalog assets", async () => {
   const result = await execute(["list"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /systematic-debugging/);
+});
+
+test("list works from outside the repository", async () => {
+  const cwd = await fs.mkdtemp(path.join(os.tmpdir(), "apx-outside-"));
+  const result = await executeInCwd(["list"], cwd);
 
   assert.equal(result.exitCode, 0);
   assert.match(result.stdout, /systematic-debugging/);
@@ -409,6 +434,96 @@ test("mcp write requires explicit destination and refuses overwrite", async () =
   assert.match(second.stderr, /Destination already exists/);
 });
 
+test("setup dry-run is default and reports planned Codex actions without writing", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-setup-codex-"));
+  const result = await execute(["setup", "codex", "--agent-root", agentRoot, "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.agent, "codex");
+  assert.equal(json.data.dryRun, true);
+  assert.match(json.stdout, /setup dry-run: codex/);
+  assert.ok(json.data.createdDirectories.some((item: string) => item.endsWith("agent-powerups")));
+  assert.ok(json.data.manualSteps.some((item: string) => item.includes("AGENTS.md")));
+  await assert.rejects(fs.access(path.join(agentRoot, "agent-powerups")));
+});
+
+test("setup dry-run supports Claude Code and Gemini", async () => {
+  const claudeRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-setup-claude-"));
+  const geminiRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-setup-gemini-"));
+
+  const claude = await execute(["setup", "claude-code", "--agent-root", claudeRoot, "--dry-run", "--json"]);
+  const gemini = await execute(["setup", "gemini", "--agent-root", geminiRoot, "--dry-run", "--json"]);
+
+  assert.equal(claude.exitCode, 0);
+  assert.equal(parseJson(claude.stdout).data.agent, "claude-code");
+  assert.match(parseJson(claude.stdout).stdout, /setup dry-run: claude-code/);
+
+  assert.equal(gemini.exitCode, 0);
+  assert.equal(parseJson(gemini.stdout).data.agent, "gemini");
+  assert.match(parseJson(gemini.stdout).stdout, /setup dry-run: gemini/);
+});
+
+test("setup --yes creates agent directories and copies assets", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-setup-apply-"));
+  const result = await execute(["setup", "codex", "--agent-root", agentRoot, "--yes", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.dryRun, false);
+  assert.match(json.stdout, /setup complete: codex/);
+  await fs.access(path.join(agentRoot, "agent-powerups", "skills", "systematic-debugging", "SKILL.md"));
+  await fs.access(path.join(agentRoot, "agent-powerups", "commands", "generic", "ship-check.md"));
+  await fs.access(path.join(agentRoot, "agent-powerups", "mcp", "codex", "github-local.toml"));
+  await fs.access(path.join(agentRoot, "agent-powerups", "instructions", "agent-powerups.md"));
+});
+
+test("setup updates an existing instruction file with backup and idempotent block", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-setup-instructions-"));
+  const instructionsFile = path.join(agentRoot, "AGENTS.md");
+  await fs.writeFile(instructionsFile, "# Existing instructions\n", "utf8");
+
+  const first = await execute([
+    "setup",
+    "codex",
+    "--agent-root",
+    agentRoot,
+    "--instructions-file",
+    instructionsFile,
+    "--yes",
+    "--json",
+  ]);
+  assert.equal(first.exitCode, 0);
+  const firstJson = parseJson(first.stdout);
+  assert.equal(firstJson.data.modifiedFiles.length, 1);
+  assert.equal(firstJson.data.backupFiles.length, 1);
+
+  const second = await execute([
+    "setup",
+    "codex",
+    "--agent-root",
+    agentRoot,
+    "--instructions-file",
+    instructionsFile,
+    "--yes",
+    "--json",
+  ]);
+  assert.equal(second.exitCode, 0);
+  const secondJson = parseJson(second.stdout);
+  assert.equal(secondJson.data.modifiedFiles.length, 0);
+
+  const content = await fs.readFile(instructionsFile, "utf8");
+  assert.equal((content.match(/BEGIN agent-powerups/g) ?? []).length, 1);
+  await fs.access(firstJson.data.backupFiles[0]);
+});
+
+test("setup refuses conflicting dry-run and confirmation flags", async () => {
+  const result = await execute(["setup", "codex", "--dry-run", "--yes"]);
+
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stderr, /cannot combine --dry-run and --yes/i);
+});
+
 test("plugin validate accepts built plugin output", async () => {
   const dest = await fs.mkdtemp(path.join(os.tmpdir(), "apx-plugin-validate-"));
   await execute(["plugin", "build", "--dest", dest, "--write"]);
@@ -473,7 +588,8 @@ test("plugin diff detects mirrored asset drift", async () => {
 });
 
 test("relay init creates context.md and reports session path", async () => {
-  const result = await execute(["relay", "init", "test-session-42"]);
+  const cwd = await fs.mkdtemp(path.join(os.tmpdir(), "apx-relay-"));
+  const result = await executeInCwd(["relay", "init", "test-session-42"], cwd);
 
   assert.equal(result.exitCode, 0);
   assert.match(result.stdout, /test-session-42/);
@@ -485,15 +601,17 @@ test("relay init creates context.md and reports session path", async () => {
 });
 
 test("relay init rejects invalid session name", async () => {
-  const result = await execute(["relay", "init", "BAD NAME"]);
+  const cwd = await fs.mkdtemp(path.join(os.tmpdir(), "apx-relay-"));
+  const result = await executeInCwd(["relay", "init", "BAD NAME"], cwd);
 
   assert.equal(result.exitCode, 1);
   assert.match(result.stderr, /lowercase/i);
 });
 
 test("relay init rejects duplicate session", async () => {
-  await execute(["relay", "init", "dupe-session"]);
-  const second = await execute(["relay", "init", "dupe-session"]);
+  const cwd = await fs.mkdtemp(path.join(os.tmpdir(), "apx-relay-"));
+  await executeInCwd(["relay", "init", "dupe-session"], cwd);
+  const second = await executeInCwd(["relay", "init", "dupe-session"], cwd);
 
   assert.equal(second.exitCode, 1);
   assert.match(second.stderr, /already exists/i);
