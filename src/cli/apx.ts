@@ -12,6 +12,7 @@ import { runInstallCommand } from "./commands/install.js";
 import { runListCommand } from "./commands/list.js";
 import { runMcpCheckCommand, runMcpListCommand, runMcpPrintCommand, runMcpWriteCommand } from "./commands/mcp.js";
 import { runPluginBuildCommand, runPluginDiffCommand, runPluginValidateCommand } from "./commands/plugin.js";
+import { runRelayInitCommand } from "./commands/relay.js";
 import { runShipCheckCommand } from "./commands/run-command.js";
 import { runValidateCatalogCommand, runValidateSkillsCommand } from "./commands/validate.js";
 import { hasFlag, parseOption, parseOptions } from "./utils/args.js";
@@ -52,7 +53,8 @@ apx plugin validate <plugin-path> [--json]
 apx plugin diff <plugin-path> [--json]
 apx plugin build --dest <path> (--dry-run|--write) [--json]
 apx validate skills
-apx validate catalog`;
+apx validate catalog
+apx relay init <session-name>`;
 
 function getPackageVersion(): string {
   return "0.1.0";
@@ -320,6 +322,18 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
         return writeExecutionResult(io, await runValidateCatalogCommand(service), json);
       }
       throw new Error("Unknown validate subcommand. Use: apx validate skills | apx validate catalog");
+    }
+
+    if (command === "relay") {
+      const subcommand = argv[1];
+      if (subcommand === "init") {
+        const sessionName = argv[2];
+        if (!sessionName) {
+          throw new Error("Missing session name for relay init");
+        }
+        return writeExecutionResult(io, await runRelayInitCommand(repoRoot, sessionName), json);
+      }
+      throw new Error("Unknown relay subcommand. Use: apx relay init <session-name>");
     }
 
     if (command === "plugin") {
