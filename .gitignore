@@ -7,3 +7,5 @@ dist/
 .worktrees/
 plugins/
 .remember/
+graphify-out/
+.obsidian/
