@@ -33,6 +33,7 @@ apx list
 apx list --type skill
 apx list --type command
 apx list --type mcp-config
+apx using-powerups
 ```
 
 If `apx` is unavailable, inspect local folders: `skills/`, `commands/`, `mcp/`, `agents-md/`, `hooks/`, `workflows/`.
@@ -47,7 +48,7 @@ Prefer the narrowest asset whose description matches the current task. Examples:
 | implementation spec | planning skill |
 | file or URL intake | file-intake skill |
 | pre-handoff validation | command |
-| local config snippet | MCP config |
+| local MCP setup | MCP config |
 | repo instruction baseline | AGENTS.md template |
 
 3. Read before using.
@@ -63,11 +64,11 @@ Then read the asset file. Do not rely only on the catalog summary.
 
 4. Check requirements.
 
-If `apx check` reports a missing command or package, stop and say exactly what is missing. Ask before installing anything. Do not pretend conversion, fetch, review, or CLI delegation happened when the tool was unavailable.
+If `apx check` reports a missing command or package, stop and say exactly what is missing. Use `apx check <asset> --install-missing --dry-run` to preview supported installers. Ask before running `--install-missing --yes`. Do not pretend conversion, fetch, review, or CLI delegation happened when the tool was unavailable.
 
 5. Apply conservatively.
 
-Follow the asset instructions. Keep scope local to the user task. For MCP configs and hooks, treat snippets as review-before-use; do not enable them automatically.
+Follow the asset instructions. Keep scope local to the user task. For GitHub MCP, use `apx mcp check github-local`, `apx mcp smoke github-local`, then `apx mcp install github-local --target <agent> --dry-run` before any `--yes` install. For hooks, treat recipes as review-before-use; do not enable them automatically.
 
 6. Report use.
 
