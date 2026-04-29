@@ -140,6 +140,18 @@
     }
   },
   {
+    "name": "ask-codex",
+    "type": "skill",
+    "summary": "Ask Codex through the local Codex CLI and save a reusable artifact.",
+    "path": "skills/ask-codex",
+    "compatible_with": ["claude-code", "generic"],
+    "tags": ["codex", "cli", "second-opinion", "artifacts"],
+    "maturity": "draft",
+    "requires": {
+      "commands": ["codex"]
+    }
+  },
+  {
     "name": "github-local",
     "type": "mcp-config",
     "summary": "Local GitHub MCP config snippets for Codex, Claude Code, and generic clients.",
