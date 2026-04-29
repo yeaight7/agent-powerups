@@ -1,4 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import net from "node:net";
 import path from "node:path";
@@ -34,6 +35,7 @@ interface RelayState {
   repoRoot: string;
   startedAt: string;
   updatedAt: string;
+  token: string;
 }
 
 interface RelayStartData {
@@ -77,7 +79,7 @@ interface AcpMessage {
   error?: { code: number; message: string; data?: unknown };
 }
 
-interface RelayBackend {
+export interface RelayBackend {
   prompt(prompt: string, timeoutMs: number): Promise<{ text: string; stopReason: string }>;
   close(): void;
 }
@@ -338,69 +340,7 @@ class GeminiAcpClient {
   }
 }
 
-class SubprocessClient implements RelayBackend {
-  constructor(
-    private readonly commandPath: string,
-    private readonly buildArgs: (prompt: string) => string[],
-    private readonly log: (line: string) => void,
-  ) {}
 
-  async prompt(prompt: string, timeoutMs: number): Promise<{ text: string; stopReason: string }> {
-    return new Promise((resolve, reject) => {
-      const args = this.buildArgs(prompt);
-      const isWindowsScript =
-        process.platform === "win32" && /\.(?:cmd|bat)$/i.test(this.commandPath);
-
-      const child: ChildProcessWithoutNullStreams = isWindowsScript
-        ? spawnWindowsScript(this.commandPath, args)
-        : spawn(this.commandPath, args, {
-            env: { ...process.env, TERM: "xterm-256color", COLORTERM: "truecolor" },
-            windowsHide: true,
-          });
-
-      const chunks: string[] = [];
-
-      child.stdout.on("data", (chunk: Buffer) => chunks.push(chunk.toString()));
-      child.stderr.on("data", (chunk: Buffer) => this.log(chunk.toString().trimEnd()));
-
-      const timer = setTimeout(() => {
-        child.kill("SIGTERM");
-        reject(new Error(`Subprocess timed out after ${timeoutMs}ms`));
-      }, timeoutMs);
-
-      child.on("exit", (code, signal) => {
-        clearTimeout(timer);
-        if (signal === "SIGTERM") return;
-        resolve({
-          text: chunks.join("").trim(),
-          stopReason: code === 0 ? "end_turn" : `exit_${code ?? "unknown"}`,
-        });
-      });
-
-      child.on("error", (err) => {
-        clearTimeout(timer);
-        reject(err);
-      });
-    });
-  }
-
-  close(): void {
-    // no-op
-  }
-}
-
-const SUBPROCESS_PROVIDERS = {
-  claude: {
-    command: "claude",
-    displayName: "Claude",
-    buildArgs: (prompt: string) => ["-p", prompt],
-  },
-  codex: {
-    command: "codex",
-    displayName: "Codex",
-    buildArgs: (prompt: string) => [prompt],
-  },
-} as const;
 
 async function sendDaemonRequest<T>(
   state: RelayState,
@@ -416,7 +356,7 @@ async function sendDaemonRequest<T>(
     }, timeoutMs);
 
     socket.on("connect", () => {
-      socket.write(`${JSON.stringify(request)}\n`);
+      socket.write(`${JSON.stringify({ ...request, token: state.token })}\n`);
     });
     socket.on("data", (chunk) => {
       buffer += chunk.toString();
@@ -735,6 +675,16 @@ async function buildRelayBackend(
   model: string | undefined,
   log: (line: string) => void,
 ): Promise<{ backend: RelayBackend; acpSessionId: string }> {
+  if (provider === "claude") {
+    const { buildClaudeRelayBackend } = await import("./relay-claude.js");
+    return buildClaudeRelayBackend(repoRoot, model, log);
+  }
+
+  if (provider === "codex") {
+    const { buildCodexRelayBackend } = await import("./relay-codex.js");
+    return buildCodexRelayBackend(repoRoot, model, log);
+  }
+
   if (provider === "gemini") {
     const commandPath = await resolveCommand("gemini");
     if (!commandPath) {
@@ -763,17 +713,7 @@ async function buildRelayBackend(
     };
   }
 
-  const spec = SUBPROCESS_PROVIDERS[provider];
-  const commandPath = await resolveCommand(spec.command);
-
-  if (!commandPath) {
-    throw new Error(`Local ${spec.displayName} CLI required. Verify: ${spec.command} --version`);
-  }
-
-  return {
-    backend: new SubprocessClient(commandPath, spec.buildArgs, log),
-    acpSessionId: "",
-  };
+  throw new Error(`Unsupported provider: ${provider}`);
 }
 
 export async function runRelayDaemonCommand(repoRoot: string, argv: string[]): Promise<ExecutionResult> {
@@ -831,6 +771,7 @@ export async function runRelayDaemonCommand(repoRoot: string, argv: string[]): P
     repoRoot,
     startedAt: now,
     updatedAt: now,
+    token,
   });
 
   await new Promise<void>((resolve) => {
