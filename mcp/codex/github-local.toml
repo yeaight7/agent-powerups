@@ -1,6 +1,6 @@
-[mcp_servers.github-local]
-command = "npx"
-args = ["-y", "@modelcontextprotocol/server-github"]
+[mcpServers.github-local]
+command = "docker"
+args = ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"]
 
-[mcp_servers.github-local.env]
-GITHUB_TOKEN = "${GITHUB_TOKEN}"
+[mcpServers.github-local.env]
+GITHUB_PERSONAL_ACCESS_TOKEN = "${GITHUB_TOKEN}"

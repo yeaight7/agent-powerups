@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "github": {
+    "github-local": {
       "command": "docker",
       "args": [
         "run",
