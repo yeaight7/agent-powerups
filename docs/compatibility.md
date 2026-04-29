@@ -1,6 +1,6 @@
 # Compatibility
 
-Agent Powerups currently ships generic skills, Python helper scripts, one local MCP config family, starter AGENTS.md templates, one review-first command pack, one hook recipe, one workflow guide, and an experimental local plugin layout. It still does not ship executable hook installers or platform examples beyond placeholders.
+Agent Powerups currently ships generic skills, Python helper scripts, one local MCP config family, starter AGENTS.md templates, review-first command prompts, hook recipes, workflow guides, setup examples, and an experimental local plugin layout. It still does not ship executable hook installers or official platform integrations.
 
 ## Compatibility Rules
 
@@ -35,11 +35,11 @@ Platform-specific labels (`claude-code`, `codex`) are additive signals. A skill 
 
 | Surface | Concrete shipped assets | Claim level |
 |---------|-------------------------|-------------|
-| Claude Code | generic root skills, `github-local` MCP snippet, `ship-check` command variant | limited |
-| Codex | generic root skills, repo scripts, `ask-claude`/`ask-gemini` local CLI flow, experimental `github-local` MCP snippet | limited |
-| Gemini CLI | generic root skills only; `ask-gemini` invokes Gemini CLI from another local agent | limited |
+| Claude Code | generic root skills, `using-powerups`, `github-local` MCP snippet, `ship-check` command variant, setup example | limited |
+| Codex | generic root skills, `using-powerups`, repo scripts, `ask-claude`/`ask-gemini` local CLI flow, experimental `github-local` MCP snippet, setup example | limited |
+| Gemini CLI | generic root skills, `using-powerups`, generic setup example; `ask-gemini` invokes Gemini CLI from another local agent | limited |
 | Cursor | generic root skills only | limited |
-| Generic | root skills, Python scripts, AGENTS.md templates, generic MCP snippet, command prompts, hook recipes, workflows | primary |
+| Generic | root skills, Python scripts, AGENTS.md templates, generic MCP snippet, command prompts, hook recipes, workflows, setup examples | primary |
 
 ## Tool Dependencies
 

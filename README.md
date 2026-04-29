@@ -10,7 +10,7 @@ Today, this repo ships:
 - safe local CLI (`apx`) with runnable local checks
 - validation and requirement-check scripts
 - first local MCP config snippets
-- first command, hook, workflow, and AGENTS.md templates
+- command, hook, workflow, examples, and AGENTS.md templates
 - experimental local plugin layout
 
 Everything else stays conservative. No global mutation. No hidden install hooks. No fake marketplace claims.
@@ -22,12 +22,12 @@ Everything else stays conservative. No global mutation. No hidden install hooks.
 | `skills/` | shipped | Reusable agent workflows such as `systematic-debugging` and `writing-plans` |
 | `mcp/` | shipped | Local-first MCP config snippets for checking and explicit writes |
 | `agents-md/` | shipped | Starter AGENTS.md templates |
-| `commands/` | shipped | Runnable local command packs |
-| `hooks/` | shipped | Runnable local hook checks |
+| `commands/` | shipped | Review-first command prompts plus safe runnable checks |
+| `hooks/` | shipped | Review-before-use hook recipes plus safe runnable checks |
 | `workflows/` | shipped | Scenario guides |
 | `plugins/` | experimental | Local-only plugin layout with deterministic build/validate commands |
 | `scripts/` | shipped | Validation and tool-check helpers for this repo |
-| `examples/` | planned | Placeholder for future platform examples |
+| `examples/` | shipped | Minimal safe setup examples |
 
 ## Quickstart
 
@@ -128,6 +128,8 @@ Current shipped skills:
 - `markitdown-file-intake`
 - `ask-claude`
 - `ask-gemini`
+- `ask-codex`
+- `using-powerups`
 
 Current shipped scripts:
 
@@ -150,10 +152,19 @@ Current shipped AGENTS.md templates:
 Current shipped command packs:
 
 - `ship-check`
+- `using-powerups-command`
 
 Current shipped hook examples:
 
 - `no-secrets-preflight`
+- `handoff-summary`
+- `validation-required`
+
+Current shipped examples:
+
+- `minimal-setup-example`
+- `codex-setup-example`
+- `claude-code-setup-example`
 
 Current shipped workflows:
 
@@ -170,12 +181,12 @@ Compatibility claims in this repo are intentionally narrow:
 | Root `skills/` | yes | Generic text-based skills; some also mention known agent surfaces |
 | `mcp/` | yes | Manual-review config snippets only; Codex output experimental/local |
 | `agents-md/` | yes | Plain text templates |
-| `commands/` | yes | Review-first markdown command prompts; Claude Code target where provided |
+| `commands/` | yes | Review-first markdown command prompts; Claude Code and Codex targets where provided |
 | `hooks/` | yes | Documentation recipes only; not installed automatically |
 | `workflows/` | yes | Plain text scenario guides |
 | `plugins/` | experimental | Local layout only; no official marketplace claim |
 | `scripts/` | yes | Generic Python scripts |
-| `examples/` | no | No support claim yet |
+| `examples/` | yes | Plain text setup examples only |
 
 More detail: [`docs/compatibility.md`](./docs/compatibility.md)
 
