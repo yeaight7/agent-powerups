@@ -148,12 +148,12 @@
     "tags": ["mcp", "github", "local", "experimental"],
     "maturity": "draft",
     "requires": {
-      "commands": ["npx"]
+      "commands": ["docker"]
     },
     "mcp": {
       "required_env": ["GITHUB_TOKEN"],
-      "server_package": "@modelcontextprotocol/server-github",
-      "warning": "@modelcontextprotocol/server-github is deprecated on npm. For public docs, verify current guidance in github/github-mcp-server; GitHub recommends the remote MCP server for most users.",
+      "server_package": "ghcr.io/github/github-mcp-server",
+      "warning": "Requires Docker. Uses ghcr.io/github/github-mcp-server (official). Set GITHUB_TOKEN env var before use.",
       "output_hints": {
         "generic": ".mcp.json",
         "claude-code": ".mcp.json",
