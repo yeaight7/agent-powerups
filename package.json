@@ -4,11 +4,43 @@
   "description": "Local-first CLI for browsing, validating, running, and explicitly writing agent powerups.",
   "license": "Apache-2.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/javierrivero/agent-powerups.git"
+  },
+  "bugs": {
+    "url": "https://github.com/javierrivero/agent-powerups/issues"
+  },
+  "homepage": "https://github.com/javierrivero/agent-powerups#readme",
+  "keywords": [
+    "claude-code",
+    "codex",
+    "ai-agents",
+    "skills",
+    "mcp",
+    "developer-tools",
+    "cli"
+  ],
   "bin": {
     "apx": "dist/cli/apx.js"
   },
   "engines": {
     "node": ">=20"
+  },
+  "files": [
+    "dist/",
+    "skills/",
+    "commands/",
+    "hooks/",
+    "mcp/",
+    "agents-md/",
+    "workflows/",
+    "catalog.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/postbuild-apx-wrapper.mjs",
