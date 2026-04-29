@@ -27,10 +27,14 @@ Use local Claude Code CLI as an external advisor for focused questions, reviews,
 Run through APX:
 
 ```bash
-apx ask claude "Review this patch for correctness"
+apx ask-claude "Review this patch for correctness"
 ```
 
-Equivalent direct CLI call:
+Equivalent nested APX and direct CLI calls:
+
+```bash
+apx ask claude "Review this patch for correctness"
+```
 
 ```bash
 claude -p "Review this patch for correctness"
@@ -61,7 +65,8 @@ Artifact sections:
 ## Verification
 
 ```bash
-apx ask claude "Return OK only" --json
+apx check ask-claude
+apx ask-claude "Return OK only" --json
 ```
 
 Confirm JSON includes `provider`, `artifactPath`, `promptLength`, and raw output in `stdout`. Open the artifact before applying advice.
