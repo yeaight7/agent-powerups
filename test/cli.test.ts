@@ -64,6 +64,74 @@ async function createStubCommand(dir: string, name: string, output: string): Pro
   await fs.chmod(filePath, 0o755);
 }
 
+async function createGeminiWarningStub(dir: string): Promise<void> {
+  if (process.platform === "win32") {
+    await fs.writeFile(
+      path.join(dir, "gemini.cmd"),
+      [
+        "@echo off",
+        "echo Warning: True color (24-bit) support not detected. 1>&2",
+        "echo GEMINI_STUB %*",
+      ].join("\r\n") + "\r\n",
+      "utf8",
+    );
+    return;
+  }
+
+  const filePath = path.join(dir, "gemini");
+  await fs.writeFile(
+    filePath,
+    "#!/bin/sh\necho 'Warning: True color (24-bit) support not detected.' >&2\necho \"GEMINI_STUB $*\"\n",
+    { encoding: "utf8", mode: 0o755 },
+  );
+  await fs.chmod(filePath, 0o755);
+}
+
+async function createGeminiAcpStub(dir: string): Promise<void> {
+  const scriptPath = path.join(dir, "gemini-acp-stub.mjs");
+  await fs.writeFile(
+    scriptPath,
+    [
+      "import readline from 'node:readline';",
+      "if (!process.argv.includes('--acp')) {",
+      "  console.error('expected --acp');",
+      "  process.exit(2);",
+      "}",
+      "const rl = readline.createInterface({ input: process.stdin });",
+      "const write = (message) => process.stdout.write(`${JSON.stringify(message)}\\n`);",
+      "rl.on('line', (line) => {",
+      "  if (!line.trim()) return;",
+      "  const message = JSON.parse(line);",
+      "  if (message.method === 'initialize') {",
+      "    write({ jsonrpc: '2.0', id: message.id, result: { protocolVersion: 1, agentInfo: { name: 'stub-gemini', version: '0.0.0' }, authMethods: [], agentCapabilities: { promptCapabilities: {}, mcpCapabilities: {} } } });",
+      "    return;",
+      "  }",
+      "  if (message.method === 'session/new') {",
+      "    write({ jsonrpc: '2.0', id: message.id, result: { sessionId: 'stub-session' } });",
+      "    return;",
+      "  }",
+      "  if (message.method === 'session/prompt') {",
+      "    const text = message.params.prompt.map((part) => part.text || '').join(' ');",
+      "    write({ jsonrpc: '2.0', method: 'session/update', params: { sessionId: message.params.sessionId, update: { sessionUpdate: 'agent_message_chunk', content: { type: 'text', text: `STUB_ACP:${text}` } } } });",
+      "    write({ jsonrpc: '2.0', id: message.id, result: { stopReason: 'end_turn' } });",
+      "    return;",
+      "  }",
+      "  write({ jsonrpc: '2.0', id: message.id, error: { code: -32601, message: `missing ${message.method}` } });",
+      "});",
+    ].join("\n"),
+    "utf8",
+  );
+
+  if (process.platform === "win32") {
+    await fs.writeFile(path.join(dir, "gemini.cmd"), `@echo off\r\nnode "${scriptPath}" %*\r\n`, "utf8");
+    return;
+  }
+
+  const filePath = path.join(dir, "gemini");
+  await fs.writeFile(filePath, `#!/bin/sh\nnode "${scriptPath}" "$@"\n`, { encoding: "utf8", mode: 0o755 });
+  await fs.chmod(filePath, 0o755);
+}
+
 async function createDockerStub(dir: string, mode: "ok" | "fail"): Promise<void> {
   if (process.platform === "win32") {
     const body = mode === "ok"
@@ -368,6 +436,29 @@ test("ask gemini runs local CLI and writes artifact", async () => {
   assert.match(result.stdout, /provider: gemini/);
   assert.match(result.stdout, /artifact:/);
   assert.match(result.stdout, /GEMINI_STUB/);
+});
+
+test("ask gemini filters terminal color warnings from output and artifact", async () => {
+  const commandDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-ask-bin-"));
+  const artifactDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-artifacts-"));
+  await createGeminiWarningStub(commandDir);
+
+  const result = await executeWithPath([
+    "ask",
+    "gemini",
+    "Brainstorm test cases",
+    "--artifact-dir",
+    artifactDir,
+    "--json",
+  ], commandDir);
+
+  assert.equal(result.exitCode, 0);
+  assert.doesNotMatch(result.stderr, /True color/);
+  assert.doesNotMatch(result.stdout, /True color/);
+  const json = parseJson(result.stdout);
+  const artifact = await fs.readFile(json.data.artifactPath, "utf8");
+  assert.doesNotMatch(artifact, /True color/);
+  assert.match(artifact, /GEMINI_STUB/);
 });
 
 test("flat ask-gemini alias runs local Gemini CLI and writes artifact", async () => {
@@ -784,6 +875,46 @@ test("relay init rejects duplicate session", async () => {
 
   assert.equal(second.exitCode, 1);
   assert.match(second.stderr, /already exists/i);
+});
+
+test("relay keeps a Gemini ACP agent active for start ask status stop", async () => {
+  const cwd = await fs.mkdtemp(path.join(os.tmpdir(), "apx-relay-"));
+  await copyDir(path.join(repoRoot, "catalog.json"), path.join(cwd, "catalog.json"));
+  for (const dirName of ["skills", "commands", "hooks", "mcp", "agents-md", "workflows"]) {
+    await copyDir(path.join(repoRoot, dirName), path.join(cwd, dirName));
+  }
+
+  const commandDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-relay-bin-"));
+  await createGeminiAcpStub(commandDir);
+
+  const previousPath = process.env.PATH;
+  try {
+    process.env.PATH = `${commandDir}${path.delimiter}${process.env.PATH ?? ""}`;
+
+    const start = await executeInCwd(["relay", "start", "second-opinion", "--provider", "gemini", "--json"], cwd);
+    assert.equal(start.exitCode, 0);
+    const startJson = parseJson(start.stdout);
+    assert.equal(startJson.data.provider, "gemini");
+    assert.equal(startJson.data.sessionName, "second-opinion");
+    assert.equal(startJson.data.status, "active");
+
+    const status = await executeInCwd(["relay", "status", "second-opinion", "--json"], cwd);
+    assert.equal(status.exitCode, 0);
+    assert.equal(parseJson(status.stdout).data.status, "active");
+
+    const ask = await executeInCwd(["relay", "ask", "second-opinion", "review relay design", "--json"], cwd);
+    assert.equal(ask.exitCode, 0);
+    const askJson = parseJson(ask.stdout);
+    assert.match(askJson.stdout, /STUB_ACP:review relay design/);
+    assert.match(askJson.data.artifactPath, /second-opinion[\\/]gemini-turn-\d+-review-relay-design-\d{8}T\d{6}\d{3}Z\.md$/);
+    assert.match(await fs.readFile(askJson.data.artifactPath, "utf8"), /STUB_ACP:review relay design/);
+
+    const stop = await executeInCwd(["relay", "stop", "second-opinion", "--json"], cwd);
+    assert.equal(stop.exitCode, 0);
+    assert.equal(parseJson(stop.stdout).data.status, "stopped");
+  } finally {
+    process.env.PATH = previousPath;
+  }
 });
 
 test("ship-check resolves npm through PATH on Windows instead of Node install layout", () => {
