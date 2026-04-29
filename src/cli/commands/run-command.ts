@@ -1,6 +1,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
+import { runValidateCatalogCommand, runValidateSkillsCommand } from "./validate.js";
 import type { CatalogService } from "../utils/catalog.js";
 import { createResult, type ExecutionResult } from "../utils/result.js";
 
@@ -88,8 +89,11 @@ export async function runShipCheckCommand(
   const checks: CheckRun[] = [];
   checks.push(await runCheck(service.repoRoot, "git status --short", "git", ["status", "--short"], options.env));
   checks.push(await runCheck(service.repoRoot, "git diff --check", "git", ["diff", "--check"], options.env));
-  checks.push(await runCheck(service.repoRoot, "python scripts/validate-catalog.py", "python", ["scripts/validate-catalog.py"], options.env));
-  checks.push(await runCheck(service.repoRoot, "python scripts/validate-skills.py", "python", ["scripts/validate-skills.py"], options.env));
+
+  const catalogResult = await runValidateCatalogCommand(service);
+  checks.push({ name: "apx validate catalog", command: "apx", args: ["validate", "catalog"], exitCode: catalogResult.exitCode, stdout: catalogResult.stdout, stderr: catalogResult.stderr ?? "" });
+  const skillsResult = await runValidateSkillsCommand(service);
+  checks.push({ name: "apx validate skills", command: "apx", args: ["validate", "skills"], exitCode: skillsResult.exitCode, stdout: skillsResult.stdout, stderr: skillsResult.stderr ?? "" });
 
   if (options.full) {
     if (process.env.APX_SHIP_CHECK_NESTED === "1") {

@@ -4,6 +4,7 @@ import path from "node:path";
 import { promisify } from "node:util";
 
 import { runPluginDiffCommand, runPluginValidateCommand } from "./plugin.js";
+import { runValidateCatalogCommand, runValidateSkillsCommand } from "./validate.js";
 import type { CatalogService } from "../utils/catalog.js";
 import { checkRequirements } from "../utils/requirements.js";
 import { createResult, type ExecutionResult } from "../utils/result.js";
@@ -43,7 +44,6 @@ async function checkLicenseConsistency(repoRoot: string): Promise<DoctorCheck> {
   const licenseText = await fs.readFile(path.join(repoRoot, "LICENSE"), "utf8");
   const rootLicense = licenseText.includes("Apache License") && licenseText.includes("Version 2.0") ? "Apache-2.0" : "UNKNOWN";
   const packageJson = await readJson(path.join(repoRoot, "package.json"));
-  const pluginJson = await readJson(path.join(repoRoot, "plugins", "agent-powerups", ".codex-plugin", "plugin.json"));
   const mismatches: string[] = [];
 
   if (rootLicense !== "Apache-2.0") {
@@ -52,8 +52,15 @@ async function checkLicenseConsistency(repoRoot: string): Promise<DoctorCheck> {
   if (packageJson.license !== rootLicense) {
     mismatches.push(`package.json=${packageJson.license ?? "missing"}`);
   }
-  if (pluginJson.license !== rootLicense) {
-    mismatches.push(`plugin.json=${pluginJson.license ?? "missing"}`);
+
+  const pluginJsonPath = path.join(repoRoot, "plugins", "agent-powerups", ".codex-plugin", "plugin.json");
+  try {
+    const pluginJson = await readJson(pluginJsonPath);
+    if (pluginJson.license !== rootLicense) {
+      mismatches.push(`plugin.json=${pluginJson.license ?? "missing"}`);
+    }
+  } catch {
+    // plugins/ dir is optional (gitignored when publishing from source)
   }
 
   return mismatches.length > 0
@@ -192,11 +199,28 @@ export async function runDoctorCommand(
   checks.push(await checkSkills(service.repoRoot));
 
   const pluginPath = path.join(service.repoRoot, "plugins", "agent-powerups");
-  const pluginValidation = await runPluginValidateCommand(pluginPath);
-  checks.push(pluginValidation.exitCode === 0 ? ok("plugin metadata", pluginValidation.stdout) : fail("plugin metadata", pluginValidation.stderr || pluginValidation.stdout));
+  let pluginDirExists = false;
+  try {
+    await fs.access(pluginPath);
+    pluginDirExists = true;
+  } catch {
+    // plugins/ dir is optional
+  }
 
-  const pluginDiff = await runPluginDiffCommand(service, pluginPath);
-  checks.push(pluginDiff.exitCode === 0 ? ok("plugin mirror sync", pluginDiff.stdout) : fail("plugin mirror sync", pluginDiff.data?.diffs.join("; ") ?? pluginDiff.stdout));
+  if (pluginDirExists) {
+    try {
+      const pluginValidation = await runPluginValidateCommand(pluginPath);
+      checks.push(pluginValidation.exitCode === 0 ? ok("plugin metadata", pluginValidation.stdout) : fail("plugin metadata", pluginValidation.stderr || pluginValidation.stdout));
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      checks.push(fail("plugin metadata", msg));
+    }
+    const pluginDiff = await runPluginDiffCommand(service, pluginPath);
+    checks.push(pluginDiff.exitCode === 0 ? ok("plugin mirror sync", pluginDiff.stdout) : fail("plugin mirror sync", pluginDiff.data?.diffs.join("; ") ?? pluginDiff.stdout));
+  } else {
+    checks.push(warn("plugin metadata", "plugins/ not present"));
+    checks.push(warn("plugin mirror sync", "plugins/ not present"));
+  }
 
   const missingRequirements = service
     .listAssets()
@@ -218,9 +242,10 @@ export async function runDoctorCommand(
     } else {
       checks.push(await runExternalCheck("npm test", process.platform === "win32" ? "npm.cmd" : "npm", ["test"], service.repoRoot));
     }
-    checks.push(await runExternalCheck("python scripts/validate-skills.py", "python", ["scripts/validate-skills.py"], service.repoRoot));
-    checks.push(await runExternalCheck("python scripts/validate-catalog.py", "python", ["scripts/validate-catalog.py"], service.repoRoot));
-    checks.push(await runExternalCheck("python scripts/check-requirements.py", "python", ["scripts/check-requirements.py"], service.repoRoot));
+    const validateSkillsResult = await runValidateSkillsCommand(service);
+    checks.push(validateSkillsResult.exitCode === 0 ? ok("apx validate skills", validateSkillsResult.stdout) : fail("apx validate skills", validateSkillsResult.stdout));
+    const validateCatalogResult = await runValidateCatalogCommand(service);
+    checks.push(validateCatalogResult.exitCode === 0 ? ok("apx validate catalog", validateCatalogResult.stdout) : fail("apx validate catalog", validateCatalogResult.stdout));
   }
 
   const failures = checks.filter((check) => check.status === "FAIL");

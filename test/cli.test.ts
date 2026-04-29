@@ -160,7 +160,6 @@ test("mcp print prints target config with safety note", async () => {
   assert.match(result.stdout, /mcpServers/);
   assert.match(result.stdout, /GITHUB_TOKEN/);
   assert.match(result.stdout, /does not mutate/i);
-  assert.match(result.stdout, /deprecated/i);
   assert.match(result.stdout, /github\/github-mcp-server/i);
 });
 
@@ -253,7 +252,8 @@ test("doctor --full --json reports build test and validator checks without recur
   const checkNames = json.data.checks.map((check: { name: string }) => check.name);
   assert.ok(checkNames.includes("npm run build"));
   assert.ok(checkNames.includes("npm test"));
-  assert.ok(checkNames.includes("python scripts/validate-skills.py"));
+  assert.ok(checkNames.includes("apx validate skills"));
+  assert.ok(checkNames.includes("apx validate catalog"));
   assert.ok(
     json.data.checks.some(
       (check: { name: string; skipped?: boolean }) => check.name === "npm test" && check.skipped,
@@ -348,7 +348,7 @@ test("commands run ship-check executes safe checks as json", async () => {
   assert.equal(json.exitCode, 0);
   assert.match(json.stdout, /ship-check/);
   assert.ok(json.data.checks.some((check: { name: string }) => check.name === "git status --short"));
-  assert.ok(json.data.checks.some((check: { name: string }) => check.name === "python scripts/validate-catalog.py"));
+  assert.ok(json.data.checks.some((check: { name: string }) => check.name === "apx validate catalog"));
   assert.doesNotMatch(json.stdout, /npm test/);
 });
 
@@ -393,8 +393,7 @@ test("mcp check reports structured metadata", async () => {
   assert.equal(json.data.name, "github-local");
   assert.equal(json.data.target, "generic");
   assert.ok(json.data.requiredEnv.some((entry: { name: string }) => entry.name === "GITHUB_TOKEN"));
-  assert.ok(json.data.requiredCommands.some((entry: { name: string }) => entry.name === "npx"));
-  assert.match(json.warnings.join("\n"), /deprecated/i);
+  assert.ok(json.data.requiredCommands.some((entry: { name: string }) => entry.name === "docker"));
   assert.match(json.data.warning, /github\/github-mcp-server/i);
 });
 
@@ -410,8 +409,10 @@ test("mcp write requires explicit destination and refuses overwrite", async () =
   assert.match(second.stderr, /Destination already exists/);
 });
 
-test("plugin validate accepts bundled plugin after metadata cleanup", async () => {
-  const result = await execute(["plugin", "validate", "plugins/agent-powerups", "--json"]);
+test("plugin validate accepts built plugin output", async () => {
+  const dest = await fs.mkdtemp(path.join(os.tmpdir(), "apx-plugin-validate-"));
+  await execute(["plugin", "build", "--dest", dest, "--write"]);
+  const result = await execute(["plugin", "validate", dest, "--json"]);
 
   assert.equal(result.exitCode, 0);
   const json = parseJson(result.stdout);
@@ -460,7 +461,7 @@ test("plugin build --write mirrors catalog-backed assets", async () => {
 
 test("plugin diff detects mirrored asset drift", async () => {
   const pluginDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-plugin-drift-"));
-  await copyDir(path.join(repoRoot, "plugins", "agent-powerups"), pluginDir);
+  await execute(["plugin", "build", "--dest", pluginDir, "--write"]);
   await fs.rm(path.join(pluginDir, "skills", "systematic-debugging", "SKILL.md"));
 
   const result = await execute(["plugin", "diff", pluginDir, "--json"]);

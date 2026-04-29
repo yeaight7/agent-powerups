@@ -38,7 +38,7 @@ test("catalog includes executable command and structured mcp metadata", async ()
 
   assert.equal(command.run?.kind, "ship-check");
   assert.deepEqual(mcp.mcp?.required_env, ["GITHUB_TOKEN"]);
-  assert.equal(mcp.mcp?.server_package, "@modelcontextprotocol/server-github");
+  assert.equal(mcp.mcp?.server_package, "ghcr.io/github/github-mcp-server");
 });
 
 test("catalog includes local ask skills with command requirements", async () => {
