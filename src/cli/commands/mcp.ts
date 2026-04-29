@@ -65,11 +65,11 @@ export async function runMcpPrintCommand(
     `config: ${asset.name}`,
     `target: ${target}`,
     `source: ${variantPath}`,
-    "safety: this prints a snippet and does not mutate local or global MCP configuration files",
+    "safety: this prints config content and does not mutate local or global MCP configuration files",
   ];
 
   if (target === "codex") {
-    notes.push("warning: Codex target output is experimental/local and should be reviewed before use.");
+    notes.push("hint: use `apx mcp install github-local --target codex --dry-run` to preview a managed Codex install.");
   }
 
   if (asset.mcp?.warning) {
