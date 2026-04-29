@@ -72,9 +72,9 @@ node dist/cli/apx.js ask codex "Return OK only" --json
 
 ```sh
 node dist/cli/apx.js check markitdown-file-intake
+node dist/cli/apx.js check ask-codex
 node dist/cli/apx.js check ask-claude
 node dist/cli/apx.js check ask-gemini
-node dist/cli/apx.js check ask-codex
 ```
 
 7. Dry-run safe install:
