@@ -12,7 +12,7 @@ import { runInstallCommand } from "./commands/install.js";
 import { runListCommand } from "./commands/list.js";
 import { runMcpCheckCommand, runMcpInstallCommand, runMcpListCommand, runMcpPrintCommand, runMcpSmokeCommand, runMcpWriteCommand } from "./commands/mcp.js";
 import { runPluginBuildCommand, runPluginDiffCommand, runPluginValidateCommand } from "./commands/plugin.js";
-import { runRelayInitCommand } from "./commands/relay.js";
+import { runRelayAskCommand, runRelayDaemonCommand, runRelayInitCommand, runRelayStartCommand, runRelayStatusCommand, runRelayStopCommand } from "./commands/relay.js";
 import { runShipCheckCommand } from "./commands/run-command.js";
 import { parseSetupAgent, runSetupCommand } from "./commands/setup.js";
 import { runValidateCatalogCommand, runValidateSkillsCommand } from "./commands/validate.js";
@@ -64,7 +64,11 @@ apx plugin diff <plugin-path> [--json]
 apx plugin build --dest <path> (--dry-run|--write) [--json]
 apx validate skills
 apx validate catalog
-apx relay init <session-name>`;
+apx relay init <session-name>
+apx relay start <session-name> [--provider gemini] [--model <model>] [--json]
+apx relay status <session-name> [--json]
+apx relay ask <session-name> <prompt> [--timeout-ms <ms>] [--json]
+apx relay stop <session-name> [--json]`;
 
 function getPackageVersion(): string {
   return "0.1.0";
@@ -419,7 +423,30 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
         }
         return writeExecutionResult(io, await runRelayInitCommand(repoRoot, sessionName), json);
       }
-      throw new Error("Unknown relay subcommand. Use: apx relay init <session-name>");
+      if (subcommand === "start") {
+        return writeExecutionResult(io, await runRelayStartCommand(repoRoot, argv), json);
+      }
+      if (subcommand === "status") {
+        const sessionName = argv[2];
+        if (!sessionName) {
+          throw new Error("Missing session name for relay status");
+        }
+        return writeExecutionResult(io, await runRelayStatusCommand(repoRoot, sessionName), json);
+      }
+      if (subcommand === "ask") {
+        return writeExecutionResult(io, await runRelayAskCommand(repoRoot, argv), json);
+      }
+      if (subcommand === "stop") {
+        const sessionName = argv[2];
+        if (!sessionName) {
+          throw new Error("Missing session name for relay stop");
+        }
+        return writeExecutionResult(io, await runRelayStopCommand(repoRoot, sessionName), json);
+      }
+      if (subcommand === "daemon") {
+        return writeExecutionResult(io, await runRelayDaemonCommand(repoRoot, argv), json);
+      }
+      throw new Error("Unknown relay subcommand. Use: apx relay init|start|status|ask|stop <session-name>");
     }
 
     if (command === "plugin") {
