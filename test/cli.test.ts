@@ -111,6 +111,17 @@ test("info prints asset details", async () => {
   assert.match(result.stdout, /Microsoft MarkItDown/);
 });
 
+test("using-powerups is discoverable and has no external requirements", async () => {
+  const info = await execute(["info", "using-powerups"]);
+  const check = await execute(["check", "using-powerups"]);
+
+  assert.equal(info.exitCode, 0);
+  assert.match(info.stdout, /using-powerups/);
+  assert.match(info.stdout, /agent-powerups/);
+  assert.equal(check.exitCode, 0);
+  assert.match(check.stdout, /no external requirements declared/);
+});
+
 test("check reports missing requirements without installing", async () => {
   const result = await execute(["check", "markitdown-file-intake"]);
 

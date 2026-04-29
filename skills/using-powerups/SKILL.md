@@ -1,0 +1,114 @@
+---
+name: using-powerups
+description: Use when starting work in a repository with Agent Powerups installed, when a task may match a reusable local skill, command, workflow, hook recipe, AGENTS.md template, or MCP snippet.
+---
+
+# Using Powerups
+
+## Purpose
+
+Find and apply installed Agent Powerups before improvising. A powerup is useful only after you inspect it, confirm requirements, and report how it shaped the work.
+
+## When to Use
+
+Use at the start of non-trivial work, and again when the task changes shape.
+
+Use when the user asks for debugging, planning, review, setup, file intake, cleanup, PR triage, second opinions, MCP config, hooks, commands, or AGENTS.md templates.
+
+Do not force a powerup when none fits. Say no matching powerup applies and proceed normally.
+
+## Inputs
+
+- User task.
+- Current repo or agent root.
+- Installed `agent-powerups` location, usually `agent-powerups/` under the agent root or the package repo.
+- Optional CLI access to `apx`.
+
+## Workflow
+
+1. Discover available assets.
+
+```sh
+apx list
+apx list --type skill
+apx list --type command
+apx list --type mcp-config
+```
+
+If `apx` is unavailable, inspect local folders: `skills/`, `commands/`, `mcp/`, `agents-md/`, `hooks/`, `workflows/`.
+
+2. Match the task to assets.
+
+Prefer the narrowest asset whose description matches the current task. Examples:
+
+| Task signal | Asset type to inspect |
+|-------------|-----------------------|
+| bug, failing test, regression | debugging skill |
+| implementation spec | planning skill |
+| file or URL intake | file-intake skill |
+| pre-handoff validation | command |
+| local config snippet | MCP config |
+| repo instruction baseline | AGENTS.md template |
+
+3. Read before using.
+
+For a candidate asset:
+
+```sh
+apx info <name>
+apx check <name>
+```
+
+Then read the asset file. Do not rely only on the catalog summary.
+
+4. Check requirements.
+
+If `apx check` reports a missing command or package, stop and say exactly what is missing. Ask before installing anything. Do not pretend conversion, fetch, review, or CLI delegation happened when the tool was unavailable.
+
+5. Apply conservatively.
+
+Follow the asset instructions. Keep scope local to the user task. For MCP configs and hooks, treat snippets as review-before-use; do not enable them automatically.
+
+6. Report use.
+
+Final response should name:
+
+- powerup used
+- requirement check result
+- important fallback or skipped asset
+- validation performed
+
+## Output
+
+When a powerup applies:
+
+```text
+Used: <asset-name>
+Why: <task signal>
+Requirements: <OK / missing / not needed>
+Result: <how it changed the work>
+```
+
+When none applies:
+
+```text
+No matching Agent Powerup found. Proceeded with normal repo inspection.
+```
+
+## Verification
+
+Before claiming setup or use succeeded:
+
+- Asset was read, not guessed from name.
+- Requirements were checked.
+- Missing tools were reported, not bypassed silently.
+- No secrets were written.
+- No global config, shell profile, hook, MCP server, or dependency install was changed without explicit user approval.
+
+## Failure Modes
+
+- **Catalog missing**: inspect local asset folders directly, then report that `apx` catalog discovery failed.
+- **Missing dependency**: stop that asset path; ask before install; use a lower-capability fallback if safe.
+- **No matching asset**: say so and continue normally.
+- **Unsafe asset request**: print manual review steps instead of mutating config.
+- **Multiple possible assets**: choose the narrowest one; mention skipped alternatives only when relevant.

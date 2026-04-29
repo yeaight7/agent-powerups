@@ -152,6 +152,15 @@
     }
   },
   {
+    "name": "using-powerups",
+    "type": "skill",
+    "summary": "Discover, select, check, and apply installed Agent Powerups safely.",
+    "path": "skills/using-powerups",
+    "compatible_with": ["claude-code", "codex", "gemini-cli", "generic"],
+    "tags": ["discovery", "skills", "commands", "mcp", "setup"],
+    "maturity": "draft"
+  },
+  {
     "name": "github-local",
     "type": "mcp-config",
     "summary": "Local GitHub MCP config snippets for Codex, Claude Code, and generic clients.",
@@ -235,9 +244,19 @@
       "kind": "ship-check"
     },
     "targets": {
+      "codex": "commands/codex/ship-check.md",
       "generic": "commands/generic/ship-check.md",
       "claude-code": "commands/claude-code/ship-check.md"
     }
+  },
+  {
+    "name": "using-powerups-command",
+    "type": "command",
+    "summary": "Manual command prompt for discovering and applying installed Agent Powerups.",
+    "path": "commands/generic/using-powerups.md",
+    "compatible_with": ["generic"],
+    "tags": ["commands", "discovery", "powerups"],
+    "maturity": "draft"
   },
   {
     "name": "no-secrets-preflight",
@@ -246,6 +265,51 @@
     "path": "hooks/safety/no-secrets-preflight.md",
     "compatible_with": ["generic"],
     "tags": ["hooks", "safety", "secrets"],
+    "maturity": "draft"
+  },
+  {
+    "name": "handoff-summary",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for complete final handoff summaries.",
+    "path": "hooks/productivity/handoff-summary.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "productivity", "handoff"],
+    "maturity": "draft"
+  },
+  {
+    "name": "validation-required",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for blocking unverified completion claims.",
+    "path": "hooks/quality/validation-required.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "quality", "validation"],
+    "maturity": "draft"
+  },
+  {
+    "name": "minimal-setup-example",
+    "type": "example",
+    "summary": "Minimal disposable-root setup example for reviewing Agent Powerups safely.",
+    "path": "examples/minimal/README.md",
+    "compatible_with": ["generic"],
+    "tags": ["examples", "setup", "dry-run"],
+    "maturity": "draft"
+  },
+  {
+    "name": "codex-setup-example",
+    "type": "example",
+    "summary": "Codex setup example using dry-run and explicit agent root staging.",
+    "path": "examples/codex/README.md",
+    "compatible_with": ["codex"],
+    "tags": ["examples", "codex", "setup"],
+    "maturity": "draft"
+  },
+  {
+    "name": "claude-code-setup-example",
+    "type": "example",
+    "summary": "Claude Code setup example using dry-run and explicit agent root staging.",
+    "path": "examples/claude-code/README.md",
+    "compatible_with": ["claude-code"],
+    "tags": ["examples", "claude-code", "setup"],
     "maturity": "draft"
   },
   {

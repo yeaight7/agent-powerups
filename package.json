@@ -37,6 +37,7 @@
     "agents-md/",
     "workflows/",
     "docs/",
+    "examples/",
     "catalog.json",
     "README.md",
     "LICENSE"

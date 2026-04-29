@@ -1,10 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
 import path from "node:path";
 
 import { createCatalogService } from "../src/cli/utils/catalog.js";
 
-const repoRoot = path.resolve(import.meta.dirname, "..");
+const repoRoot = path.resolve(import.meta.dirname, "..", "..");
 
 test("loads catalog and exposes shipped skills", async () => {
   const service = await createCatalogService(repoRoot);
@@ -53,4 +54,40 @@ test("catalog includes local ask skills with command requirements", async () => 
   assert.equal(gemini.type, "skill");
   assert.deepEqual(gemini.requires?.commands, ["gemini"]);
   assert.ok(gemini.compatible_with.includes("codex"));
+});
+
+test("catalog includes using-powerups and replacement assets", async () => {
+  const service = await createCatalogService(repoRoot);
+
+  assert.equal(service.getAsset("using-powerups").type, "skill");
+  assert.equal(service.getAsset("using-powerups-command").type, "command");
+  assert.equal(service.getAsset("validation-required").type, "hook");
+  assert.equal(service.getAsset("handoff-summary").type, "hook");
+  assert.equal(service.getAsset("minimal-setup-example").type, "example");
+  assert.equal(service.getAsset("codex-setup-example").type, "example");
+  assert.equal(service.getAsset("claude-code-setup-example").type, "example");
+});
+
+async function findGitkeepFiles(root: string): Promise<string[]> {
+  const ignored = new Set([".git", "node_modules", "dist", ".worktrees"]);
+  const entries = await fs.readdir(root, { withFileTypes: true });
+  const found: string[] = [];
+  for (const entry of entries) {
+    if (ignored.has(entry.name)) {
+      continue;
+    }
+    const fullPath = path.join(root, entry.name);
+    if (entry.isDirectory()) {
+      found.push(...(await findGitkeepFiles(fullPath)));
+    } else if (entry.isFile() && entry.name === ".gitkeep") {
+      found.push(path.relative(repoRoot, fullPath).replaceAll("\\", "/"));
+    }
+  }
+  return found;
+}
+
+test("working tree gitkeep placeholders are gone", async () => {
+  const result = await findGitkeepFiles(repoRoot);
+
+  assert.deepEqual(result, []);
 });
