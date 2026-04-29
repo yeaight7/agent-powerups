@@ -893,6 +893,13 @@ test("relay keeps a Gemini ACP agent active for start ask status stop", async ()
     process.env.PATH = `${commandDir}${path.delimiter}${process.env.PATH ?? ""}`;
 
     const start = await executeInCwd(["relay", "start", "second-opinion", "--provider", "gemini", "--json"], cwd);
+    if (start.exitCode !== 0) {
+      console.error("START FAILED:", start.stderr, start.stdout);
+      const logPath = path.join(cwd, ".apx", "relay", "second-opinion", "relay.log");
+      console.error("LOG:", await fs.readFile(logPath, "utf8").catch(() => "NO LOG"));
+      const statePath = path.join(cwd, ".apx", "relay", "second-opinion", "relay.json");
+      console.error("STATE:", await fs.readFile(statePath, "utf8").catch(() => "NO STATE"));
+    }
     assert.equal(start.exitCode, 0);
     const startJson = parseJson(start.stdout);
     assert.equal(startJson.data.provider, "gemini");
