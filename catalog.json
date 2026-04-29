@@ -324,10 +324,10 @@
   {
     "name": "agent-relay",
     "type": "workflow",
-    "summary": "Experimental stateless multi-turn delegation protocol between agents via artifact threading.",
+    "summary": "Persistent local Gemini ACP relay for delegating repeat questions, reviews, and research turns to an always-active secondary agent.",
     "path": "workflows/agent-relay.md",
     "compatible_with": ["claude-code", "codex", "generic"],
-    "tags": ["delegation", "multi-agent", "artifacts", "experimental"],
+    "tags": ["delegation", "multi-agent", "artifacts", "gemini", "acp"],
     "maturity": "draft"
   },
   {
