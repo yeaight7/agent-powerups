@@ -65,6 +65,7 @@ node dist/cli/apx.js mcp check github-local --target generic
 ```sh
 node dist/cli/apx.js ask claude "Return OK only" --json
 node dist/cli/apx.js ask gemini "Return OK only" --json
+node dist/cli/apx.js ask codex "Return OK only" --json
 ```
 
 6. Check deps without installing:
@@ -73,6 +74,7 @@ node dist/cli/apx.js ask gemini "Return OK only" --json
 node dist/cli/apx.js check markitdown-file-intake
 node dist/cli/apx.js check ask-claude
 node dist/cli/apx.js check ask-gemini
+node dist/cli/apx.js check ask-codex
 ```
 
 7. Dry-run safe install:
@@ -200,6 +202,7 @@ Current optional external tools used by shipped skills:
 |-------|------|----------|---------|
 | `ask-claude` | Claude Code CLI (`claude`) | yes for local advisor workflow | install/configure Claude Code CLI |
 | `ask-gemini` | Gemini CLI (`gemini`) | yes for local advisor workflow | install/configure Gemini CLI |
+| `ask-codex` | Codex CLI (`codex`) | yes for local advisor workflow | install/configure Codex CLI |
 | `markitdown-file-intake` | Microsoft MarkItDown (`markitdown`) | yes for conversion workflow | `python -m pip install markitdown` |
 | `defuddle` | Defuddle CLI (`defuddle`) | yes for Defuddle workflow | `npm install -g defuddle` |
 | `pr-triage` | GitHub CLI (`gh`) | optional | platform package manager |
@@ -225,6 +228,7 @@ node dist/cli/apx.js info markitdown-file-intake
 node dist/cli/apx.js check markitdown-file-intake
 node dist/cli/apx.js ask claude "Review this patch" --json
 node dist/cli/apx.js ask gemini "Brainstorm test cases" --json
+node dist/cli/apx.js ask codex "Explain this code" --json
 node dist/cli/apx.js install markitdown-file-intake --target codex --dry-run
 node dist/cli/apx.js setup codex --dry-run
 node dist/cli/apx.js setup claude-code --dry-run
