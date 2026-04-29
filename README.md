@@ -9,7 +9,7 @@ Today, this repo ships:
 - reusable skills
 - safe local CLI (`apx`) with runnable local checks
 - validation and requirement-check scripts
-- first local MCP config snippets
+- verified local GitHub MCP check, smoke, and install flow
 - command, hook, workflow, examples, and AGENTS.md templates
 - experimental local plugin layout
 
@@ -20,7 +20,7 @@ Everything else stays conservative. No global mutation. No hidden install hooks.
 | Path | Status | Notes |
 |------|--------|-------|
 | `skills/` | shipped | Reusable agent workflows such as `systematic-debugging` and `writing-plans` |
-| `mcp/` | shipped | Local-first MCP config snippets for checking and explicit writes |
+| `mcp/` | shipped | Local-first GitHub MCP config with check, smoke, and explicit install commands |
 | `agents-md/` | shipped | Starter AGENTS.md templates |
 | `commands/` | shipped | Review-first command prompts plus safe runnable checks |
 | `hooks/` | shipped | Review-before-use hook recipes plus safe runnable checks |
@@ -58,14 +58,16 @@ node dist/cli/apx.js info markitdown-file-intake
 node dist/cli/apx.js commands run ship-check
 node dist/cli/apx.js hooks run no-secrets-preflight --all
 node dist/cli/apx.js mcp check github-local --target generic
+node dist/cli/apx.js mcp smoke github-local --json
+node dist/cli/apx.js mcp install github-local --target codex --dry-run
 ```
 
 5. Try a local advisor CLI and save an artifact:
 
 ```sh
-node dist/cli/apx.js ask codex "Return OK only" --json
-node dist/cli/apx.js ask claude "Return OK only" --json
-node dist/cli/apx.js ask gemini "Return OK only" --json
+node dist/cli/apx.js ask-codex "Return OK only" --json
+node dist/cli/apx.js ask-claude "Return OK only" --json
+node dist/cli/apx.js ask-gemini "Return OK only" --json
 ```
 
 6. Check deps without installing:
@@ -75,6 +77,13 @@ node dist/cli/apx.js check markitdown-file-intake
 node dist/cli/apx.js check ask-codex
 node dist/cli/apx.js check ask-claude
 node dist/cli/apx.js check ask-gemini
+```
+
+Preview supported dependency installers before asking for approval:
+
+```sh
+node dist/cli/apx.js check defuddle --install-missing --dry-run
+node dist/cli/apx.js check markitdown-file-intake --install-missing --dry-run
 ```
 
 7. Dry-run safe install:
@@ -181,7 +190,7 @@ Compatibility claims in this repo are intentionally narrow:
 | Asset class | Shipped today | Compatibility claim |
 |-------------|---------------|---------------------|
 | Root `skills/` | yes | Generic text-based skills; some also mention known agent surfaces |
-| `mcp/` | yes | Manual-review config snippets only; Codex output experimental/local |
+| `mcp/` | yes | Verified local GitHub MCP check/smoke/install flow for the official Docker-backed server |
 | `agents-md/` | yes | Plain text templates |
 | `commands/` | yes | Review-first markdown command prompts; Claude Code and Codex targets where provided |
 | `hooks/` | yes | Documentation recipes only; not installed automatically |
@@ -226,9 +235,12 @@ node dist/cli/apx.js doctor --full --json
 node dist/cli/apx.js list
 node dist/cli/apx.js info markitdown-file-intake
 node dist/cli/apx.js check markitdown-file-intake
-node dist/cli/apx.js ask codex "Explain this code" --json
-node dist/cli/apx.js ask claude "Review this patch" --json
-node dist/cli/apx.js ask gemini "Brainstorm test cases" --json
+node dist/cli/apx.js ask-codex "Explain this code" --json
+node dist/cli/apx.js ask-claude "Review this patch" --json
+node dist/cli/apx.js ask-gemini "Brainstorm test cases" --json
+node dist/cli/apx.js ship-check --json
+node dist/cli/apx.js no-secrets-preflight --all --json
+node dist/cli/apx.js using-powerups
 node dist/cli/apx.js install markitdown-file-intake --target codex --dry-run
 node dist/cli/apx.js setup codex --dry-run
 node dist/cli/apx.js setup claude-code --dry-run
@@ -241,6 +253,9 @@ Extra surfaces:
 node dist/cli/apx.js mcp list
 node dist/cli/apx.js mcp print github-local --target claude-code
 node dist/cli/apx.js mcp check github-local --target claude-code --json
+node dist/cli/apx.js mcp smoke github-local --json
+node dist/cli/apx.js mcp install github-local --target codex --dry-run
+node dist/cli/apx.js mcp install github-local --target claude-code --dry-run
 node dist/cli/apx.js mcp write github-local --target generic --dest .agent-powerups/github-local.json
 node dist/cli/apx.js agents-md list
 node dist/cli/apx.js agents-md print typescript-app
