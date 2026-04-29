@@ -1,6 +1,6 @@
 ---
 name: using-powerups
-description: Use when starting work in a repository with Agent Powerups installed, when a task may match a reusable local skill, command, workflow, hook recipe, AGENTS.md template, or MCP snippet.
+description: Use when starting work in a repository with Agent Powerups installed, when a task may match a reusable local skill, command, workflow, hook recipe, AGENTS.md template, or MCP feature.
 ---
 
 # Using Powerups
