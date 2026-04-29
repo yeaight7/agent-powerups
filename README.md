@@ -8,6 +8,7 @@ Today, this repo ships:
 
 - reusable skills
 - safe local CLI (`apx`) with runnable local checks
+- persistent Gemini relay for always-active secondary-agent delegation
 - validation and requirement-check scripts
 - verified local GitHub MCP check, smoke, and install flow
 - command, hook, workflow, examples, and AGENTS.md templates
@@ -180,6 +181,7 @@ Current shipped examples:
 Current shipped workflows:
 
 - `feature-iteration`
+- `agent-relay`
 
 Schema details: [`docs/catalog-schema.md`](./docs/catalog-schema.md)
 
@@ -238,6 +240,9 @@ node dist/cli/apx.js check markitdown-file-intake
 node dist/cli/apx.js ask-codex "Explain this code" --json
 node dist/cli/apx.js ask-claude "Review this patch" --json
 node dist/cli/apx.js ask-gemini "Brainstorm test cases" --json
+node dist/cli/apx.js relay start second-opinion --provider gemini --json
+node dist/cli/apx.js relay ask second-opinion "Review this plan" --json
+node dist/cli/apx.js relay stop second-opinion --json
 node dist/cli/apx.js ship-check --json
 node dist/cli/apx.js no-secrets-preflight --all --json
 node dist/cli/apx.js using-powerups
