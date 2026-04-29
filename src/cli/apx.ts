@@ -10,7 +10,7 @@ import { runNoSecretsPreflightCommand } from "./commands/hooks.js";
 import { runInfoCommand } from "./commands/info.js";
 import { runInstallCommand } from "./commands/install.js";
 import { runListCommand } from "./commands/list.js";
-import { runMcpCheckCommand, runMcpListCommand, runMcpPrintCommand, runMcpWriteCommand } from "./commands/mcp.js";
+import { runMcpCheckCommand, runMcpInstallCommand, runMcpListCommand, runMcpPrintCommand, runMcpSmokeCommand, runMcpWriteCommand } from "./commands/mcp.js";
 import { runPluginBuildCommand, runPluginDiffCommand, runPluginValidateCommand } from "./commands/plugin.js";
 import { runRelayInitCommand } from "./commands/relay.js";
 import { runShipCheckCommand } from "./commands/run-command.js";
@@ -32,13 +32,21 @@ apx version
 apx list
 apx list --type <${ALLOWED_TYPES.join("|")}>
 apx info <asset-name>
-apx check [asset-name]
+apx check [asset-name] [--install-missing] [--dry-run|--yes]
 apx doctor [--full] [--json]
 apx ask <claude|gemini|codex> <prompt> [--artifact-dir <path>] [--json]
+apx ask-claude <prompt> [--artifact-dir <path>] [--json]
+apx ask-gemini <prompt> [--artifact-dir <path>] [--json]
+apx ask-codex <prompt> [--artifact-dir <path>] [--json]
+apx ship-check [--full] [--json]
+apx no-secrets-preflight [--path <path> | --all] [--json]
+apx using-powerups
 apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--dest <path>]
 apx setup <codex|claude-code|gemini> [--dry-run|--yes] [--agent-root <path>] [--instructions-file <path>] [--json]
 apx mcp list
 apx mcp print <config-name> --target <${INSTALL_TARGETS.join("|")}>
+apx mcp smoke <config-name> [--json]
+apx mcp install <config-name> --target <codex|claude-code|generic> [--dry-run|--yes] [--agent-root <path>] [--dest <path>] [--force] [--json]
 apx agents-md list
 apx agents-md print <template-name>
 apx commands list
@@ -121,15 +129,19 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
 
     if (command === "check") {
       const assetName = argv[1];
-      const result = await runCheckCommand(service, assetName);
+      const result = await runCheckCommand(service, assetName, {
+        installMissing: hasFlag(argv, "--install-missing"),
+        dryRun: hasFlag(argv, "--dry-run"),
+        yes: hasFlag(argv, "--yes"),
+      });
       if (json) {
         io.stdout(
           formatResult(
             createResult({
               exitCode: result.exitCode,
               stdout: result.output,
-              warnings: result.exitCode === 0 ? [] : ["missing requirements"],
-              actions: [],
+              warnings: [...(result.exitCode === 0 ? [] : ["missing requirements"]), ...result.warnings],
+              actions: result.actions,
             }),
             true,
           ),
@@ -146,6 +158,40 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
 
     if (command === "ask") {
       return writeExecutionResult(io, await runAskCommand(service, argv), json);
+    }
+
+    if (command === "ask-claude" || command === "ask-gemini" || command === "ask-codex") {
+      const provider = command.replace("ask-", "");
+      return writeExecutionResult(io, await runAskCommand(service, ["ask", provider, ...argv.slice(1)]), json);
+    }
+
+    if (command === "ship-check") {
+      return writeExecutionResult(io, await runShipCheckCommand(service, { full: hasFlag(argv, "--full") }), json);
+    }
+
+    if (command === "no-secrets-preflight") {
+      return writeExecutionResult(
+        io,
+        await runNoSecretsPreflightCommand(service, {
+          all: hasFlag(argv, "--all"),
+          paths: parseOptions(argv, "--path"),
+        }),
+        json,
+      );
+    }
+
+    if (command === "using-powerups") {
+      io.stdout(
+        await runTypedAssetPrintCommand(
+          service,
+          "using-powerups-command",
+          "command",
+          "command",
+          "this prints a command prompt and does not run commands or mutate files",
+          "generic",
+        ),
+      );
+      return 0;
     }
 
     if (command === "install") {
@@ -197,6 +243,30 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
           throw new Error("Missing config name for mcp check");
         }
         return writeExecutionResult(io, await runMcpCheckCommand(service, assetName, parseTarget(argv)), json);
+      }
+      if (subcommand === "smoke") {
+        const assetName = argv[2];
+        if (!assetName) {
+          throw new Error("Missing config name for mcp smoke");
+        }
+        return writeExecutionResult(io, await runMcpSmokeCommand(service, assetName), json);
+      }
+      if (subcommand === "install") {
+        const assetName = argv[2];
+        if (!assetName) {
+          throw new Error("Missing config name for mcp install");
+        }
+        return writeExecutionResult(
+          io,
+          await runMcpInstallCommand(service, assetName, parseTarget(argv), {
+            agentRoot: parseOption(argv, "--agent-root"),
+            dest: parseOption(argv, "--dest"),
+            dryRun: hasFlag(argv, "--dry-run") || !hasFlag(argv, "--yes"),
+            yes: hasFlag(argv, "--yes"),
+            force: hasFlag(argv, "--force"),
+          }),
+          json,
+        );
       }
       if (subcommand === "write") {
         const assetName = argv[2];
