@@ -37,16 +37,20 @@ codex --version   # or: claude --version / gemini --version
 
 ### Turn 0 — Open the relay
 
-Name the relay session. Create a context file.
+Scaffold the session with `apx relay init`:
 
 ```bash
-mkdir -p .apx/relay/<session-name>
+apx relay init <session-name>
 ```
 
-Write a `context.md` file describing:
+This creates `.apx/relay/<session-name>/context.md` with a template. Open it and fill in:
 - The goal of the session.
 - What the secondary agent should know (scope, constraints, current state).
 - What output format you expect from each turn.
+
+The session name must be lowercase letters, digits, and hyphens (e.g. `auth-review`, `patch-2`).
+
+The created `context.md` template:
 
 ```markdown
 # Relay: <session-name>
