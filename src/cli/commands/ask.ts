@@ -14,13 +14,22 @@ const PROVIDERS = {
     assetName: "ask-claude",
     command: "claude",
     displayName: "Claude",
+    buildArgs: (prompt: string): string[] => ["-p", prompt],
   },
   gemini: {
     assetName: "ask-gemini",
     command: "gemini",
     displayName: "Gemini",
+    buildArgs: (prompt: string): string[] => ["-p", prompt],
   },
-} as const;
+  // Codex CLI takes the prompt as a positional argument, not -p.
+  codex: {
+    assetName: "ask-codex",
+    command: "codex",
+    displayName: "Codex",
+    buildArgs: (prompt: string): string[] => [prompt],
+  },
+};
 
 type AskProvider = keyof typeof PROVIDERS;
 
@@ -32,7 +41,7 @@ export interface AskData {
 }
 
 function isAskProvider(value: string): value is AskProvider {
-  return value === "claude" || value === "gemini";
+  return value === "claude" || value === "gemini" || value === "codex";
 }
 
 function parsePrompt(argv: string[]): string {
@@ -95,8 +104,7 @@ async function resolveCommand(command: string): Promise<string | undefined> {
   }
 }
 
-async function runLocalCli(commandPath: string, prompt: string): Promise<{ exitCode: number; stdout: string; stderr: string }> {
-  const args = ["-p", prompt];
+async function runLocalCli(commandPath: string, args: string[]): Promise<{ exitCode: number; stdout: string; stderr: string }> {
   const lowerPath = commandPath.toLowerCase();
   const isWindowsScript =
     process.platform === "win32" && (lowerPath.endsWith(".cmd") || lowerPath.endsWith(".bat"));
@@ -166,7 +174,7 @@ function artifactContent(input: {
 export async function runAskCommand(service: CatalogService, argv: string[]): Promise<ExecutionResult<AskData>> {
   const providerName = argv[1];
   if (!providerName || !isAskProvider(providerName)) {
-    throw new Error("Unknown ask provider. Expected one of: claude, gemini");
+    throw new Error("Unknown ask provider. Expected one of: claude, gemini, codex");
   }
 
   const prompt = parsePrompt(argv);
@@ -188,7 +196,7 @@ export async function runAskCommand(service: CatalogService, argv: string[]): Pr
     );
   }
 
-  const cliResult = await runLocalCli(commandPath, prompt);
+  const cliResult = await runLocalCli(commandPath, provider.buildArgs(prompt));
   const artifactDir = path.resolve(parseOption(argv, "--artifact-dir") ?? path.join(service.repoRoot, ".apx", "artifacts"));
   const artifactPath = path.join(artifactDir, `${providerName}-${slugify(prompt)}-${artifactTimestamp()}.md`);
 
