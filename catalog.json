@@ -258,6 +258,15 @@
     "maturity": "draft"
   },
   {
+    "name": "agent-relay",
+    "type": "workflow",
+    "summary": "Experimental stateless multi-turn delegation protocol between agents via artifact threading.",
+    "path": "workflows/agent-relay.md",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["delegation", "multi-agent", "artifacts", "experimental"],
+    "maturity": "draft"
+  },
+  {
     "name": "validate-skills",
     "type": "script",
     "summary": "Validate that every skill folder has a non-empty SKILL.md with required frontmatter.",
