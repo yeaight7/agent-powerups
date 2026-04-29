@@ -163,18 +163,18 @@
   {
     "name": "github-local",
     "type": "mcp-config",
-    "summary": "Local GitHub MCP config snippets for Codex, Claude Code, and generic clients.",
+    "summary": "Verified local GitHub MCP check, smoke, and install flow for Codex, Claude Code, and generic clients.",
     "path": "mcp/generic/github-local.json",
-    "compatible_with": ["generic"],
-    "tags": ["mcp", "github", "local", "experimental"],
-    "maturity": "draft",
+    "compatible_with": ["generic", "codex", "claude-code"],
+    "tags": ["mcp", "github", "local", "docker"],
+    "maturity": "beta",
     "requires": {
       "commands": ["docker"]
     },
     "mcp": {
       "required_env": ["GITHUB_TOKEN"],
       "server_package": "ghcr.io/github/github-mcp-server",
-      "warning": "Requires Docker. Uses ghcr.io/github/github-mcp-server (official). Set GITHUB_TOKEN env var before use.",
+      "warning": "Requires Docker. Uses ghcr.io/github/github-mcp-server (official). Set GITHUB_TOKEN or GITHUB_PAT env var before use.",
       "output_hints": {
         "generic": ".mcp.json",
         "claude-code": ".mcp.json",
