@@ -398,7 +398,7 @@ const SUBPROCESS_PROVIDERS = {
   codex: {
     command: "codex",
     displayName: "Codex",
-    buildArgs: (prompt: string) => ["--full-auto", prompt],
+    buildArgs: (prompt: string) => [prompt],
   },
 } as const;
 
@@ -793,6 +793,7 @@ export async function runRelayDaemonCommand(repoRoot: string, argv: string[]): P
   };
 
   const { backend, acpSessionId } = await buildRelayBackend(provider, repoRoot, model, log);
+  const token = crypto.randomBytes(16).toString("hex");
 
   const server = net.createServer((socket) => {
     let buffer = "";
@@ -803,7 +804,7 @@ export async function runRelayDaemonCommand(repoRoot: string, argv: string[]): P
         const line = buffer.slice(0, newlineIndex).trim();
         buffer = buffer.slice(newlineIndex + 1);
         if (line) {
-          void handleDaemonLine(line, socket, backend, server);
+          void handleDaemonLine(line, socket, backend, server, token);
         }
         newlineIndex = buffer.indexOf("\n");
       }
@@ -844,13 +845,19 @@ async function handleDaemonLine(
   socket: net.Socket,
   backend: RelayBackend,
   server: net.Server,
+  token: string,
 ): Promise<void> {
   const respond = (response: Record<string, unknown>) => {
     socket.write(`${JSON.stringify(response)}\n`);
   };
 
   try {
-    const request = JSON.parse(line) as { type?: string; prompt?: string; timeoutMs?: number };
+    const request = JSON.parse(line) as { type?: string; prompt?: string; timeoutMs?: number; token?: string };
+    if (!request.token || request.token !== token) {
+      respond({ ok: false, error: "Unauthorized" });
+      socket.end();
+      return;
+    }
     if (request.type === "ping") {
       respond({ ok: true, data: { status: "active" } });
       return;
