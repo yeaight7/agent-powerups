@@ -174,7 +174,7 @@
     "mcp": {
       "required_env": ["GITHUB_TOKEN"],
       "server_package": "ghcr.io/github/github-mcp-server",
-      "warning": "Requires Docker. Uses ghcr.io/github/github-mcp-server (official). Set GITHUB_TOKEN or GITHUB_PAT env var before use.",
+      "warning": "Requires Docker. Uses ghcr.io/github/github-mcp-server (official). Set GITHUB_TOKEN or GITHUB_PAT env var before use. The ghcr.io image is currently unpinned (latest) by default; it is strongly recommended to pin to a specific digest in production.",
       "output_hints": {
         "generic": ".mcp.json",
         "claude-code": ".mcp.json",
