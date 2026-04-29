@@ -29,6 +29,7 @@
   },
   "files": [
     "dist/",
+    "!dist/test/",
     "skills/",
     "commands/",
     "hooks/",
