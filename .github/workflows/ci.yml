@@ -27,11 +27,6 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-
       - name: Install dependencies
         run: npm ci
 
@@ -41,11 +36,5 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Validate skills
-        run: python scripts/validate-skills.py
-
-      - name: Validate catalog
-        run: python scripts/validate-catalog.py
-
-      - name: Check requirements
-        run: python scripts/check-requirements.py
+      - name: Validate
+        run: node dist/cli/apx.js validate skills && node dist/cli/apx.js validate catalog

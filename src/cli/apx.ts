@@ -12,6 +12,7 @@ import { runInstallCommand } from "./commands/install.js";
 import { runListCommand } from "./commands/list.js";
 import { runMcpCheckCommand, runMcpListCommand, runMcpPrintCommand, runMcpWriteCommand } from "./commands/mcp.js";
 import { runPluginBuildCommand, runPluginDiffCommand, runPluginValidateCommand } from "./commands/plugin.js";
+import { runValidateCatalogCommand, runValidateSkillsCommand } from "./commands/validate.js";
 import { runShipCheckCommand } from "./commands/run-command.js";
 import { hasFlag, parseOption, parseOptions } from "./utils/args.js";
 import { ALLOWED_TYPES, CatalogError, createCatalogService } from "./utils/catalog.js";
@@ -49,7 +50,9 @@ apx mcp check <config-name> --target <${INSTALL_TARGETS.join("|")}> [--json]
 apx mcp write <config-name> --target <${INSTALL_TARGETS.join("|")}> --dest <path> [--force] [--json]
 apx plugin validate <plugin-path> [--json]
 apx plugin diff <plugin-path> [--json]
-apx plugin build --dest <path> (--dry-run|--write) [--json]`;
+apx plugin build --dest <path> (--dry-run|--write) [--json]
+apx validate skills
+apx validate catalog`;
 
 function getPackageVersion(): string {
   return "0.1.0";
@@ -306,6 +309,17 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
         return 0;
       }
       throw new Error("Unknown workflows subcommand");
+    }
+
+    if (command === "validate") {
+      const subcommand = argv[1];
+      if (subcommand === "skills") {
+        return writeExecutionResult(io, await runValidateSkillsCommand(service), json);
+      }
+      if (subcommand === "catalog") {
+        return writeExecutionResult(io, await runValidateCatalogCommand(service), json);
+      }
+      throw new Error("Unknown validate subcommand. Use: apx validate skills | apx validate catalog");
     }
 
     if (command === "plugin") {
