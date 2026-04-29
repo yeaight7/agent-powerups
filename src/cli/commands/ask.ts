@@ -21,6 +21,7 @@ const PROVIDERS = {
     command: "gemini",
     displayName: "Gemini",
     buildArgs: (prompt: string): string[] => ["-p", prompt],
+    filterStderr: filterGeminiStderr,
   },
   // Codex CLI takes the prompt as a positional argument, not -p.
   codex: {
@@ -32,6 +33,14 @@ const PROVIDERS = {
 };
 
 type AskProvider = keyof typeof PROVIDERS;
+
+function filterGeminiStderr(stderr: string): string {
+  return stderr
+    .split(/\r?\n/)
+    .filter((line) => !/^Warning: (?:256-color support|True color \(24-bit\) support) not detected\./.test(line.trim()))
+    .join("\n")
+    .trimEnd();
+}
 
 export interface AskData {
   provider: AskProvider;
@@ -104,7 +113,11 @@ async function resolveCommand(command: string): Promise<string | undefined> {
   }
 }
 
-async function runLocalCli(commandPath: string, args: string[]): Promise<{ exitCode: number; stdout: string; stderr: string }> {
+async function runLocalCli(
+  commandPath: string,
+  args: string[],
+  options: { env?: NodeJS.ProcessEnv } = {},
+): Promise<{ exitCode: number; stdout: string; stderr: string }> {
   const lowerPath = commandPath.toLowerCase();
   const isWindowsScript =
     process.platform === "win32" && (lowerPath.endsWith(".cmd") || lowerPath.endsWith(".bat"));
@@ -116,6 +129,7 @@ async function runLocalCli(commandPath: string, args: string[]): Promise<{ exitC
     const result = await execFileAsync(executable, executableArgs, {
       windowsHide: true,
       maxBuffer: 1024 * 1024 * 10,
+      env: options.env,
     });
     return {
       exitCode: 0,
@@ -196,7 +210,12 @@ export async function runAskCommand(service: CatalogService, argv: string[]): Pr
     );
   }
 
-  const cliResult = await runLocalCli(commandPath, provider.buildArgs(prompt));
+  const cliResult = await runLocalCli(commandPath, provider.buildArgs(prompt), {
+    env: providerName === "gemini"
+      ? { ...process.env, TERM: "xterm-256color", COLORTERM: "truecolor" }
+      : process.env,
+  });
+  const stderr = "filterStderr" in provider ? provider.filterStderr(cliResult.stderr) : cliResult.stderr;
   const artifactDir = path.resolve(parseOption(argv, "--artifact-dir") ?? path.join(service.repoRoot, ".apx", "artifacts"));
   const artifactPath = path.join(artifactDir, `${providerName}-${slugify(prompt)}-${artifactTimestamp()}.md`);
 
@@ -207,7 +226,7 @@ export async function runAskCommand(service: CatalogService, argv: string[]): Pr
       provider,
       prompt,
       stdout: cliResult.stdout,
-      stderr: cliResult.stderr,
+      stderr,
       exitCode: cliResult.exitCode,
     }),
     "utf8",
@@ -224,7 +243,7 @@ export async function runAskCommand(service: CatalogService, argv: string[]): Pr
     ]
       .filter((line, index) => index < 3 || line)
       .join("\n"),
-    stderr: cliResult.stderr,
+    stderr,
     warnings: cliResult.exitCode === 0 ? [] : [`${provider.command} exited with code ${cliResult.exitCode}`],
     actions: [`write ${artifactPath}`],
     data: {
