@@ -36,5 +36,8 @@ jobs:
       - name: Test
         run: npm test
 
+      - name: Pack Smoke Test
+        run: npm pack --dry-run
+
       - name: Validate
         run: node dist/cli/apx.js validate skills && node dist/cli/apx.js validate catalog
