@@ -21,7 +21,7 @@ Output format requested: <bullet list / patch / yes-no with explanation / etc.>
 <paste relevant code, diff, error, or plan here>
 `;
 
-type RelayProvider = "gemini";
+type RelayProvider = "gemini" | "claude" | "codex";
 
 interface RelayState {
   sessionName: string;
@@ -75,6 +75,11 @@ interface AcpMessage {
   params?: any;
   result?: any;
   error?: { code: number; message: string; data?: unknown };
+}
+
+interface RelayBackend {
+  prompt(prompt: string, timeoutMs: number): Promise<{ text: string; stopReason: string }>;
+  close(): void;
 }
 
 function validateSessionName(sessionName: string): void {
@@ -333,6 +338,70 @@ class GeminiAcpClient {
   }
 }
 
+class SubprocessClient implements RelayBackend {
+  constructor(
+    private readonly commandPath: string,
+    private readonly buildArgs: (prompt: string) => string[],
+    private readonly log: (line: string) => void,
+  ) {}
+
+  async prompt(prompt: string, timeoutMs: number): Promise<{ text: string; stopReason: string }> {
+    return new Promise((resolve, reject) => {
+      const args = this.buildArgs(prompt);
+      const isWindowsScript =
+        process.platform === "win32" && /\.(?:cmd|bat)$/i.test(this.commandPath);
+
+      const child: ChildProcessWithoutNullStreams = isWindowsScript
+        ? spawnWindowsScript(this.commandPath, args)
+        : spawn(this.commandPath, args, {
+            env: { ...process.env, TERM: "xterm-256color", COLORTERM: "truecolor" },
+            windowsHide: true,
+          });
+
+      const chunks: string[] = [];
+
+      child.stdout.on("data", (chunk: Buffer) => chunks.push(chunk.toString()));
+      child.stderr.on("data", (chunk: Buffer) => this.log(chunk.toString().trimEnd()));
+
+      const timer = setTimeout(() => {
+        child.kill("SIGTERM");
+        reject(new Error(`Subprocess timed out after ${timeoutMs}ms`));
+      }, timeoutMs);
+
+      child.on("exit", (code, signal) => {
+        clearTimeout(timer);
+        if (signal === "SIGTERM") return;
+        resolve({
+          text: chunks.join("").trim(),
+          stopReason: code === 0 ? "end_turn" : `exit_${code ?? "unknown"}`,
+        });
+      });
+
+      child.on("error", (err) => {
+        clearTimeout(timer);
+        reject(err);
+      });
+    });
+  }
+
+  close(): void {
+    // no-op
+  }
+}
+
+const SUBPROCESS_PROVIDERS = {
+  claude: {
+    command: "claude",
+    displayName: "Claude",
+    buildArgs: (prompt: string) => ["-p", prompt],
+  },
+  codex: {
+    command: "codex",
+    displayName: "Codex",
+    buildArgs: (prompt: string) => ["--full-auto", prompt],
+  },
+} as const;
+
 async function sendDaemonRequest<T>(
   state: RelayState,
   request: Record<string, unknown>,
@@ -391,10 +460,14 @@ function cliPath(): string {
 
 function parseProvider(argv: string[]): RelayProvider {
   const provider = parseOption(argv, "--provider") ?? "gemini";
-  if (provider !== "gemini") {
-    throw new Error("Persistent relay currently supports --provider gemini");
+
+  if (provider !== "gemini" && provider !== "claude" && provider !== "codex") {
+    throw new Error(
+      `Unknown relay provider: ${provider}. Expected one of: gemini, claude, codex`,
+    );
   }
-  return provider;
+
+  return provider as RelayProvider;
 }
 
 function parseRelayPrompt(argv: string[]): string {
@@ -478,7 +551,7 @@ export async function runRelayInitCommand(repoRoot: string, sessionName: string)
       `context: ${contextPath}`,
       "",
       "Edit context.md to describe your goal and paste Turn 0 context.",
-      `Then start the persistent secondary agent: apx relay start ${sessionName} --provider gemini`,
+      `Then start the persistent secondary agent: apx relay start ${sessionName} --provider <gemini|claude|codex>`,
       `Delegate with: apx relay ask ${sessionName} "<task for secondary agent>"`,
     ].join("\n"),
     actions: [`write ${contextPath}`],
@@ -589,7 +662,7 @@ export async function runRelayAskCommand(repoRoot: string, argv: string[]): Prom
 
   const state = await readState(repoRoot, sessionName);
   if (!state || state.status !== "active") {
-    throw new Error(`Relay is not active. Start it with: apx relay start ${sessionName} --provider gemini`);
+    throw new Error(`Relay is not active. Start it with: apx relay start ${sessionName} --provider <gemini|claude|codex>`);
   }
 
   const timeoutMs = Number(parseOption(argv, "--timeout-ms") ?? 120000);
@@ -656,6 +729,53 @@ export async function runRelayStopCommand(repoRoot: string, sessionName: string)
   });
 }
 
+async function buildRelayBackend(
+  provider: RelayProvider,
+  repoRoot: string,
+  model: string | undefined,
+  log: (line: string) => void,
+): Promise<{ backend: RelayBackend; acpSessionId: string }> {
+  if (provider === "gemini") {
+    const commandPath = await resolveCommand("gemini");
+    if (!commandPath) {
+      throw new Error("Local Gemini CLI required. Verify: gemini --version");
+    }
+
+    const acpChild =
+      process.platform === "win32" && /\.(?:cmd|bat)$/i.test(commandPath)
+        ? spawnWindowsScript(commandPath, ["--acp"])
+        : spawn(commandPath, ["--acp"], {
+            env: { ...process.env, TERM: "xterm-256color", COLORTERM: "truecolor" },
+            windowsHide: true,
+          });
+
+    const acp = new GeminiAcpClient(acpChild, repoRoot, log);
+    await acp.initialize();
+
+    const acpSessionId = await acp.newSession(model);
+
+    return {
+      backend: {
+        prompt: (prompt, timeoutMs) => acp.prompt(acpSessionId, prompt, timeoutMs),
+        close: () => acp.close(),
+      },
+      acpSessionId,
+    };
+  }
+
+  const spec = SUBPROCESS_PROVIDERS[provider];
+  const commandPath = await resolveCommand(spec.command);
+
+  if (!commandPath) {
+    throw new Error(`Local ${spec.displayName} CLI required. Verify: ${spec.command} --version`);
+  }
+
+  return {
+    backend: new SubprocessClient(commandPath, spec.buildArgs, log),
+    acpSessionId: "",
+  };
+}
+
 export async function runRelayDaemonCommand(repoRoot: string, argv: string[]): Promise<ExecutionResult> {
   const sessionName = argv[2];
   if (!sessionName) {
@@ -672,20 +792,7 @@ export async function runRelayDaemonCommand(repoRoot: string, argv: string[]): P
     }
   };
 
-  const commandPath = await resolveCommand(provider);
-  if (!commandPath) {
-    throw new Error("Local Gemini CLI is required for relay. Install and verify with: gemini --version");
-  }
-
-  const acpChild = process.platform === "win32" && /\.(?:cmd|bat)$/i.test(commandPath)
-    ? spawnWindowsScript(commandPath, ["--acp"])
-    : spawn(commandPath, ["--acp"], {
-        env: { ...process.env, TERM: "xterm-256color", COLORTERM: "truecolor" },
-        windowsHide: true,
-      });
-  const acp = new GeminiAcpClient(acpChild, repoRoot, log);
-  await acp.initialize();
-  const acpSessionId = await acp.newSession(model);
+  const { backend, acpSessionId } = await buildRelayBackend(provider, repoRoot, model, log);
 
   const server = net.createServer((socket) => {
     let buffer = "";
@@ -696,7 +803,7 @@ export async function runRelayDaemonCommand(repoRoot: string, argv: string[]): P
         const line = buffer.slice(0, newlineIndex).trim();
         buffer = buffer.slice(newlineIndex + 1);
         if (line) {
-          void handleDaemonLine(line, socket, acp, acpSessionId, server);
+          void handleDaemonLine(line, socket, backend, server);
         }
         newlineIndex = buffer.indexOf("\n");
       }
@@ -728,15 +835,14 @@ export async function runRelayDaemonCommand(repoRoot: string, argv: string[]): P
   await new Promise<void>((resolve) => {
     server.on("close", resolve);
   });
-  acp.close();
+  backend.close();
   return createResult({ stdout: "relay daemon stopped" });
 }
 
 async function handleDaemonLine(
   line: string,
   socket: net.Socket,
-  acp: GeminiAcpClient,
-  acpSessionId: string,
+  backend: RelayBackend,
   server: net.Server,
 ): Promise<void> {
   const respond = (response: Record<string, unknown>) => {
@@ -753,7 +859,7 @@ async function handleDaemonLine(
       if (!request.prompt) {
         throw new Error("Missing relay prompt");
       }
-      const result = await acp.prompt(acpSessionId, request.prompt, request.timeoutMs ?? 120000);
+      const result = await backend.prompt(request.prompt, request.timeoutMs ?? 120000);
       respond({ ok: true, data: result });
       return;
     }
