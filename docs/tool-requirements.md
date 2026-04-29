@@ -8,6 +8,8 @@ Most assets in this repo are plain text and require no extra tooling. A small nu
 - Check first.
 - Show the install command before running it.
 - Ask for approval before installing anything.
+- Use `apx check <asset> --install-missing --dry-run` to preview supported installers.
+- Use `apx check <asset> --install-missing --yes` only after approval.
 - If installation is declined, say so and use the documented fallback.
 - Do not claim a conversion or fetch happened if the tool was missing.
 
@@ -61,6 +63,7 @@ Install:
 
 ```powershell
 python -m pip install markitdown
+node dist\cli\apx.js check markitdown-file-intake --install-missing --dry-run
 ```
 
 Fallback:
@@ -84,6 +87,7 @@ Install:
 
 ```powershell
 npm install -g defuddle
+node dist\cli\apx.js check defuddle --install-missing --dry-run
 ```
 
 Fallback:
