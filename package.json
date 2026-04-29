@@ -36,6 +36,7 @@
     "mcp/",
     "agents-md/",
     "workflows/",
+    "docs/",
     "catalog.json",
     "README.md",
     "LICENSE"

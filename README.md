@@ -82,7 +82,27 @@ node dist/cli/apx.js install markitdown-file-intake --target codex --dry-run
 node dist/cli/apx.js install ask-claude --target codex --dry-run
 ```
 
-8. Keep repo validation in loop:
+8. Dry-run agent setup:
+
+```sh
+node dist/cli/apx.js setup codex --dry-run
+node dist/cli/apx.js setup claude-code --dry-run
+node dist/cli/apx.js setup gemini --dry-run
+```
+
+Apply only after review:
+
+```sh
+node dist/cli/apx.js setup codex --yes
+```
+
+Agent setup docs:
+
+- [`docs/setup/codex.md`](./docs/setup/codex.md)
+- [`docs/setup/claude-code.md`](./docs/setup/claude-code.md)
+- [`docs/setup/gemini.md`](./docs/setup/gemini.md)
+
+9. Keep repo validation in loop:
 
 ```sh
 python scripts/validate-skills.py
@@ -195,6 +215,9 @@ node dist/cli/apx.js check markitdown-file-intake
 node dist/cli/apx.js ask claude "Review this patch" --json
 node dist/cli/apx.js ask gemini "Brainstorm test cases" --json
 node dist/cli/apx.js install markitdown-file-intake --target codex --dry-run
+node dist/cli/apx.js setup codex --dry-run
+node dist/cli/apx.js setup claude-code --dry-run
+node dist/cli/apx.js setup gemini --dry-run
 ```
 
 Extra surfaces:

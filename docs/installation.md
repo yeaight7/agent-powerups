@@ -32,6 +32,33 @@ node dist\cli\apx.js ask gemini "Return OK only" --json
 
 5. Copy or print only what you need. Default `apx install` mode is dry-run.
 
+## Agent Setup
+
+Setup is explicit, review-first, and dry-run by default.
+
+```powershell
+node dist\cli\apx.js setup codex --dry-run
+node dist\cli\apx.js setup claude-code --dry-run
+node dist\cli\apx.js setup gemini --dry-run
+```
+
+Apply only with confirmation:
+
+```powershell
+node dist\cli\apx.js setup codex --yes
+node dist\cli\apx.js setup claude-code --yes
+node dist\cli\apx.js setup gemini --yes
+```
+
+Use `--agent-root <path>` to avoid writing to a default agent root during first review.
+Use `--instructions-file <path>` when you want setup to append the marked `agent-powerups` block to a specific instruction file.
+
+Per-agent details:
+
+- [`docs/setup/codex.md`](./setup/codex.md)
+- [`docs/setup/claude-code.md`](./setup/claude-code.md)
+- [`docs/setup/gemini.md`](./setup/gemini.md)
+
 ## Recommended Workflow
 
 - Start with one asset at a time.
