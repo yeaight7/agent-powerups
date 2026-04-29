@@ -116,17 +116,17 @@ No backup is created when the instruction block is already present and no edit i
 
 1. Remove the `agent-powerups/` directory under the Claude Code root.
 2. If an instruction file was modified, restore the `.bak` file over the edited file.
-3. Remove any manually enabled MCP config that was copied from `agent-powerups/mcp/`.
+3. Remove the `github-local` server entry from `.mcp.json` if you enabled it.
 
 ## Limitations
 
-- MCP snippets are copied for review only; setup does not enable MCP servers.
+- GitHub MCP is copied for review; enable it with `apx mcp check`, `apx mcp smoke`, and `apx mcp install github-local --target claude-code --yes` only after approval.
 - Shell profiles are not changed.
 - External tools are not installed.
 - Compatibility is limited to local files and user-reviewed instructions.
 
 ## Security Notes
 
-- Do not write secrets into copied MCP snippets.
-- Set tokens such as `GITHUB_TOKEN` in the local shell/session only.
+- Do not write secrets into copied MCP config.
+- Set tokens such as `GITHUB_TOKEN` or `GITHUB_PAT` in the local shell/session only.
 - Review all copied skills and hooks before trusting them in privileged workspaces.
