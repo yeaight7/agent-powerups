@@ -1,6 +1,6 @@
-[mcpServers.github-local]
+[mcp_servers.github-local]
 command = "docker"
 args = ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"]
 
-[mcpServers.github-local.env]
+[mcp_servers.github-local.env]
 GITHUB_PERSONAL_ACCESS_TOKEN = "${GITHUB_TOKEN}"
