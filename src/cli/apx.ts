@@ -32,7 +32,7 @@ apx list --type <${ALLOWED_TYPES.join("|")}>
 apx info <asset-name>
 apx check [asset-name]
 apx doctor [--full] [--json]
-apx ask <claude|gemini> <prompt> [--artifact-dir <path>] [--json]
+apx ask <claude|gemini|codex> <prompt> [--artifact-dir <path>] [--json]
 apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--dest <path>]
 apx mcp list
 apx mcp print <config-name> --target <${INSTALL_TARGETS.join("|")}>
