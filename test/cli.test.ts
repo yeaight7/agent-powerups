@@ -64,6 +64,29 @@ async function createStubCommand(dir: string, name: string, output: string): Pro
   await fs.chmod(filePath, 0o755);
 }
 
+async function createDockerStub(dir: string, mode: "ok" | "fail"): Promise<void> {
+  if (process.platform === "win32") {
+    const body = mode === "ok"
+      ? [
+          "@echo off",
+          "if \"%1\"==\"info\" echo DOCKER_INFO_OK && exit /b 0",
+          "if \"%1\"==\"run\" echo DOCKER_RUN_OK %* && exit /b 0",
+          "echo DOCKER_STUB %*",
+          "exit /b 0",
+        ].join("\r\n")
+      : "@echo off\r\necho DOCKER_FAIL %* 1>&2\r\nexit /b 1";
+    await fs.writeFile(path.join(dir, "docker.cmd"), `${body}\r\n`, "utf8");
+    return;
+  }
+
+  const filePath = path.join(dir, "docker");
+  const body = mode === "ok"
+    ? "#!/bin/sh\nif [ \"$1\" = \"info\" ]; then echo DOCKER_INFO_OK; exit 0; fi\nif [ \"$1\" = \"run\" ]; then echo \"DOCKER_RUN_OK $*\"; exit 0; fi\necho \"DOCKER_STUB $*\"\n"
+    : "#!/bin/sh\necho \"DOCKER_FAIL $*\" >&2\nexit 1\n";
+  await fs.writeFile(filePath, body, { encoding: "utf8", mode: 0o755 });
+  await fs.chmod(filePath, 0o755);
+}
+
 async function copyDir(source: string, destination: string): Promise<void> {
   await fs.cp(source, destination, { recursive: true });
 }
@@ -347,6 +370,54 @@ test("ask gemini runs local CLI and writes artifact", async () => {
   assert.match(result.stdout, /GEMINI_STUB/);
 });
 
+test("flat ask-gemini alias runs local Gemini CLI and writes artifact", async () => {
+  const commandDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-ask-bin-"));
+  const artifactDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-artifacts-"));
+  await createStubCommand(commandDir, "gemini", "GEMINI_ALIAS_STUB");
+
+  const result = await executeWithPath([
+    "ask-gemini",
+    "Brainstorm test cases",
+    "--artifact-dir",
+    artifactDir,
+    "--json",
+  ], commandDir);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.provider, "gemini");
+  assert.match(json.stdout, /GEMINI_ALIAS_STUB/);
+});
+
+test("flat ship-check alias runs executable command", async () => {
+  const result = await execute(["ship-check", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.match(json.stdout, /ship-check/);
+  assert.ok(json.data.checks.some((check: { name: string }) => check.name === "apx validate catalog"));
+});
+
+test("flat no-secrets-preflight alias scans explicit path", async () => {
+  const cleanPath = await tempPath("clean.txt");
+  await fs.writeFile(cleanPath, "const tokenName = 'placeholder only';\n", "utf8");
+
+  const result = await execute(["no-secrets-preflight", "--path", cleanPath, "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.mode, "paths");
+  assert.equal(json.data.findings.length, 0);
+});
+
+test("flat using-powerups alias prints the command prompt", async () => {
+  const result = await execute(["using-powerups"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /command: using-powerups-command/);
+  assert.match(result.stdout, /Find and apply installed Agent Powerups/);
+});
+
 test("ask requires a prompt", async () => {
   const result = await execute(["ask", "claude"]);
 
@@ -422,15 +493,102 @@ test("hooks run no-secrets-preflight passes clean explicit path", async () => {
 });
 
 test("mcp check reports structured metadata", async () => {
-  const result = await execute(["mcp", "check", "github-local", "--target", "generic", "--json"]);
+  const previousToken = process.env.GITHUB_TOKEN;
+  try {
+    process.env.GITHUB_TOKEN = "test-token";
+    const result = await execute(["mcp", "check", "github-local", "--target", "generic", "--json"]);
 
-  assert.equal(result.exitCode, 0);
+    assert.equal(result.exitCode, 0);
+    const json = parseJson(result.stdout);
+    assert.equal(json.data.name, "github-local");
+    assert.equal(json.data.target, "generic");
+    assert.ok(json.data.requiredEnv.some((entry: { name: string; set: boolean }) => entry.name === "GITHUB_TOKEN" && entry.set));
+    assert.ok(json.data.requiredCommands.some((entry: { name: string }) => entry.name === "docker"));
+    assert.match(json.data.warning, /github\/github-mcp-server/i);
+  } finally {
+    if (previousToken === undefined) {
+      delete process.env.GITHUB_TOKEN;
+    } else {
+      process.env.GITHUB_TOKEN = previousToken;
+    }
+  }
+});
+
+test("mcp check fails when GitHub token is missing", async () => {
+  const previousToken = process.env.GITHUB_TOKEN;
+  const previousPat = process.env.GITHUB_PAT;
+  try {
+    delete process.env.GITHUB_TOKEN;
+    delete process.env.GITHUB_PAT;
+    const result = await execute(["mcp", "check", "github-local", "--target", "generic", "--json"]);
+
+    assert.equal(result.exitCode, 1);
+    const json = parseJson(result.stdout);
+    assert.ok(json.warnings.some((warning: string) => warning.includes("missing env:GITHUB_TOKEN or GITHUB_PAT")));
+  } finally {
+    if (previousToken === undefined) {
+      delete process.env.GITHUB_TOKEN;
+    } else {
+      process.env.GITHUB_TOKEN = previousToken;
+    }
+    if (previousPat === undefined) {
+      delete process.env.GITHUB_PAT;
+    } else {
+      process.env.GITHUB_PAT = previousPat;
+    }
+  }
+});
+
+test("mcp smoke verifies docker launch without printing token", async () => {
+  const commandDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-docker-bin-"));
+  await createDockerStub(commandDir, "ok");
+  const previousPath = process.env.PATH;
+  const previousToken = process.env.GITHUB_TOKEN;
+  try {
+    process.env.PATH = `${commandDir}${path.delimiter}${process.env.PATH ?? ""}`;
+    process.env.GITHUB_TOKEN = "secret-token-value";
+    const result = await execute(["mcp", "smoke", "github-local", "--json"]);
+
+    assert.equal(result.exitCode, 0);
+    const json = parseJson(result.stdout);
+    assert.equal(json.data.name, "github-local");
+    assert.ok(json.data.checks.some((check: { name: string; exitCode: number }) => check.name === "docker info" && check.exitCode === 0));
+    assert.doesNotMatch(result.stdout, /secret-token-value/);
+  } finally {
+    process.env.PATH = previousPath;
+    if (previousToken === undefined) {
+      delete process.env.GITHUB_TOKEN;
+    } else {
+      process.env.GITHUB_TOKEN = previousToken;
+    }
+  }
+});
+
+test("mcp install codex writes marked config block with backup and is idempotent", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-mcp-codex-"));
+  const configPath = path.join(agentRoot, "config.toml");
+  await fs.writeFile(configPath, "# existing config\n", "utf8");
+
+  const first = await execute(["mcp", "install", "github-local", "--target", "codex", "--agent-root", agentRoot, "--yes", "--json"]);
+  assert.equal(first.exitCode, 0);
+  const firstJson = parseJson(first.stdout);
+  assert.equal(firstJson.data.modifiedFiles.length, 1);
+  assert.equal(firstJson.data.backupFiles.length, 1);
+  const content = await fs.readFile(configPath, "utf8");
+  assert.match(content, /BEGIN agent-powerups github-local/);
+  assert.match(content, /ghcr\.io\/github\/github-mcp-server/);
+
+  const second = await execute(["mcp", "install", "github-local", "--target", "codex", "--agent-root", agentRoot, "--yes", "--json"]);
+  assert.equal(second.exitCode, 0);
+  assert.equal(parseJson(second.stdout).data.modifiedFiles.length, 0);
+});
+
+test("check install-missing dry-run reports approved installer without running it", async () => {
+  const result = await execute(["check", "defuddle", "--install-missing", "--dry-run", "--json"]);
+
+  assert.equal(result.exitCode, 1);
   const json = parseJson(result.stdout);
-  assert.equal(json.data.name, "github-local");
-  assert.equal(json.data.target, "generic");
-  assert.ok(json.data.requiredEnv.some((entry: { name: string }) => entry.name === "GITHUB_TOKEN"));
-  assert.ok(json.data.requiredCommands.some((entry: { name: string }) => entry.name === "docker"));
-  assert.match(json.data.warning, /github\/github-mcp-server/i);
+  assert.ok(json.actions.some((action: string) => action.includes("would install npm:defuddle")));
 });
 
 test("mcp write requires explicit destination and refuses overwrite", async () => {
