@@ -137,5 +137,5 @@ Artifacts are written by `apx ask`. Context is written by the host agent. Both a
 - **No real-time back-and-forth.** Each turn completes before the next begins.
 - **No shared state between CLIs.** The secondary agent has no memory of prior turns unless you include prior context explicitly.
 - **Token budget.** Accumulated context grows with each turn. Keep summaries tight.
-- **`apx ask codex` is not wired in v1.** Use `apx ask claude` or `apx ask gemini`, or invoke `codex` directly per `ask-codex` SKILL.md.
+- **`apx ask codex` passes the prompt as a positional argument.** Some Codex CLI versions open a TUI rather than writing to stdout. If stdout is empty, check `codex --help` for a quiet/non-interactive flag and invoke `codex` directly with output redirection.
 - **Not tested across all providers.** Treat each new provider combination as a new integration until verified.
