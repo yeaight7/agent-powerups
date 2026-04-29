@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { runAgentsMdListCommand, runAgentsMdPrintCommand } from "./commands/agents-md.js";
 import { runAskCommand } from "./commands/ask.js";
@@ -71,7 +73,12 @@ apx relay ask <session-name> <prompt> [--timeout-ms <ms>] [--json]
 apx relay stop <session-name> [--json]`;
 
 function getPackageVersion(): string {
-  return "0.1.0";
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../../package.json"), "utf8"));
+    return pkg.version;
+  } catch {
+    return "unknown";
+  }
 }
 
 function parseTarget(argv: string[]): InstallTarget {
