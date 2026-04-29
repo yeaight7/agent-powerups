@@ -880,7 +880,7 @@ test("relay init rejects duplicate session", async () => {
 test("relay keeps a Gemini ACP agent active for start ask status stop", async () => {
   const cwd = await fs.mkdtemp(path.join(os.tmpdir(), "apx-relay-"));
   await copyDir(path.join(repoRoot, "catalog.json"), path.join(cwd, "catalog.json"));
-  for (const dirName of ["skills", "commands", "hooks", "mcp", "agents-md", "workflows", "examples", "docs"]) {
+  for (const dirName of ["skills", "commands", "hooks", "mcp", "agents-md", "workflows", "examples", "docs", "scripts"]) {
     await copyDir(path.join(repoRoot, dirName), path.join(cwd, dirName));
   }
   await copyDir(path.join(repoRoot, "README.md"), path.join(cwd, "README.md"));
