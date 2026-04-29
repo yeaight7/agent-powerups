@@ -13,12 +13,12 @@ Scope stays narrow until the repo is public-ready.
 - deeper AGENTS.md templates for common project types
 - more small hook examples with explicit safety guards
 - more command prompts for one or two agent surfaces
-- MCP config recipes with clear trust warnings
+- additional MCP config recipes after check/smoke/install behavior is testable
 - platform examples after each target behavior is tested
 
 ## Not Planned Yet
 
-- full CLI
+- broad package-manager-style CLI
 - cross-agent orchestration
 - hidden auto-installers
 - destructive hooks
