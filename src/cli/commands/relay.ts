@@ -142,9 +142,9 @@ async function resolveCommand(command: string): Promise<string | undefined> {
 }
 
 function spawnWindowsScript(commandPath: string, args: string[]): ChildProcessWithoutNullStreams {
-  const quotedCommand = `"${commandPath.replace(/"/g, '\\"')}" ${args.map((arg) => `"${arg.replace(/"/g, '\\"')}"`).join(" ")}`;
-  return spawn(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", quotedCommand], {
+  return spawn(commandPath, args, {
     env: { ...process.env, TERM: "xterm-256color", COLORTERM: "truecolor" },
+    shell: true,
     windowsHide: true,
   });
 }
