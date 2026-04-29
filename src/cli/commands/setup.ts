@@ -136,7 +136,7 @@ function setupInstructionBlock(profile: AgentProfile, installRoot: string): stri
     "Use these local assets when relevant:",
     "- Read skills from `agent-powerups/skills/` before applying matching workflows.",
     "- Read command prompts from `agent-powerups/commands/` before using slash-command-style flows.",
-    "- Treat MCP snippets in `agent-powerups/mcp/` as manual-review config only.",
+    "- For GitHub MCP, run `apx mcp check github-local`, `apx mcp smoke github-local`, then dry-run `apx mcp install github-local --target <agent>` before enabling it.",
     "- Treat hooks in `agent-powerups/hooks/` as review-before-use recipes, not active hooks.",
     "- Do not install external tools, mutate shell profiles, write secrets, or enable MCP servers without explicit user approval.",
     "",
