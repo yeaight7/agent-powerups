@@ -1,6 +1,6 @@
 # using-powerups
 
-Purpose: discover and apply installed Agent Powerups without guessing.
+Purpose: Find and apply installed Agent Powerups without guessing.
 
 Use this prompt when starting non-trivial work in a repo where Agent Powerups may be installed.
 
