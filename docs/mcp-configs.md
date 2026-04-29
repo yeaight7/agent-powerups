@@ -1,60 +1,50 @@
 # MCP Configs
 
-This repository currently ships one local-first MCP config family: `github-local`.
+This repository ships one supported local MCP feature: `github-local`.
 
-Use `apx mcp print <config-name> --target <target>` to print snippets for review, `apx mcp check` to validate local requirements, and `apx mcp write` to write a snippet to an explicit destination. Do not paste real tokens into source-controlled files.
+`github-local` connects an MCP client to the official Docker image `ghcr.io/github/github-mcp-server`. It is agent-oriented: check prerequisites, smoke-test Docker launch, dry-run the target install, then apply only after explicit approval.
 
-## `github-local`
-
-What it does:
-- connects an MCP client to the GitHub MCP server through `npx`
-
-Target agents:
-- `claude-code`: reviewed `.mcp.json` style snippet based on Claude Code documentation
-- `generic`: generic JSON snippet for manual adaptation
-- `codex`: experimental TOML-style local snippet for manual review only
-
-Required command/package:
-- `npx`
-- `@modelcontextprotocol/server-github`
-
-Upstream status:
-- `@modelcontextprotocol/server-github` is deprecated on npm. This config remains local/demo-compatible, but public docs and production setups should verify current guidance in `github/github-mcp-server`.
-- GitHub currently recommends the remote GitHub MCP server for most users when host support exists.
-
-Required environment variables:
-- `GITHUB_TOKEN=${GITHUB_TOKEN}`
-
-Security implications:
-- grants the MCP client access to GitHub through your token
-- token should be set in local environment, not committed
-- review scope and permissions of the token before use
-
-Copy/install instructions:
-1. Check local requirements:
+## Commands
 
 ```sh
-node dist/cli/apx.js mcp check github-local --target claude-code
+node dist/cli/apx.js mcp check github-local --target codex --json
+node dist/cli/apx.js mcp smoke github-local --json
+node dist/cli/apx.js mcp install github-local --target codex --dry-run
+node dist/cli/apx.js mcp install github-local --target claude-code --dry-run
 ```
 
-2. Print or write the snippet:
+Apply after review:
 
 ```sh
-node dist/cli/apx.js mcp print github-local --target claude-code
+node dist/cli/apx.js mcp install github-local --target codex --yes
+node dist/cli/apx.js mcp install github-local --target claude-code --yes
+```
+
+Generic explicit writes remain available:
+
+```sh
 node dist/cli/apx.js mcp write github-local --target generic --dest .agent-powerups/github-local.json
 ```
 
-3. Copy the printed or written snippet into your local MCP config by hand.
-4. Replace placeholder values locally.
-5. Keep real tokens out of git.
+## Requirements
 
-Write safety:
-- `apx mcp write` requires `--dest`.
-- Existing files are not overwritten unless `--force` is provided.
-- No global MCP config is modified by default.
+- Docker installed and running.
+- `GITHUB_TOKEN` or `GITHUB_PAT` set in the environment.
+- Token value is passed to the container as `GITHUB_PERSONAL_ACCESS_TOKEN`.
 
-Claude Code note:
-- Native Windows setups may require `cmd /c npx ...` wrapping. The shipped Claude Code snippet already uses that conservative form.
+`apx mcp check github-local` exits nonzero when Docker or token prerequisites are missing. `apx mcp smoke github-local` launches Docker checks and redacts token values from output.
 
-Codex note:
-- The shipped Codex TOML snippet is experimental and local-only. Review and adapt it before use.
+## Install Behavior
+
+- Codex target writes a marked `github-local` block to `config.toml` under `--agent-root` or the default Codex root.
+- Claude Code target writes or merges `.mcp.json` under `--agent-root`, or `--dest` when supplied.
+- Existing files are backed up before modification.
+- Re-running install is idempotent when the managed block/config is already current.
+- Dry-run is default unless `--yes` is supplied.
+
+## Security
+
+- Do not commit real tokens.
+- Prefer narrow GitHub token scopes.
+- Review dry-run output before applying.
+- Remove the marked block or merged `github-local` server entry to disable the MCP server.
