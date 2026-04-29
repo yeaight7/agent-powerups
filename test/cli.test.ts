@@ -472,6 +472,33 @@ test("plugin diff detects mirrored asset drift", async () => {
   assert.ok(json.data.diffs.some((diff: string) => diff.includes("skills/systematic-debugging/SKILL.md")));
 });
 
+test("relay init creates context.md and reports session path", async () => {
+  const result = await execute(["relay", "init", "test-session-42"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /test-session-42/);
+  assert.match(result.stdout, /context\.md/);
+  const contextPath = result.stdout.match(/context: (.+)/)?.[1]?.trim() ?? "";
+  const content = await fs.readFile(contextPath, "utf8");
+  assert.match(content, /# Relay: test-session-42/);
+  assert.match(content, /Turn 0 context/);
+});
+
+test("relay init rejects invalid session name", async () => {
+  const result = await execute(["relay", "init", "BAD NAME"]);
+
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stderr, /lowercase/i);
+});
+
+test("relay init rejects duplicate session", async () => {
+  await execute(["relay", "init", "dupe-session"]);
+  const second = await execute(["relay", "init", "dupe-session"]);
+
+  assert.equal(second.exitCode, 1);
+  assert.match(second.stderr, /already exists/i);
+});
+
 test("ship-check resolves npm through PATH on Windows instead of Node install layout", () => {
   const resolved = resolveCheckExecutable("npm", ["test"], "win32");
 
