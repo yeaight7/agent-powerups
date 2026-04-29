@@ -93,7 +93,7 @@ In the response to the user, include:
 - A summary of relevant findings.
 - Any recommendation you are or are not acting on, with rationale.
 
-## Output Shape
+## Output
 
 Artifact path convention:
 
@@ -120,11 +120,26 @@ Artifact should contain:
 
 `apx check ask-codex` verifies whether `codex` is present in PATH.
 
-`apx ask codex` is supported:
+Prefer the flat APX command after reading this skill:
+
+```bash
+apx ask-codex "Review this function for edge cases"
+apx ask-codex "Return OK only" --json
+```
+
+Nested APX form remains supported:
 
 ```bash
 apx ask codex "Review this function for edge cases"
-apx ask codex "Return OK only" --json
 ```
 
 APX passes the prompt as a positional argument (`codex "prompt"`, not `codex -p "prompt"`). This matches the Codex CLI's invocation convention. Verify the output mode with `codex --help` if the captured stdout is empty — some Codex versions open a TUI by default and may require a flag such as `--full-auto` or `-q` for non-interactive output. If that applies, invoke `codex` directly per the workflow above and redirect output manually.
+
+## Verification
+
+```bash
+apx check ask-codex
+apx ask-codex "Return OK only" --json
+```
+
+Confirm JSON includes `provider`, `artifactPath`, `promptLength`, and raw output in `stdout`. Open the artifact before applying advice.
