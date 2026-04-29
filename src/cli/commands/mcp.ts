@@ -167,8 +167,12 @@ async function runProcessCheck(
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<{ name: string; exitCode: number; stdout: string; stderr: string }> {
   const executable = process.platform === "win32" && command === "docker" ? "docker.cmd" : command;
+  const launchCommand = process.platform === "win32" && executable.endsWith(".cmd") ? process.env.ComSpec ?? "cmd.exe" : executable;
+  const launchArgs = process.platform === "win32" && executable.endsWith(".cmd")
+    ? ["/d", "/c", executable, ...args]
+    : args;
   try {
-    const result = await execFileAsync(executable, args, {
+    const result = await execFileAsync(launchCommand, launchArgs, {
       env,
       shell: false,
       windowsHide: true,
