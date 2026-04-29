@@ -20,7 +20,11 @@ function extractFileRefs(content: string): string[] {
   const refs = new Set<string>();
   const refRe = /`([^`\s]+\.(?:md|ps1|sh|ts|js|py|json|toml|ya?ml))`/g;
   for (const m of content.matchAll(refRe)) {
-    refs.add(m[1]);
+    const ref = m[1];
+    // Only check refs that are bare filenames or explicitly under references/ or examples/
+    if (!ref.includes("/") || ref.startsWith("references/") || ref.startsWith("examples/")) {
+      refs.add(ref);
+    }
   }
   return [...refs];
 }
@@ -71,10 +75,14 @@ async function validateSkills(
     if (!fm["description"]) errors.push(`[${entry}] frontmatter missing required field: description`);
 
     for (const ref of extractFileRefs(content)) {
-      const candidates = [
-        path.join(skillDir, ref),
-        path.join(skillDir, path.basename(ref)),
-      ];
+      const basename = path.basename(ref);
+      const candidates = ref.includes("/")
+        ? [path.join(skillDir, ref)]
+        : [
+            path.join(skillDir, ref),
+            path.join(skillDir, "references", basename),
+            path.join(skillDir, "examples", basename),
+          ];
       const found = await Promise.all(candidates.map(fileExists));
       if (!found.some(Boolean)) {
         errors.push(`[${entry}] missing referenced support file: ${ref}`);
