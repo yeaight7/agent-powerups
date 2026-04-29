@@ -16,7 +16,7 @@ Purpose: keep a secondary agent process active so the primary agent or user can 
 
 For Gemini, the daemon launches `gemini --acp`, opens one ACP session, keeps it idle between turns, and sends each `apx relay ask` prompt to that already-active session.
 
-For Claude and Codex, the daemon stays alive to route requests, but each ask launches a fresh subprocess (`claude -p` or `codex --full-auto`). They do not preserve conversation state between relay asks.
+For Claude and Codex, the daemon stays alive to route requests, but each ask launches a fresh subprocess (`claude -p` or `codex`). They do not preserve conversation state between relay asks.
 
 The host gets:
 
