@@ -47,7 +47,7 @@ Setup copies:
 - `workflows/` to `agent-powerups/workflows/`
 - `docs/setup/` to `agent-powerups/docs/setup/`
 
-No Gemini-specific MCP snippet is shipped yet. Setup therefore copies only the generic MCP review snippets.
+No Gemini-specific MCP install target is shipped yet. Setup copies the generic GitHub MCP config for review.
 
 Setup also generates:
 
@@ -116,18 +116,18 @@ No backup is created when the instruction block is already present and no edit i
 
 1. Remove the `agent-powerups/` directory under the Gemini root.
 2. If an instruction file was modified, restore the `.bak` file over the edited file.
-3. Remove any manually enabled MCP config that was copied from `agent-powerups/mcp/`.
+3. Remove any GitHub MCP config copied from `agent-powerups/mcp/` if you enabled it manually.
 
 ## Limitations
 
 - No Gemini-specific command or MCP layout is claimed.
-- MCP snippets are copied for review only; setup does not enable MCP servers.
+- GitHub MCP config is copied for review only; setup does not enable MCP servers for Gemini.
 - Shell profiles are not changed.
 - External tools are not installed.
 - Compatibility is limited to local files and user-reviewed instructions.
 
 ## Security Notes
 
-- Do not write secrets into copied MCP snippets.
-- Set tokens such as `GITHUB_TOKEN` in the local shell/session only.
+- Do not write secrets into copied MCP config.
+- Set tokens such as `GITHUB_TOKEN` or `GITHUB_PAT` in the local shell/session only.
 - Review all copied skills and hooks before trusting them in privileged workspaces.
