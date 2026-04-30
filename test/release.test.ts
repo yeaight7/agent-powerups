@@ -13,6 +13,8 @@ test("package exposes a release preflight command", async () => {
   const packageJson = JSON.parse(await readText("package.json"));
 
   assert.equal(packageJson.scripts["release:check"], "node scripts/release-check.mjs");
+  assert.equal(packageJson.repository.url, "git+https://github.com/yeaight7/agent-powerups.git");
+  assert.ok(packageJson.files.includes("!docs/superpowers/"));
 });
 
 test("release preflight script covers build, validation, version, pack, and publish dry-runs", async () => {
