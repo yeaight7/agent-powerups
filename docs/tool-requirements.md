@@ -63,7 +63,7 @@ Install:
 
 ```powershell
 python -m pip install markitdown
-node dist\cli\apx.js check markitdown-file-intake --install-missing --dry-run
+apx check markitdown-file-intake --install-missing --dry-run
 ```
 
 Fallback:
@@ -87,7 +87,7 @@ Install:
 
 ```powershell
 npm install -g defuddle
-node dist\cli\apx.js check defuddle --install-missing --dry-run
+apx check defuddle --install-missing --dry-run
 ```
 
 Fallback:
