@@ -9,8 +9,8 @@ Shipped assets are organized by type: `skills/`, `commands/`, `hooks/`, `mcp/`, 
 - `npm install`: install Node dependencies.
 - `npm run build`: compile TypeScript with `tsc` and create the `apx` wrapper.
 - `npm run test`: build, then run the Node test suite via `scripts/run-node-tests.mjs`.
-- `node dist/cli/apx.js doctor`: run local health checks after building.
-- `node dist/cli/apx.js list`: inspect catalog entries.
+- `apx doctor`: run local health checks after building.
+- `apx list`: inspect catalog entries.
 - `python scripts/validate-skills.py`: validate skill metadata and required files.
 - `python scripts/validate-catalog.py`: validate `catalog.json`.
 - `python scripts/check-requirements.py`: check documented tool requirements.
