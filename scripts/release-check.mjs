@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
+import { readFile } from "node:fs/promises";
+
+const packageJson = JSON.parse(
+  await readFile(new URL("../package.json", import.meta.url), "utf8"),
+);
+const expectedVersionPattern = new RegExp(`^${escapeRegExp(packageJson.version)}\\s*$`);
 
 const checks = [
   ["npm run build", "npm", ["run", "build"]],
@@ -7,10 +13,14 @@ const checks = [
   ["node dist/cli/apx.js doctor --full", "node", ["dist/cli/apx.js", "doctor", "--full"]],
   ["python scripts/validate-skills.py", "python", ["scripts/validate-skills.py"]],
   ["python scripts/validate-catalog.py", "python", ["scripts/validate-catalog.py"]],
-  ["node dist/cli/apx.js version", "node", ["dist/cli/apx.js", "version"], { expectStdout: /^0\.1\.0\s*$/ }],
+  ["node dist/cli/apx.js version", "node", ["dist/cli/apx.js", "version"], { expectStdout: expectedVersionPattern }],
   ["npm pack --dry-run", "npm", ["pack", "--dry-run"]],
   ["npm publish --dry-run --access public", "npm", ["publish", "--dry-run", "--access", "public"]],
 ];
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 function resolveExecutable(command) {
   if (process.platform === "win32" && command === "npm") {
