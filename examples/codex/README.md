@@ -5,20 +5,20 @@ Goal: stage Agent Powerups for Codex review.
 Dry-run first:
 
 ```powershell
-node dist\cli\apx.js setup codex --dry-run
+apx setup codex --dry-run
 ```
 
 Safer first apply with explicit root:
 
 ```powershell
-node dist\cli\apx.js setup codex --agent-root .agent-powerups-demo\codex --yes
+apx setup codex --agent-root .agent-powerups-demo\codex --yes
 ```
 
 Then inspect:
 
 ```powershell
-node dist\cli\apx.js info using-powerups
-node dist\cli\apx.js check using-powerups
+apx info using-powerups
+apx check using-powerups
 ```
 
 Instruction file behavior:
