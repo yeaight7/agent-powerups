@@ -487,15 +487,6 @@
     }
   },
   {
-    "name": "caveman",
-    "type": "skill",
-    "summary": "Switch to ultra-compressed single-sentence responses for rapid iteration.",
-    "path": "skills/caveman",
-    "compatible_with": ["claude-code", "codex", "generic"],
-    "tags": ["communication", "brevity", "tokens"],
-    "maturity": "beta"
-  },
-  {
     "name": "dependency-review",
     "type": "hook",
     "summary": "Review-before-use hook recipe for auditing new packages before they land in dependency manifests.",
