@@ -392,5 +392,222 @@
     "requires": {
       "commands": ["codex"]
     }
+  },
+  {
+    "name": "graphify",
+    "type": "skill",
+    "summary": "Convert any input into a structured knowledge graph using MCP server and JSON Canvas.",
+    "path": "skills/graphify",
+    "compatible_with": ["claude-code"],
+    "tags": ["knowledge-graph", "json-canvas", "visualization", "mcp"],
+    "maturity": "draft"
+  },
+  {
+    "name": "brainstorming",
+    "type": "skill",
+    "summary": "Force design-first exploration and user approval before any implementation begins.",
+    "path": "skills/brainstorming",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["design", "planning", "ideation", "process"],
+    "maturity": "beta"
+  },
+  {
+    "name": "dispatching-parallel-agents",
+    "type": "skill",
+    "summary": "Orchestrate two or more independent tasks in parallel subagents with structured output collection.",
+    "path": "skills/dispatching-parallel-agents",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["multi-agent", "parallel", "orchestration", "subagents"],
+    "maturity": "beta"
+  },
+  {
+    "name": "test-driven-development",
+    "type": "skill",
+    "summary": "Enforce RED→GREEN→REFACTOR discipline with an Iron Law that prevents test-after or skip patterns.",
+    "path": "skills/test-driven-development",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["tdd", "testing", "quality", "process"],
+    "maturity": "beta"
+  },
+  {
+    "name": "verification-before-completion",
+    "type": "skill",
+    "summary": "Gate work completion behind explicit requirement verification before claiming done.",
+    "path": "skills/verification-before-completion",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["verification", "quality", "completion", "process"],
+    "maturity": "beta"
+  },
+  {
+    "name": "writing-skills",
+    "type": "skill",
+    "summary": "Create well-formed SKILL.md files with correct structure, trigger clauses, and Claude Search Optimization.",
+    "path": "skills/writing-skills",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["meta", "skills", "documentation", "authoring"],
+    "maturity": "beta"
+  },
+  {
+    "name": "finishing-a-development-branch",
+    "type": "skill",
+    "summary": "Present a four-option merge/PR/keep/discard menu and execute the chosen path cleanly.",
+    "path": "skills/finishing-a-development-branch",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["git", "branching", "merging", "handoff"],
+    "maturity": "beta"
+  },
+  {
+    "name": "using-git-worktrees",
+    "type": "skill",
+    "summary": "Set up and work inside isolated git worktrees to avoid cross-branch contamination.",
+    "path": "skills/using-git-worktrees",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["git", "worktrees", "isolation", "branching"],
+    "maturity": "beta"
+  },
+  {
+    "name": "json-canvas",
+    "type": "skill",
+    "summary": "Create and validate JSON Canvas files for node-based visual layouts.",
+    "path": "skills/json-canvas",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["json-canvas", "visualization", "diagrams", "spec"],
+    "maturity": "beta"
+  },
+  {
+    "name": "gh-address-comments",
+    "type": "skill",
+    "summary": "Read GitHub PR review threads with GraphQL and address each comment with targeted fixes.",
+    "path": "skills/gh-address-comments",
+    "compatible_with": ["claude-code"],
+    "tags": ["github", "pull-requests", "code-review", "gh"],
+    "maturity": "beta",
+    "requires": {
+      "commands": ["gh"]
+    }
+  },
+  {
+    "name": "caveman",
+    "type": "skill",
+    "summary": "Switch to ultra-compressed single-sentence responses for rapid iteration.",
+    "path": "skills/caveman",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["communication", "brevity", "tokens"],
+    "maturity": "beta"
+  },
+  {
+    "name": "dependency-review",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for auditing new packages before they land in dependency manifests.",
+    "path": "hooks/safety/dependency-review.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "safety", "dependencies", "supply-chain"],
+    "maturity": "draft"
+  },
+  {
+    "name": "test-gate",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for blocking completion and commits when tests are red.",
+    "path": "hooks/quality/test-gate.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "quality", "testing", "gate"],
+    "maturity": "draft"
+  },
+  {
+    "name": "lint-check",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for enforcing linter and formatter checks before commits.",
+    "path": "hooks/quality/lint-check.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "quality", "linting", "style"],
+    "maturity": "draft"
+  },
+  {
+    "name": "session-context-restore",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for surfacing prior session context at session start.",
+    "path": "hooks/productivity/session-context-restore.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "productivity", "context", "memory"],
+    "maturity": "draft"
+  },
+  {
+    "name": "auto-commit-message",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for generating Conventional Commits messages from staged diffs.",
+    "path": "hooks/productivity/auto-commit-message.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "productivity", "git", "conventional-commits"],
+    "maturity": "draft"
+  },
+  {
+    "name": "plan",
+    "type": "command",
+    "summary": "Structure a task before starting: read request, map files, write step list, confirm scope.",
+    "path": "commands/generic/plan.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "planning", "pre-task"],
+    "maturity": "beta",
+    "targets": {
+      "codex": "commands/codex/plan.md",
+      "generic": "commands/generic/plan.md",
+      "claude-code": "commands/claude-code/plan.md"
+    }
+  },
+  {
+    "name": "review",
+    "type": "command",
+    "summary": "Code review workflow: read diff, check correctness, check tests, check style, write findings.",
+    "path": "commands/generic/review.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "code-review", "quality"],
+    "maturity": "beta",
+    "targets": {
+      "codex": "commands/codex/review.md",
+      "generic": "commands/generic/review.md",
+      "claude-code": "commands/claude-code/review.md"
+    }
+  },
+  {
+    "name": "debug",
+    "type": "command",
+    "summary": "Debugging session: reproduce, isolate, hypothesize, verify, fix, confirm.",
+    "path": "commands/generic/debug.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "debugging", "bug-fix"],
+    "maturity": "beta",
+    "targets": {
+      "codex": "commands/codex/debug.md",
+      "generic": "commands/generic/debug.md",
+      "claude-code": "commands/claude-code/debug.md"
+    }
+  },
+  {
+    "name": "implement",
+    "type": "command",
+    "summary": "Feature implementation: read spec, write failing test, implement, validate, update docs.",
+    "path": "commands/generic/implement.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "implementation", "tdd"],
+    "maturity": "beta",
+    "targets": {
+      "codex": "commands/codex/implement.md",
+      "generic": "commands/generic/implement.md",
+      "claude-code": "commands/claude-code/implement.md"
+    }
+  },
+  {
+    "name": "triage",
+    "type": "command",
+    "summary": "Issue and PR triage: list open items, categorize by impact and urgency, assign priorities.",
+    "path": "commands/generic/triage.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "triage", "prioritization"],
+    "maturity": "beta",
+    "targets": {
+      "codex": "commands/codex/triage.md",
+      "generic": "commands/generic/triage.md",
+      "claude-code": "commands/claude-code/triage.md"
+    }
   }
 ]
