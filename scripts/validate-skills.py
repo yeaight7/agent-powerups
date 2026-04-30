@@ -29,7 +29,7 @@ warnings: list[str] = []
 def referenced_support_files(content: str) -> list[str]:
     refs: set[str] = set()
     for match in re.finditer(
-        r"`([^`\r\n]+\.(?:md|ps1|sh|ts|js|py|json|toml|ya?ml))`",
+        r"`([^`\s\r\n]+\.(?:md|ps1|sh|ts|js|py|json|toml|ya?ml))`",
         content,
         re.IGNORECASE,
     ):
