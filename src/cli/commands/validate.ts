@@ -20,7 +20,7 @@ function extractFileRefs(content: string): string[] {
   const refs = new Set<string>();
   const refRe = /`([^`\s]+\.(?:md|ps1|sh|ts|js|py|json|toml|ya?ml))`/g;
   for (const m of content.matchAll(refRe)) {
-    const ref = m[1];
+    const ref = m[1].replaceAll("\\", "/").replace(/^\.?\//, "");
     // Only check refs that are bare filenames or explicitly under references/ or examples/
     if (!ref.includes("/") || ref.startsWith("references/") || ref.startsWith("examples/")) {
       refs.add(ref);
