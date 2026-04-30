@@ -6,7 +6,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yeaight7/agent-powerups.git"
+    "url": "git+https://github.com/yeaight7/agent-powerups.git"
   },
   "bugs": {
     "url": "https://github.com/yeaight7/agent-powerups/issues"
@@ -37,6 +37,7 @@
     "agents-md/",
     "workflows/",
     "docs/",
+    "!docs/superpowers/",
     "examples/",
     "catalog.json",
     "README.md",
@@ -50,7 +51,8 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/postbuild-apx-wrapper.mjs",
-    "test": "npm run build && node scripts/run-node-tests.mjs"
+    "test": "npm run build && node scripts/run-node-tests.mjs",
+    "release:check": "node scripts/release-check.mjs"
   },
   "dependencies": {
     "zod": "^3.25.76"

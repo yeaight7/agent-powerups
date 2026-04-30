@@ -73,11 +73,22 @@ apx relay ask <session-name> <prompt> [--timeout-ms <ms>] [--json]
 apx relay stop <session-name> [--json]`;
 
 function getPackageVersion(): string {
-  try {
-    const pkg = JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../../package.json"), "utf8"));
-    return pkg.version;
-  } catch {
-    return "unknown";
+  let current = path.dirname(fileURLToPath(import.meta.url));
+  while (true) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(path.join(current, "package.json"), "utf8"));
+      if (pkg.name === "agent-powerups" && typeof pkg.version === "string") {
+        return pkg.version;
+      }
+    } catch {
+      // Keep walking toward the repository/package root.
+    }
+
+    const parent = path.dirname(current);
+    if (parent === current) {
+      return "unknown";
+    }
+    current = parent;
   }
 }
 

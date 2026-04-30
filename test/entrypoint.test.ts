@@ -19,3 +19,11 @@ test("postbuild entrypoint runs help", async () => {
 
   assert.match(result.stdout, /apx help/);
 });
+
+test("postbuild entrypoint reports package version", async () => {
+  const entrypoint = path.resolve(repoRoot, "dist", "cli", "apx.js");
+  const packageJson = JSON.parse(await fs.readFile(path.resolve(repoRoot, "package.json"), "utf8"));
+  const result = await execFileAsync("node", [entrypoint, "version"], { cwd: repoRoot });
+
+  assert.equal(result.stdout.trim(), packageJson.version);
+});
