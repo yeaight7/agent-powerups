@@ -7,23 +7,23 @@ This repository ships one supported local MCP feature: `github-local`.
 ## Commands
 
 ```sh
-node dist/cli/apx.js mcp check github-local --target codex --json
-node dist/cli/apx.js mcp smoke github-local --json
-node dist/cli/apx.js mcp install github-local --target codex --dry-run
-node dist/cli/apx.js mcp install github-local --target claude-code --dry-run
+apx mcp check github-local --target codex --json
+apx mcp smoke github-local --json
+apx mcp install github-local --target codex --dry-run
+apx mcp install github-local --target claude-code --dry-run
 ```
 
 Apply after review:
 
 ```sh
-node dist/cli/apx.js mcp install github-local --target codex --yes
-node dist/cli/apx.js mcp install github-local --target claude-code --yes
+apx mcp install github-local --target codex --yes
+apx mcp install github-local --target claude-code --yes
 ```
 
 Generic explicit writes remain available:
 
 ```sh
-node dist/cli/apx.js mcp write github-local --target generic --dest .agent-powerups/github-local.json
+apx mcp write github-local --target generic --dest .agent-powerups/github-local.json
 ```
 
 ## Requirements
