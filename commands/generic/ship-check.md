@@ -11,8 +11,8 @@ Run this as a manual checklist before saying work is complete.
    - Prefer the narrowest command that exercises the touched behavior.
    - If shared CLI/catalog behavior changed, run `npm test`.
 3. Run repo validation when assets changed.
-   - `node dist/cli/apx.js validate skills`
-   - `node dist/cli/apx.js validate catalog`
+   - `apx validate skills`
+   - `apx validate catalog`
 4. Report:
    - changed files
    - commands run
