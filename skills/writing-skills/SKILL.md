@@ -3,8 +3,6 @@ name: writing-skills
 description: Use when creating new skills, editing existing skills, or verifying skills work before deployment
 ---
 
-> Inspired by: obra/superpowers (MIT). Adapted for agent-powerups.
-
 # Writing Skills
 
 ## Overview
