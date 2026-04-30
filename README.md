@@ -42,74 +42,75 @@ cd agent-powerups
 npm install
 ```
 
-2. Build CLI:
+2. Build CLI and install globally:
 
 ```sh
 npm run build
+npm link
 ```
 
 3. Check repo health:
 
 ```sh
-node dist/cli/apx.js doctor
-node dist/cli/apx.js doctor --full
+apx doctor
+apx doctor --full
 ```
 
 4. Browse catalog:
 
 ```sh
-node dist/cli/apx.js list
-node dist/cli/apx.js info markitdown-file-intake
-node dist/cli/apx.js commands run ship-check
-node dist/cli/apx.js hooks run no-secrets-preflight --all
-node dist/cli/apx.js mcp check github-local --target generic
-node dist/cli/apx.js mcp smoke github-local --json
-node dist/cli/apx.js mcp install github-local --target codex --dry-run
+apx list
+apx info markitdown-file-intake
+apx commands run ship-check
+apx hooks run no-secrets-preflight --all
+apx mcp check github-local --target generic
+apx mcp smoke github-local --json
+apx mcp install github-local --target codex --dry-run
 ```
 
 5. Try a local advisor CLI and save an artifact:
 
 ```sh
-node dist/cli/apx.js ask-codex "Return OK only" --json
-node dist/cli/apx.js ask-claude "Return OK only" --json
-node dist/cli/apx.js ask-gemini "Return OK only" --json
+apx ask-codex "Return OK only" --json
+apx ask-claude "Return OK only" --json
+apx ask-gemini "Return OK only" --json
 ```
 
 6. Check deps without installing:
 
 ```sh
-node dist/cli/apx.js check markitdown-file-intake
-node dist/cli/apx.js check ask-codex
-node dist/cli/apx.js check ask-claude
-node dist/cli/apx.js check ask-gemini
+apx check markitdown-file-intake
+apx check ask-codex
+apx check ask-claude
+apx check ask-gemini
 ```
 
 Preview supported dependency installers before asking for approval:
 
 ```sh
-node dist/cli/apx.js check defuddle --install-missing --dry-run
-node dist/cli/apx.js check markitdown-file-intake --install-missing --dry-run
+apx check defuddle --install-missing --dry-run
+apx check markitdown-file-intake --install-missing --dry-run
 ```
 
 7. Dry-run safe install:
 
 ```sh
-node dist/cli/apx.js install markitdown-file-intake --target codex --dry-run
-node dist/cli/apx.js install ask-claude --target codex --dry-run
+apx install markitdown-file-intake --target codex --dry-run
+apx install ask-claude --target codex --dry-run
 ```
 
 8. Dry-run agent setup:
 
 ```sh
-node dist/cli/apx.js setup codex --dry-run
-node dist/cli/apx.js setup claude-code --dry-run
-node dist/cli/apx.js setup gemini --dry-run
+apx setup codex --dry-run
+apx setup claude-code --dry-run
+apx setup gemini --dry-run
 ```
 
 Apply only after review:
 
 ```sh
-node dist/cli/apx.js setup codex --yes
+apx setup codex --yes
 ```
 
 Agent setup docs:
@@ -236,55 +237,56 @@ More detail: [`docs/tool-requirements.md`](./docs/tool-requirements.md) and [`do
 ```sh
 npm install
 npm run build
-node dist/cli/apx.js doctor
-node dist/cli/apx.js doctor --full --json
-node dist/cli/apx.js list
-node dist/cli/apx.js info markitdown-file-intake
-node dist/cli/apx.js check markitdown-file-intake
-node dist/cli/apx.js ask-codex "Explain this code" --json
-node dist/cli/apx.js ask-claude "Review this patch" --json
-node dist/cli/apx.js ask-gemini "Brainstorm test cases" --json
-node dist/cli/apx.js relay start second-opinion --provider gemini --json
-node dist/cli/apx.js relay ask second-opinion "Review this plan" --json
-node dist/cli/apx.js relay stop second-opinion --json
-node dist/cli/apx.js ship-check --json
-node dist/cli/apx.js no-secrets-preflight --all --json
-node dist/cli/apx.js using-powerups
-node dist/cli/apx.js install markitdown-file-intake --target codex --dry-run
-node dist/cli/apx.js setup codex --dry-run
-node dist/cli/apx.js setup claude-code --dry-run
-node dist/cli/apx.js setup gemini --dry-run
+npm link
+apx doctor
+apx doctor --full --json
+apx list
+apx info markitdown-file-intake
+apx check markitdown-file-intake
+apx ask-codex "Explain this code" --json
+apx ask-claude "Review this patch" --json
+apx ask-gemini "Brainstorm test cases" --json
+apx relay start second-opinion --provider gemini --json
+apx relay ask second-opinion "Review this plan" --json
+apx relay stop second-opinion --json
+apx ship-check --json
+apx no-secrets-preflight --all --json
+apx using-powerups
+apx install markitdown-file-intake --target codex --dry-run
+apx setup codex --dry-run
+apx setup claude-code --dry-run
+apx setup gemini --dry-run
 ```
 
 Extra surfaces:
 
 ```sh
-node dist/cli/apx.js mcp list
-node dist/cli/apx.js mcp print github-local --target claude-code
-node dist/cli/apx.js mcp check github-local --target claude-code --json
-node dist/cli/apx.js mcp smoke github-local --json
-node dist/cli/apx.js mcp install github-local --target codex --dry-run
-node dist/cli/apx.js mcp install github-local --target claude-code --dry-run
-node dist/cli/apx.js mcp write github-local --target generic --dest .agent-powerups/github-local.json
-node dist/cli/apx.js agents-md list
-node dist/cli/apx.js agents-md print typescript-app
-node dist/cli/apx.js commands list
-node dist/cli/apx.js commands print ship-check --target generic
-node dist/cli/apx.js commands run ship-check --full
-node dist/cli/apx.js hooks list
-node dist/cli/apx.js hooks print no-secrets-preflight
-node dist/cli/apx.js hooks run no-secrets-preflight --path README.md
-node dist/cli/apx.js workflows list
-node dist/cli/apx.js workflows print feature-iteration
-node dist/cli/apx.js plugin validate plugins/agent-powerups
-node dist/cli/apx.js plugin diff plugins/agent-powerups
-node dist/cli/apx.js plugin build --dest plugins/agent-powerups --dry-run
+apx mcp list
+apx mcp print github-local --target claude-code
+apx mcp check github-local --target claude-code --json
+apx mcp smoke github-local --json
+apx mcp install github-local --target codex --dry-run
+apx mcp install github-local --target claude-code --dry-run
+apx mcp write github-local --target generic --dest .agent-powerups/github-local.json
+apx agents-md list
+apx agents-md print typescript-app
+apx commands list
+apx commands print ship-check --target generic
+apx commands run ship-check --full
+apx hooks list
+apx hooks print no-secrets-preflight
+apx hooks run no-secrets-preflight --path README.md
+apx workflows list
+apx workflows print feature-iteration
+apx plugin validate plugins/agent-powerups
+apx plugin diff plugins/agent-powerups
+apx plugin build --dest plugins/agent-powerups --dry-run
 ```
 
 To explicitly copy a skill into a local Codex-visible folder, choose the destination yourself:
 
 ```sh
-node dist/cli/apx.js install ask-claude --target codex --dest .agent-powerups/installed/ask-claude
+apx install ask-claude --target codex --dest .agent-powerups/installed/ask-claude
 ```
 
 ## Experimental Plugin Layout
