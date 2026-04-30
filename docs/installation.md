@@ -10,24 +10,25 @@ Agent Powerups ships both repo assets and a minimal local CLI. Installation stay
 npm install
 ```
 
-2. Build CLI:
+2. Build CLI and install globally:
 
 ```powershell
 npm run build
+npm link
 ```
 
 3. Inspect catalog and repo health:
 
 ```powershell
-node dist\cli\apx.js doctor
-node dist\cli\apx.js list
+apx doctor
+apx list
 ```
 
 4. Try local advisor skills when their CLIs are configured:
 
 ```powershell
-node dist\cli\apx.js ask-claude "Return OK only" --json
-node dist\cli\apx.js ask-gemini "Return OK only" --json
+apx ask-claude "Return OK only" --json
+apx ask-gemini "Return OK only" --json
 ```
 
 5. Copy or print only what you need. Default `apx install` mode is dry-run.
@@ -37,17 +38,17 @@ node dist\cli\apx.js ask-gemini "Return OK only" --json
 Setup is explicit, review-first, and dry-run by default.
 
 ```powershell
-node dist\cli\apx.js setup codex --dry-run
-node dist\cli\apx.js setup claude-code --dry-run
-node dist\cli\apx.js setup gemini --dry-run
+apx setup codex --dry-run
+apx setup claude-code --dry-run
+apx setup gemini --dry-run
 ```
 
 Apply only with confirmation:
 
 ```powershell
-node dist\cli\apx.js setup codex --yes
-node dist\cli\apx.js setup claude-code --yes
-node dist\cli\apx.js setup gemini --yes
+apx setup codex --yes
+apx setup claude-code --yes
+apx setup gemini --yes
 ```
 
 Use `--agent-root <path>` to avoid writing to a default agent root during first review.
@@ -66,23 +67,23 @@ Per-agent details:
 - Prefer dry-run first:
 
 ```powershell
-node dist\cli\apx.js install markitdown-file-intake --target codex --dry-run
-node dist\cli\apx.js install ask-claude --target codex --dry-run
-node dist\cli\apx.js install ask-gemini --target codex --dry-run
-node dist\cli\apx.js mcp print github-local --target claude-code
-node dist\cli\apx.js mcp check github-local --target claude-code --json
-node dist\cli\apx.js mcp smoke github-local --json
-node dist\cli\apx.js mcp install github-local --target codex --dry-run
-node dist\cli\apx.js mcp install github-local --target claude-code --dry-run
-node dist\cli\apx.js mcp write github-local --target generic --dest .agent-powerups\github-local.json
-node dist\cli\apx.js commands print ship-check --target generic
-node dist\cli\apx.js commands run ship-check
-node dist\cli\apx.js hooks print no-secrets-preflight
-node dist\cli\apx.js hooks run no-secrets-preflight --all
-node dist\cli\apx.js workflows print feature-iteration
-node dist\cli\apx.js ask-claude "Review this change" --artifact-dir .apx\artifacts --json
-node dist\cli\apx.js ask-gemini "List edge cases" --artifact-dir .apx\artifacts --json
-node dist\cli\apx.js plugin validate plugins\agent-powerups
+apx install markitdown-file-intake --target codex --dry-run
+apx install ask-claude --target codex --dry-run
+apx install ask-gemini --target codex --dry-run
+apx mcp print github-local --target claude-code
+apx mcp check github-local --target claude-code --json
+apx mcp smoke github-local --json
+apx mcp install github-local --target codex --dry-run
+apx mcp install github-local --target claude-code --dry-run
+apx mcp write github-local --target generic --dest .agent-powerups\github-local.json
+apx commands print ship-check --target generic
+apx commands run ship-check
+apx hooks print no-secrets-preflight
+apx hooks run no-secrets-preflight --all
+apx workflows print feature-iteration
+apx ask-claude "Review this change" --artifact-dir .apx\artifacts --json
+apx ask-gemini "List edge cases" --artifact-dir .apx\artifacts --json
+apx plugin validate plugins\agent-powerups
 ```
 
 - Run validators after editing repo content:
@@ -108,8 +109,8 @@ npm install -g defuddle
 Agents can preview supported installs without running them:
 
 ```powershell
-node dist\cli\apx.js check markitdown-file-intake --install-missing --dry-run
-node dist\cli\apx.js check defuddle --install-missing --dry-run
+apx check markitdown-file-intake --install-missing --dry-run
+apx check defuddle --install-missing --dry-run
 ```
 
 Do not auto-install tools in scripts or hooks without explicit user approval. Use `--install-missing --yes` only after approval.
@@ -119,10 +120,10 @@ Do not auto-install tools in scripts or hooks without explicit user approval. Us
 Write-capable commands require an explicit destination or `--write` flag:
 
 ```powershell
-node dist\cli\apx.js mcp write github-local --target generic --dest .agent-powerups\github-local.json
-node dist\cli\apx.js mcp install github-local --target codex --yes
-node dist\cli\apx.js install ask-claude --target codex --dest .agent-powerups\installed\ask-claude
-node dist\cli\apx.js plugin build --dest plugins\agent-powerups --write
+apx mcp write github-local --target generic --dest .agent-powerups\github-local.json
+apx mcp install github-local --target codex --yes
+apx install ask-claude --target codex --dest .agent-powerups\installed\ask-claude
+apx plugin build --dest plugins\agent-powerups --write
 ```
 
 Existing MCP destination files are backed up by target installers or not overwritten by explicit generic writes unless `--force` is provided.
