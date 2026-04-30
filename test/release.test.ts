@@ -35,6 +35,8 @@ test("release preflight script covers build, validation, version, pack, and publ
 
   assert.match(script, /cmd\.exe/);
   assert.match(script, /"\/d", "\/s", "\/c"/);
+  assert.match(script, /packageJson\.version/);
+  assert.doesNotMatch(script, /\^0\\\.1\\\.0/);
 });
 
 test("ci validates release support on linux, windows, and macos", async () => {
@@ -55,15 +57,16 @@ test("release workflow publishes v tags with npm trusted publishing", async () =
   assert.match(workflow, /node-version:\s*24/);
   assert.match(workflow, /npm install -g npm@latest/);
   assert.match(workflow, /npm publish --access public/);
+  assert.match(workflow, /gh release view "\$GITHUB_REF_NAME"/);
   assert.doesNotMatch(workflow, /NODE_AUTH_TOKEN|NPM_TOKEN/);
 });
 
 test("release checklist documents trusted publishing and post-publish verification", async () => {
-  const checklist = await readText("docs/release-checklist-v0.1.0.md");
+  const checklist = await readText("docs/release-checklist-v0.1.1.md");
 
   assert.match(checklist, /Trusted Publisher/);
   assert.match(checklist, /release\.yml/);
   assert.match(checklist, /npm run release:check/);
-  assert.match(checklist, /git tag v0\.1\.0/);
-  assert.match(checklist, /npm view agent-powerups@0\.1\.0/);
+  assert.match(checklist, /git tag v0\.1\.1/);
+  assert.match(checklist, /npm view agent-powerups@0\.1\.1/);
 });
