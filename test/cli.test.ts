@@ -584,10 +584,12 @@ test("hooks run no-secrets-preflight passes clean explicit path", async () => {
 });
 
 test("mcp check reports structured metadata", async () => {
+  const commandDir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-docker-bin-"));
   const previousToken = process.env.GITHUB_TOKEN;
   try {
+    await createDockerStub(commandDir, "ok");
     process.env.GITHUB_TOKEN = "test-token";
-    const result = await execute(["mcp", "check", "github-local", "--target", "generic", "--json"]);
+    const result = await executeWithPath(["mcp", "check", "github-local", "--target", "generic", "--json"], commandDir);
 
     assert.equal(result.exitCode, 0);
     const json = parseJson(result.stdout);
