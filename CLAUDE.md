@@ -16,9 +16,9 @@ node --test test/cli.test.ts
 
 No linter is configured. TypeScript strict mode is the primary safety net.
 
-After build, the CLI is available at:
+After build, install globally once with `npm link`. Then the CLI is available as:
 ```bash
-node dist/cli/apx.js <command>
+apx <command>
 ```
 
 ## Architecture
@@ -27,7 +27,7 @@ This repo is an "Oh My Zsh"-style collection of reusable agent powerups (skills,
 
 ### catalog.json — single source of truth
 
-Every shipped asset is registered in `catalog.json`. The Zod schema in `src/cli/utils/catalog.ts` enforces structure: required fields (`name`, `type`, `summary`, `path`, `compatible_with`, `maturity`), optional fields (`requires`, `targets`, `mcp`, `run`). Duplicate names are rejected. All referenced paths must exist on disk. When adding a new skill or command, add its catalog entry and verify with `node dist/cli/apx.js validate catalog`.
+Every shipped asset is registered in `catalog.json`. The Zod schema in `src/cli/utils/catalog.ts` enforces structure: required fields (`name`, `type`, `summary`, `path`, `compatible_with`, `maturity`), optional fields (`requires`, `targets`, `mcp`, `run`). Duplicate names are rejected. All referenced paths must exist on disk. When adding a new skill or command, add its catalog entry and verify with `apx validate catalog`.
 
 Allowed `compatible_with` values: `claude-code`, `codex`, `gemini-cli`, `cursor`, `generic`.
 Allowed `maturity` values: `draft`, `beta`, `stable`.
