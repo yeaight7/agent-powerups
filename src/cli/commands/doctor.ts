@@ -95,7 +95,7 @@ function parseFrontmatter(content: string): Record<string, string> | undefined {
 
 function referencedSupportFiles(content: string): string[] {
   const refs = new Set<string>();
-  const pattern = /`([^`\r\n]+\.(?:md|ps1|sh|ts|js|py|json|toml|ya?ml))`/gi;
+  const pattern = /`([^`\s\r\n]+\.(?:md|ps1|sh|ts|js|py|json|toml|ya?ml))`/gi;
   for (const match of content.matchAll(pattern)) {
     const raw = match[1].replaceAll("\\", "/").replace(/^\.?\//, "");
     if (raw.startsWith("references/") || raw.startsWith("examples/") || !raw.includes("/")) {
