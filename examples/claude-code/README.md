@@ -5,20 +5,20 @@ Goal: stage Agent Powerups for Claude Code review.
 Dry-run first:
 
 ```powershell
-node dist\cli\apx.js setup claude-code --dry-run
+apx setup claude-code --dry-run
 ```
 
 Safer first apply with explicit root:
 
 ```powershell
-node dist\cli\apx.js setup claude-code --agent-root .agent-powerups-demo\claude --yes
+apx setup claude-code --agent-root .agent-powerups-demo\claude --yes
 ```
 
 Then inspect:
 
 ```powershell
-node dist\cli\apx.js commands print ship-check --target claude-code
-node dist\cli\apx.js info using-powerups
+apx commands print ship-check --target claude-code
+apx info using-powerups
 ```
 
 Instruction file behavior:
