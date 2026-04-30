@@ -30,6 +30,9 @@ test("release preflight script covers build, validation, version, pack, and publ
   ]) {
     assert.match(script, new RegExp(expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
+
+  assert.match(script, /cmd\.exe/);
+  assert.match(script, /"\/d", "\/s", "\/c"/);
 });
 
 test("ci validates release support on linux, windows, and macos", async () => {
