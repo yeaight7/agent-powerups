@@ -3,8 +3,6 @@ name: test-driven-development
 description: Use when implementing any feature or bugfix, before writing implementation code
 ---
 
-> Inspired by: obra/superpowers (MIT). Adapted for agent-powerups.
-
 # Test-Driven Development (TDD)
 
 ## Overview
