@@ -5,15 +5,16 @@ Goal: inspect Agent Powerups without mutating an agent's global config.
 ```powershell
 npm install
 npm run build
-node dist\cli\apx.js doctor
-node dist\cli\apx.js list
-node dist\cli\apx.js setup codex --agent-root .agent-powerups-demo\codex --dry-run
+npm link
+apx doctor
+apx list
+apx setup codex --agent-root .agent-powerups-demo\codex --dry-run
 ```
 
 Apply to a disposable local root:
 
 ```powershell
-node dist\cli\apx.js setup codex --agent-root .agent-powerups-demo\codex --yes
+apx setup codex --agent-root .agent-powerups-demo\codex --yes
 ```
 
 Review:
