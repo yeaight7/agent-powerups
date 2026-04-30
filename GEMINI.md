@@ -39,13 +39,13 @@ npm run test
 # This builds the project and runs tests via `scripts/run-node-tests.mjs`.
 ```
 
-**Running the CLI (Locally):**
-After building, you can run the CLI directly from the `dist` folder:
+**Running the CLI:**
+After building, run `npm link` once to make `apx` available globally:
 ```bash
-node dist/cli/apx.js doctor
-node dist/cli/apx.js list
-node dist/cli/apx.js info <asset-name>
-node dist/cli/apx.js check <asset-name>
+apx doctor
+apx list
+apx info <asset-name>
+apx check <asset-name>
 ```
 
 **Repository Validation:**
