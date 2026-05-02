@@ -172,7 +172,7 @@
   {
     "name": "data-quality",
     "type": "skill",
-    "summary": "Project-specific dbt data quality patterns for analytics-genially on BigQuery.",
+    "summary": "Reusable dbt data quality patterns for warehouse-backed analytics projects.",
     "path": "skills/data-quality",
     "compatible_with": ["generic"],
     "tags": ["dbt", "bigquery", "testing", "data-quality"],
@@ -199,7 +199,7 @@
   {
     "name": "dbt-strategy",
     "type": "skill",
-    "summary": "Project-specific dbt modeling strategy for analytics-genially on BigQuery.",
+    "summary": "Reusable dbt modeling strategy for warehouse-backed analytics projects.",
     "path": "skills/dbt-strategy",
     "compatible_with": ["generic"],
     "tags": ["dbt", "bigquery", "modeling", "architecture"],
