@@ -1,16 +1,16 @@
 ---
 name: dbt-strategy
-description: This skill should be used when creating or modifying dbt models in the analytics-genially project. Covers the project's four-layer BigQuery architecture (sources/staging/core/marts), naming conventions, no-alias SQL rule, surrogate key and missing record patterns, BigQuery incremental strategies, deduplication, and project macros. Use when building fact tables, dimension tables, staging models, writing SQL, or designing tests in this project.
+description: Use when creating or modifying dimensional dbt models in warehouse-backed analytics projects. Covers a four-layer warehouse architecture (sources/staging/core/marts), naming conventions, no-alias SQL rule, surrogate-key and missing-record patterns, incremental strategies, deduplication, and common project macros. Use when building fact tables, dimension tables, staging models, writing SQL, or designing tests.
 ---
 
-# dbt Strategy — analytics-genially
+# dbt Strategy
 
-Patterns for building dbt models in `analytics_genially`, a BigQuery dbt project using Kimball dimensional modeling.
+Patterns for building dbt models in warehouse-backed analytics projects using Kimball-style dimensional modeling.
 
 ## Layer Architecture
 
 ```
-sources/     Source views — raw data from Genially app, Snowplow, Netsuite, Pipedrive, Academy
+sources/     Source views — raw data from app DB, event stream, billing, CRM, LMS
     ↓
 staging/     Intermediate transformations (keep minimal — new models go directly to core/)
     ↓
@@ -25,8 +25,8 @@ Put new models in `core/` directly. Use `staging/` only when complex intermediat
 
 | Layer    | Prefix  | Example                                         |
 |----------|---------|-------------------------------------------------|
-| Sources  | `src_`  | `src_genially_teams`, `src_snowplow_events`     |
-| Staging  | `stg_`  | `stg_teams`, `stg_netsuite_customers`           |
+| Sources  | `src_`  | `src_app_teams`, `src_events`                   |
+| Staging  | `stg_`  | `stg_teams`, `stg_billing_customers`            |
 | Core dim | `dim_`  | `dim_teams`, `dim_users`                        |
 | Core fct | `fct_`  | `fct_team_members`, `fct_team_budgets`          |
 | Marts    | `mart_` | `mart_team_overview`, `mart_creation_overview`  |
@@ -57,7 +57,7 @@ Every model uses clear CTEs. The final SELECT is always `select * from final`:
 
 ```sql
 with source_cte as (
-    select * from {{ ref('src_genially_teams') }}
+    select * from {{ ref('src_app_teams') }}
 ),
 
 transformed as (
@@ -94,7 +94,7 @@ Every dimension includes a `union all` missing record sentinel.
 {% set missing_team = "'Missing Team'" %}
 
 with team_snapshots as (
-    select * from {{ ref('src_snapshot_genially_teams') }}
+    select * from {{ ref('src_snapshot_app_teams') }}
 ),
 
 latest_state as (
@@ -235,14 +235,14 @@ select * from final
 ### Pattern 5: Source Definition (BigQuery)
 
 ```yaml
-# models/sources/genially/_genially__sources.yml
+# models/sources/app/_app__sources.yml
 version: 2
 
 sources:
-  - name: genially
-    description: Core Genially application database
-    database: data-genially
-    schema: genially
+  - name: app
+    description: Core application database
+    database: <warehouse_project>
+    schema: app
     tables:
       - name: teams
         description: Raw team records
@@ -270,7 +270,7 @@ Shared descriptions live in `.md` files as Jinja docblocks:
 ```markdown
 <!-- models/core/shared/docs_shared.md -->
 {% docs team_id %}
-The unique identifier for a team in the Genially platform.
+The unique identifier for a team entity in the application.
 {% enddocs %}
 ```
 
