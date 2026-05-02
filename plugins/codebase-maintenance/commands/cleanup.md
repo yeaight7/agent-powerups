@@ -7,9 +7,11 @@ description: Run a systematic cleanup on the provided code to resolve smells, si
 You are an expert in clean code. Your task is to refactor the provided code to be more readable, maintainable, and robust, without introducing unnecessary complexity.
 
 ## Target
-$ARGUMENTS
+
+`$ARGUMENTS`
 
 ## Execution Steps
+
 1. **Smell Detection:** Identify long methods, giant classes, magic strings/numbers, and duplicated logic.
 2. **Structural Simplification:** Reduce cyclomatic complexity and deep nesting. Extract methods where appropriate.
 3. **Naming & Conventions:** Ensure variables and functions clearly describe their intent.
