@@ -301,8 +301,8 @@ Accepted values macros live in `macros/accepted_values/` — use these in YAML t
 
 | Environment | Dataset |
 |-------------|---------|
-| Production  | `data-genially.dbt_production` |
-| Development | `dbt_<username>` e.g., `dbt_pabloreina` |
+| Production  | `<project>.dbt_production` |
+| Development | `dbt_<username>` e.g., `dbt_johndoe` |
 
 Use production for reading, development dataset for writing during development.
 
