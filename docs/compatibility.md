@@ -1,6 +1,6 @@
 # Compatibility
 
-Agent Powerups currently ships generic skills, Python helper scripts, one verified local GitHub MCP flow, starter AGENTS.md templates, review-first command prompts, hook recipes, workflow guides, setup examples, and an experimental local plugin layout. It still does not ship executable hook installers or broad platform integrations.
+Agent Powerups currently ships generic skills, Python helper scripts, one verified local GitHub MCP flow, starter AGENTS.md templates, review-first command prompts, hook recipes, workflow guides, setup examples, and seven local-first plugin bundles. It still does not ship executable hook installers or broad platform integrations.
 
 ## Compatibility Rules
 
@@ -51,9 +51,8 @@ Examples:
 - `defuddle` depends on Defuddle CLI
 - `pr-triage` can optionally use `gh`
 
-## Experimental Areas
+## Limited Areas
 
-- `plugins/agent-powerups` is local-only and experimental.
-- `.agents/plugins/marketplace.json` is example metadata, not verified marketplace support.
+- Plugin bundles ship under `plugins/<name>` and are intended for local install flows driven by `apx plugins`.
 - MCP support is intentionally limited to the Docker-backed official GitHub MCP server.
 - `hooks/` content is review-before-use documentation, not active hook installation.
