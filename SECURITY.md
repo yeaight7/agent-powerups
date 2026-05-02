@@ -15,6 +15,7 @@ This repo should not contain:
 
 - tokens, API keys, or credentials
 - machine-specific paths
+- internal project names, non-public dataset/table identifiers, or company-specific examples
 - personal or customer data
 - destructive-only automation
 - instructions to bypass security controls
