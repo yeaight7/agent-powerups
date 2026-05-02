@@ -1,11 +1,11 @@
 ---
 name: data-quality
-description: This skill should be used when adding data quality tests to dbt models in the analytics-genially project. Covers dbt generic tests, singular tests (assert_*.sql), accepted values macros, dbt_utils test patterns, cross-system consistency tests, and BigQuery-specific testing considerations. Use when writing data tests, creating assert_*.sql files, testing business logic, or validating referential integrity in this project.
+description: Use when adding or reviewing data quality tests for dbt models in warehouse-backed analytics projects. Covers dbt generic tests, singular tests (assert_*.sql), accepted-values macros, dbt_utils patterns, cross-system consistency tests, and warehouse-oriented validation. Use when writing data tests, creating assert_*.sql files, testing business logic, or validating referential integrity.
 ---
 
-# Data Quality — analytics-genially
+# Data Quality
 
-Testing patterns for the `analytics_genially` dbt project on BigQuery. This project uses **dbt tests exclusively** — no external frameworks like Great Expectations.
+Testing patterns for dbt projects on analytical warehouses such as BigQuery. This workflow uses **dbt tests exclusively** — no external data-quality framework required.
 
 ## Test Types
 
@@ -76,7 +76,7 @@ orphaned as (
 select * from orphaned
 ```
 
-Organize singular tests in subdirectories matching the domain: `tests/academy/`, `tests/geniallys/`, `tests/int_netsuite_invoices/`, etc.
+Organize singular tests in subdirectories matching the domain: `tests/accounts/`, `tests/billing/`, `tests/content/`, etc.
 
 ## Generic Test Patterns
 
@@ -179,10 +179,10 @@ Usage in YAML:
 Assert that data is consistent across source systems. These go in `tests/` as singular tests:
 
 ```sql
--- tests/finance/assert_netsuite_invoices_plan_matches_team_plan.sql
--- Tests consistency between Netsuite invoices and Genially team data
+-- tests/finance/assert_billing_plan_matches_team_plan.sql
+-- Tests consistency between billing records and team plan data
 with invoices as (
-    select * from {{ ref('fct_netsuite_all_invoices') }}
+    select * from {{ ref('fct_billing_invoices') }}
 ),
 
 teams as (
@@ -208,10 +208,10 @@ select * from mismatched
 
 ```
 tests/
-├── academy/                 # Tests for academy domain models
+├── accounts/                # Tests for account and team domain models
 ├── adhoc/                   # Ad-hoc spot-check tests
-├── geniallys/               # Tests for genially creation models
-├── int_netsuite_invoices/   # Finance cross-system tests
+├── billing/                 # Finance and billing consistency tests
+├── content/                 # Content or product-domain tests
 └── generic/                 # Reusable generic test definitions
 ```
 
