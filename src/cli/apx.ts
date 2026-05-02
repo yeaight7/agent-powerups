@@ -14,6 +14,7 @@ import { runInstallCommand } from "./commands/install.js";
 import { runListCommand } from "./commands/list.js";
 import { runMcpCheckCommand, runMcpInstallCommand, runMcpListCommand, runMcpPrintCommand, runMcpSmokeCommand, runMcpWriteCommand } from "./commands/mcp.js";
 import { runPluginBuildCommand, runPluginDiffCommand, runPluginValidateCommand } from "./commands/plugin.js";
+import { runPluginsListCommand, runPluginsInfoCommand, runPluginsValidateCommand, runPluginsInstallCommand } from "./commands/plugins.js";
 import { runRelayAskCommand, runRelayDaemonCommand, runRelayInitCommand, runRelayStartCommand, runRelayStatusCommand, runRelayStopCommand } from "./commands/relay.js";
 import { runShipCheckCommand } from "./commands/run-command.js";
 import { parseSetupAgent, runSetupCommand } from "./commands/setup.js";
@@ -64,6 +65,11 @@ apx mcp write <config-name> --target <${INSTALL_TARGETS.join("|")}> --dest <path
 apx plugin validate <plugin-path> [--json]
 apx plugin diff <plugin-path> [--json]
 apx plugin build --dest <path> (--dry-run|--write) [--json]
+apx plugins list [--json]
+apx plugins info <plugin-name> [--json]
+apx plugins validate <plugin-name> [--json]
+apx plugins validate --all [--json]
+apx plugins install <plugin-name> --target <codex|claude-code|generic> [--dest <path>] [--dry-run|--yes] [--force] [--json]
 apx validate skills
 apx validate catalog
 apx relay init <session-name>
@@ -499,6 +505,23 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
         );
       }
       throw new Error("Unknown plugin subcommand");
+    }
+
+    if (command === "plugins") {
+      const subcommand = argv[1];
+      if (!subcommand || subcommand === "list") {
+        return await runPluginsListCommand(argv, io);
+      }
+      if (subcommand === "info") {
+        return await runPluginsInfoCommand(argv, io);
+      }
+      if (subcommand === "validate") {
+        return await runPluginsValidateCommand(argv, io);
+      }
+      if (subcommand === "install") {
+        return await runPluginsInstallCommand(argv, io);
+      }
+      throw new Error("Unknown plugins subcommand");
     }
 
     throw new Error(`Unknown command: ${command}`);
