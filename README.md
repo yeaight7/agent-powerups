@@ -12,7 +12,7 @@ Today, this repo ships:
 - validation and requirement-check scripts
 - verified local GitHub MCP check, smoke, and install flow
 - command, hook, workflow, examples, and AGENTS.md templates
-- experimental local plugin layout
+- seven shipped plugin bundles with `apx plugins` discovery, validation, and install flow
 
 Everything else stays conservative. No global mutation. No hidden install hooks. No fake marketplace claims.
 
@@ -26,7 +26,7 @@ Everything else stays conservative. No global mutation. No hidden install hooks.
 | `commands/` | shipped | Review-first command prompts plus safe runnable checks |
 | `hooks/` | shipped | Review-before-use hook recipes plus safe runnable checks |
 | `workflows/` | shipped | Scenario guides |
-| `plugins/` | experimental | Local-only plugin layout with deterministic build/validate commands |
+| `plugins/` | shipped | Seven plugin bundles with local-first discovery, validation, and install commands |
 | `scripts/` | shipped | Validation and tool-check helpers for this repo |
 | `examples/` | shipped | Minimal safe setup examples |
 
@@ -144,12 +144,19 @@ Current shipped skills:
 - `no-fluff`
 - `writing-plans`
 - `ai-slop-cleaner`
+- `bigquery-cost-audit`
+- `data-quality`
+- `dbt-incremental-strategy-audit`
+- `dbt-preflight`
+- `dbt-strategy`
+- `metric-impact-analyzer`
 - `requesting-code-review`
 - `receiving-code-review`
 - `pr-triage`
 - `repo-map`
 - `bug-hunt`
 - `safe-refactor`
+- `sql-business-logic-review`
 - `defuddle`
 - `markitdown-file-intake`
 - `ask-claude`
@@ -197,6 +204,16 @@ Current shipped workflows:
 - `feature-iteration`
 - `agent-relay`
 
+Current shipped plugin bundles:
+
+- `dev-vitals`
+- `debugging-diagnostics`
+- `codebase-maintenance`
+- `data-engineering`
+- `documentation-systems`
+- `machine-learning-ops`
+- `quality-gates`
+
 Schema details: [`docs/catalog-schema.md`](./docs/catalog-schema.md)
 
 ## Compatibility Matrix
@@ -211,7 +228,7 @@ Compatibility claims in this repo are intentionally narrow:
 | `commands/` | yes | Review-first markdown command prompts; Claude Code and Codex targets where provided |
 | `hooks/` | yes | Documentation recipes only; not installed automatically |
 | `workflows/` | yes | Plain text scenario guides |
-| `plugins/` | experimental | Local layout only; no official marketplace claim |
+| `plugins/` | yes | Seven local-first plugin bundles with `apx plugins` discovery, validation, and install support |
 | `scripts/` | yes | Generic Python scripts |
 | `examples/` | yes | Plain text setup examples only |
 
@@ -287,9 +304,10 @@ apx hooks print no-secrets-preflight
 apx hooks run no-secrets-preflight --path README.md
 apx workflows list
 apx workflows print feature-iteration
-apx plugin validate plugins/agent-powerups
-apx plugin diff plugins/agent-powerups
-apx plugin build --dest plugins/agent-powerups --dry-run
+apx plugins list
+apx plugins info dev-vitals
+apx plugins validate --all
+apx plugins install dev-vitals --target codex --dry-run
 ```
 
 To explicitly copy a skill into a local Codex-visible folder, choose the destination yourself:
@@ -298,16 +316,14 @@ To explicitly copy a skill into a local Codex-visible folder, choose the destina
 apx install ask-claude --target codex --dest .agent-powerups/installed/ask-claude
 ```
 
-## Experimental Plugin Layout
+## Plugin Bundles
 
-Local-only. Experimental-only. Not verified marketplace support.
+Plugin bundles ship under [`plugins/`](./plugins/) and are registered in both [`.claude-plugin/marketplace.json`](./.claude-plugin/marketplace.json) and [`.codex-plugin/marketplace.json`](./.codex-plugin/marketplace.json).
 
-- plugin files live under [`plugins/agent-powerups`](./plugins/agent-powerups)
-- local marketplace example lives under [`.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json)
-- use `apx plugin validate plugins/agent-powerups` before use
-- use `apx plugin diff plugins/agent-powerups` to detect drift from catalog-backed root assets
-- use `apx plugin build --dest plugins/agent-powerups --write` to refresh the local mirror from catalog assets
-- never commit real tokens
+- use `apx plugins list` to discover bundles
+- use `apx plugins info <name>` to inspect a single bundle
+- use `apx plugins validate --all` to verify bundle structure
+- use `apx plugins install <name> --target <codex|claude-code|generic> --dry-run` before any write
 
 ## Safety Warning
 
