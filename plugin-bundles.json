@@ -1,12 +1,12 @@
 {
   "$schema": "./docs/plugin-bundles-schema.json",
-  "_comment": "Plugin expansion manifest for Agent Powerups. Reflects the active structure under plugins/. Phase-2 scaffolding and Phase-3 refactor/rename have been successfully completed.",
-  "version": "0.2.0-draft",
+  "_comment": "Active plugin bundle manifest for the shipped plugin packs under plugins/.",
+  "version": "0.2.0",
   "plugins": [
     {
       "name": "dev-vitals",
       "description": "Core developer workflow skills: planning, execution, communication, and powerup discovery.",
-      "maturity": "draft",
+      "maturity": "beta",
       "skills": [
         { "name": "repo-map", "origin": "root-copy" },
         { "name": "writing-plans", "origin": "root-copy" },
@@ -34,7 +34,7 @@
     {
       "name": "debugging-diagnostics",
       "description": "Error diagnosis, fault isolation, log forensics, and incident investigation.",
-      "maturity": "draft",
+      "maturity": "beta",
       "overlap_with_root": [
         { "root_skill": "systematic-debugging", "rule": "Root covers general root-cause discipline; plugin adds log forensics, flaky tests, regression bisecting." },
         { "root_skill": "bug-hunt", "rule": "Root covers single-bug isolation; plugin adds multi-system correlation and reproduction workflows." }
@@ -65,7 +65,7 @@
     {
       "name": "codebase-maintenance",
       "description": "Safe refactoring, dead-code removal, legacy modernization, and dependency hygiene.",
-      "maturity": "draft",
+      "maturity": "beta",
       "overlap_with_root": [
         { "root_skill": "safe-refactor", "rule": "Root covers small-step refactors; plugin adds legacy migration plans and batch dead-code sweeps." },
         { "root_skill": "ai-slop-cleaner", "rule": "Root covers AI-generated code cleanup; plugin adds tech-debt tracking and dep auditing." }
@@ -95,7 +95,7 @@
     {
       "name": "data-engineering",
       "description": "Analytics engineering, dbt patterns, BigQuery optimization, data quality, and pipeline workflows.",
-      "maturity": "draft",
+      "maturity": "beta",
       "skills": [
         { "name": "data-quality", "origin": "first-party-seed" },
         { "name": "dbt-strategy", "origin": "first-party-seed" },
@@ -108,7 +108,7 @@
       ],
       "agents": [
         { "name": "data-engineer", "origin": "first-party-seed" },
-		{ "name": "data-analytics-engineer", "origin": "first-party-seed" },
+        { "name": "dbt-analytics-engineer", "origin": "first-party-seed" },
         { "name": "data-quality-reviewer", "origin": "first-party-seed" },
         { "name": "semantic-layer-reviewer", "origin": "first-party-seed" },
         { "name": "bigquery-cost-analyst", "origin": "first-party-seed" }
@@ -123,7 +123,7 @@
     {
       "name": "documentation-systems",
       "description": "Documentation architecture, API reference authoring, ADR writing, readme hardening, and doc quality.",
-      "maturity": "draft",
+      "maturity": "beta",
       "skills": [
         { "name": "agent-readable-docs", "origin": "first-party-seed" },
         { "name": "readme-hardening", "origin": "first-party-seed" },
@@ -149,7 +149,7 @@
     {
       "name": "machine-learning-ops",
       "description": "ML pipeline design, experiment tracking, model evaluation, training debugging, and reproducibility.",
-      "maturity": "draft",
+      "maturity": "beta",
       "skills": [
         { "name": "reproducible-training-runs", "origin": "first-party-seed" },
         { "name": "experiment-tracking-review", "origin": "first-party-seed" },
@@ -175,7 +175,7 @@
     {
       "name": "quality-gates",
       "description": "Quality enforcement: TDD discipline, code review workflows, release verification, and CI failure analysis.",
-      "maturity": "draft",
+      "maturity": "beta",
       "overlap_with_root": [
         { "root_skill": "test-driven-development", "rule": "Root covers RED→GREEN→REFACTOR discipline; plugin adds orchestration agents and multi-stage review pipeline." },
         { "root_skill": "requesting-code-review", "rule": "Root covers review request pattern; plugin adds multi-agent review and formal scoring." },
