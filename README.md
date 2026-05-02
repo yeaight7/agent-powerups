@@ -68,7 +68,16 @@ apx mcp smoke github-local --json
 apx mcp install github-local --target codex --dry-run
 ```
 
-5. Try a local advisor CLI and save an artifact:
+5. Work with plugin bundles:
+
+```sh
+apx plugins list
+apx plugins info dev-vitals
+apx plugins validate --all
+apx plugins install dev-vitals --target codex --dry-run
+```
+
+6. Try a local advisor CLI and save an artifact:
 
 ```sh
 apx ask-codex "Return OK only" --json
