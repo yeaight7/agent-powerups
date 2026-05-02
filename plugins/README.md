@@ -6,26 +6,26 @@ Domain-specific plugin bundles for Agent Powerups. Each plugin extends the base 
 
 | Plugin | Domain | Status |
 |---|---|---|
-| [`data-engineering`](data-engineering/) | dbt, BigQuery, Airflow, analytics engineering | seed content |
-| [`dev-vitals`](dev-vitals/) | Core engineering: code review, Git, auth, SQL, monorepo | planned |
-| [`debugging-diagnostics`](debugging-diagnostics/) | Error investigation, log forensics, fault isolation | planned |
-| [`codebase-maintenance`](codebase-maintenance/) | Refactoring, legacy modernization, dependency hygiene | planned |
-| [`documentation-systems`](documentation-systems/) | Doc architecture, API reference, ADR writing | planned |
-| [`machine-learning-ops`](machine-learning-ops/) | ML pipelines, experiment tracking, model serving | planned |
-| [`quality-gates`](quality-gates/) | TDD, PR review, evaluation methodology | planned |
+| [`data-engineering`](data-engineering/) | dbt, BigQuery, data quality, analytics engineering | active |
+| [`dev-vitals`](dev-vitals/) | Core engineering: task intake, context minimization, handoffs | active |
+| [`debugging-diagnostics`](debugging-diagnostics/) | Error investigation, log forensics, flaky tests, repros | active |
+| [`codebase-maintenance`](codebase-maintenance/) | Safe refactoring, dead code, incremental migrations | active |
+| [`documentation-systems`](documentation-systems/) | Doc architecture, README hardening, ADRs, context docs | active |
+| [`machine-learning-ops`](machine-learning-ops/) | Experiment tracking, model evaluation, leakage checks | active |
+| [`quality-gates`](quality-gates/) | Change impact, pre-release verification, risk-based review | active |
 
-Full planned inventory (skills, agents, commands) is in [`../plugin-bundles.json`](../plugin-bundles.json).
-
-Architecture rules and the root-skill vs plugin-skill duplication policy are in [`../docs/plugin-expansion-contract.md`](../docs/plugin-expansion-contract.md).
+Full inventory (skills, agents, commands) is tracked in [`../plugin-bundles.json`](../plugin-bundles.json).
 
 ## Structure
 
-Each plugin follows the standard Claude Code plugin layout:
+Each plugin follows the standard coding agent plugin layout:
 
 ```
 <plugin-name>/
 ├── .claude-plugin/
-│   └── plugin.json      # Manifest (name, version, description)
+│   └── plugin.json      # Claude Code Manifest
+├── .codex-plugin/
+│   └── plugin.json      # Codex Manifest
 ├── skills/
 │   └── <skill-name>/
 │       └── SKILL.md
@@ -38,5 +38,3 @@ Each plugin follows the standard Claude Code plugin layout:
 ## Root Skills vs Plugin Skills
 
 Root skills in `../skills/` are general-purpose and standalone. Plugin skills are domain-specific and go deeper. A plugin skill may cover the same topic as a root skill — it must not replace or override it.
-
-See [`../docs/plugin-expansion-contract.md`](../docs/plugin-expansion-contract.md) for the full duplication rule.
