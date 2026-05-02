@@ -9,6 +9,3 @@ dist/
 .remember/
 graphify-out/
 .obsidian/
-claude_conversation.md
-plugin-bundles.json
-docs/plugin-expansion-contract.md
