@@ -1,0 +1,6 @@
+{
+  "name": "data-engineering",
+  "version": "0.1.0",
+  "description": "Analytics engineering, dbt patterns, BigQuery optimization, data quality, and pipeline workflows.",
+  "maturity": "draft"
+}
