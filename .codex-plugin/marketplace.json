@@ -1,0 +1,92 @@
+{
+  "name": "agent-powerups-plugins",
+  "interface": {
+    "displayName": "Agent Powerups Plugins"
+  },
+  "plugins": [
+    {
+      "name": "dev-vitals",
+      "source": {
+        "source": "local",
+        "path": "./plugins/dev-vitals"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "debugging-diagnostics",
+      "source": {
+        "source": "local",
+        "path": "./plugins/debugging-diagnostics"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "codebase-maintenance",
+      "source": {
+        "source": "local",
+        "path": "./plugins/codebase-maintenance"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "data-engineering",
+      "source": {
+        "source": "local",
+        "path": "./plugins/data-engineering"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "documentation-systems",
+      "source": {
+        "source": "local",
+        "path": "./plugins/documentation-systems"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "machine-learning-ops",
+      "source": {
+        "source": "local",
+        "path": "./plugins/machine-learning-ops"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "quality-gates",
+      "source": {
+        "source": "local",
+        "path": "./plugins/quality-gates"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
