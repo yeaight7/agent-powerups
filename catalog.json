@@ -161,6 +161,69 @@
     "maturity": "stable"
   },
   {
+    "name": "bigquery-cost-audit",
+    "type": "skill",
+    "summary": "Analyze BigQuery usage for cost hotspots, repeated failures, and practical optimization opportunities.",
+    "path": "skills/bigquery-cost-audit",
+    "compatible_with": ["generic"],
+    "tags": ["bigquery", "cost", "analytics", "review"],
+    "maturity": "beta"
+  },
+  {
+    "name": "data-quality",
+    "type": "skill",
+    "summary": "Project-specific dbt data quality patterns for analytics-genially on BigQuery.",
+    "path": "skills/data-quality",
+    "compatible_with": ["generic"],
+    "tags": ["dbt", "bigquery", "testing", "data-quality"],
+    "maturity": "beta"
+  },
+  {
+    "name": "dbt-incremental-strategy-audit",
+    "type": "skill",
+    "summary": "Audit whether a dbt incremental model uses the right strategy for the repo, data shape, and operations.",
+    "path": "skills/dbt-incremental-strategy-audit",
+    "compatible_with": ["generic"],
+    "tags": ["dbt", "incremental", "review", "performance"],
+    "maturity": "beta"
+  },
+  {
+    "name": "dbt-preflight",
+    "type": "skill",
+    "summary": "Inspect changed dbt assets, estimate blast radius, and recommend the narrowest safe validation plan.",
+    "path": "skills/dbt-preflight",
+    "compatible_with": ["generic"],
+    "tags": ["dbt", "validation", "blast-radius", "review"],
+    "maturity": "beta"
+  },
+  {
+    "name": "dbt-strategy",
+    "type": "skill",
+    "summary": "Project-specific dbt modeling strategy for analytics-genially on BigQuery.",
+    "path": "skills/dbt-strategy",
+    "compatible_with": ["generic"],
+    "tags": ["dbt", "bigquery", "modeling", "architecture"],
+    "maturity": "beta"
+  },
+  {
+    "name": "metric-impact-analyzer",
+    "type": "skill",
+    "summary": "Evaluate metric and semantic model changes for BI breakage and business meaning drift.",
+    "path": "skills/metric-impact-analyzer",
+    "compatible_with": ["generic"],
+    "tags": ["metrics", "semantic-layer", "bi", "review"],
+    "maturity": "beta"
+  },
+  {
+    "name": "sql-business-logic-review",
+    "type": "skill",
+    "summary": "Review SQL for business logic correctness, aggregation risk, and silent definition changes.",
+    "path": "skills/sql-business-logic-review",
+    "compatible_with": ["generic"],
+    "tags": ["sql", "business-logic", "analytics", "review"],
+    "maturity": "beta"
+  },
+  {
     "name": "github-local",
     "type": "mcp-config",
     "summary": "Verified local GitHub MCP check, smoke, and install flow for Codex, Claude Code, and generic clients.",
