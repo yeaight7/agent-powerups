@@ -81,9 +81,12 @@ apx commands run ship-check
 apx hooks print no-secrets-preflight
 apx hooks run no-secrets-preflight --all
 apx workflows print feature-iteration
+apx plugins list
+apx plugins info dev-vitals
+apx plugins validate --all
+apx plugins install dev-vitals --target codex --dry-run
 apx ask-claude "Review this change" --artifact-dir .apx\artifacts --json
 apx ask-gemini "List edge cases" --artifact-dir .apx\artifacts --json
-apx plugin validate plugins\agent-powerups
 ```
 
 - Run validators after editing repo content:
@@ -123,7 +126,6 @@ Write-capable commands require an explicit destination or `--write` flag:
 apx mcp write github-local --target generic --dest .agent-powerups\github-local.json
 apx mcp install github-local --target codex --yes
 apx install ask-claude --target codex --dest .agent-powerups\installed\ask-claude
-apx plugin build --dest plugins\agent-powerups --write
 ```
 
 Existing MCP destination files are backed up by target installers or not overwritten by explicit generic writes unless `--force` is provided.
