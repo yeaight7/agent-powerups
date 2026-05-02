@@ -24,7 +24,7 @@
     "path": "skills/writing-plans",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["planning", "implementation", "spec"],
-    "maturity": "beta"
+    "maturity": "stable"
   },
   {
     "name": "ai-slop-cleaner",
@@ -33,7 +33,7 @@
     "path": "skills/ai-slop-cleaner",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["cleanup", "refactoring", "code-quality"],
-    "maturity": "beta"
+    "maturity": "stable"
   },
   {
     "name": "requesting-code-review",
@@ -42,7 +42,7 @@
     "path": "skills/requesting-code-review",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["code-review", "quality", "merging"],
-    "maturity": "beta"
+    "maturity": "stable"
   },
   {
     "name": "receiving-code-review",
@@ -51,7 +51,7 @@
     "path": "skills/receiving-code-review",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["code-review", "feedback", "collaboration"],
-    "maturity": "beta"
+    "maturity": "stable"
   },
   {
     "name": "pr-triage",
@@ -60,7 +60,7 @@
     "path": "skills/pr-triage",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["git", "pull-requests", "triage"],
-    "maturity": "beta"
+    "maturity": "stable"
   },
   {
     "name": "repo-map",
@@ -69,7 +69,7 @@
     "path": "skills/repo-map",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["architecture", "onboarding", "exploration"],
-    "maturity": "beta"
+    "maturity": "stable"
   },
   {
     "name": "bug-hunt",
@@ -78,7 +78,7 @@
     "path": "skills/bug-hunt",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["debugging", "testing", "bug-fix"],
-    "maturity": "beta"
+    "maturity": "stable"
   },
   {
     "name": "safe-refactor",
@@ -109,7 +109,7 @@
     "path": "skills/markitdown-file-intake",
     "compatible_with": ["generic"],
     "tags": ["file-intake", "markdown", "documents"],
-    "maturity": "draft",
+    "maturity": "stable",
     "requires": {
       "commands": ["markitdown"],
       "python_packages": ["markitdown"]
@@ -122,7 +122,7 @@
     "path": "skills/ask-claude",
     "compatible_with": ["codex", "generic"],
     "tags": ["claude", "cli", "second-opinion", "artifacts"],
-    "maturity": "draft",
+    "maturity": "beta",
     "requires": {
       "commands": ["claude"]
     }
@@ -134,7 +134,7 @@
     "path": "skills/ask-gemini",
     "compatible_with": ["codex", "generic"],
     "tags": ["gemini", "cli", "second-opinion", "artifacts"],
-    "maturity": "draft",
+    "maturity": "beta",
     "requires": {
       "commands": ["gemini"]
     }
@@ -146,7 +146,7 @@
     "path": "skills/ask-codex",
     "compatible_with": ["claude-code", "generic"],
     "tags": ["codex", "cli", "second-opinion", "artifacts"],
-    "maturity": "draft",
+    "maturity": "beta",
     "requires": {
       "commands": ["codex"]
     }
@@ -158,7 +158,7 @@
     "path": "skills/using-powerups",
     "compatible_with": ["claude-code", "codex", "gemini-cli", "generic"],
     "tags": ["discovery", "skills", "commands", "mcp", "setup"],
-    "maturity": "draft"
+    "maturity": "stable"
   },
   {
     "name": "github-local",
@@ -256,7 +256,7 @@
     "path": "commands/generic/using-powerups.md",
     "compatible_with": ["generic"],
     "tags": ["commands", "discovery", "powerups"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "no-secrets-preflight",
@@ -265,7 +265,7 @@
     "path": "hooks/safety/no-secrets-preflight.md",
     "compatible_with": ["generic"],
     "tags": ["hooks", "safety", "secrets"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "handoff-summary",
@@ -274,7 +274,7 @@
     "path": "hooks/productivity/handoff-summary.md",
     "compatible_with": ["generic"],
     "tags": ["hooks", "productivity", "handoff"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "validation-required",
@@ -283,7 +283,7 @@
     "path": "hooks/quality/validation-required.md",
     "compatible_with": ["generic"],
     "tags": ["hooks", "quality", "validation"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "minimal-setup-example",
@@ -292,7 +292,7 @@
     "path": "examples/minimal/README.md",
     "compatible_with": ["generic"],
     "tags": ["examples", "setup", "dry-run"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "codex-setup-example",
@@ -301,7 +301,7 @@
     "path": "examples/codex/README.md",
     "compatible_with": ["codex"],
     "tags": ["examples", "codex", "setup"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "claude-code-setup-example",
@@ -310,7 +310,7 @@
     "path": "examples/claude-code/README.md",
     "compatible_with": ["claude-code"],
     "tags": ["examples", "claude-code", "setup"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "feature-iteration",
@@ -319,7 +319,7 @@
     "path": "workflows/feature-iteration.md",
     "compatible_with": ["generic"],
     "tags": ["workflows", "planning", "testing"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "agent-relay",
@@ -328,7 +328,7 @@
     "path": "workflows/agent-relay.md",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["delegation", "multi-agent", "artifacts", "gemini", "acp"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "validate-skills",
@@ -364,7 +364,7 @@
     "path": "skills/relay-gemini",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["relay", "gemini", "acp", "artifacts"],
-    "maturity": "draft",
+    "maturity": "beta",
     "requires": {
       "commands": ["gemini"]
     }
@@ -376,7 +376,7 @@
     "path": "skills/relay-claude",
     "compatible_with": ["codex", "gemini-cli", "generic"],
     "tags": ["relay", "claude", "cli", "artifacts"],
-    "maturity": "draft",
+    "maturity": "beta",
     "requires": {
       "commands": ["claude"]
     }
@@ -388,7 +388,7 @@
     "path": "skills/relay-codex",
     "compatible_with": ["claude-code", "gemini-cli", "generic"],
     "tags": ["relay", "codex", "cli", "artifacts"],
-    "maturity": "draft",
+    "maturity": "beta",
     "requires": {
       "commands": ["codex"]
     }
@@ -400,7 +400,7 @@
     "path": "skills/graphify",
     "compatible_with": ["claude-code"],
     "tags": ["knowledge-graph", "json-canvas", "visualization", "mcp"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "brainstorming",
@@ -493,7 +493,7 @@
     "path": "hooks/safety/dependency-review.md",
     "compatible_with": ["generic"],
     "tags": ["hooks", "safety", "dependencies", "supply-chain"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "test-gate",
@@ -502,7 +502,7 @@
     "path": "hooks/quality/test-gate.md",
     "compatible_with": ["generic"],
     "tags": ["hooks", "quality", "testing", "gate"],
-    "maturity": "draft"
+    "maturity": "beta"
   },
   {
     "name": "lint-check",
@@ -600,5 +600,68 @@
       "generic": "commands/generic/triage.md",
       "claude-code": "commands/claude-code/triage.md"
     }
+  },
+  {
+    "name": "dev-vitals",
+    "type": "pack",
+    "summary": "Core engineering discipline: task intake, context minimization, and handoffs.",
+    "path": "plugins/dev-vitals",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "core", "workflow"],
+    "maturity": "beta"
+  },
+  {
+    "name": "debugging-diagnostics",
+    "type": "pack",
+    "summary": "Failure investigation: log forensics, flaky tests, and minimal reproductions.",
+    "path": "plugins/debugging-diagnostics",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "debugging", "diagnostics"],
+    "maturity": "beta"
+  },
+  {
+    "name": "codebase-maintenance",
+    "type": "pack",
+    "summary": "Safe refactoring: dead code removal, naming cleanup, and incremental migrations.",
+    "path": "plugins/codebase-maintenance",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "refactoring", "maintenance"],
+    "maturity": "beta"
+  },
+  {
+    "name": "data-engineering",
+    "type": "pack",
+    "summary": "Analytics engineering: dbt patterns, BigQuery optimization, and data quality.",
+    "path": "plugins/data-engineering",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "data", "dbt", "bigquery"],
+    "maturity": "beta"
+  },
+  {
+    "name": "documentation-systems",
+    "type": "pack",
+    "summary": "Maintainable docs: README hardening, ADRs, and agent-readable context docs.",
+    "path": "plugins/documentation-systems",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "documentation", "architecture"],
+    "maturity": "beta"
+  },
+  {
+    "name": "machine-learning-ops",
+    "type": "pack",
+    "summary": "ML hygiene: experiment tracking, leakage checks, and model evaluation.",
+    "path": "plugins/machine-learning-ops",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "ml", "ops", "experiments"],
+    "maturity": "beta"
+  },
+  {
+    "name": "quality-gates",
+    "type": "pack",
+    "summary": "Software quality: change impact check, CI analysis, and release verification.",
+    "path": "plugins/quality-gates",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "quality", "ci"],
+    "maturity": "beta"
   }
 ]
