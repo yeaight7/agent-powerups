@@ -228,7 +228,7 @@ dbt test --store-failures         # Persist failures to BQ for inspection
 To inspect test failures in BigQuery (development):
 
 ```sql
-select * from `dbt_pabloreina`.`dbt_test__audit`.<test_name>
+select * from `dbt_<username>`.`dbt_test__audit`.<test_name>
 ```
 
 ## Test Coverage Checklist
