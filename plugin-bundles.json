@@ -1,0 +1,210 @@
+{
+  "$schema": "./docs/plugin-bundles-schema.json",
+  "_comment": "Plugin expansion manifest for Agent Powerups. Reflects the active structure under plugins/. Phase-2 scaffolding and Phase-3 refactor/rename have been successfully completed.",
+  "version": "0.2.0-draft",
+  "plugins": [
+    {
+      "name": "dev-vitals",
+      "description": "Core developer workflow skills: planning, execution, communication, and powerup discovery.",
+      "maturity": "draft",
+      "skills": [
+        { "name": "repo-map", "origin": "root-copy" },
+        { "name": "writing-plans", "origin": "root-copy" },
+        { "name": "brainstorming", "origin": "root-copy" },
+        { "name": "verification-before-completion", "origin": "root-copy" },
+        { "name": "dispatching-parallel-agents", "origin": "root-copy" },
+        { "name": "using-powerups", "origin": "root-copy" },
+        { "name": "no-fluff", "origin": "root-copy" },
+        { "name": "handoff-discipline", "origin": "first-party-seed" },
+        { "name": "task-intake", "origin": "first-party-seed" },
+        { "name": "context-minimization", "origin": "first-party-seed" }
+      ],
+      "agents": [
+        { "name": "dev-workflow-coach", "origin": "first-party-seed" },
+        { "name": "repo-context-mapper", "origin": "first-party-seed" },
+        { "name": "implementation-planner", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "plan", "origin": "root-copy" },
+        { "name": "implement", "origin": "root-copy" },
+        { "name": "ship-check", "origin": "root-copy" },
+        { "name": "using-powerups", "origin": "root-copy" }
+      ]
+    },
+    {
+      "name": "debugging-diagnostics",
+      "description": "Error diagnosis, fault isolation, log forensics, and incident investigation.",
+      "maturity": "draft",
+      "overlap_with_root": [
+        { "root_skill": "systematic-debugging", "rule": "Root covers general root-cause discipline; plugin adds log forensics, flaky tests, regression bisecting." },
+        { "root_skill": "bug-hunt", "rule": "Root covers single-bug isolation; plugin adds multi-system correlation and reproduction workflows." }
+      ],
+      "skills": [
+        { "name": "systematic-debugging", "origin": "root-copy" },
+        { "name": "bug-hunt", "origin": "root-copy" },
+        { "name": "minimal-reproduction", "origin": "first-party-seed" },
+        { "name": "log-driven-diagnosis", "origin": "first-party-seed" },
+        { "name": "failure-triage", "origin": "first-party-seed" },
+        { "name": "flaky-test-investigation", "origin": "first-party-seed" },
+        { "name": "regression-bisecting", "origin": "first-party-seed" },
+        { "name": "incident-readout", "origin": "first-party-seed" }
+      ],
+      "agents": [
+        { "name": "root-cause-debugger", "origin": "first-party-seed" },
+        { "name": "failure-diagnostician", "origin": "first-party-seed" },
+        { "name": "reproduction-engineer", "origin": "first-party-seed" },
+        { "name": "flaky-test-investigator", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "debug", "origin": "root-copy" },
+        { "name": "diagnose-failure", "origin": "first-party-seed" },
+        { "name": "create-repro", "origin": "first-party-seed" },
+        { "name": "trace-regression", "origin": "first-party-seed" }
+      ]
+    },
+    {
+      "name": "codebase-maintenance",
+      "description": "Safe refactoring, dead-code removal, legacy modernization, and dependency hygiene.",
+      "maturity": "draft",
+      "overlap_with_root": [
+        { "root_skill": "safe-refactor", "rule": "Root covers small-step refactors; plugin adds legacy migration plans and batch dead-code sweeps." },
+        { "root_skill": "ai-slop-cleaner", "rule": "Root covers AI-generated code cleanup; plugin adds tech-debt tracking and dep auditing." }
+      ],
+      "skills": [
+        { "name": "safe-refactor", "origin": "root-copy" },
+        { "name": "ai-slop-cleaner", "origin": "root-copy" },
+        { "name": "dead-code-removal", "origin": "first-party-seed" },
+        { "name": "dependency-cleanup", "origin": "first-party-seed" },
+        { "name": "naming-and-structure-cleanup", "origin": "first-party-seed" },
+        { "name": "test-preserving-refactor", "origin": "first-party-seed" },
+        { "name": "architecture-simplification", "origin": "first-party-seed" },
+        { "name": "incremental-migration", "origin": "first-party-seed" }
+      ],
+      "agents": [
+        { "name": "safe-refactorer", "origin": "first-party-seed" },
+        { "name": "codebase-cleaner", "origin": "first-party-seed" },
+        { "name": "technical-debt-reviewer", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "cleanup", "origin": "first-party-seed" },
+        { "name": "refactor-plan", "origin": "first-party-seed" },
+        { "name": "debt-audit", "origin": "first-party-seed" },
+        { "name": "safe-rename", "origin": "first-party-seed" }
+      ]
+    },
+    {
+      "name": "data-engineering",
+      "description": "Analytics engineering, dbt patterns, BigQuery optimization, data quality, and pipeline workflows.",
+      "maturity": "draft",
+      "skills": [
+        { "name": "data-quality", "origin": "first-party-seed" },
+        { "name": "dbt-strategy", "origin": "first-party-seed" },
+        { "name": "bigquery-cost-audit", "origin": "root-copy" },
+        { "name": "metric-impact-analyzer", "origin": "root-copy" },
+        { "name": "dbt-incremental-strategy-audit", "origin": "first-party-seed" },
+        { "name": "sql-business-logic-review", "origin": "first-party-seed" },
+        { "name": "dbt-preflight", "origin": "root-copy" },
+        { "name": "semantic-layer-change-review", "origin": "first-party-seed" }
+      ],
+      "agents": [
+        { "name": "data-engineer", "origin": "first-party-seed" },
+		{ "name": "data-analytics-engineer", "origin": "first-party-seed" },
+        { "name": "data-quality-reviewer", "origin": "first-party-seed" },
+        { "name": "semantic-layer-reviewer", "origin": "first-party-seed" },
+        { "name": "bigquery-cost-analyst", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "dbt-model-review", "origin": "first-party-seed" },
+        { "name": "data-quality-check", "origin": "first-party-seed" },
+        { "name": "semantic-change-check", "origin": "first-party-seed" },
+        { "name": "bigquery-cost-check", "origin": "first-party-seed" }
+      ]
+    },
+    {
+      "name": "documentation-systems",
+      "description": "Documentation architecture, API reference authoring, ADR writing, readme hardening, and doc quality.",
+      "maturity": "draft",
+      "skills": [
+        { "name": "agent-readable-docs", "origin": "first-party-seed" },
+        { "name": "readme-hardening", "origin": "first-party-seed" },
+        { "name": "architecture-decision-records", "origin": "first-party-seed" },
+        { "name": "handoff-documentation", "origin": "first-party-seed" },
+        { "name": "context-docs", "origin": "first-party-seed" },
+        { "name": "api-doc-review", "origin": "first-party-seed" },
+        { "name": "doc-consistency-check", "origin": "first-party-seed" }
+      ],
+      "agents": [
+        { "name": "agent-docs-architect", "origin": "first-party-seed" },
+        { "name": "readme-reviewer", "origin": "first-party-seed" },
+        { "name": "handoff-writer", "origin": "first-party-seed" },
+        { "name": "doc-consistency-reviewer", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "doc-audit", "origin": "first-party-seed" },
+        { "name": "write-handoff", "origin": "first-party-seed" },
+        { "name": "readme-review", "origin": "first-party-seed" },
+        { "name": "architecture-note", "origin": "first-party-seed" }
+      ]
+    },
+    {
+      "name": "machine-learning-ops",
+      "description": "ML pipeline design, experiment tracking, model evaluation, training debugging, and reproducibility.",
+      "maturity": "draft",
+      "skills": [
+        { "name": "reproducible-training-runs", "origin": "first-party-seed" },
+        { "name": "experiment-tracking-review", "origin": "first-party-seed" },
+        { "name": "ml-leakage-check", "origin": "first-party-seed" },
+        { "name": "model-evaluation-reporting", "origin": "first-party-seed" },
+        { "name": "training-pipeline-debugging", "origin": "first-party-seed" },
+        { "name": "dataset-split-review", "origin": "first-party-seed" },
+        { "name": "baseline-comparison-review", "origin": "first-party-seed" }
+      ],
+      "agents": [
+        { "name": "ml-experiment-reviewer", "origin": "first-party-seed" },
+        { "name": "training-pipeline-debugger", "origin": "first-party-seed" },
+        { "name": "leakage-auditor", "origin": "first-party-seed" },
+        { "name": "model-evaluation-analyst", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "ml-run-review", "origin": "first-party-seed" },
+        { "name": "leakage-check", "origin": "first-party-seed" },
+        { "name": "evaluation-report", "origin": "first-party-seed" },
+        { "name": "experiment-preflight", "origin": "first-party-seed" }
+      ]
+    },
+    {
+      "name": "quality-gates",
+      "description": "Quality enforcement: TDD discipline, code review workflows, release verification, and CI failure analysis.",
+      "maturity": "draft",
+      "overlap_with_root": [
+        { "root_skill": "test-driven-development", "rule": "Root covers RED→GREEN→REFACTOR discipline; plugin adds orchestration agents and multi-stage review pipeline." },
+        { "root_skill": "requesting-code-review", "rule": "Root covers review request pattern; plugin adds multi-agent review and formal scoring." },
+        { "root_skill": "receiving-code-review", "rule": "Root covers feedback evaluation; plugin adds structured comment addressing workflows." },
+        { "root_skill": "gh-address-comments", "rule": "Root covers PR comment addressing; plugin extends with release verification and CI workflows." }
+      ],
+      "skills": [
+        { "name": "test-driven-development", "origin": "root-copy" },
+        { "name": "verification-before-completion", "origin": "root-copy" },
+        { "name": "requesting-code-review", "origin": "root-copy" },
+        { "name": "receiving-code-review", "origin": "root-copy" },
+        { "name": "gh-address-comments", "origin": "root-copy" },
+        { "name": "ci-failure-readout", "origin": "first-party-seed" },
+        { "name": "pre-release-verification", "origin": "first-party-seed" },
+        { "name": "risk-based-review", "origin": "first-party-seed" },
+        { "name": "change-impact-check", "origin": "first-party-seed" }
+      ],
+      "agents": [
+        { "name": "quality-gatekeeper", "origin": "first-party-seed" },
+        { "name": "release-readiness-reviewer", "origin": "first-party-seed" },
+        { "name": "ci-failure-analyst", "origin": "first-party-seed" },
+        { "name": "review-coordinator", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "quality-check", "origin": "first-party-seed" },
+        { "name": "pre-pr-check", "origin": "first-party-seed" },
+        { "name": "release-check", "origin": "first-party-seed" },
+        { "name": "ci-readout", "origin": "first-party-seed" }
+      ]
+    }
+  ]
+}
