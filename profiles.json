@@ -1,0 +1,70 @@
+{
+  "version": "0.1.0",
+  "_comment": "User-intent install profiles. Each profile is a curated set of skills, commands, hooks, and plugin bundles for a specific workflow context.",
+  "profiles": [
+    {
+      "name": "safe-core",
+      "description": "Essential safety disciplines: powerup discovery, clean communication, planning, and no-secrets enforcement.",
+      "maturity": "stable",
+      "skills": [
+        "using-powerups",
+        "no-fluff",
+        "repo-map",
+        "writing-plans",
+        "verification-before-completion",
+        "search-before-building"
+      ],
+      "commands": ["ship-check", "using-powerups-command"],
+      "hooks": [
+        { "name": "no-secrets-preflight", "mode": "review-only" }
+      ],
+      "plugin_bundles": [],
+      "mcp": []
+    },
+    {
+      "name": "dev-loop",
+      "description": "Full developer loop: workflow vitals, debugging diagnostics, and quality gates.",
+      "maturity": "beta",
+      "skills": [],
+      "commands": [],
+      "hooks": [],
+      "plugin_bundles": ["dev-vitals", "debugging-diagnostics", "quality-gates"],
+      "mcp": []
+    },
+    {
+      "name": "data-engineer",
+      "description": "Analytics engineering: dbt workflows, BigQuery cost audit, metric impact analysis, and SQL logic review.",
+      "maturity": "beta",
+      "skills": [
+        "dbt-preflight",
+        "metric-impact-analyzer",
+        "bigquery-cost-audit",
+        "sql-business-logic-review"
+      ],
+      "commands": [],
+      "hooks": [],
+      "plugin_bundles": ["data-engineering"],
+      "mcp": []
+    },
+    {
+      "name": "release-maintainer",
+      "description": "Release readiness: quality gates, documentation systems, and codebase maintenance.",
+      "maturity": "beta",
+      "skills": [],
+      "commands": [],
+      "hooks": [],
+      "plugin_bundles": ["quality-gates", "documentation-systems", "codebase-maintenance"],
+      "mcp": []
+    },
+    {
+      "name": "research-heavy",
+      "description": "Research-first workflows: search before building, context retrieval loop, and model routing.",
+      "maturity": "beta",
+      "skills": ["search-before-building", "context-retrieval-loop"],
+      "commands": ["model-route"],
+      "hooks": [],
+      "plugin_bundles": [],
+      "mcp": []
+    }
+  ]
+}
