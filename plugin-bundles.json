@@ -17,7 +17,10 @@
         { "name": "no-fluff", "origin": "root-copy" },
         { "name": "handoff-discipline", "origin": "first-party-seed" },
         { "name": "task-intake", "origin": "first-party-seed" },
-        { "name": "context-minimization", "origin": "first-party-seed" }
+        { "name": "context-minimization", "origin": "first-party-seed" },
+        { "name": "context-retrieval-loop", "origin": "new-skill" },
+        { "name": "agent-harness-design", "origin": "new-skill" },
+        { "name": "strategic-context-compaction", "origin": "new-skill" }
       ],
       "agents": [
         { "name": "dev-workflow-coach", "origin": "first-party-seed" },
@@ -78,7 +81,8 @@
         { "name": "naming-and-structure-cleanup", "origin": "first-party-seed" },
         { "name": "test-preserving-refactor", "origin": "first-party-seed" },
         { "name": "architecture-simplification", "origin": "first-party-seed" },
-        { "name": "incremental-migration", "origin": "first-party-seed" }
+        { "name": "incremental-migration", "origin": "first-party-seed" },
+        { "name": "context-retrieval-loop", "origin": "new-skill" }
       ],
       "agents": [
         { "name": "safe-refactorer", "origin": "first-party-seed" },
@@ -131,7 +135,8 @@
         { "name": "handoff-documentation", "origin": "first-party-seed" },
         { "name": "context-docs", "origin": "first-party-seed" },
         { "name": "api-doc-review", "origin": "first-party-seed" },
-        { "name": "doc-consistency-check", "origin": "first-party-seed" }
+        { "name": "doc-consistency-check", "origin": "first-party-seed" },
+        { "name": "context-retrieval-loop", "origin": "new-skill" }
       ],
       "agents": [
         { "name": "agent-docs-architect", "origin": "first-party-seed" },
@@ -191,7 +196,8 @@
         { "name": "ci-failure-readout", "origin": "first-party-seed" },
         { "name": "pre-release-verification", "origin": "first-party-seed" },
         { "name": "risk-based-review", "origin": "first-party-seed" },
-        { "name": "change-impact-check", "origin": "first-party-seed" }
+        { "name": "change-impact-check", "origin": "first-party-seed" },
+        { "name": "ai-regression-testing", "origin": "new-skill" }
       ],
       "agents": [
         { "name": "quality-gatekeeper", "origin": "first-party-seed" },
