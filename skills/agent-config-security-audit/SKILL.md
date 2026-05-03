@@ -9,7 +9,7 @@ Systematic security review of agent configuration files. Run before committing c
 
 ## When to Use
 
-- After modifying any agent config file (`settings.json`, `.mcp.json`, AGENTS.md, hooks)
+- After modifying any agent config file (`.claude/settings.json`, `.claude/mcp.json`, AGENTS.md, hooks)
 - Before committing configuration changes to version control
 - When onboarding a project with existing agent configs
 - Periodic hygiene check (monthly or after a major dependency update)
@@ -21,10 +21,10 @@ Audit every config file present:
 | File | Agent |
 |------|-------|
 | `.claude/settings.json` | Claude Code |
-| `.mcp.json` or `.claude/mcp.json` | Claude Code |
+| `.claude/mcp.json` (or project-root mcp.json) | Claude Code |
 | `.codex/config.toml` | Codex |
-| `AGENTS.md` | Generic/Codex |
-| `CLAUDE.md` | Claude Code |
+| `docs/AGENTS.md` (project root) | Generic/Codex |
+| `docs/CLAUDE.md` (project root) | Claude Code |
 | `hooks/` | Any |
 | `plugins/*/plugin.json` | Agent Powerups |
 | `.apx/relay/*.json` | apx relay |
@@ -80,7 +80,7 @@ Audit every config file present:
 
 ### Plugin Manifests
 
-- [ ] Each plugin's `plugin.json` declares tool access scoped to its purpose
+- [ ] Each plugin's manifest (`plugins/NAME/.codex-plugin/plugin.json`) declares tool access scoped to its purpose
 - [ ] No plugin grants broader access than it needs
 - [ ] Plugin version pinned, not `latest`
 
