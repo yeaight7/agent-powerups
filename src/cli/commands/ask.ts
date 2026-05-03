@@ -73,10 +73,10 @@ function slugify(input: string): string {
   const slug = input
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "")
+    .replace(/^-/, "")
+    .replace(/-$/, "")
     .slice(0, 48)
-    .replace(/-+$/, "");
+    .replace(/-$/, "");
   return slug || "prompt";
 }
 
