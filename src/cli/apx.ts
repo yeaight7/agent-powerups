@@ -15,6 +15,10 @@ import { runListCommand } from "./commands/list.js";
 import { runMcpCheckCommand, runMcpInstallCommand, runMcpListCommand, runMcpPrintCommand, runMcpSmokeCommand, runMcpWriteCommand } from "./commands/mcp.js";
 import { runPluginBuildCommand, runPluginDiffCommand, runPluginValidateCommand } from "./commands/plugin.js";
 import { runPluginsListCommand, runPluginsInfoCommand, runPluginsValidateCommand, runPluginsInstallCommand } from "./commands/plugins.js";
+import { runProfilesListCommand, runProfilesInfoCommand, runProfilesPlanCommand, runProfilesInstallCommand } from "./commands/profiles.js";
+import { runSecurityAuditCommand } from "./commands/security-audit.js";
+import { runAuditRepoCommand, runAuditSkillsCommand, runAuditPluginsCommand, runAuditTargetCommand } from "./commands/audit.js";
+import { runQualityGateCommand } from "./commands/quality-gate.js";
 import { runRelayAskCommand, runRelayDaemonCommand, runRelayInitCommand, runRelayStartCommand, runRelayStatusCommand, runRelayStopCommand } from "./commands/relay.js";
 import { runShipCheckCommand } from "./commands/run-command.js";
 import { parseSetupAgent, runSetupCommand } from "./commands/setup.js";
@@ -70,6 +74,17 @@ apx plugins info <plugin-name> [--json]
 apx plugins validate <plugin-name> [--json]
 apx plugins validate --all [--json]
 apx plugins install <plugin-name> --target <codex|claude-code|generic> [--dest <path>] [--dry-run|--yes] [--force] [--json]
+apx profiles list [--json]
+apx profiles info <profile-name> [--json]
+apx profiles plan <profile-name> --target <codex|claude-code|generic> [--json]
+apx profiles install <profile-name> --target <codex|claude-code|generic> [--dry-run|--yes] [--dest <path>] [--force] [--json]
+apx security-audit --path <path> [--json]
+apx security-audit --all [--json]
+apx audit repo [--json]
+apx audit skills [--json]
+apx audit plugins [--json]
+apx audit target <codex|claude-code|gemini-cli|cursor|generic> [--json]
+apx quality-gate --scope <repo|plugins|release> [--json]
 apx validate skills
 apx validate catalog
 apx relay init <session-name>
@@ -427,6 +442,37 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
       throw new Error("Unknown workflows subcommand");
     }
 
+    if (command === "security-audit") {
+      return writeExecutionResult(
+        io,
+        await runSecurityAuditCommand(service.repoRoot, {
+          paths: parseOptions(argv, "--path"),
+          all: hasFlag(argv, "--all"),
+        }),
+        json,
+      );
+    }
+
+    if (command === "audit") {
+      const subcommand = argv[1];
+      if (!subcommand) throw new Error("Missing audit subcommand. Use: apx audit repo|skills|plugins|target <target>");
+      if (subcommand === "repo") return writeExecutionResult(io, await runAuditRepoCommand(service), json);
+      if (subcommand === "skills") return writeExecutionResult(io, await runAuditSkillsCommand(service), json);
+      if (subcommand === "plugins") return writeExecutionResult(io, await runAuditPluginsCommand(service), json);
+      if (subcommand === "target") {
+        const target = argv[2];
+        if (!target) throw new Error("Missing target. Use: apx audit target <codex|claude-code|gemini-cli|cursor|generic>");
+        return writeExecutionResult(io, await runAuditTargetCommand(service, target), json);
+      }
+      throw new Error("Unknown audit subcommand. Use: apx audit repo|skills|plugins|target");
+    }
+
+    if (command === "quality-gate") {
+      const scope = parseOption(argv, "--scope");
+      if (!scope) throw new Error("Missing --scope. Use: apx quality-gate --scope <repo|plugins|release>");
+      return writeExecutionResult(io, await runQualityGateCommand(service, scope), json);
+    }
+
     if (command === "validate") {
       const subcommand = argv[1];
       if (subcommand === "skills") {
@@ -522,6 +568,23 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
         return await runPluginsInstallCommand(argv, io);
       }
       throw new Error("Unknown plugins subcommand");
+    }
+
+    if (command === "profiles") {
+      const subcommand = argv[1];
+      if (!subcommand || subcommand === "list") {
+        return await runProfilesListCommand(argv, io);
+      }
+      if (subcommand === "info") {
+        return await runProfilesInfoCommand(argv, io);
+      }
+      if (subcommand === "plan") {
+        return await runProfilesPlanCommand(argv, service, io);
+      }
+      if (subcommand === "install") {
+        return await runProfilesInstallCommand(argv, service, io);
+      }
+      throw new Error("Unknown profiles subcommand. Use: apx profiles list|info|plan|install");
     }
 
     throw new Error(`Unknown command: ${command}`);
