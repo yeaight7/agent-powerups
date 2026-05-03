@@ -943,3 +943,384 @@ test("ship-check resolves npm through PATH on Windows instead of Node install la
   assert.equal(resolved.command, "npm.cmd");
   assert.deepEqual(resolved.args, ["test"]);
 });
+
+// profiles
+
+test("profiles list returns all profiles with name, maturity, skill count, and bundle note", async () => {
+  const result = await execute(["profiles", "list"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /safe-core/);
+  assert.match(result.stdout, /\[stable\]/);
+  assert.match(result.stdout, /dev-loop/);
+  assert.match(result.stdout, /data-engineer/);
+  assert.match(result.stdout, /release-maintainer/);
+  assert.match(result.stdout, /research-heavy/);
+});
+
+test("profiles list --json returns structured profile array", async () => {
+  const result = await execute(["profiles", "list", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.ok(Array.isArray(json.data));
+  assert.ok(json.data.length >= 5);
+  const safeCore = json.data.find((p: any) => p.name === "safe-core");
+  assert.ok(safeCore);
+  assert.equal(safeCore.maturity, "stable");
+  assert.ok(safeCore.skills.includes("using-powerups"));
+});
+
+test("profiles info returns full detail for safe-core", async () => {
+  const result = await execute(["profiles", "info", "safe-core"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /Profile: safe-core/);
+  assert.match(result.stdout, /using-powerups/);
+  assert.match(result.stdout, /no-secrets-preflight/);
+  assert.match(result.stdout, /review-only/);
+});
+
+test("profiles info --json returns structured profile data", async () => {
+  const result = await execute(["profiles", "info", "safe-core", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.name, "safe-core");
+  assert.ok(json.data.skills.includes("search-before-building"));
+  assert.ok(json.data.hooks.some((h: any) => h.name === "no-secrets-preflight"));
+});
+
+test("profiles info returns error for unknown profile", async () => {
+  const result = await execute(["profiles", "info", "no-such-profile", "--json"]);
+
+  assert.equal(result.exitCode, 1);
+  const json = parseJson(result.stderr);
+  assert.match(json.stderr, /not found/i);
+});
+
+test("profiles info returns error when name is missing", async () => {
+  const result = await execute(["profiles", "info", "--json"]);
+
+  assert.equal(result.exitCode, 1);
+  const json = parseJson(result.stderr);
+  assert.match(json.stderr, /missing profile name/i);
+});
+
+test("profiles plan is read-only and shows skills and commands for safe-core codex target", async () => {
+  const result = await execute(["profiles", "plan", "safe-core", "--target", "codex"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /read-only/);
+  assert.match(result.stdout, /using-powerups/);
+  assert.match(result.stdout, /ship-check/);
+  assert.match(result.stdout, /no-secrets-preflight/);
+  assert.match(result.stdout, /NOT installed/i);
+});
+
+test("profiles plan --json returns actions with type, name, source, dest", async () => {
+  const result = await execute(["profiles", "plan", "safe-core", "--target", "codex", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.ok(Array.isArray(json.data.actions));
+  assert.ok(json.data.actions.some((a: any) => a.type === "skill" && a.name === "using-powerups"));
+  assert.ok(json.data.actions.some((a: any) => a.type === "command" && a.name === "ship-check"));
+  assert.ok(Array.isArray(json.data.reviewOnlyHooks));
+  assert.ok(json.data.reviewOnlyHooks.includes("no-secrets-preflight"));
+});
+
+test("profiles plan rejects missing target", async () => {
+  const result = await execute(["profiles", "plan", "safe-core"]);
+
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stderr, /--target/i);
+});
+
+test("profiles plan rejects invalid target", async () => {
+  const result = await execute(["profiles", "plan", "safe-core", "--target", "badbot"]);
+
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stderr, /--target/i);
+});
+
+test("profiles install dry-run reports would-copy actions without writing files", async () => {
+  const dest = await fs.mkdtemp(path.join(os.tmpdir(), "apx-profiles-dry-"));
+  const result = await execute(["profiles", "install", "safe-core", "--target", "codex", "--dry-run", "--dest", dest]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /dry-run/);
+  assert.match(result.stdout, /no files were written/i);
+  await assert.rejects(fs.access(path.join(dest, "skills", "using-powerups")));
+});
+
+test("profiles install default (no --yes) behaves as dry-run", async () => {
+  const dest = await fs.mkdtemp(path.join(os.tmpdir(), "apx-profiles-nodest-"));
+  const result = await execute(["profiles", "install", "safe-core", "--target", "codex", "--dest", dest]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /dry-run/);
+  await assert.rejects(fs.access(path.join(dest, "skills", "using-powerups")));
+});
+
+test("profiles install --yes --dest writes skill and command files", async () => {
+  const dest = await fs.mkdtemp(path.join(os.tmpdir(), "apx-profiles-install-"));
+  const result = await execute(["profiles", "install", "safe-core", "--target", "codex", "--yes", "--dest", dest]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /install complete/i);
+  await fs.access(path.join(dest, "skills", "using-powerups", "SKILL.md"));
+  await fs.access(path.join(dest, "skills", "search-before-building", "SKILL.md"));
+});
+
+test("profiles install --yes without --dest returns error", async () => {
+  const result = await execute(["profiles", "install", "safe-core", "--target", "codex", "--yes", "--json"]);
+
+  assert.equal(result.exitCode, 1);
+  const json = parseJson(result.stderr);
+  assert.match(json.stderr, /--dest/i);
+});
+
+test("profiles install --yes --dest --json returns copiedFiles and skippedFiles arrays", async () => {
+  const dest = await fs.mkdtemp(path.join(os.tmpdir(), "apx-profiles-json-"));
+  const result = await execute(["profiles", "install", "safe-core", "--target", "codex", "--yes", "--dest", dest, "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.profile, "safe-core");
+  assert.equal(json.data.dryRun, false);
+  assert.ok(Array.isArray(json.data.copiedFiles));
+  assert.ok(json.data.copiedFiles.length > 0);
+  assert.ok(Array.isArray(json.data.skippedFiles));
+});
+
+test("profiles install skips existing files without --force", async () => {
+  const dest = await fs.mkdtemp(path.join(os.tmpdir(), "apx-profiles-skip-"));
+  await execute(["profiles", "install", "safe-core", "--target", "codex", "--yes", "--dest", dest]);
+  const second = await execute(["profiles", "install", "safe-core", "--target", "codex", "--yes", "--dest", dest, "--json"]);
+
+  assert.equal(second.exitCode, 0);
+  const json = parseJson(second.stdout);
+  assert.ok(json.data.skippedFiles.length > 0);
+});
+
+test("profiles install --force overwrites existing files", async () => {
+  const dest = await fs.mkdtemp(path.join(os.tmpdir(), "apx-profiles-force-"));
+  await execute(["profiles", "install", "safe-core", "--target", "codex", "--yes", "--dest", dest]);
+  const second = await execute(["profiles", "install", "safe-core", "--target", "codex", "--yes", "--dest", dest, "--force", "--json"]);
+
+  assert.equal(second.exitCode, 0);
+  const json = parseJson(second.stdout);
+  assert.equal(json.data.skippedFiles.length, 0);
+  assert.ok(json.data.copiedFiles.length > 0);
+});
+
+// security-audit
+
+test("security-audit --path . returns structured JSON with scannedFiles and finding arrays", async () => {
+  const result = await execute(["security-audit", "--path", ".", "--json"]);
+
+  const json = parseJson(result.stdout);
+  assert.ok(typeof json.data.scannedFiles === "number" && json.data.scannedFiles > 0);
+  assert.ok(typeof json.data.p0Count === "number");
+  assert.ok(typeof json.data.p1Count === "number");
+  assert.ok(Array.isArray(json.data.findings));
+  assert.ok([0, 1, 2].includes(json.exitCode));
+});
+
+test("security-audit exit 0 on clean directory", async () => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-sec-clean-"));
+  await fs.writeFile(path.join(dir, "clean.json"), JSON.stringify({ name: "ok" }), "utf8");
+  const result = await execute(["security-audit", "--path", dir, "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.p0Count, 0);
+  assert.equal(json.data.p1Count, 0);
+});
+
+test("security-audit detects npx -y in yaml file as P1", async () => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-sec-p1-"));
+  await fs.writeFile(path.join(dir, "ci.yml"), "run: npx -y some-tool\n", "utf8");
+  const result = await execute(["security-audit", "--path", dir, "--json"]);
+
+  assert.ok(result.exitCode >= 1);
+  const json = parseJson(result.stdout);
+  assert.ok(json.data.p1Count > 0);
+  assert.ok(json.data.findings.some((f: any) => f.check === "npx-y"));
+});
+
+test("security-audit exit code 2 when P0 found", async () => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-sec-p0-"));
+  await fs.writeFile(path.join(dir, "settings.json"), JSON.stringify({ allowedTools: ["*"] }), "utf8");
+  const result = await execute(["security-audit", "--path", dir, "--json"]);
+
+  assert.equal(result.exitCode, 2);
+  const json = parseJson(result.stdout);
+  assert.ok(json.data.p0Count > 0);
+});
+
+test("security-audit finding has required fields: severity, check, file, line, detail", async () => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-sec-fields-"));
+  await fs.writeFile(path.join(dir, "ci.yml"), "run: npx -y some-tool\n", "utf8");
+  const result = await execute(["security-audit", "--path", dir, "--json"]);
+
+  const json = parseJson(result.stdout);
+  const finding = json.data.findings[0] as any;
+  assert.ok(finding.severity === "P0" || finding.severity === "P1");
+  assert.ok(typeof finding.check === "string" && finding.check.length > 0);
+  assert.ok(typeof finding.file === "string");
+  assert.ok(typeof finding.line === "number");
+  assert.ok(typeof finding.detail === "string");
+});
+
+test("security-audit skips node_modules and dist", async () => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "apx-sec-skip-"));
+  await fs.mkdir(path.join(dir, "node_modules"), { recursive: true });
+  await fs.writeFile(path.join(dir, "node_modules", "ci.yml"), "run: npx -y evil\n", "utf8");
+  const result = await execute(["security-audit", "--path", dir, "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.p1Count, 0);
+});
+
+// audit
+
+test("audit repo returns structured JSON with scope=repo and check arrays", async () => {
+  const result = await execute(["audit", "repo", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.scope, "repo");
+  assert.ok(Array.isArray(json.data.checks));
+  assert.ok(json.data.checks.length > 0);
+  assert.ok(json.data.checks.every((c: any) => ["pass", "warn", "fail"].includes(c.status)));
+  assert.ok(typeof json.data.passCount === "number");
+  assert.ok(typeof json.data.failCount === "number");
+});
+
+test("audit repo checks include catalog-paths, skill-frontmatter, package-json", async () => {
+  const result = await execute(["audit", "repo", "--json"]);
+
+  const json = parseJson(result.stdout);
+  const names = json.data.checks.map((c: any) => c.name);
+  assert.ok(names.includes("catalog-paths"));
+  assert.ok(names.includes("skill-frontmatter"));
+  assert.ok(names.includes("package-json"));
+});
+
+test("audit skills returns structured JSON with scope=skills", async () => {
+  const result = await execute(["audit", "skills", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.scope, "skills");
+  assert.ok(Array.isArray(json.data.checks));
+  assert.ok(json.data.checks.some((c: any) => c.name === "skill-md-present"));
+  assert.ok(json.data.checks.some((c: any) => c.name === "phase-marker-clean"));
+});
+
+test("audit plugins returns structured JSON with scope=plugins", async () => {
+  const result = await execute(["audit", "plugins", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.scope, "plugins");
+  assert.ok(Array.isArray(json.data.checks));
+  assert.ok(json.data.checks.some((c: any) => c.name === "plugin-dirs"));
+});
+
+test("audit target codex returns structured JSON with scope=target:codex", async () => {
+  const result = await execute(["audit", "target", "codex", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.scope, "target:codex");
+  assert.ok(json.data.checks.some((c: any) => c.name.includes("codex")));
+});
+
+test("audit target claude-code returns structured JSON", async () => {
+  const result = await execute(["audit", "target", "claude-code", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.scope, "target:claude-code");
+});
+
+test("audit target rejects invalid target", async () => {
+  const result = await execute(["audit", "target", "invalid-agent"]);
+
+  assert.equal(result.exitCode, 1);
+});
+
+test("audit missing subcommand returns exit 1", async () => {
+  const result = await execute(["audit"]);
+
+  assert.equal(result.exitCode, 1);
+});
+
+// quality-gate
+
+test("quality-gate --scope repo returns structured JSON with steps array", async () => {
+  const result = await execute(["quality-gate", "--scope", "repo", "--json"]);
+
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.scope, "repo");
+  assert.ok(Array.isArray(json.data.steps));
+  assert.ok(json.data.steps.length > 0);
+  assert.ok(json.data.steps.every((s: any) => ["pass", "warn", "fail", "skip"].includes(s.status)));
+  assert.ok(typeof json.data.passCount === "number");
+  assert.ok(typeof json.data.failCount === "number");
+});
+
+test("quality-gate --scope repo includes npm run build, validate skills, audit repo, security-audit steps", async () => {
+  const result = await execute(["quality-gate", "--scope", "repo", "--json"]);
+
+  const json = parseJson(result.stdout);
+  const names = json.data.steps.map((s: any) => s.name);
+  assert.ok(names.includes("npm run build"));
+  assert.ok(names.includes("apx validate skills"));
+  assert.ok(names.includes("apx audit repo"));
+  assert.ok(names.includes("apx security-audit"));
+});
+
+test("quality-gate --scope plugins returns structured JSON with plugin steps", async () => {
+  const result = await execute(["quality-gate", "--scope", "plugins", "--json"]);
+
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.scope, "plugins");
+  const names = json.data.steps.map((s: any) => s.name);
+  assert.ok(names.includes("apx plugins validate --all"));
+  assert.ok(names.includes("apx audit plugins"));
+});
+
+test("quality-gate --scope release includes npm test step with valid status", async () => {
+  const result = await execute(["quality-gate", "--scope", "release", "--json"]);
+
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.scope, "release");
+  const npmTest = json.data.steps.find((s: any) => s.name === "npm test");
+  assert.ok(npmTest, "npm test step should exist");
+  // guard fires under npm test (skip); runs directly otherwise (pass or fail)
+  assert.ok(["pass", "skip", "fail"].includes(npmTest.status));
+});
+
+test("quality-gate --scope release includes security-audit step", async () => {
+  const result = await execute(["quality-gate", "--scope", "release", "--json"]);
+
+  const json = parseJson(result.stdout);
+  assert.ok(json.data.steps.some((s: any) => s.name === "apx security-audit"));
+});
+
+test("quality-gate rejects invalid scope", async () => {
+  const result = await execute(["quality-gate", "--scope", "unknown"]);
+
+  assert.equal(result.exitCode, 1);
+});
+
+test("quality-gate missing --scope returns exit 1", async () => {
+  const result = await execute(["quality-gate"]);
+
+  assert.equal(result.exitCode, 1);
+});
