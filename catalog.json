@@ -665,6 +665,87 @@
     }
   },
   {
+    "name": "search-before-building",
+    "type": "skill",
+    "summary": "Check existing repo capability, external libraries, MCP options, and maintenance risk before writing custom code. Decide adopt/wrap/build with explicit criteria.",
+    "path": "skills/search-before-building",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["planning", "research", "dependencies", "process"],
+    "maturity": "beta"
+  },
+  {
+    "name": "context-retrieval-loop",
+    "type": "skill",
+    "summary": "Deterministic 3-cycle loop for gathering codebase context before acting. Broad rg, exact source and tests, target-specific docs. Stop after enough context or report gaps.",
+    "path": "skills/context-retrieval-loop",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["context", "search", "subagents", "multi-agent"],
+    "maturity": "beta"
+  },
+  {
+    "name": "agent-harness-design",
+    "type": "skill",
+    "summary": "Design agent tool sets with stable names, narrow schemas, deterministic output shapes, and explicit error paths. No catch-all tools unless unavoidable.",
+    "path": "skills/agent-harness-design",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["agents", "tools", "design", "architecture"],
+    "maturity": "beta"
+  },
+  {
+    "name": "agent-config-security-audit",
+    "type": "skill",
+    "summary": "Audit agent config files for security vulnerabilities and misconfigurations. Covers settings.json, .mcp.json, .codex/config.toml, AGENTS.md, hooks, and plugin manifests. Classifies P0/P1 findings.",
+    "path": "skills/agent-config-security-audit",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["security", "audit", "config", "agents"],
+    "maturity": "beta"
+  },
+  {
+    "name": "model-routing",
+    "type": "skill",
+    "summary": "Vendor-neutral routing guide for choosing the right model tier. Mechanical work uses fast; implementation uses standard; architecture, security, and release audit use deep.",
+    "path": "skills/model-routing",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["models", "routing", "cost", "planning"],
+    "maturity": "beta"
+  },
+  {
+    "name": "security-audit",
+    "type": "command",
+    "summary": "Audit agent configuration files for security vulnerabilities and misconfigurations. Classifies findings as P0 or P1.",
+    "path": "commands/security-audit.md",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["commands", "security", "audit", "config"],
+    "maturity": "beta"
+  },
+  {
+    "name": "model-route",
+    "type": "command",
+    "summary": "Recommend the best model tier for the current task based on complexity, risk, and budget.",
+    "path": "commands/model-route.md",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["commands", "models", "routing", "cost"],
+    "maturity": "beta"
+  },
+  {
+    "name": "quality-gate",
+    "type": "command",
+    "summary": "Run formatter, linter, and type checks for a file or directory. Report remediation steps.",
+    "path": "commands/quality-gate.md",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["commands", "quality", "linting", "formatting"],
+    "maturity": "beta"
+  },
+  {
+    "name": "bug-check",
+    "type": "command",
+    "summary": "Run automated tests and build checks first, then agent code review. For each bug found, propose or document a regression test.",
+    "path": "commands/bug-check.md",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["commands", "testing", "debugging", "regression"],
+    "maturity": "beta"
+  },
+  {
     "name": "dev-vitals",
     "type": "pack",
     "summary": "Core engineering discipline: task intake, context minimization, and handoffs.",
