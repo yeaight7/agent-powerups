@@ -203,13 +203,76 @@
         { "name": "quality-gatekeeper", "origin": "first-party-seed" },
         { "name": "release-readiness-reviewer", "origin": "first-party-seed" },
         { "name": "ci-failure-analyst", "origin": "first-party-seed" },
-        { "name": "review-coordinator", "origin": "first-party-seed" }
+        { "name": "review-coordinator", "origin": "first-party-seed" },
+        { "name": "plan-critic", "origin": "first-party-seed" },
+        { "name": "code-reviewer", "origin": "first-party-seed" },
+        { "name": "test-engineer", "origin": "first-party-seed" }
       ],
       "commands": [
         { "name": "quality-check", "origin": "first-party-seed" },
         { "name": "pre-pr-check", "origin": "first-party-seed" },
         { "name": "release-check", "origin": "first-party-seed" },
         { "name": "ci-readout", "origin": "first-party-seed" }
+      ]
+    },
+    {
+      "name": "software-engineering",
+      "description": "Full-lifecycle software delivery: parallel execution, requirements clarification, autonomous pipeline, persistent completion loops, and hard-won skill extraction.",
+      "maturity": "experimental",
+      "skills": [
+        { "name": "parallel-execution-engine", "origin": "first-party-seed" },
+        { "name": "requirements-clarifier", "origin": "first-party-seed" },
+        { "name": "persistent-completion-loop", "origin": "first-party-seed" },
+        { "name": "autonomous-delivery-pipeline", "origin": "first-party-seed" },
+        { "name": "hard-won-skill-extractor", "origin": "first-party-seed" }
+      ],
+      "agents": [
+        { "name": "repo-explorer", "origin": "first-party-seed" },
+        { "name": "architecture-reviewer", "origin": "first-party-seed" },
+        { "name": "implementation-planner", "origin": "first-party-seed" },
+        { "name": "test-engineer", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "clarify-requirements", "origin": "placeholder" },
+        { "name": "plan-implementation", "origin": "placeholder" },
+        { "name": "parallel-work", "origin": "placeholder" },
+        { "name": "finish-loop", "origin": "placeholder" }
+      ]
+    },
+    {
+      "name": "agentic-systems",
+      "description": "Multi-model orchestration and advisor routing: tri-model review and canonical advisor routing.",
+      "maturity": "experimental",
+      "skills": [
+        { "name": "tri-model-review", "origin": "first-party-seed" },
+        { "name": "canonical-advisor-routing", "origin": "first-party-seed" },
+        { "name": "model-routing", "origin": "first-party-seed" },
+        { "name": "context-retrieval-loop", "origin": "first-party-seed" },
+        { "name": "agent-harness-design", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "tri-review", "origin": "placeholder" },
+        { "name": "ask-all", "origin": "placeholder" },
+        { "name": "model-route", "origin": "root-copy" }
+      ]
+    },
+    {
+      "name": "security-guardrails",
+      "description": "Security vulnerability detection: OWASP Top 10 analysis, secrets scanning, dependency audits.",
+      "maturity": "experimental",
+      "skills": [
+        { "name": "agent-config-security-audit", "origin": "root-copy" },
+        { "name": "hook-safety-review", "origin": "placeholder" },
+        { "name": "mcp-risk-review", "origin": "placeholder" },
+        { "name": "secret-leak-preflight", "origin": "placeholder" }
+      ],
+      "agents": [
+        { "name": "security-reviewer", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "security-audit", "origin": "root-copy" },
+        { "name": "mcp-risk-check", "origin": "placeholder" },
+        { "name": "hook-risk-check", "origin": "placeholder" }
       ]
     }
   ]
