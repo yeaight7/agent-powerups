@@ -22,6 +22,24 @@ import { runQualityGateCommand } from "./commands/quality-gate.js";
 import { runRelayAskCommand, runRelayDaemonCommand, runRelayInitCommand, runRelayStartCommand, runRelayStatusCommand, runRelayStopCommand } from "./commands/relay.js";
 import { runShipCheckCommand } from "./commands/run-command.js";
 import { parseSetupAgent, parseSetupMode, runSetupCommand } from "./commands/setup.js";
+import {
+  runTriReviewCommand,
+  runClarifyRequirementsCommand,
+  runParallelWorkCommand,
+  runFinishLoopCommand,
+} from "./commands/advisor-workflows.js";
+import {
+  runProjectInitCommand,
+  runPhaseDiscussCommand,
+  runPhasePlanCommand,
+  runPhaseExecuteCommand,
+  runPhaseVerifyCommand,
+  runCodebaseMapCommand,
+  runReviewCodeCommand,
+  runWorkflowRouteCommand,
+  runReviewRouteCommand,
+  runContextRouteCommand,
+} from "./commands/phase-workflows.js";
 import { runValidateCatalogCommand, runValidateSkillsCommand } from "./commands/validate.js";
 import { hasFlag, parseOption, parseOptions } from "./utils/args.js";
 import { ALLOWED_TYPES, CatalogError, createCatalogService } from "./utils/catalog.js";
@@ -91,7 +109,21 @@ apx relay init <session-name>
 apx relay start <session-name> [--provider <gemini|claude|codex>] [--model <model>] [--json]
 apx relay status <session-name> [--json]
 apx relay ask <session-name> <prompt> [--timeout-ms <ms>] [--json]
-apx relay stop <session-name> [--json]`;
+apx relay stop <session-name> [--json]
+apx tri-review "<task>" [--run-advisors] [--json]
+apx clarify-requirements "<request>" [--json]
+apx parallel-work plan "<task>" [--json]
+apx finish-loop plan "<task>" [--json]
+apx project init [--dest <path>] [--yes] [--json]
+apx phase discuss <phase> [--planning-root <path>] [--json]
+apx phase plan <phase> [--planning-root <path>] [--research] [--prd <path>] [--mvp] [--json]
+apx phase execute <phase> [--planning-root <path>] [--wave <n>] [--interactive] [--json]
+apx phase verify <phase> [--planning-root <path>] [--json]
+apx codebase map [--dest <path>] [--yes] [--json]
+apx review code [--depth quick|standard|deep] [--files <csv>] [--fix] [--json]
+apx review route "<request>" [--json]
+apx workflow route "<request>" [--json]
+apx context route "<request>" [--json]`;
 
 function getPackageVersion(): string {
   let current = path.dirname(fileURLToPath(import.meta.url));
@@ -586,6 +618,66 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
         return await runProfilesInstallCommand(argv, service, io);
       }
       throw new Error("Unknown profiles subcommand. Use: apx profiles list|info|plan|install");
+    }
+
+    // Advisory workflow commands
+    if (command === "tri-review") {
+      return await runTriReviewCommand(argv, io);
+    }
+
+    if (command === "clarify-requirements") {
+      return await runClarifyRequirementsCommand(argv, io);
+    }
+
+    if (command === "parallel-work") {
+      return await runParallelWorkCommand(argv, io);
+    }
+
+    if (command === "finish-loop") {
+      return await runFinishLoopCommand(argv, io);
+    }
+
+    // Phase lifecycle commands
+    if (command === "project") {
+      const subcommand = argv[1];
+      if (subcommand === "init") {
+        return await runProjectInitCommand(argv, io);
+      }
+      throw new Error("Unknown project subcommand. Use: apx project init");
+    }
+
+    if (command === "phase") {
+      const subcommand = argv[1];
+      if (subcommand === "discuss") return await runPhaseDiscussCommand(argv, io);
+      if (subcommand === "plan") return await runPhasePlanCommand(argv, io);
+      if (subcommand === "execute") return await runPhaseExecuteCommand(argv, io);
+      if (subcommand === "verify") return await runPhaseVerifyCommand(argv, io);
+      throw new Error("Unknown phase subcommand. Use: apx phase discuss|plan|execute|verify <phase>");
+    }
+
+    if (command === "codebase") {
+      const subcommand = argv[1];
+      if (subcommand === "map") return await runCodebaseMapCommand(argv, io);
+      throw new Error("Unknown codebase subcommand. Use: apx codebase map");
+    }
+
+    if (command === "review") {
+      const subcommand = argv[1];
+      if (subcommand === "code") return await runReviewCodeCommand(argv, io);
+      if (subcommand === "route") return await runReviewRouteCommand(argv, io);
+      throw new Error("Unknown review subcommand. Use: apx review code|route");
+    }
+
+    if (command === "workflow") {
+      const subcommand = argv[1];
+      if (subcommand === "route") return await runWorkflowRouteCommand(argv, io);
+      throw new Error("Unknown workflow subcommand. Use: apx workflow route");
+    }
+
+    if (command === "context") {
+      const subcommand = argv[1];
+      if (subcommand === "route") return await runContextRouteCommand(argv, io);
+      throw new Error("Unknown context subcommand. Use: apx context route");
     }
 
     throw new Error(`Unknown command: ${command}`);
