@@ -6,6 +6,7 @@ import type { CatalogService } from "../utils/catalog.js";
 import { createResult, type ExecutionResult } from "../utils/result.js";
 
 export type SetupAgent = "codex" | "claude-code" | "gemini";
+export type SetupMode = "minimal" | "recommended" | "full";
 
 export interface SetupData {
   agent: SetupAgent;
@@ -25,6 +26,7 @@ export interface SetupOptions {
   instructionsFile?: string;
   dryRun: boolean;
   yes: boolean;
+  mode?: SetupMode;
 }
 
 interface AgentProfile {
@@ -68,6 +70,19 @@ const PROFILES: Record<SetupAgent, AgentProfile> = {
   },
 };
 
+const MINIMAL_SKILLS = [
+  "using-powerups",
+  "no-fluff",
+  "repo-map",
+  "writing-plans",
+  "verification-before-completion",
+  "search-before-building",
+] as const;
+
+const MINIMAL_COMMANDS_GENERIC = ["ship-check.md", "using-powerups.md"] as const;
+
+const RECOMMENDED_PLUGIN_BUNDLES = ["dev-vitals", "debugging-diagnostics", "quality-gates"] as const;
+
 function isSetupAgent(value: string | undefined): value is SetupAgent {
   return value === "codex" || value === "claude-code" || value === "gemini";
 }
@@ -77,6 +92,16 @@ export function parseSetupAgent(value: string | undefined): SetupAgent {
     throw new Error("Missing or invalid setup target. Expected one of: codex, claude-code, gemini");
   }
   return value;
+}
+
+export function parseSetupMode(value: string | undefined): SetupMode {
+  if (value === "minimal" || value === "recommended" || value === "full") {
+    return value;
+  }
+  if (value !== undefined) {
+    throw new Error(`Invalid --mode value '${value}'. Expected one of: minimal, recommended, full`);
+  }
+  return "minimal";
 }
 
 function defaultAgentRoot(profile: AgentProfile): string {
@@ -124,8 +149,52 @@ async function filesEqual(left: string, right: string): Promise<boolean> {
   }
 }
 
-function setupInstructionBlock(profile: AgentProfile, installRoot: string): string {
+function setupInstructionBlock(profile: AgentProfile, installRoot: string, mode: SetupMode): string {
   const normalizedRoot = installRoot.replaceAll("\\", "/");
+
+  if (mode === "minimal") {
+    return [
+      START_MARKER,
+      "",
+      "## Agent Powerups",
+      "",
+      `Agent Powerups assets are installed at \`${normalizedRoot}\`.`,
+      "",
+      "Use these local assets when relevant:",
+      "- Read `agent-powerups/skills/using-powerups/SKILL.md` before first use.",
+      "- Use `apx` commands to discover, inspect, validate, and extend setup. Do not manually edit config files without running `apx` first.",
+      "- MCP servers require explicit user approval. Run `apx mcp check` and `apx mcp smoke` before enabling any MCP server.",
+      "- External tools require user approval before install.",
+      "",
+      `This is a minimal (bootstrap) setup. To get a recommended agent environment:`,
+      `  apx setup ${profile.agent} --mode recommended --yes`,
+      "",
+      END_MARKER,
+    ].join("\n");
+  }
+
+  if (mode === "recommended") {
+    return [
+      START_MARKER,
+      "",
+      "## Agent Powerups",
+      "",
+      `Agent Powerups assets are installed at \`${normalizedRoot}\`.`,
+      "",
+      "Use these local assets when relevant:",
+      "- Read `agent-powerups/skills/using-powerups/SKILL.md` before first use.",
+      "- Use `apx` commands to discover, inspect, validate, and extend setup. Do not manually edit config files without running `apx` first.",
+      "- Skills are at `agent-powerups/skills/`. Plugin bundles are at `agent-powerups/plugins/`.",
+      "- Run `apx profiles list` to see curated skill sets for specific workflows.",
+      "- Treat hooks in `agent-powerups/hooks/` as review-before-use recipes, not active hooks.",
+      "- MCP servers require explicit user approval. Run `apx mcp check` and `apx mcp smoke` before enabling any MCP server.",
+      "- External tools require user approval before install.",
+      "",
+      END_MARKER,
+    ].join("\n");
+  }
+
+  // full mode
   return [
     START_MARKER,
     "",
@@ -134,11 +203,13 @@ function setupInstructionBlock(profile: AgentProfile, installRoot: string): stri
     `Agent Powerups assets are installed at \`${normalizedRoot}\`.`,
     "",
     "Use these local assets when relevant:",
-    "- Read skills from `agent-powerups/skills/` before applying matching workflows.",
-    "- Read command prompts from `agent-powerups/commands/` before using slash-command-style flows.",
-    "- For GitHub MCP, run `apx mcp check github-local`, `apx mcp smoke github-local`, then dry-run `apx mcp install github-local --target <agent>` before enabling it.",
+    "- Read `agent-powerups/skills/using-powerups/SKILL.md` before first use.",
+    "- Use `apx` commands to discover, inspect, validate, and extend setup. Do not manually edit config files without running `apx` first.",
+    "- Skills are at `agent-powerups/skills/`. Plugin bundles are at `agent-powerups/plugins/`.",
+    "- Run `apx profiles list` to see curated skill sets for specific workflows.",
     "- Treat hooks in `agent-powerups/hooks/` as review-before-use recipes, not active hooks.",
-    "- Do not install external tools, mutate shell profiles, write secrets, or enable MCP servers without explicit user approval.",
+    "- MCP configs are staged at `agent-powerups/mcp/` but NOT enabled. Run `apx mcp check` and `apx mcp smoke` before enabling any MCP server.",
+    "- External tools require user approval before install.",
     "",
     END_MARKER,
   ].join("\n");
@@ -198,6 +269,60 @@ async function collectCopyPairs(service: CatalogService, agentRoot: string, prof
       }
       const relative = path.relative(directory.source, sourceFile);
       pairs.push({ source: sourceFile, dest: path.join(directory.dest, relative) });
+    }
+  }
+
+  return pairs;
+}
+
+async function collectMinimalCopyPairs(service: CatalogService, agentRoot: string, profile: AgentProfile): Promise<Array<{ source: string; dest: string }>> {
+  const installRoot = path.join(agentRoot, "agent-powerups");
+  const pairs: Array<{ source: string; dest: string }> = [];
+
+  // Minimal skills
+  for (const skillName of MINIMAL_SKILLS) {
+    const skillDir = path.join(service.repoRoot, "skills", skillName);
+    const destDir = path.join(installRoot, "skills", skillName);
+    for (const sourceFile of await listFiles(skillDir)) {
+      if (path.basename(sourceFile) === ".gitkeep") continue;
+      const relative = path.relative(skillDir, sourceFile);
+      pairs.push({ source: sourceFile, dest: path.join(destDir, relative) });
+    }
+  }
+
+  // Generic commands
+  for (const commandFile of MINIMAL_COMMANDS_GENERIC) {
+    const sourceFile = path.join(service.repoRoot, "commands", "generic", commandFile);
+    if (await pathExists(sourceFile)) {
+      pairs.push({ source: sourceFile, dest: path.join(installRoot, "commands", "generic", commandFile) });
+    }
+  }
+
+  // Agent-specific commands (same filenames, different target dir)
+  if (profile.commandTargetDir) {
+    for (const commandFile of MINIMAL_COMMANDS_GENERIC) {
+      const sourceFile = path.join(service.repoRoot, "commands", profile.commandTargetDir, commandFile);
+      if (await pathExists(sourceFile)) {
+        pairs.push({ source: sourceFile, dest: path.join(installRoot, "commands", profile.commandTargetDir, commandFile) });
+      }
+    }
+  }
+
+  return pairs;
+}
+
+async function collectRecommendedCopyPairs(service: CatalogService, agentRoot: string, profile: AgentProfile): Promise<Array<{ source: string; dest: string }>> {
+  const installRoot = path.join(agentRoot, "agent-powerups");
+  const pairs = await collectMinimalCopyPairs(service, agentRoot, profile);
+
+  // Plugin bundles
+  for (const bundle of RECOMMENDED_PLUGIN_BUNDLES) {
+    const bundleDir = path.join(service.repoRoot, "plugins", bundle);
+    const destDir = path.join(installRoot, "plugins", bundle);
+    for (const sourceFile of await listFiles(bundleDir)) {
+      if (path.basename(sourceFile) === ".gitkeep") continue;
+      const relative = path.relative(bundleDir, sourceFile);
+      pairs.push({ source: sourceFile, dest: path.join(destDir, relative) });
     }
   }
 
@@ -308,8 +433,8 @@ async function updateInstructionFile(
   return { modifiedFiles: [instructionPath], backupFiles: [backupPath], skippedFiles: [] };
 }
 
-function formatSetupOutput(data: SetupData): string {
-  const lines = [data.dryRun ? `setup dry-run: ${data.agent}` : `setup complete: ${data.agent}`, `agent root: ${data.agentRoot}`];
+function formatSetupOutput(data: SetupData, mode: SetupMode): string {
+  const lines = [data.dryRun ? `setup dry-run [mode: ${mode}]: ${data.agent}` : `setup complete [mode: ${mode}]: ${data.agent}`, `agent root: ${data.agentRoot}`];
   const sections: Array<[string, string[]]> = [
     ["created directories", data.createdDirectories],
     ["copied files", data.copiedFiles],
@@ -328,8 +453,20 @@ function formatSetupOutput(data: SetupData): string {
 
   if (data.dryRun) {
     lines.push("safety: dry-run only; no files were changed");
+    lines.push("");
+    lines.push("Available modes:");
+    lines.push(`  apx setup ${data.agent} --mode minimal --yes     # bootstrap awareness only (6 skills + 2 commands)`);
+    lines.push(`  apx setup ${data.agent} --mode recommended --yes # main agent setup (minimal + dev-loop plugins)`);
+    lines.push(`  apx setup ${data.agent} --mode full --yes        # broad staging (all assets)`);
   } else {
     lines.push("safety: setup only wrote under the selected agent root and backed up existing instruction files before editing");
+    if (mode === "minimal") {
+      lines.push(`Note: Minimal (bootstrap) setup only. For recommended agent environment: \`apx setup ${data.agent} --mode recommended --yes\``);
+    } else if (mode === "recommended") {
+      lines.push(`Recommended setup applied. To extend: \`apx setup ${data.agent} --mode full --yes\``);
+    } else {
+      lines.push("Full setup staged. MCP configs require explicit approval before enabling.");
+    }
   }
 
   return lines.join("\n");
@@ -343,25 +480,28 @@ export async function runSetupCommand(
     throw new Error("cannot combine --dry-run and --yes");
   }
 
+  const mode: SetupMode = options.mode ?? "minimal";
   const profile = PROFILES[options.agent];
   const dryRun = options.dryRun || !options.yes;
   const agentRoot = path.resolve(options.agentRoot ?? defaultAgentRoot(profile));
   const installRoot = path.join(agentRoot, "agent-powerups");
-  const block = setupInstructionBlock(profile, installRoot);
+  const block = setupInstructionBlock(profile, installRoot, mode);
   const candidateInstructionFile = path.join(agentRoot, profile.instructionFileName);
   const instructionFile = path.resolve(options.instructionsFile ?? candidateInstructionFile);
 
-  const rootDirectories = [
-    agentRoot,
-    installRoot,
-    path.join(installRoot, "skills"),
-    path.join(installRoot, "commands"),
-    path.join(installRoot, "mcp"),
-    path.join(installRoot, "agents-md"),
-    path.join(installRoot, "hooks"),
-    path.join(installRoot, "workflows"),
-    path.join(installRoot, "instructions"),
-  ];
+  // Only create directories relevant to the selected mode
+  const rootDirectories: string[] = [agentRoot, installRoot, path.join(installRoot, "skills"), path.join(installRoot, "commands"), path.join(installRoot, "instructions")];
+
+  if (mode === "full") {
+    rootDirectories.push(
+      path.join(installRoot, "mcp"),
+      path.join(installRoot, "agents-md"),
+      path.join(installRoot, "hooks"),
+      path.join(installRoot, "workflows"),
+    );
+  } else if (mode === "recommended") {
+    rootDirectories.push(path.join(installRoot, "plugins"));
+  }
 
   const createdDirectorySet = new Set<string>();
   for (const directory of rootDirectories) {
@@ -378,7 +518,16 @@ export async function runSetupCommand(
   const modifiedFiles: string[] = [];
   const backupFiles: string[] = [];
 
-  const copies = await copyPlannedFiles(await collectCopyPairs(service, agentRoot, profile), dryRun);
+  let copyPairs: Array<{ source: string; dest: string }>;
+  if (mode === "minimal") {
+    copyPairs = await collectMinimalCopyPairs(service, agentRoot, profile);
+  } else if (mode === "recommended") {
+    copyPairs = await collectRecommendedCopyPairs(service, agentRoot, profile);
+  } else {
+    copyPairs = await collectCopyPairs(service, agentRoot, profile);
+  }
+
+  const copies = await copyPlannedFiles(copyPairs, dryRun);
   for (const directory of copies.createdDirectories) {
     createdDirectorySet.add(directory);
   }
@@ -400,9 +549,15 @@ export async function runSetupCommand(
   const manualSteps = [
     `Review ${path.join(installRoot, "instructions", "agent-powerups.md")}.`,
     `Ensure the marked agent-powerups block is present in ${instructionFile}.`,
-    `Review MCP snippets under ${path.join(installRoot, "mcp")} before enabling any MCP server.`,
-    "Set required secrets such as GITHUB_TOKEN in your shell/session only; do not write secrets into copied snippets.",
   ];
+
+  if (mode === "full") {
+    manualSteps.push(
+      `Review MCP snippets under ${path.join(installRoot, "mcp")} before enabling any MCP server.`,
+    );
+  }
+
+  manualSteps.push("Set required secrets such as GITHUB_TOKEN in your shell/session only; do not write secrets into copied snippets.");
 
   const data: SetupData = {
     agent: options.agent,
@@ -417,7 +572,7 @@ export async function runSetupCommand(
   };
 
   return createResult({
-    stdout: formatSetupOutput(data),
+    stdout: formatSetupOutput(data, mode),
     warnings: skippedFiles.filter((item) => item.includes("not overwritten") || item.includes("manual edit")),
     actions: [
       ...data.createdDirectories.map((item) => `mkdir ${item}`),
