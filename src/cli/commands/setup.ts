@@ -39,6 +39,10 @@ interface AgentProfile {
   mcpTargetDir?: string;
 }
 
+function assertNever(x: never): never {
+  throw new Error(`Unexpected value: ${String(x)}`);
+}
+
 const START_MARKER = "<!-- BEGIN agent-powerups -->";
 const END_MARKER = "<!-- END agent-powerups -->";
 
@@ -194,25 +198,28 @@ function setupInstructionBlock(profile: AgentProfile, installRoot: string, mode:
     ].join("\n");
   }
 
-  // full mode
-  return [
-    START_MARKER,
-    "",
-    "## Agent Powerups",
-    "",
-    `Agent Powerups assets are installed at \`${normalizedRoot}\`.`,
-    "",
-    "Use these local assets when relevant:",
-    "- Read `agent-powerups/skills/using-powerups/SKILL.md` before first use.",
-    "- Use `apx` commands to discover, inspect, validate, and extend setup. Do not manually edit config files without running `apx` first.",
-    "- Skills are at `agent-powerups/skills/`. Plugin bundles are at `agent-powerups/plugins/`.",
-    "- Run `apx profiles list` to see curated skill sets for specific workflows.",
-    "- Treat hooks in `agent-powerups/hooks/` as review-before-use recipes, not active hooks.",
-    "- MCP configs are staged at `agent-powerups/mcp/` but NOT enabled. Run `apx mcp check` and `apx mcp smoke` before enabling any MCP server.",
-    "- External tools require user approval before install.",
-    "",
-    END_MARKER,
-  ].join("\n");
+  if (mode === "full") {
+    return [
+      START_MARKER,
+      "",
+      "## Agent Powerups",
+      "",
+      `Agent Powerups assets are installed at \`${normalizedRoot}\`.`,
+      "",
+      "Use these local assets when relevant:",
+      "- Read `agent-powerups/skills/using-powerups/SKILL.md` before first use.",
+      "- Use `apx` commands to discover, inspect, validate, and extend setup. Do not manually edit config files without running `apx` first.",
+      "- Skills are at `agent-powerups/skills/`. Plugin bundles are at `agent-powerups/plugins/`.",
+      "- Run `apx profiles list` to see curated skill sets for specific workflows.",
+      "- Treat hooks in `agent-powerups/hooks/` as review-before-use recipes, not active hooks.",
+      "- MCP configs are staged at `agent-powerups/mcp/` but NOT enabled. Run `apx mcp check` and `apx mcp smoke` before enabling any MCP server.",
+      "- External tools require user approval before install.",
+      "",
+      END_MARKER,
+    ].join("\n");
+  }
+
+  return assertNever(mode);
 }
 
 function backupPathFor(filePath: string, date = new Date()): string {
@@ -275,16 +282,25 @@ async function collectCopyPairs(service: CatalogService, agentRoot: string, prof
   return pairs;
 }
 
-async function collectMinimalCopyPairs(service: CatalogService, agentRoot: string, profile: AgentProfile): Promise<Array<{ source: string; dest: string }>> {
+async function collectMinimalCopyPairs(
+  service: CatalogService,
+  agentRoot: string,
+  profile: AgentProfile,
+): Promise<{ pairs: Array<{ source: string; dest: string }>; warnings: string[] }> {
   const installRoot = path.join(agentRoot, "agent-powerups");
   const pairs: Array<{ source: string; dest: string }> = [];
+  const warnings: string[] = [];
 
   // Minimal skills
   for (const skillName of MINIMAL_SKILLS) {
     const skillDir = path.join(service.repoRoot, "skills", skillName);
     const destDir = path.join(installRoot, "skills", skillName);
-    for (const sourceFile of await listFiles(skillDir)) {
-      if (path.basename(sourceFile) === ".gitkeep") continue;
+    const files = await listFiles(skillDir);
+    const validFiles = files.filter((f) => path.basename(f) !== ".gitkeep");
+    if (validFiles.length === 0) {
+      warnings.push(`skills/${skillName} (directory not found in repo; skipped)`);
+    }
+    for (const sourceFile of validFiles) {
       const relative = path.relative(skillDir, sourceFile);
       pairs.push({ source: sourceFile, dest: path.join(destDir, relative) });
     }
@@ -308,25 +324,35 @@ async function collectMinimalCopyPairs(service: CatalogService, agentRoot: strin
     }
   }
 
-  return pairs;
+  return { pairs, warnings };
 }
 
-async function collectRecommendedCopyPairs(service: CatalogService, agentRoot: string, profile: AgentProfile): Promise<Array<{ source: string; dest: string }>> {
+async function collectRecommendedCopyPairs(
+  service: CatalogService,
+  agentRoot: string,
+  profile: AgentProfile,
+): Promise<{ pairs: Array<{ source: string; dest: string }>; warnings: string[] }> {
   const installRoot = path.join(agentRoot, "agent-powerups");
-  const pairs = await collectMinimalCopyPairs(service, agentRoot, profile);
+  const minimal = await collectMinimalCopyPairs(service, agentRoot, profile);
+  const pairs = minimal.pairs;
+  const warnings = minimal.warnings;
 
   // Plugin bundles
   for (const bundle of RECOMMENDED_PLUGIN_BUNDLES) {
     const bundleDir = path.join(service.repoRoot, "plugins", bundle);
     const destDir = path.join(installRoot, "plugins", bundle);
-    for (const sourceFile of await listFiles(bundleDir)) {
-      if (path.basename(sourceFile) === ".gitkeep") continue;
+    const files = await listFiles(bundleDir);
+    const validFiles = files.filter((f) => path.basename(f) !== ".gitkeep");
+    if (validFiles.length === 0) {
+      warnings.push(`plugins/${bundle} (directory not found in repo; skipped)`);
+    }
+    for (const sourceFile of validFiles) {
       const relative = path.relative(bundleDir, sourceFile);
       pairs.push({ source: sourceFile, dest: path.join(destDir, relative) });
     }
   }
 
-  return pairs;
+  return { pairs, warnings };
 }
 
 async function copyPlannedFiles(
@@ -464,8 +490,10 @@ function formatSetupOutput(data: SetupData, mode: SetupMode): string {
       lines.push(`Note: Minimal (bootstrap) setup only. For recommended agent environment: \`apx setup ${data.agent} --mode recommended --yes\``);
     } else if (mode === "recommended") {
       lines.push(`Recommended setup applied. To extend: \`apx setup ${data.agent} --mode full --yes\``);
-    } else {
+    } else if (mode === "full") {
       lines.push("Full setup staged. MCP configs require explicit approval before enabling.");
+    } else {
+      assertNever(mode);
     }
   }
 
@@ -520,11 +548,17 @@ export async function runSetupCommand(
 
   let copyPairs: Array<{ source: string; dest: string }>;
   if (mode === "minimal") {
-    copyPairs = await collectMinimalCopyPairs(service, agentRoot, profile);
+    const result = await collectMinimalCopyPairs(service, agentRoot, profile);
+    copyPairs = result.pairs;
+    skippedFiles.push(...result.warnings);
   } else if (mode === "recommended") {
-    copyPairs = await collectRecommendedCopyPairs(service, agentRoot, profile);
-  } else {
+    const result = await collectRecommendedCopyPairs(service, agentRoot, profile);
+    copyPairs = result.pairs;
+    skippedFiles.push(...result.warnings);
+  } else if (mode === "full") {
     copyPairs = await collectCopyPairs(service, agentRoot, profile);
+  } else {
+    return assertNever(mode);
   }
 
   const copies = await copyPlannedFiles(copyPairs, dryRun);
