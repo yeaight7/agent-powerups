@@ -796,6 +796,90 @@ test("setup refuses conflicting dry-run and confirmation flags", async () => {
   assert.match(result.stderr, /cannot combine --dry-run and --yes/i);
 });
 
+test("setup --mode minimal copies only bootstrap skills and commands", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-setup-minimal-"));
+  const result = await execute(["setup", "codex", "--agent-root", agentRoot, "--mode", "minimal", "--yes", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.dryRun, false);
+  assert.match(json.stdout, /setup complete \[mode: minimal\]: codex/);
+
+  // Minimal skills should be present
+  await fs.access(path.join(agentRoot, "agent-powerups", "skills", "using-powerups", "SKILL.md"));
+  await fs.access(path.join(agentRoot, "agent-powerups", "skills", "no-fluff", "SKILL.md"));
+  await fs.access(path.join(agentRoot, "agent-powerups", "commands", "generic", "ship-check.md"));
+
+  // Non-minimal skill should NOT be present
+  await assert.rejects(
+    fs.access(path.join(agentRoot, "agent-powerups", "skills", "systematic-debugging", "SKILL.md")),
+  );
+  // MCP should NOT be present in minimal
+  await assert.rejects(
+    fs.access(path.join(agentRoot, "agent-powerups", "mcp")),
+  );
+});
+
+test("setup --mode minimal output recommends --mode recommended", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-setup-minimal-rec-"));
+  const result = await execute(["setup", "codex", "--agent-root", agentRoot, "--mode", "minimal", "--yes", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.match(json.stdout, /--mode recommended --yes/);
+});
+
+test("setup --mode recommended copies core skills and dev-loop plugin bundles", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-setup-recommended-"));
+  const result = await execute(["setup", "codex", "--agent-root", agentRoot, "--mode", "recommended", "--yes", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.dryRun, false);
+  assert.match(json.stdout, /setup complete \[mode: recommended\]: codex/);
+
+  // Core skills present
+  await fs.access(path.join(agentRoot, "agent-powerups", "skills", "using-powerups", "SKILL.md"));
+  await fs.access(path.join(agentRoot, "agent-powerups", "skills", "writing-plans", "SKILL.md"));
+
+  // Plugin bundles present
+  await fs.access(path.join(agentRoot, "agent-powerups", "plugins", "dev-vitals"));
+  await fs.access(path.join(agentRoot, "agent-powerups", "plugins", "debugging-diagnostics"));
+  await fs.access(path.join(agentRoot, "agent-powerups", "plugins", "quality-gates"));
+
+  // Full-only assets NOT present (MCP is full-only)
+  await assert.rejects(
+    fs.access(path.join(agentRoot, "agent-powerups", "mcp")),
+  );
+  // Non-minimal skill NOT present
+  await assert.rejects(
+    fs.access(path.join(agentRoot, "agent-powerups", "skills", "systematic-debugging", "SKILL.md")),
+  );
+});
+
+test("setup rejects invalid --mode value", async () => {
+  const result = await execute(["setup", "codex", "--mode", "enterprise"]);
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stderr, /invalid.*mode/i);
+});
+
+test("setup --yes without --mode defaults to minimal mode", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-setup-default-"));
+  const result = await execute(["setup", "codex", "--agent-root", agentRoot, "--yes", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.match(json.stdout, /setup complete \[mode: minimal\]: codex/);
+
+  // Minimal skills present
+  await fs.access(path.join(agentRoot, "agent-powerups", "skills", "using-powerups", "SKILL.md"));
+
+  // Full-only skill NOT present
+  await assert.rejects(
+    fs.access(path.join(agentRoot, "agent-powerups", "skills", "systematic-debugging", "SKILL.md")),
+  );
+});
+
 test("plugin validate accepts built plugin output", async () => {
   const dest = await fs.mkdtemp(path.join(os.tmpdir(), "apx-plugin-validate-"));
   await execute(["plugin", "build", "--dest", dest, "--write"]);
