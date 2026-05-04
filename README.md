@@ -108,18 +108,34 @@ apx install markitdown-file-intake --target codex --dry-run
 apx install ask-claude --target codex --dry-run
 ```
 
-8. Dry-run agent setup:
+8. Agent setup:
 
 ```sh
 apx setup codex --dry-run
-apx setup claude-code --dry-run
-apx setup gemini --dry-run
+apx setup codex --mode minimal --yes    # bootstrap only
+apx setup codex --mode recommended --yes  # main agent setup (recommended)
+apx setup codex --mode full --yes       # broad staging
 ```
 
-Apply only after review:
+#### Agent-managed setup (recommended)
+
+Give your agent access to this repo and ask it to run:
 
 ```sh
-apx setup codex --yes
+apx list
+apx profiles list
+apx setup <codex|claude-code|gemini> --mode recommended --yes
+```
+
+Agent will inspect available skills/plugins, propose a plan, and apply it.
+
+#### Manual setup
+
+Dry-run first, then apply:
+
+```sh
+apx setup codex --dry-run
+apx setup codex --mode recommended --yes
 ```
 
 Agent setup docs:
@@ -282,7 +298,14 @@ apx install markitdown-file-intake --target codex --dry-run
 apx setup codex --dry-run
 apx setup claude-code --dry-run
 apx setup gemini --dry-run
+apx setup codex --mode recommended --yes
+apx setup claude-code --mode recommended --yes
+apx setup gemini --mode recommended --yes
 ```
+
+### Migration note (v0.x)
+
+`apx setup <agent> --yes` previously installed all assets. It now defaults to minimal (bootstrap) mode. Use `--mode full --yes` for the previous broad-install behavior.
 
 Extra surfaces:
 

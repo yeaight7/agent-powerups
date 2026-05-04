@@ -2,6 +2,34 @@
 
 Status: conservative local setup. This documents what `apx setup gemini` does; it is not an official Gemini CLI integration claim.
 
+## Setup Modes
+
+`apx setup gemini` supports three modes via `--mode`:
+
+| Mode | Assets installed | Use when |
+|------|-----------------|----------|
+| `minimal` | 6 bootstrap skills + 2 commands | Bootstrap awareness only |
+| `recommended` | Core skills + dev-loop plugins | Main agent setup (recommended) |
+| `full` | All skills, commands, plugin bundles, hooks, MCP configs (staged) | Broad agent-assembled environment |
+
+Default (`--yes` alone) is `minimal`. MCP configs are staged in `full` mode but never enabled automatically.
+
+```powershell
+# Dry-run (default — no files written)
+apx setup gemini
+
+# Apply minimal
+apx setup gemini --yes
+
+# Apply recommended (main agent setup)
+apx setup gemini --mode recommended --yes
+
+# Apply full
+apx setup gemini --mode full --yes
+```
+
+**For agents:** Prefer `--mode recommended --yes`. Use `apx profiles list` to see available skill sets after setup.
+
 ## Expected Agent Root Directory
 
 Default root:
@@ -37,7 +65,9 @@ If the target directory does not exist, `--yes` creates it. `--dry-run` only rep
 
 ## Files Copied Or Generated
 
-Setup copies:
+Files copied depend on the selected mode. See [Setup Modes](#setup-modes) above.
+
+In `full` mode (default for `--yes` in previous versions), setup copies:
 
 - `skills/` to `agent-powerups/skills/`
 - `commands/generic/` to `agent-powerups/commands/generic/`

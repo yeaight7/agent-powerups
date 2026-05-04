@@ -2,6 +2,34 @@
 
 Status: conservative local setup. This documents what `apx setup codex` does; it is not an official Codex integration claim.
 
+## Setup Modes
+
+`apx setup codex` supports three modes via `--mode`:
+
+| Mode | Assets installed | Use when |
+|------|-----------------|----------|
+| `minimal` | 6 bootstrap skills + 2 commands | Bootstrap awareness only |
+| `recommended` | Core skills + dev-loop plugins | Main agent setup (recommended) |
+| `full` | All skills, commands, plugin bundles, hooks, MCP configs (staged) | Broad agent-assembled environment |
+
+Default (`--yes` alone) is `minimal`. MCP configs are staged in `full` mode but never enabled automatically.
+
+```powershell
+# Dry-run (default — no files written)
+apx setup codex
+
+# Apply minimal
+apx setup codex --yes
+
+# Apply recommended (main agent setup)
+apx setup codex --mode recommended --yes
+
+# Apply full
+apx setup codex --mode full --yes
+```
+
+**For agents:** Prefer `--mode recommended --yes`. Use `apx profiles list` to see available skill sets after setup.
+
 ## Expected Agent Root Directory
 
 Default root:
@@ -37,7 +65,9 @@ If the target directory does not exist, `--yes` creates it. `--dry-run` only rep
 
 ## Files Copied Or Generated
 
-Setup copies:
+Files copied depend on the selected mode. See [Setup Modes](#setup-modes) above.
+
+In `full` mode (default for `--yes` in previous versions), setup copies:
 
 - `skills/` to `agent-powerups/skills/`
 - `commands/generic/` to `agent-powerups/commands/generic/`

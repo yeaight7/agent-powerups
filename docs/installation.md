@@ -35,21 +35,34 @@ apx ask-gemini "Return OK only" --json
 
 ## Agent Setup
 
-Setup is explicit, review-first, and dry-run by default.
+The recommended path is agent-managed: give your agent access to Agent Powerups, ask it to inspect available assets, and have it propose and apply a setup plan.
 
 ```powershell
-apx setup codex --dry-run
+# Let agent discover available assets
+apx list
+apx profiles list
+apx plugins list
+
+# Minimal bootstrap (dry-run first)
 apx setup claude-code --dry-run
-apx setup gemini --dry-run
+apx setup claude-code --mode minimal --yes
+
+# Recommended agent setup
+apx setup claude-code --mode recommended --yes
+
+# Full staging (agent decides)
+apx setup claude-code --mode full --yes
 ```
 
-Apply only with confirmation:
+Setup modes:
 
-```powershell
-apx setup codex --yes
-apx setup claude-code --yes
-apx setup gemini --yes
-```
+| Mode | What it installs | When to use |
+|------|-----------------|-------------|
+| `minimal` | 6 bootstrap skills + 2 commands | Starting point, bootstrap only |
+| `recommended` | Core skills + dev-loop plugin bundles | Main agent setup (recommended) |
+| `full` | All skills, commands, bundles (MCP staged) | Agent-assembled environment |
+
+Apply only after review. Default (no `--yes`) is always dry-run.
 
 Use `--agent-root <path>` to avoid writing to a default agent root during first review.
 Use `--instructions-file <path>` when you want setup to append the marked `agent-powerups` block to a specific instruction file.
