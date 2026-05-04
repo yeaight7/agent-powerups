@@ -1,0 +1,6 @@
+{
+  "name": "context-efficiency",
+  "version": "0.1.0",
+  "description": "Context-efficient routing: lightweight dispatch commands that route user intent to the right workflow, review, or codebase-intelligence skill without loading full context.",
+  "maturity": "experimental"
+}
