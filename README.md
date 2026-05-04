@@ -12,7 +12,8 @@ Today, this repo ships:
 - validation and requirement-check scripts
 - verified local GitHub MCP check, smoke, and install flow
 - command, hook, workflow, examples, and AGENTS.md templates
-- seven shipped plugin bundles with `apx plugins` discovery, validation, and install flow
+- 14 plugin bundles (7 beta, 7 experimental) with `apx plugins` discovery, validation, and install flow
+- user-intent profiles with `apx profiles` for curated skill/plugin sets
 
 Everything else stays conservative. No global mutation. No hidden install hooks. No fake marketplace claims.
 
@@ -26,7 +27,7 @@ Everything else stays conservative. No global mutation. No hidden install hooks.
 | `commands/` | shipped | Review-first command prompts plus safe runnable checks |
 | `hooks/` | shipped | Review-before-use hook recipes plus safe runnable checks |
 | `workflows/` | shipped | Scenario guides |
-| `plugins/` | shipped | Seven plugin bundles with local-first discovery, validation, and install commands |
+| `plugins/` | shipped | 14 plugin bundles (7 beta, 7 experimental) with local-first discovery, validation, and install commands |
 | `scripts/` | shipped | Validation and tool-check helpers for this repo |
 | `examples/` | shipped | Minimal safe setup examples |
 
@@ -85,7 +86,25 @@ apx ask-claude "Return OK only" --json
 apx ask-gemini "Return OK only" --json
 ```
 
-6. Check deps without installing:
+7. Start a persistent relay session (keeps context across turns):
+
+```sh
+apx relay init second-opinion
+apx relay start second-opinion --provider gemini
+apx relay ask second-opinion "Review this plan" --json
+apx relay status second-opinion
+apx relay stop second-opinion
+```
+
+8. Browse profiles and apply one:
+
+```sh
+apx profiles list
+apx profiles info safe-core
+apx profiles apply safe-core --dry-run
+```
+
+9. Check deps without installing:
 
 ```sh
 apx check markitdown-file-intake
@@ -101,14 +120,14 @@ apx check defuddle --install-missing --dry-run
 apx check markitdown-file-intake --install-missing --dry-run
 ```
 
-7. Dry-run safe install:
+10. Dry-run safe install:
 
 ```sh
 apx install markitdown-file-intake --target codex --dry-run
 apx install ask-claude --target codex --dry-run
 ```
 
-8. Agent setup:
+11. Agent setup:
 
 ```sh
 apx setup codex --dry-run
@@ -144,7 +163,7 @@ Agent setup docs:
 - [`docs/setup/claude-code.md`](./docs/setup/claude-code.md)
 - [`docs/setup/gemini.md`](./docs/setup/gemini.md)
 
-9. Keep repo validation in loop:
+12. Keep repo validation in loop:
 
 ```sh
 python scripts/validate-skills.py
@@ -220,7 +239,7 @@ Current shipped workflows:
 - `feature-iteration`
 - `agent-relay`
 
-Current shipped plugin bundles:
+Current shipped plugin bundles (beta):
 
 - `dev-vitals`
 - `debugging-diagnostics`
@@ -229,6 +248,16 @@ Current shipped plugin bundles:
 - `documentation-systems`
 - `machine-learning-ops`
 - `quality-gates`
+
+Current shipped plugin bundles (experimental):
+
+- `software-engineering`
+- `agentic-systems`
+- `security-guardrails`
+- `codebase-intelligence`
+- `spec-driven-development`
+- `spec-quality-gates`
+- `context-efficiency`
 
 Schema details: [`docs/catalog-schema.md`](./docs/catalog-schema.md)
 
@@ -244,7 +273,7 @@ Compatibility claims in this repo are intentionally narrow:
 | `commands/` | yes | Review-first markdown command prompts; Claude Code and Codex targets where provided |
 | `hooks/` | yes | Documentation recipes only; not installed automatically |
 | `workflows/` | yes | Plain text scenario guides |
-| `plugins/` | yes | Seven local-first plugin bundles with `apx plugins` discovery, validation, and install support |
+| `plugins/` | yes | 14 plugin bundles (7 beta, 7 experimental) with `apx plugins` discovery, validation, and install support |
 | `scripts/` | yes | Generic Python scripts |
 | `examples/` | yes | Plain text setup examples only |
 
@@ -331,6 +360,14 @@ apx plugins list
 apx plugins info dev-vitals
 apx plugins validate --all
 apx plugins install dev-vitals --target codex --dry-run
+apx profiles list
+apx profiles info safe-core
+apx profiles apply safe-core --dry-run
+apx relay init second-opinion
+apx relay start second-opinion --provider gemini --json
+apx relay ask second-opinion "Review this plan" --json
+apx relay status second-opinion --json
+apx relay stop second-opinion --json
 ```
 
 To explicitly copy a skill into a local Codex-visible folder, choose the destination yourself:
