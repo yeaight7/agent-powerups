@@ -807,5 +807,32 @@
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "quality", "ci"],
     "maturity": "beta"
+  },
+  {
+    "name": "software-engineering",
+    "type": "pack",
+    "summary": "Full-lifecycle software delivery: parallel execution, autonomous pipeline.",
+    "path": "plugins/software-engineering",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "software-engineering", "delivery"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "agentic-systems",
+    "type": "pack",
+    "summary": "Multi-model orchestration and advisor routing.",
+    "path": "plugins/agentic-systems",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "agentic-systems", "orchestration"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "security-guardrails",
+    "type": "pack",
+    "summary": "Security vulnerability detection and review workflows.",
+    "path": "plugins/security-guardrails",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "security", "guardrails"],
+    "maturity": "experimental"
   }
 ]
