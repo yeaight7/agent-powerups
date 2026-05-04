@@ -16,6 +16,10 @@ Domain-specific plugin bundles for Agent Powerups. Each plugin extends the base 
 | [`software-engineering`](software-engineering/) | Parallel execution, requirements clarification, autonomous delivery | experimental |
 | [`agentic-systems`](agentic-systems/) | Multi-model orchestration, canonical advisor routing | experimental |
 | [`security-guardrails`](security-guardrails/) | Security vulnerability detection, secrets scanning, dependency audits | experimental |
+| [`codebase-intelligence`](codebase-intelligence/) | Parallel codebase mapping: architecture, stack, conventions, concerns | experimental |
+| [`spec-driven-development`](spec-driven-development/) | Spec-driven lifecycle: discuss → plan → execute → verify | experimental |
+| [`spec-quality-gates`](spec-quality-gates/) | Adversarial plan verification and structured code review | experimental |
+| [`context-efficiency`](context-efficiency/) | Context-efficient dispatch routers for workflow, review, and codebase commands | experimental |
 
 Full inventory (skills, agents, commands) is tracked in [`../plugin-bundles.json`](../plugin-bundles.json).
 
