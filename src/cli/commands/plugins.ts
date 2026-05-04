@@ -76,6 +76,11 @@ export async function runPluginsInfoCommand(argv: string[], io: CliIO): Promise<
   io.stdout(`\nCommands (${info.commands.length}):`);
   for (const c of info.commands) io.stdout(`  - ${c}`);
 
+  if (info.templates.length > 0) {
+    io.stdout(`\nTemplates (${info.templates.length}):`);
+    for (const t of info.templates) io.stdout(`  - ${t}`);
+  }
+
   return 0;
 }
 
