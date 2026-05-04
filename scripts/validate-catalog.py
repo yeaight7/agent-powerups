@@ -33,7 +33,7 @@ ALLOWED_TYPES = {
     "script",
     "pack",
 }
-ALLOWED_MATURITY = {"draft", "beta", "stable"}
+ALLOWED_MATURITY = {"draft", "beta", "stable", "experimental"}
 ALLOWED_COMPATIBLE = {"claude-code", "codex", "gemini-cli", "cursor", "generic"}
 ALLOWED_REQUIRE_KEYS = {"commands", "python_packages", "npm_packages"}
 ALLOWED_TARGET_KEYS = {"codex", "claude-code", "generic"}
