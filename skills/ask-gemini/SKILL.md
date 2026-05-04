@@ -16,6 +16,8 @@ Use local Gemini CLI as an external advisor for brainstorming, design feedback, 
 - Do not use when Gemini CLI is missing or unauthenticated.
 - Do not use as an MCP fallback.
 
+**For multi-turn advisory sessions** (persistent context across follow-ups), use `relay-gemini` instead — `apx relay start <name> --provider gemini` keeps context across turns.
+
 ## Inputs
 
 - A specific prompt or task.
