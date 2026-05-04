@@ -13,6 +13,9 @@ Domain-specific plugin bundles for Agent Powerups. Each plugin extends the base 
 | [`documentation-systems`](documentation-systems/) | Doc architecture, README hardening, ADRs, context docs | active |
 | [`machine-learning-ops`](machine-learning-ops/) | Experiment tracking, model evaluation, leakage checks | active |
 | [`quality-gates`](quality-gates/) | Change impact, pre-release verification, risk-based review | active |
+| [`software-engineering`](software-engineering/) | Parallel execution, requirements clarification, autonomous delivery | experimental |
+| [`agentic-systems`](agentic-systems/) | Multi-model orchestration, canonical advisor routing | experimental |
+| [`security-guardrails`](security-guardrails/) | Security vulnerability detection, secrets scanning, dependency audits | experimental |
 
 Full inventory (skills, agents, commands) is tracked in [`../plugin-bundles.json`](../plugin-bundles.json).
 
