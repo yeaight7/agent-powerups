@@ -274,6 +274,65 @@
         { "name": "mcp-risk-check", "origin": "placeholder" },
         { "name": "hook-risk-check", "origin": "placeholder" }
       ]
+    },
+    {
+      "name": "codebase-intelligence",
+      "description": "Codebase mapping: parallel agent analysis producing structured architecture, stack, conventions, and quality documents.",
+      "maturity": "experimental",
+      "agents": [
+        { "name": "codebase-mapper", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "map-codebase", "origin": "first-party-seed" }
+      ],
+      "templates": [
+        { "name": "STACK" },
+        { "name": "INTEGRATIONS" },
+        { "name": "ARCHITECTURE" },
+        { "name": "STRUCTURE" },
+        { "name": "CONVENTIONS" },
+        { "name": "TESTING" },
+        { "name": "CONCERNS" }
+      ]
+    },
+    {
+      "name": "spec-driven-development",
+      "description": "Spec-driven project lifecycle: discuss/plan/execute/verify phase pipeline with research and goal-backward planning.",
+      "maturity": "experimental",
+      "agents": [
+        { "name": "phase-researcher", "origin": "first-party-seed" },
+        { "name": "phase-planner", "origin": "first-party-seed" },
+        { "name": "phase-executor", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "new-project", "origin": "first-party-seed" },
+        { "name": "discuss-phase", "origin": "first-party-seed" },
+        { "name": "plan-phase", "origin": "first-party-seed" },
+        { "name": "execute-phase", "origin": "first-party-seed" },
+        { "name": "verify-work", "origin": "first-party-seed" }
+      ]
+    },
+    {
+      "name": "spec-quality-gates",
+      "description": "Quality gates for spec-driven development: adversarial plan verification and structured code review.",
+      "maturity": "experimental",
+      "agents": [
+        { "name": "plan-checker", "origin": "first-party-seed" },
+        { "name": "structured-code-reviewer", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "code-review", "origin": "first-party-seed" }
+      ]
+    },
+    {
+      "name": "context-efficiency",
+      "description": "Context-efficient routing: dispatch tables for workflow, review, and codebase-intelligence commands.",
+      "maturity": "experimental",
+      "commands": [
+        { "name": "workflow-router", "origin": "first-party-seed" },
+        { "name": "review-router", "origin": "first-party-seed" },
+        { "name": "context-router", "origin": "first-party-seed" }
+      ]
     }
   ]
 }
