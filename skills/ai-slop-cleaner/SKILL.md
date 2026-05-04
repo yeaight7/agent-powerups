@@ -1,6 +1,6 @@
 ---
 name: ai-slop-cleaner
-description: Run an anti-slop cleanup workflow on AI-generated code — regression-tests-first, smell-by-smell, behavior preserved.
+description: Run an anti-slop cleanup workflow on AI-generated code — regression-tests-first, smell-by-smell, behavior preserved. Supports explicit review-only mode.
 ---
 
 ## Purpose
@@ -13,8 +13,9 @@ Reduce AI-generated code bloat through systematic, smell-by-smell cleanup that p
 - A user asks to "cleanup", "refactor", or "deslop" AI-generated output.
 - Follow-up implementation left duplicate code, dead code, weak boundaries, or missing tests.
 - A disciplined cleanup workflow is needed without broad rewrites.
+- The user wants a reviewer-only anti-slop pass via `--review` mode.
 
-This skill accepts an optional **file list scope**. If a changed-files list is provided, keep the cleanup strictly bounded to those files.
+This skill accepts an optional **file list scope**. If a changed-files list is provided, keep the cleanup strictly bounded to those files. Do not silently expand a changed-file scope.
 
 ## Inputs
 
@@ -56,6 +57,15 @@ This skill accepts an optional **file list scope**. If a changed-files list is p
    - Relevant unit/integration tests pass.
    - Diff stays minimal and scoped.
    - No new abstractions or dependencies unless explicitly required.
+
+## Review Mode (`--review`)
+
+If invoked with a `--review` flag, operate as a reviewer-only pass:
+1. Do **not** start by editing files.
+2. Review the cleanup plan, changed files, and regression coverage.
+3. Check specifically for leftover dead code, duplicate logic, needless wrappers, and missing tests for preserved behavior.
+4. Produce a reviewer verdict with required follow-ups.
+5. Hand needed changes back to a separate writer pass instead of fixing and approving in one step.
 
 ## Output
 
