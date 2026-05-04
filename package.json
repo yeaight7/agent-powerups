@@ -45,6 +45,7 @@
     "catalog.json",
     "plugins/",
     "plugin-bundles.json",
+    "profiles.json",
     ".codex-plugin/",
     ".claude-plugin/",
     "README.md",
