@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agent Powerups Plugin Bundles",
+  "description": "Schema for plugin-bundles.json — the active plugin bundle manifest for shipped plugin packs.",
+  "type": "object",
+  "required": ["version", "plugins"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "_comment": { "type": "string" },
+    "version": {
+      "type": "string",
+      "description": "Manifest format version (semver)"
+    },
+    "plugins": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/PluginBundle" }
+    }
+  },
+  "definitions": {
+    "AssetRef": {
+      "type": "object",
+      "required": ["name", "origin"],
+      "properties": {
+        "name": { "type": "string" },
+        "origin": {
+          "type": "string",
+          "enum": ["root-copy", "first-party-seed", "new-skill", "placeholder"]
+        }
+      }
+    },
+    "TemplateRef": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "description": "Template file base name (without .md extension)" }
+      }
+    },
+    "OverlapRule": {
+      "type": "object",
+      "required": ["root_skill", "rule"],
+      "properties": {
+        "root_skill": { "type": "string" },
+        "rule": { "type": "string" }
+      }
+    },
+    "PluginBundle": {
+      "type": "object",
+      "required": ["name", "description", "maturity"],
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "maturity": {
+          "type": "string",
+          "enum": ["draft", "beta", "stable", "experimental"]
+        },
+        "overlap_with_root": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/OverlapRule" }
+        },
+        "skills": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/AssetRef" }
+        },
+        "agents": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/AssetRef" }
+        },
+        "commands": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/AssetRef" }
+        },
+        "templates": {
+          "type": "array",
+          "description": "Document templates written by this plugin's agents",
+          "items": { "$ref": "#/definitions/TemplateRef" }
+        }
+      }
+    }
+  }
+}
