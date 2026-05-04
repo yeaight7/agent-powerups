@@ -1,0 +1,6 @@
+{
+  "name": "spec-quality-gates",
+  "version": "0.1.0",
+  "description": "Spec-driven quality gates: plan verification before execution, adversarial code review with severity classification, and goal-backward plan checking.",
+  "maturity": "experimental"
+}
