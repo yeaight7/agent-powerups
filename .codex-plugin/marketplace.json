@@ -87,6 +87,90 @@
         "authentication": "NONE"
       },
       "category": "Developer Tools"
+    },
+    {
+      "name": "software-engineering",
+      "source": {
+        "source": "local",
+        "path": "./plugins/software-engineering"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "agentic-systems",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentic-systems"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "security-guardrails",
+      "source": {
+        "source": "local",
+        "path": "./plugins/security-guardrails"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "codebase-intelligence",
+      "source": {
+        "source": "local",
+        "path": "./plugins/codebase-intelligence"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "spec-driven-development",
+      "source": {
+        "source": "local",
+        "path": "./plugins/spec-driven-development"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "spec-quality-gates",
+      "source": {
+        "source": "local",
+        "path": "./plugins/spec-quality-gates"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "context-efficiency",
+      "source": {
+        "source": "local",
+        "path": "./plugins/context-efficiency"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
     }
   ]
 }
