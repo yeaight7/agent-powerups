@@ -714,7 +714,7 @@ test("setup dry-run is default and reports planned Codex actions without writing
   const json = parseJson(result.stdout);
   assert.equal(json.data.agent, "codex");
   assert.equal(json.data.dryRun, true);
-  assert.match(json.stdout, /setup dry-run: codex/);
+  assert.match(json.stdout, /setup dry-run \[mode: \w+\]: codex/);
   assert.ok(json.data.createdDirectories.some((item: string) => item.endsWith("agent-powerups")));
   assert.ok(json.data.manualSteps.some((item: string) => item.includes("AGENTS.md")));
   await assert.rejects(fs.access(path.join(agentRoot, "agent-powerups")));
@@ -729,21 +729,21 @@ test("setup dry-run supports Claude Code and Gemini", async () => {
 
   assert.equal(claude.exitCode, 0);
   assert.equal(parseJson(claude.stdout).data.agent, "claude-code");
-  assert.match(parseJson(claude.stdout).stdout, /setup dry-run: claude-code/);
+  assert.match(parseJson(claude.stdout).stdout, /setup dry-run \[mode: \w+\]: claude-code/);
 
   assert.equal(gemini.exitCode, 0);
   assert.equal(parseJson(gemini.stdout).data.agent, "gemini");
-  assert.match(parseJson(gemini.stdout).stdout, /setup dry-run: gemini/);
+  assert.match(parseJson(gemini.stdout).stdout, /setup dry-run \[mode: \w+\]: gemini/);
 });
 
 test("setup --yes creates agent directories and copies assets", async () => {
   const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-setup-apply-"));
-  const result = await execute(["setup", "codex", "--agent-root", agentRoot, "--yes", "--json"]);
+  const result = await execute(["setup", "codex", "--agent-root", agentRoot, "--mode", "full", "--yes", "--json"]);
 
   assert.equal(result.exitCode, 0);
   const json = parseJson(result.stdout);
   assert.equal(json.data.dryRun, false);
-  assert.match(json.stdout, /setup complete: codex/);
+  assert.match(json.stdout, /setup complete \[mode: \w+\]: codex/);
   await fs.access(path.join(agentRoot, "agent-powerups", "skills", "systematic-debugging", "SKILL.md"));
   await fs.access(path.join(agentRoot, "agent-powerups", "commands", "generic", "ship-check.md"));
   await fs.access(path.join(agentRoot, "agent-powerups", "mcp", "codex", "github-local.toml"));

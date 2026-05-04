@@ -21,7 +21,7 @@ import { runAuditRepoCommand, runAuditSkillsCommand, runAuditPluginsCommand, run
 import { runQualityGateCommand } from "./commands/quality-gate.js";
 import { runRelayAskCommand, runRelayDaemonCommand, runRelayInitCommand, runRelayStartCommand, runRelayStatusCommand, runRelayStopCommand } from "./commands/relay.js";
 import { runShipCheckCommand } from "./commands/run-command.js";
-import { parseSetupAgent, runSetupCommand } from "./commands/setup.js";
+import { parseSetupAgent, parseSetupMode, runSetupCommand } from "./commands/setup.js";
 import { runValidateCatalogCommand, runValidateSkillsCommand } from "./commands/validate.js";
 import { hasFlag, parseOption, parseOptions } from "./utils/args.js";
 import { ALLOWED_TYPES, CatalogError, createCatalogService } from "./utils/catalog.js";
@@ -49,7 +49,7 @@ apx ship-check [--full] [--json]
 apx no-secrets-preflight [--path <path> | --all] [--json]
 apx using-powerups
 apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--dest <path>]
-apx setup <codex|claude-code|gemini> [--dry-run|--yes] [--agent-root <path>] [--instructions-file <path>] [--json]
+apx setup <codex|claude-code|gemini> [--mode minimal|recommended|full] [--dry-run|--yes] [--agent-root <path>] [--instructions-file <path>] [--json]
 apx mcp list
 apx mcp print <config-name> --target <${INSTALL_TARGETS.join("|")}>
 apx mcp smoke <config-name> [--json]
@@ -261,6 +261,7 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
           instructionsFile: parseOption(argv, "--instructions-file"),
           dryRun: hasFlag(argv, "--dry-run"),
           yes: hasFlag(argv, "--yes"),
+          mode: parseSetupMode(parseOption(argv, "--mode")),
         }),
         json,
       );
