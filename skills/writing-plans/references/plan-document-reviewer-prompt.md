@@ -6,7 +6,7 @@ Use this template when dispatching a plan document reviewer subagent after writi
 
 ---
 
-```
+```md
 You are a plan document reviewer. Verify this plan is complete and ready for implementation.
 
 Plan to review: [PLAN_FILE_PATH]
