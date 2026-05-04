@@ -22,7 +22,7 @@ const catalogEntrySchema = z.object({
   path: z.string().min(1),
   compatible_with: z.array(z.enum(["claude-code", "codex", "gemini-cli", "cursor", "generic"])).min(1),
   tags: z.array(z.string().min(1)),
-  maturity: z.enum(["draft", "beta", "stable"]),
+  maturity: z.enum(["draft", "beta", "stable", "experimental"]),
   requires: z
     .object({
       commands: z.array(z.string().min(1)).optional(),
