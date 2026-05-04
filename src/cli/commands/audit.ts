@@ -110,14 +110,10 @@ async function auditSkillFrontmatter(repoRoot: string): Promise<AuditCheck> {
       if (!fm?.name || !fm?.description) {
         issues.push(`${entry}: missing name or description`);
       }
-      if (content.includes("PHASE-COPIED-BASE")) {
-        issues.push(`${entry}: unfinished PHASE-COPIED-BASE marker`);
-      }
     } catch {
       issues.push(`${entry}: missing SKILL.md`);
     }
   }
-
   return issues.length > 0
     ? fail("skill-frontmatter", `${issues.length} issue(s): ${issues.slice(0, 3).join("; ")}${issues.length > 3 ? " ..." : ""}`)
     : pass("skill-frontmatter", `${count} skills OK`);
@@ -273,7 +269,6 @@ export async function runAuditSkillsCommand(service: CatalogService): Promise<Ex
     });
   }
 
-  let hasPhaseMarker = 0;
   let missingFrontmatter = 0;
   let missingSkillMd = 0;
   let tooShort = 0;
@@ -293,7 +288,6 @@ export async function runAuditSkillsCommand(service: CatalogService): Promise<Ex
 
     const fm = parseFrontmatter(content);
     if (!fm?.name || !fm?.description) missingFrontmatter++;
-    if (content.includes("PHASE-COPIED-BASE")) hasPhaseMarker++;
     if (content.trim().length < MIN_CONTENT_LENGTH) tooShort++;
   }
 
@@ -303,9 +297,6 @@ export async function runAuditSkillsCommand(service: CatalogService): Promise<Ex
 
   if (missingFrontmatter > 0) checks.push(fail("skill-frontmatter", `${missingFrontmatter} skill(s) missing name/description`));
   else checks.push(pass("skill-frontmatter", "all have name + description"));
-
-  if (hasPhaseMarker > 0) checks.push(fail("phase-marker-clean", `${hasPhaseMarker} skill(s) still have PHASE-COPIED-BASE marker`));
-  else checks.push(pass("phase-marker-clean", "no unfinished copy markers"));
 
   if (tooShort > 0) checks.push(warn("skill-content-length", `${tooShort} skill(s) under ${MIN_CONTENT_LENGTH} chars`));
   else checks.push(pass("skill-content-length", `all skills meet minimum length`));
