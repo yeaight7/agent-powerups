@@ -65,6 +65,46 @@
       "hooks": [],
       "plugin_bundles": [],
       "mcp": []
+    },
+    {
+      "name": "spec-core",
+      "description": "Spec-driven development: discuss → plan → execute → verify phase pipeline with quality gates and codebase mapping.",
+      "maturity": "experimental",
+      "skills": ["verification-before-completion"],
+      "commands": [],
+      "hooks": [],
+      "plugin_bundles": ["spec-driven-development", "spec-quality-gates", "codebase-intelligence", "context-efficiency"],
+      "mcp": []
+    },
+    {
+      "name": "software-engineer",
+      "description": "Full software engineering: autonomous delivery pipeline, requirements clarification, parallel execution, quality gates, and debugging.",
+      "maturity": "experimental",
+      "skills": [],
+      "commands": [],
+      "hooks": [],
+      "plugin_bundles": ["software-engineering", "quality-gates", "debugging-diagnostics"],
+      "mcp": []
+    },
+    {
+      "name": "agentic-review",
+      "description": "Multi-model review: tri-model consensus and canonical advisor routing for agentic workflows.",
+      "maturity": "experimental",
+      "skills": [],
+      "commands": [],
+      "hooks": [],
+      "plugin_bundles": ["agentic-systems"],
+      "mcp": []
+    },
+    {
+      "name": "security-first",
+      "description": "Security-first development: secrets scanning, MCP risk review, hook safety, and OWASP auditing.",
+      "maturity": "experimental",
+      "skills": [],
+      "commands": [],
+      "hooks": [],
+      "plugin_bundles": ["security-guardrails"],
+      "mcp": []
     }
   ]
 }
