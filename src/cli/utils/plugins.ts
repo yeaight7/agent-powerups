@@ -10,6 +10,7 @@ export interface PluginInfo {
   skills: string[];
   agents: string[];
   commands: string[];
+  templates: string[];
   path: string;
 }
 
@@ -32,9 +33,9 @@ export async function listPlugins(cwd: string): Promise<PluginInfo[]> {
 
   for (const bundle of bundles) {
     if (!bundle.name) continue;
-    
+
     const pluginPath = path.join(cwd, PLUGINS_DIR, bundle.name);
-    
+
     try {
       await fs.stat(pluginPath);
     } catch {
@@ -48,6 +49,7 @@ export async function listPlugins(cwd: string): Promise<PluginInfo[]> {
       skills: bundle.skills?.map((s: any) => s.name) || [],
       agents: bundle.agents?.map((a: any) => a.name) || [],
       commands: bundle.commands?.map((c: any) => c.name) || [],
+      templates: bundle.templates?.map((t: any) => t.name) || [],
       path: pluginPath
     });
   }
@@ -64,13 +66,13 @@ export async function validatePlugin(cwd: string, name: string): Promise<{ valid
   const errors: string[] = [];
   const bundles = await getPluginBundles(cwd);
   const bundle = bundles.find(b => b.name === name);
-  
+
   if (!bundle) {
     return { valid: false, errors: [`Plugin '${name}' not found in ${BUNDLES_FILE}`] };
   }
 
   const pluginPath = path.join(cwd, PLUGINS_DIR, name);
-  
+
   try {
     await fs.stat(pluginPath);
   } catch {
@@ -78,15 +80,7 @@ export async function validatePlugin(cwd: string, name: string): Promise<{ valid
     return { valid: false, errors };
   }
 
-  const requiredDirs = ["skills", "commands", "agents"];
-  for (const dir of requiredDirs) {
-    try {
-      await fs.stat(path.join(pluginPath, dir));
-    } catch {
-      errors.push(`Missing required directory: ${dir}/`);
-    }
-  }
-
+  // Validate manifest files
   const requiredFiles = [
     ".codex-plugin/plugin.json",
     ".claude-plugin/plugin.json"
@@ -99,12 +93,74 @@ export async function validatePlugin(cwd: string, name: string): Promise<{ valid
     }
   }
 
-  if (bundle.skills && Array.isArray(bundle.skills)) {
-    for (const skill of bundle.skills) {
+  // Validate skills (only if declared)
+  const skills: any[] = bundle.skills && Array.isArray(bundle.skills) ? bundle.skills : [];
+  if (skills.length > 0) {
+    try {
+      await fs.stat(path.join(pluginPath, "skills"));
+    } catch {
+      errors.push(`Missing required directory: skills/`);
+    }
+    for (const skill of skills) {
       try {
         await fs.stat(path.join(pluginPath, "skills", skill.name, "SKILL.md"));
       } catch {
         errors.push(`Missing SKILL.md for skill: ${skill.name}`);
+      }
+    }
+  }
+
+  // Validate agent files (skip placeholder agents)
+  const agents: any[] = bundle.agents && Array.isArray(bundle.agents) ? bundle.agents : [];
+  const checkableAgents = agents.filter((a: any) => a.origin !== "placeholder");
+  if (checkableAgents.length > 0) {
+    try {
+      await fs.stat(path.join(pluginPath, "agents"));
+    } catch {
+      errors.push(`Missing required directory: agents/`);
+    }
+    for (const agent of checkableAgents) {
+      try {
+        await fs.stat(path.join(pluginPath, "agents", `${agent.name}.md`));
+      } catch {
+        errors.push(`Missing agent file: agents/${agent.name}.md`);
+      }
+    }
+  }
+
+  // Validate command files (skip placeholder and root-copy commands)
+  const commands: any[] = bundle.commands && Array.isArray(bundle.commands) ? bundle.commands : [];
+  const checkableCommands = commands.filter((c: any) =>
+    c.origin !== "placeholder" && c.origin !== "root-copy"
+  );
+  if (checkableCommands.length > 0) {
+    try {
+      await fs.stat(path.join(pluginPath, "commands"));
+    } catch {
+      errors.push(`Missing required directory: commands/`);
+    }
+    for (const cmd of checkableCommands) {
+      try {
+        await fs.stat(path.join(pluginPath, "commands", `${cmd.name}.md`));
+      } catch {
+        errors.push(`Missing command file: commands/${cmd.name}.md`);
+      }
+    }
+  }
+
+  // Validate templates if declared
+  const templates: any[] = bundle.templates && Array.isArray(bundle.templates) ? bundle.templates : [];
+  if (templates.length > 0) {
+    try {
+      await fs.stat(path.join(pluginPath, "templates"));
+    } catch {
+      errors.push(`Missing required directory: templates/`);
+    }
+    for (const tmpl of templates) {
+      try {
+        await fs.stat(path.join(pluginPath, "templates", `${tmpl.name}.md`));
+      } catch {
+        errors.push(`Missing template file: templates/${tmpl.name}.md`);
       }
     }
   }
@@ -118,7 +174,7 @@ export async function validatePlugin(cwd: string, name: string): Promise<{ valid
 async function copyRecursive(src: string, dest: string): Promise<string[]> {
   const stats = await fs.stat(src);
   const copiedFiles: string[] = [];
-  
+
   if (stats.isDirectory()) {
     await fs.mkdir(dest, { recursive: true });
     const entries = await fs.readdir(src);
@@ -134,15 +190,15 @@ async function copyRecursive(src: string, dest: string): Promise<string[]> {
     await fs.copyFile(src, dest);
     copiedFiles.push(dest);
   }
-  
+
   return copiedFiles;
 }
 
 export async function installPlugin(
-  cwd: string, 
-  name: string, 
-  target: InstallTarget | "generic", 
-  destPath: string, 
+  cwd: string,
+  name: string,
+  target: InstallTarget | "generic",
+  destPath: string,
   dryRun: boolean,
   force: boolean = false
 ): Promise<{ success: boolean, message: string, copiedFiles?: string[] }> {
@@ -169,14 +225,14 @@ export async function installPlugin(
     }
 
     const copiedFiles: string[] = [];
-    
+
     if (!dryRun) {
       await fs.mkdir(destPath, { recursive: true });
       copiedFiles.push(...await copyRecursive(pluginInfo.path, destPath));
     }
 
-    return { 
-      success: true, 
+    return {
+      success: true,
       message: dryRun ? `Would install plugin '${name}' to ${destPath}` : `Successfully installed plugin '${name}' to ${destPath}`,
       copiedFiles: dryRun ? [] : copiedFiles
     };
