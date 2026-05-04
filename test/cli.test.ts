@@ -1218,7 +1218,7 @@ test("audit skills returns structured JSON with scope=skills", async () => {
   assert.equal(json.data.scope, "skills");
   assert.ok(Array.isArray(json.data.checks));
   assert.ok(json.data.checks.some((c: any) => c.name === "skill-md-present"));
-  assert.ok(json.data.checks.some((c: any) => c.name === "phase-marker-clean"));
+  assert.ok(json.data.checks.some((c: any) => c.name === "skill-frontmatter"));
 });
 
 test("audit plugins returns structured JSON with scope=plugins", async () => {
