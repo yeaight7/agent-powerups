@@ -973,6 +973,35 @@ test("relay init rejects duplicate session", async () => {
   assert.match(second.stderr, /already exists/i);
 });
 
+test("relay status returns missing with exit 1 for unknown session", async () => {
+  const cwd = await fs.mkdtemp(path.join(os.tmpdir(), "apx-relay-"));
+  const result = await executeInCwd(["relay", "status", "ghost-session", "--json"], cwd);
+
+  assert.equal(result.exitCode, 1);
+  // writeExecutionResult always writes JSON to stdout (not stderr)
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.status, "missing");
+  assert.equal(json.data.sessionName, "ghost-session");
+});
+
+test("relay stop returns stopped with exit 0 even when session does not exist", async () => {
+  const cwd = await fs.mkdtemp(path.join(os.tmpdir(), "apx-relay-"));
+  const result = await executeInCwd(["relay", "stop", "ghost-session", "--json"], cwd);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.status, "stopped");
+  assert.equal(json.data.sessionName, "ghost-session");
+});
+
+test("relay ask returns error with exit 1 when session is not active", async () => {
+  const cwd = await fs.mkdtemp(path.join(os.tmpdir(), "apx-relay-"));
+  const result = await executeInCwd(["relay", "ask", "ghost-session", "hello", "--json"], cwd);
+
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stderr, /not active|start it with/i);
+});
+
 test.skip("relay keeps a Gemini ACP agent active for start ask status stop", async () => {
   const cwd = await fs.mkdtemp(path.join(os.tmpdir(), "apx-relay-"));
   await copyDir(path.join(repoRoot, "catalog.json"), path.join(cwd, "catalog.json"));
