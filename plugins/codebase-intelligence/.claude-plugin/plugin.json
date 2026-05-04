@@ -1,0 +1,6 @@
+{
+  "name": "codebase-intelligence",
+  "version": "0.1.0",
+  "description": "Codebase mapping and analysis: parallel mapper agents producing structured codebase documents (STACK, ARCHITECTURE, CONVENTIONS, CONCERNS, etc.).",
+  "maturity": "experimental"
+}
