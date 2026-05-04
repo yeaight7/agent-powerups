@@ -1,0 +1,6 @@
+{
+  "name": "agentic-systems",
+  "version": "0.1.0",
+  "description": "Multi-model orchestration and advisor routing: tri-model review (Claude + Codex + Gemini) and canonical advisor routing with artifact capture.",
+  "maturity": "experimental"
+}
