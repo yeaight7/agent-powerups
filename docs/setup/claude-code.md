@@ -48,17 +48,26 @@ If `CLAUDE_CONFIG_DIR` or `CLAUDE_HOME` is set, setup uses the first value found
 
 ## Directories Created
 
-Under the selected agent root, setup creates:
+Directories created depend on the selected mode.
+
+**`minimal` and `recommended` modes** create:
 
 ```text
 agent-powerups/
 agent-powerups/skills/
 agent-powerups/commands/
+agent-powerups/instructions/
+```
+
+`recommended` also creates `agent-powerups/plugins/`.
+
+**`full` mode** additionally creates:
+
+```text
 agent-powerups/mcp/
 agent-powerups/agents-md/
 agent-powerups/hooks/
 agent-powerups/workflows/
-agent-powerups/instructions/
 ```
 
 If the target directory does not exist, `--yes` creates it. `--dry-run` only reports it.
