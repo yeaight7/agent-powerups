@@ -5,8 +5,6 @@ description: "Use when conversation context becomes bloated. Compresses context 
 
 # Context Compression Protocol
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## When to use
 Use when context approaches limits or response quality degrades (due to the "lost in the middle" effect), typically after many turns of debugging or complex planning.
 
