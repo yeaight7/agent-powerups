@@ -5,7 +5,7 @@ Shipped copies live in root `skills/` and selected plugin bundles.
 This staging area must stay excluded from npm package output.
 
 ## Process
-1. Raw unpolished material was rewritten into standalone Agent Powerups skills.
+1. Raw unpolished material was written into `staging/`.
 2. Refactored copies were parked under `ready/` for review.
 3. Shipping copies were mirrored into root `skills/` and plugin bundles, then registered in catalog metadata.
 
