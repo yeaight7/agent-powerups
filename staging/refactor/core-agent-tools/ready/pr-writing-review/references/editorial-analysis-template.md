@@ -1,7 +1,5 @@
 # Editorial Analysis Template
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Inputs
 - PR URL or owner/repo + PR number.
 - Text file extensions in scope.
