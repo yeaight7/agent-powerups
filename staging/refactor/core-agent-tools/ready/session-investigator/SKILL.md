@@ -5,8 +5,6 @@ description: Use when diagnosing agent session history, tool-call loops, interru
 
 # Session Investigator
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## When To Use
 - Agent session ended mid-tool-call or cannot resume.
 - Need to correlate tool calls, tool results, and timing metadata.
