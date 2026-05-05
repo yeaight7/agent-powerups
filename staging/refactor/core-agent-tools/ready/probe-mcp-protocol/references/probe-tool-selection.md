@@ -1,7 +1,5 @@
 # Probe Tool Selection
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Tool Choice
 | Need | Tool |
 | --- | --- |
