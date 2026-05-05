@@ -34,7 +34,3 @@ Use when managing persistent sessions, dynamic codebase mappings, or managed con
 
 ## References
 - `references/managed-session-checklist.md`
-
-## Attribution
-*Derived from upstream harvest:*
-- Slug: `codebase-context` | Paths: `README.md`, `templates/mcp/http/.mcp.json`, `templates/mcp/stdio/.mcp.json`, `scripts/lib/managed-mcp-session.mjs`, `src/server/config.ts`
