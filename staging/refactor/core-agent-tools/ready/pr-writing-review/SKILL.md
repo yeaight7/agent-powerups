@@ -5,8 +5,6 @@ description: Use when analyzing pull request review comments for writing, docume
 
 # PR Writing Review
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## When To Use
 - User asks what writing feedback a PR received.
 - Need to compare draft vs final docs, blog posts, prompts, or README text.
