@@ -1,24 +1,21 @@
-# Core Agent Tools - Refactor Drafts
+# Core Agent Tools - Refactored Assets
 
-**DRAFT: requires review before catalog/plugin activation.**
-
-This directory contains raw drafts.
-These are **not yet shipped**, not in `catalog.json`, and must stay excluded from npm package output.
+This directory preserves the refactored staging trace for the core agent-tool skills.
+Shipped copies live in root `skills/` and selected plugin bundles.
+This staging area must stay excluded from npm package output.
 
 ## Process
-1. Raw unpolished drafts have been placed into staging directory.
-2. Concepts were rewritten and polished into ship-ready assets under `staging/ready/`.
-3. Once polished and tested locally, approved assets can be moved to root `skills/`, `mcp/`, or `plugins/` and registered in catalog metadata.
+1. Raw unpolished material was rewritten into standalone Agent Powerups skills.
+2. Refactored copies were parked under `ready/` for review.
+3. Shipping copies were mirrored into root `skills/` and plugin bundles, then registered in catalog metadata.
 
 ## Files
-- `metadata.json` maps new items, proposed root skills, proposed bundles, and existing bundle duplication.
-- `COVERAGE_MATRIX.md` shows coverage, including docs, subfolders and references.
-- `REFactor_PLAN.md` records shipping sequence and blockers.
-- `drafts/**` contains draft skill/docs content only.
-- `drafts/*/references/*.md` contains support material worth preserving for shipping review.
+- `ready/**` contains refactored staging copies.
+- `ready/*/references/*.md` contains support material preserved for audit and future edits.
 
 ## Current Boundary
-Do not move these drafts into shipped locations in this pass. Next pass should pick specific assets from `metadata.json`, then update shipped files and validators together.
+Shipped copies are the source of truth for runtime use.
+Use staging only as review trace; do not register staging paths in catalogs or plugin manifests.
 
 ## Support File Rule
 Support files are intentionally selective. They preserve concrete checklists, tool models, templates, and failure diagnostics that would bloat `SKILL.md` if kept inline.
