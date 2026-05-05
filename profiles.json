@@ -105,6 +105,26 @@
       "hooks": [],
       "plugin_bundles": ["security-guardrails"],
       "mcp": []
+    },
+    {
+      "name": "tool-integrator",
+      "description": "Tool-heavy workflows: browser automation, MCP integrations, retrieval, runtime loops, and session forensics.",
+      "maturity": "experimental",
+      "skills": [],
+      "commands": [],
+      "hooks": [],
+      "plugin_bundles": ["tool-integrations"],
+      "mcp": []
+    },
+    {
+      "name": "agent-evaluator",
+      "description": "Agent evaluation workflows: prompt evals, red-team grader authoring, and deterministic skill workbench suites.",
+      "maturity": "experimental",
+      "skills": [],
+      "commands": [],
+      "hooks": [],
+      "plugin_bundles": ["agent-evaluation-lab", "quality-gates"],
+      "mcp": []
     }
   ]
 }
