@@ -5,8 +5,6 @@ description: "Reference implementation and documentation for integrating MCP too
 
 # Probe MCP Protocol Guidance
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## When to use
 Use when developing a new MCP server, debugging an MCP connection, or integrating an agent with standard MCP protocols.
 
