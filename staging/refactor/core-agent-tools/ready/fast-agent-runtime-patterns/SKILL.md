@@ -5,8 +5,6 @@ description: "Reference patterns for fast agent runtime execution and experiment
 
 # Fast Agent Runtime Patterns
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## When to use
 Use when designing efficient agent runtimes, implementing "smart card" style prompt packs, or experimenting with novel MCP session management.
 
