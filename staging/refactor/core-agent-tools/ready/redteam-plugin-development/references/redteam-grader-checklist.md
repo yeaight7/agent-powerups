@@ -1,7 +1,5 @@
 # Redteam Grader Checklist
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Standard Inputs
 Use stable tags/fields for graders:
 
