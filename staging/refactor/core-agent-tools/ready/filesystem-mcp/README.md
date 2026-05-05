@@ -1,7 +1,7 @@
 # Filesystem MCP Conceptual Configuration
 
 ## Status
-This is a conceptual document for a Filesystem MCP server configuration. It is NOT a runnable configuration file. The upstream harvest (`filesystem-mcp-server`) provided a Go-based implementation that assumed execution within its own repository structure.
+This is a conceptual document for a Filesystem MCP server configuration. It is NOT a runnable configuration file. The earlier research used a Go-based filesystem MCP shape; this skill keeps only the safety model.
 
 ## Intent
 When packaged as a true Agent Powerup, this will provide guidance on configuring and safely running local filesystem MCP servers.
@@ -26,7 +26,3 @@ Before this becomes a shipped MCP config:
 
 ## References
 - `references/path-boundary-checklist.md`
-
-## Attribution
-*Derived from upstream harvest:*
-- Slug: `filesystem-mcp-server` | Paths: `README.md`, `internal/server/server.go`, `internal/server/server_test.go`
