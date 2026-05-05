@@ -5,8 +5,6 @@ description: "Utilize codebase context management via MCP."
 
 # Codebase Context MCP
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## When to use
 Use when managing persistent sessions, dynamic codebase mappings, or managed context states using a dedicated codebase-context MCP server.
 
