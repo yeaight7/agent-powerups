@@ -1,7 +1,5 @@
 # Session History Diagnostics
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Read-Only First
 Never edit history before:
 - locating session dir
