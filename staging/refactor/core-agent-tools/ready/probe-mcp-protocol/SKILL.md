@@ -1,16 +1,16 @@
 ---
-name: probe-mcp-protocol
+name: structured code search-mcp-protocol
 description: "Reference implementation and documentation for integrating MCP tools."
 ---
 
-# Probe MCP Protocol Guidance
+# Structured Code Search MCP
 
 ## When to use
 Use when developing a new MCP server, debugging an MCP connection, or integrating an agent with standard MCP protocols.
 
 ## Requirements / Checks
 - This is primarily an informational/reference skill.
-- Prefer installed/pinned Probe binaries over remote `npx -y ...@latest` execution.
+- Prefer installed/pinned structured code search binaries over remote `npx -y ...@latest` execution.
 - Confirm MCP client supports required transport and method filtering.
 - Bound any search path to the current workspace unless user approves otherwise.
 
@@ -39,8 +39,4 @@ Use when developing a new MCP server, debugging an MCP connection, or integratin
 - Search/extract workflow returns enough source context without flooding the model.
 
 ## References
-- `references/probe-tool-selection.md`
-
-## Attribution
-*Derived from upstream harvest:*
-- Slug: `probe` | Paths: `README.md`, `npm/README.md`, `docs/probe-agent/protocols/mcp.md`, `docs/probe-agent/protocols/mcp-server.md`, `docs/probe-agent/protocols/mcp-integration.md`, `npm/src/agent/mcp/`
+- `references/code-search-tool-selection.md`
