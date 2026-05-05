@@ -5,8 +5,6 @@ description: "Automate testing of prompts and model outputs."
 
 # Evaluator Runner
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## When to use
 Use this skill when you need to evaluate an LLM app, test a prompt, or run red-teaming/vulnerability scans against a target model or application.
 
