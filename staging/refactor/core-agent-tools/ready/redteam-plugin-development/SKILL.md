@@ -37,7 +37,3 @@ description: Use when creating or reviewing red-team eval plugins, attack prompt
 
 ## References
 - `references/redteam-grader-checklist.md`
-
-## Attribution
-- Slug: `promptfoo`
-- Source paths: `.claude/skills/redteam-plugin-development/skill.md`, `.claude/skills/promptfoo-evals/references/cheatsheet.md`, `README.md`
