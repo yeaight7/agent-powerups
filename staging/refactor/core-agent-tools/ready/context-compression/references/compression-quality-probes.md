@@ -1,7 +1,5 @@
 # Compression Quality Probes
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Probe Types
 | Probe | Question |
 | --- | --- |
