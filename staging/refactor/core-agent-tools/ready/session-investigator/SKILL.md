@@ -39,7 +39,3 @@ description: Use when diagnosing agent session history, tool-call loops, interru
 
 ## References
 - `references/history-diagnostics.md`
-
-## Attribution
-- Slug: `fast-agent`
-- Source paths: `examples/hf-toad-cards/skills/session-investigator/SKILL.md`, `examples/experimental/mcp_sessions/README.md`
