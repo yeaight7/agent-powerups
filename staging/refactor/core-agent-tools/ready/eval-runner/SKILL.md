@@ -10,7 +10,7 @@ Use this skill when you need to evaluate an LLM app, test a prompt, or run red-t
 
 ## Requirements / Checks
 1. Check if an evaluation tool is defined in project deps, scripts, lockfiles, or local toolchain.
-2. Do not run external commands like `npx promptfoo@latest` directly.
+2. Do not run external commands like `npx <eval-tool>@latest` directly.
 3. If missing, ask before adding a local dev dependency or using an ephemeral runner.
 4. Confirm expected cost, provider, API keys, and network target before execution.
 
@@ -36,7 +36,3 @@ Use this skill when you need to evaluate an LLM app, test a prompt, or run red-t
 
 ## References
 - `references/eval-config-patterns.md`
-
-## Attribution
-*Derived from upstream harvest:*
-- Slug: `promptfoo` | Paths: `.claude/skills/promptfoo-evals/`, `.claude/skills/promptfoo-evals/references/cheatsheet.md`, `README.md`
