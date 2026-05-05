@@ -20,7 +20,10 @@
         { "name": "context-minimization", "origin": "first-party-seed" },
         { "name": "context-retrieval-loop", "origin": "new-skill" },
         { "name": "agent-harness-design", "origin": "new-skill" },
-        { "name": "strategic-context-compaction", "origin": "new-skill" }
+        { "name": "strategic-context-compaction", "origin": "new-skill" },
+        { "name": "context-compression", "origin": "root-copy" },
+        { "name": "agent-runtime-patterns", "origin": "root-copy" },
+        { "name": "agent-session-forensics", "origin": "root-copy" }
       ],
       "agents": [
         { "name": "dev-workflow-coach", "origin": "first-party-seed" },
@@ -136,7 +139,8 @@
         { "name": "context-docs", "origin": "first-party-seed" },
         { "name": "api-doc-review", "origin": "first-party-seed" },
         { "name": "doc-consistency-check", "origin": "first-party-seed" },
-        { "name": "context-retrieval-loop", "origin": "new-skill" }
+        { "name": "context-retrieval-loop", "origin": "new-skill" },
+        { "name": "review-comment-style-mining", "origin": "root-copy" }
       ],
       "agents": [
         { "name": "agent-docs-architect", "origin": "first-party-seed" },
@@ -197,7 +201,10 @@
         { "name": "pre-release-verification", "origin": "first-party-seed" },
         { "name": "risk-based-review", "origin": "first-party-seed" },
         { "name": "change-impact-check", "origin": "first-party-seed" },
-        { "name": "ai-regression-testing", "origin": "new-skill" }
+        { "name": "ai-regression-testing", "origin": "new-skill" },
+        { "name": "prompt-evaluation-runner", "origin": "root-copy" },
+        { "name": "red-team-eval-authoring", "origin": "root-copy" },
+        { "name": "skill-evaluation-workbench", "origin": "root-copy" }
       ],
       "agents": [
         { "name": "quality-gatekeeper", "origin": "first-party-seed" },
@@ -264,7 +271,9 @@
         { "name": "agent-config-security-audit", "origin": "root-copy" },
         { "name": "hook-safety-review", "origin": "placeholder" },
         { "name": "mcp-risk-review", "origin": "placeholder" },
-        { "name": "secret-leak-preflight", "origin": "placeholder" }
+        { "name": "secret-leak-preflight", "origin": "placeholder" },
+        { "name": "red-team-eval-authoring", "origin": "root-copy" },
+        { "name": "filesystem-mcp-guardrails", "origin": "root-copy" }
       ],
       "agents": [
         { "name": "security-reviewer", "origin": "first-party-seed" }
@@ -293,6 +302,11 @@
         { "name": "CONVENTIONS" },
         { "name": "TESTING" },
         { "name": "CONCERNS" }
+      ],
+      "skills": [
+        { "name": "structured-code-search-mcp", "origin": "root-copy" },
+        { "name": "managed-codebase-context", "origin": "root-copy" },
+        { "name": "local-rag-mcp", "origin": "root-copy" }
       ]
     },
     {
@@ -332,6 +346,30 @@
         { "name": "workflow-router", "origin": "first-party-seed" },
         { "name": "review-router", "origin": "first-party-seed" },
         { "name": "context-router", "origin": "first-party-seed" }
+      ]
+    },
+    {
+      "name": "tool-integrations",
+      "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
+      "maturity": "experimental",
+      "skills": [
+        { "name": "browser-automation-safety", "origin": "root-copy" },
+        { "name": "managed-codebase-context", "origin": "root-copy" },
+        { "name": "agent-runtime-patterns", "origin": "root-copy" },
+        { "name": "filesystem-mcp-guardrails", "origin": "root-copy" },
+        { "name": "local-rag-mcp", "origin": "root-copy" },
+        { "name": "structured-code-search-mcp", "origin": "root-copy" },
+        { "name": "agent-session-forensics", "origin": "root-copy" }
+      ]
+    },
+    {
+      "name": "agent-evaluation-lab",
+      "description": "Prompt, skill, red-team, and agent behavior evaluation workflows.",
+      "maturity": "experimental",
+      "skills": [
+        { "name": "prompt-evaluation-runner", "origin": "root-copy" },
+        { "name": "red-team-eval-authoring", "origin": "root-copy" },
+        { "name": "skill-evaluation-workbench", "origin": "root-copy" }
       ]
     }
   ]
