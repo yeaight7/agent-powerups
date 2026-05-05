@@ -1,7 +1,5 @@
 # Runtime Patterns
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Pattern Selection
 | Problem | Pattern |
 | --- | --- |
