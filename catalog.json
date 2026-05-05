@@ -238,17 +238,9 @@
       "required_env": ["GITHUB_TOKEN"],
       "server_package": "ghcr.io/github/github-mcp-server",
       "warning": "Requires Docker. Uses ghcr.io/github/github-mcp-server (official). Set GITHUB_TOKEN or GITHUB_PAT env var before use. The ghcr.io image is currently unpinned (latest) by default; it is strongly recommended to pin to a specific digest in production.",
-      "output_hints": {
-        "generic": ".mcp.json",
-        "claude-code": ".mcp.json",
-        "codex": "config.toml"
-      }
+      "output_hints": { "generic": ".mcp.json", "claude-code": ".mcp.json", "codex": "config.toml" }
     },
-    "targets": {
-      "codex": "mcp/codex/github-local.toml",
-      "claude-code": "mcp/claude-code/github-local.json",
-      "generic": "mcp/generic/github-local.json"
-    }
+    "targets": { "codex": "mcp/codex/github-local.toml", "claude-code": "mcp/claude-code/github-local.json", "generic": "mcp/generic/github-local.json" }
   },
   {
     "name": "typescript-app",
@@ -303,14 +295,8 @@
     "compatible_with": ["generic", "claude-code"],
     "tags": ["commands", "validation", "handoff"],
     "maturity": "draft",
-    "run": {
-      "kind": "ship-check"
-    },
-    "targets": {
-      "codex": "commands/codex/ship-check.md",
-      "generic": "commands/generic/ship-check.md",
-      "claude-code": "commands/claude-code/ship-check.md"
-    }
+    "run": { "kind": "ship-check" },
+    "targets": { "codex": "commands/codex/ship-check.md", "generic": "commands/generic/ship-check.md", "claude-code": "commands/claude-code/ship-check.md" }
   },
   {
     "name": "using-powerups-command",
@@ -602,11 +588,7 @@
     "compatible_with": ["generic", "claude-code", "codex"],
     "tags": ["commands", "planning", "pre-task"],
     "maturity": "beta",
-    "targets": {
-      "codex": "commands/codex/plan.md",
-      "generic": "commands/generic/plan.md",
-      "claude-code": "commands/claude-code/plan.md"
-    }
+    "targets": { "codex": "commands/codex/plan.md", "generic": "commands/generic/plan.md", "claude-code": "commands/claude-code/plan.md" }
   },
   {
     "name": "review",
@@ -616,11 +598,7 @@
     "compatible_with": ["generic", "claude-code", "codex"],
     "tags": ["commands", "code-review", "quality"],
     "maturity": "beta",
-    "targets": {
-      "codex": "commands/codex/review.md",
-      "generic": "commands/generic/review.md",
-      "claude-code": "commands/claude-code/review.md"
-    }
+    "targets": { "codex": "commands/codex/review.md", "generic": "commands/generic/review.md", "claude-code": "commands/claude-code/review.md" }
   },
   {
     "name": "debug",
@@ -630,11 +608,7 @@
     "compatible_with": ["generic", "claude-code", "codex"],
     "tags": ["commands", "debugging", "bug-fix"],
     "maturity": "beta",
-    "targets": {
-      "codex": "commands/codex/debug.md",
-      "generic": "commands/generic/debug.md",
-      "claude-code": "commands/claude-code/debug.md"
-    }
+    "targets": { "codex": "commands/codex/debug.md", "generic": "commands/generic/debug.md", "claude-code": "commands/claude-code/debug.md" }
   },
   {
     "name": "implement",
@@ -644,11 +618,7 @@
     "compatible_with": ["generic", "claude-code", "codex"],
     "tags": ["commands", "implementation", "tdd"],
     "maturity": "beta",
-    "targets": {
-      "codex": "commands/codex/implement.md",
-      "generic": "commands/generic/implement.md",
-      "claude-code": "commands/claude-code/implement.md"
-    }
+    "targets": { "codex": "commands/codex/implement.md", "generic": "commands/generic/implement.md", "claude-code": "commands/claude-code/implement.md" }
   },
   {
     "name": "triage",
@@ -658,11 +628,7 @@
     "compatible_with": ["generic", "claude-code", "codex"],
     "tags": ["commands", "triage", "prioritization"],
     "maturity": "beta",
-    "targets": {
-      "codex": "commands/codex/triage.md",
-      "generic": "commands/generic/triage.md",
-      "claude-code": "commands/claude-code/triage.md"
-    }
+    "targets": { "codex": "commands/codex/triage.md", "generic": "commands/generic/triage.md", "claude-code": "commands/claude-code/triage.md" }
   },
   {
     "name": "search-before-building",
@@ -833,6 +799,132 @@
     "path": "plugins/security-guardrails",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "security", "guardrails"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "browser-automation-safety",
+    "type": "skill",
+    "summary": "Drive browser automation, screenshots, forms, auth sessions, and UI evidence with strict origin, secret, and artifact boundaries.",
+    "path": "skills/browser-automation-safety",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["browser", "playwright", "ui", "safety"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "managed-codebase-context",
+    "type": "skill",
+    "summary": "Use managed MCP codebase context sessions safely, with transport checks, freshness checks, timeouts, and process cleanup.",
+    "path": "skills/managed-codebase-context",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["mcp", "codebase", "context", "sessions"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "context-compression",
+    "type": "skill",
+    "summary": "Compact bloated conversation context into a safe continuation handoff without losing goals, constraints, artifacts, or validation state.",
+    "path": "skills/context-compression",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["context", "handoff", "tokens", "workflow"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "prompt-evaluation-runner",
+    "type": "skill",
+    "summary": "Build and run minimal prompt/model evals with deterministic assertions, safe env handling, explicit provider cost, and result triage.",
+    "path": "skills/prompt-evaluation-runner",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["evals", "prompts", "testing", "models"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "agent-runtime-patterns",
+    "type": "skill",
+    "summary": "Optimize agent loops, card packs, MCP session lifecycles, tool-call count, and multi-agent runtime patterns with measurement.",
+    "path": "skills/agent-runtime-patterns",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["agents", "runtime", "mcp", "performance"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "filesystem-mcp-guardrails",
+    "type": "skill",
+    "summary": "Design and review filesystem MCP access with allowed roots, method allowlists, traversal tests, and safe local file operation policy.",
+    "path": "skills/filesystem-mcp-guardrails",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["mcp", "filesystem", "security", "safety"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "local-rag-mcp",
+    "type": "skill",
+    "summary": "Query, ingest, maintain, and troubleshoot local RAG MCP corpora for semantic document retrieval while protecting sensitive data.",
+    "path": "skills/local-rag-mcp",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["mcp", "rag", "retrieval", "privacy"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "review-comment-style-mining",
+    "type": "skill",
+    "summary": "Mine PR review comments and text diffs for reusable documentation, tone, wording, and editorial improvement patterns.",
+    "path": "skills/review-comment-style-mining",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["documentation", "pull-requests", "writing", "review"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "structured-code-search-mcp",
+    "type": "skill",
+    "summary": "Use or design MCP-backed structured code search with bounded text search, AST query, symbol inventory, and scoped extraction.",
+    "path": "skills/structured-code-search-mcp",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["mcp", "code-search", "symbols", "context"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "red-team-eval-authoring",
+    "type": "skill",
+    "summary": "Create and review red-team eval plugins, attack templates, grader rubrics, safety fixtures, and model-risk test metadata.",
+    "path": "skills/red-team-eval-authoring",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["security", "evals", "red-team", "graders"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "agent-session-forensics",
+    "type": "skill",
+    "summary": "Diagnose agent session histories, interrupted tool loops, missing tool results, timing bottlenecks, and subagent trace correlation.",
+    "path": "skills/agent-session-forensics",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["agents", "debugging", "sessions", "forensics"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "skill-evaluation-workbench",
+    "type": "skill",
+    "summary": "Design, run, and debug deterministic evaluation suites for skills, prompts, tool workflows, and MCP-backed cases.",
+    "path": "skills/skill-evaluation-workbench",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["skills", "evals", "testing", "workbench"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "tool-integrations",
+    "type": "pack",
+    "summary": "Browser, MCP, retrieval, and runtime integration skills with conservative setup and safety boundaries.",
+    "path": "plugins/tool-integrations",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "mcp", "browser", "tools"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "agent-evaluation-lab",
+    "type": "pack",
+    "summary": "Prompt, skill, red-team, and agent behavior evaluation workflows.",
+    "path": "plugins/agent-evaluation-lab",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "evals", "quality", "red-team"],
     "maturity": "experimental"
   }
 ]
