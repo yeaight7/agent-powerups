@@ -1,7 +1,5 @@
 # Filesystem MCP Path Boundary Checklist
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Config Requirements
 - Explicit allowed roots.
 - No home, drive root, `/`, or broad parent dirs by default.
