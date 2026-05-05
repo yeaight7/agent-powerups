@@ -1,7 +1,7 @@
-# Compression Quality Probes
+# Compression Quality structured code searchs
 
-## Probe Types
-| Probe | Question |
+## structured code search Types
+| structured code search | Question |
 | --- | --- |
 | Recall | What exact error/command/version/decision still matters? |
 | Artifact | Which files were created, modified, inspected, or intentionally untouched? |
