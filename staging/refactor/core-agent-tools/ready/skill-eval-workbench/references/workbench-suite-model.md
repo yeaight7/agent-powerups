@@ -1,7 +1,5 @@
 # Workbench Suite Model
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Case Layout
 ```text
 suite/
