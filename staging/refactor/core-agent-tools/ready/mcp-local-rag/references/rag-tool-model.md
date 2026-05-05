@@ -1,7 +1,5 @@
 # Local RAG MCP Tool Model
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Tools
 | Tool | Use |
 | --- | --- |
