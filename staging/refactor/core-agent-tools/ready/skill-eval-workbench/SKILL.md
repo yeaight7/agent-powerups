@@ -41,7 +41,3 @@ description: Use when designing, running, debugging, or hardening deterministic 
 
 ## References
 - `references/workbench-suite-model.md`
-
-## Attribution
-- Slug: `skill-optimizer`
-- Source paths: `skills/skill-optimizer/`, `skills/skill-optimizer/references/workbench.md`, `.agents/plugins/`, `.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`, `gemini-extension.json`, `README.md`
