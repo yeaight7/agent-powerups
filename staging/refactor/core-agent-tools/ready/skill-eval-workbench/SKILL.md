@@ -5,8 +5,6 @@ description: Use when designing, running, debugging, or hardening deterministic 
 
 # Skill Eval Workbench
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## When To Use
 - A skill or prompt needs repeatable quality checks across models.
 - A workflow needs file-based graders, command traces, or local artifact checks.
