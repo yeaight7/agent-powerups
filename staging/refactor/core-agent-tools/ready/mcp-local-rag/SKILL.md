@@ -1,9 +1,9 @@
 ---
-name: mcp-local-rag
-description: "Guidance for setting up and interacting with a local Retrieval-Augmented Generation (RAG) MCP server."
+name: local-rag-mcp
+description: Use when querying, ingesting, or maintaining a local RAG MCP corpus for semantic document retrieval with privacy controls.
 ---
 
-# Local RAG via MCP
+# Local RAG MCP
 
 ## When to use
 Use when the task requires semantic search, document ingestion, or querying a local vector database for context retrieval, and an appropriate MCP server is available.
@@ -43,7 +43,3 @@ Use when the task requires semantic search, document ingestion, or querying a lo
 
 ## References
 - `references/rag-tool-model.md`
-
-## Attribution
-*Derived from upstream harvest:*
-- Slug: `mcp-local-rag` | Paths: `skills/mcp-local-rag/`, `README.md`, `server.json`, `src/server/tool-definitions.ts`
