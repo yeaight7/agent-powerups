@@ -5,8 +5,6 @@ description: Use when creating or reviewing red-team eval plugins, attack prompt
 
 # Redteam Plugin Development
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## When To Use
 - Adding a new red-team plugin or grader.
 - Editing attack templates, rubric tags, or plugin metadata.
