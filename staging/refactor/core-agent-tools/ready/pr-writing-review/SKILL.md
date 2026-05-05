@@ -36,7 +36,3 @@ description: Use when analyzing pull request review comments for writing, docume
 
 ## References
 - `references/editorial-analysis-template.md`
-
-## Attribution
-- Slug: `fast-agent`
-- Source paths: `examples/hf-toad-cards/skills/pr-writing-review/SKILL.md`, `examples/hf-toad-cards/skills/pr-writing-review/scripts/extract_pr_reviews.py`
