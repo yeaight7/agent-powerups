@@ -1,7 +1,5 @@
 # Managed MCP Session Checklist
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Before Connect
 - Transport selected: stdio or HTTP.
 - Workspace root explicit.
