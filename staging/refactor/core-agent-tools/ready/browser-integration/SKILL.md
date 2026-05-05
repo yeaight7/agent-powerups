@@ -5,8 +5,6 @@ description: "Use when an agent needs to visually inspect a webpage or interact 
 
 # Browser Integration
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## When to use
 Use when a task requires validating rendered UI, interacting with complex client-side forms, or scraping authenticated content that requires a real browser session.
 
