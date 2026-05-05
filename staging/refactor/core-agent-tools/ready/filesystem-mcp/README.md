@@ -1,7 +1,5 @@
 # Filesystem MCP Conceptual Configuration
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Status
 This is a conceptual document for a Filesystem MCP server configuration. It is NOT a runnable configuration file. The upstream harvest (`filesystem-mcp-server`) provided a Go-based implementation that assumed execution within its own repository structure.
 
