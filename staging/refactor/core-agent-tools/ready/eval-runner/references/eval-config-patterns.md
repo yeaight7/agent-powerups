@@ -1,7 +1,5 @@
 # Eval Config Patterns
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## Minimal Shape
 ```yaml
 description: "Short behavior check"
