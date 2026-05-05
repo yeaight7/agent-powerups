@@ -5,8 +5,6 @@ description: "Guidance for setting up and interacting with a local Retrieval-Aug
 
 # Local RAG via MCP
 
-**DRAFT: requires review before catalog/plugin activation.**
-
 ## When to use
 Use when the task requires semantic search, document ingestion, or querying a local vector database for context retrieval, and an appropriate MCP server is available.
 
