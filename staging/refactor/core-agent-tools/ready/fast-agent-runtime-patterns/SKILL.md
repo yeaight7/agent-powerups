@@ -1,16 +1,16 @@
 ---
-name: fast-agent-runtime-patterns
-description: "Reference patterns for fast agent runtime execution and experimental sessions."
+name: agent runtime-runtime-patterns
+description: "Reference patterns for Agent Runtime runtime execution and experimental sessions."
 ---
 
-# Fast Agent Runtime Patterns
+# Agent Runtime Runtime Patterns
 
 ## When to use
 Use when designing efficient agent runtimes, implementing "smart card" style prompt packs, or experimenting with novel MCP session management.
 
 ## Requirements / Checks
 - Applies when optimizing an agent's execution loop, card packs, MCP server usage, or session handling.
-- Treat fast-agent runtime/session concepts as experimental until validated locally.
+- Treat agent runtime/session concepts as experimental until validated locally.
 - Check whether existing Agent Powerups skills already cover the workflow before creating new runtime abstractions.
 
 ## Workflow
@@ -33,7 +33,3 @@ Use when designing efficient agent runtimes, implementing "smart card" style pro
 
 ## References
 - `references/runtime-patterns.md`
-
-## Attribution
-*Derived from upstream harvest:*
-- Slug: `fast-agent` | Paths: `README.md`, `examples/card-packs/smart/README.md`, `examples/experimental/mcp_sessions/README.md`
