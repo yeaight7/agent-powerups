@@ -40,8 +40,3 @@ Use when a task requires validating rendered UI, interacting with complex client
 
 ## References
 - `references/browser-safety-and-evidence.md`
-
-## Attribution
-*Derived from upstream harvest:*
-- Slug: `agent-browser` | Paths: `skills/agent-browser/`, `skill-data/core/`, `skill-data/core/references/*`, `skill-data/core/templates/*`, `README.md`, `agent-browser.schema.json`
-- Slug: `playwright-skill` | Paths: `skills/playwright-skill/`, `skills/playwright-skill/API_REFERENCE.md`, `skills/playwright-skill/lib/helpers.js`, `skills/playwright-skill/run.js`, `README.md`
