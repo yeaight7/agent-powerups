@@ -12,7 +12,13 @@
       "description": "Core developer workflow skills: planning, execution, communication, and powerup discovery.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["planning", "execution", "workflow", "developer-tools", "skills"],
+      "keywords": [
+        "planning",
+        "execution",
+        "workflow",
+        "developer-tools",
+        "skills"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -21,7 +27,13 @@
       "description": "Error diagnosis, fault isolation, log forensics, and incident investigation.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["debugging", "error-diagnosis", "log-analysis", "incident-investigation", "diagnostics"],
+      "keywords": [
+        "debugging",
+        "error-diagnosis",
+        "log-analysis",
+        "incident-investigation",
+        "diagnostics"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -30,7 +42,13 @@
       "description": "Safe refactoring, dead-code removal, legacy modernization, and dependency hygiene.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["refactoring", "dead-code", "modernization", "dependencies", "code-quality"],
+      "keywords": [
+        "refactoring",
+        "dead-code",
+        "modernization",
+        "dependencies",
+        "code-quality"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -39,7 +57,13 @@
       "description": "Analytics engineering, dbt patterns, BigQuery optimization, data quality, and pipeline workflows.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["dbt", "analytics", "bigquery", "data-quality", "pipelines"],
+      "keywords": [
+        "dbt",
+        "analytics",
+        "bigquery",
+        "data-quality",
+        "pipelines"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -48,7 +72,13 @@
       "description": "Documentation architecture, API reference authoring, ADR writing, readme hardening, and doc quality.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["documentation", "api-reference", "adr", "readme", "doc-quality"],
+      "keywords": [
+        "documentation",
+        "api-reference",
+        "adr",
+        "readme",
+        "doc-quality"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -57,7 +87,13 @@
       "description": "ML pipeline design, experiment tracking, model evaluation, training debugging, and reproducibility.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["machine-learning", "mlops", "experiment-tracking", "model-evaluation", "pipelines"],
+      "keywords": [
+        "machine-learning",
+        "mlops",
+        "experiment-tracking",
+        "model-evaluation",
+        "pipelines"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -66,7 +102,13 @@
       "description": "Quality enforcement: TDD discipline, code review workflows, release verification, and CI failure analysis.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["tdd", "code-review", "release", "ci", "quality"],
+      "keywords": [
+        "tdd",
+        "code-review",
+        "release",
+        "ci",
+        "quality"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -75,7 +117,13 @@
       "description": "Full-lifecycle software delivery: parallel execution, requirements clarification, autonomous pipeline, persistent completion loops, and hard-won skill extraction.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["software-engineering", "delivery", "requirements", "autonomous", "pipeline"],
+      "keywords": [
+        "software-engineering",
+        "delivery",
+        "requirements",
+        "autonomous",
+        "pipeline"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -84,7 +132,13 @@
       "description": "Multi-model orchestration and advisor routing: tri-model review and canonical advisor routing.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["multi-agent", "orchestration", "routing", "tri-model", "advisor"],
+      "keywords": [
+        "multi-agent",
+        "orchestration",
+        "routing",
+        "tri-model",
+        "advisor"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -93,7 +147,13 @@
       "description": "Security vulnerability detection: OWASP Top 10 analysis, secrets scanning, dependency audits.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["security", "owasp", "secrets-scanning", "dependency-audit", "vulnerabilities"],
+      "keywords": [
+        "security",
+        "owasp",
+        "secrets-scanning",
+        "dependency-audit",
+        "vulnerabilities"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -102,7 +162,13 @@
       "description": "Codebase mapping and analysis: parallel mapper agents producing structured codebase documents (STACK, ARCHITECTURE, CONVENTIONS, CONCERNS, etc.).",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["codebase-mapping", "architecture", "analysis", "conventions", "documentation"],
+      "keywords": [
+        "codebase-mapping",
+        "architecture",
+        "analysis",
+        "conventions",
+        "documentation"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -111,7 +177,13 @@
       "description": "Spec-driven project lifecycle: new-project initialization, discuss/plan/execute/verify phase pipeline with research and goal-backward planning.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["spec", "planning", "phase-pipeline", "research", "goal-backward"],
+      "keywords": [
+        "spec",
+        "planning",
+        "phase-pipeline",
+        "research",
+        "goal-backward"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -120,7 +192,13 @@
       "description": "Spec-driven quality gates: plan verification before execution, adversarial code review with severity classification, and goal-backward plan checking.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["spec", "quality-gates", "plan-verification", "adversarial-review", "severity"],
+      "keywords": [
+        "spec",
+        "quality-gates",
+        "plan-verification",
+        "adversarial-review",
+        "severity"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -129,16 +207,13 @@
       "description": "Context-efficient routing: lightweight dispatch commands that route user intent to the right workflow, review, or codebase-intelligence skill without loading full context.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["context", "routing", "dispatch", "lightweight", "workflow"],
-      "category": "Developer Tools"
-    },
-    {
-      "name": "agent-evaluation-lab",
-      "source": "./plugins/agent-evaluation-lab",
-      "description": "Prompt, skill, red-team, and agent behavior evaluation workflows.",
-      "version": "0.1.0",
-      "license": "Apache-2.0",
-      "keywords": ["evaluation", "testing", "red-team", "skills", "agent-behavior"],
+      "keywords": [
+        "context",
+        "routing",
+        "dispatch",
+        "lightweight",
+        "workflow"
+      ],
       "category": "Developer Tools"
     },
     {
@@ -147,7 +222,28 @@
       "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative safety boundaries.",
       "version": "0.1.0",
       "license": "Apache-2.0",
-      "keywords": ["browser", "mcp", "retrieval", "agent-runtime", "integrations"],
+      "keywords": [
+        "browser",
+        "mcp",
+        "retrieval",
+        "agent-runtime",
+        "integrations"
+      ],
+      "category": "Developer Tools"
+    },
+    {
+      "name": "agent-evaluation-lab",
+      "source": "./plugins/agent-evaluation-lab",
+      "description": "Prompt, skill, red-team, and agent behavior evaluation workflows.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "keywords": [
+        "evaluation",
+        "testing",
+        "red-team",
+        "skills",
+        "agent-behavior"
+      ],
       "category": "Developer Tools"
     }
   ]
