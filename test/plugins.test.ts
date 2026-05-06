@@ -30,6 +30,10 @@ async function tempPath(name: string): Promise<string> {
   return path.join(dir, name);
 }
 
+async function readJson(filePath: string): Promise<any> {
+  return JSON.parse(await fs.readFile(filePath, "utf8"));
+}
+
 test("plugins command: list", async () => {
   const res = await execute(["plugins", "list"]);
   assert.equal(res.exitCode, 0);
@@ -71,4 +75,26 @@ test("plugins command: install failure on existing dir without force", async () 
   const res = await execute(["plugins", "install", "dev-vitals", "--target", "generic", "--dest", destPath, "--yes"]);
   assert.equal(res.exitCode, 1);
   assert.match(res.stderr, /is not empty. Use --force to overwrite/);
+});
+
+test("plugin marketplaces list every plugin bundle for Claude and Codex", async () => {
+  const bundles = await readJson(path.join(repoRoot, "plugin-bundles.json"));
+  const expectedNames = bundles.plugins.map((plugin: any) => plugin.name).sort();
+
+  const claude = await readJson(path.join(repoRoot, ".claude-plugin", "marketplace.json"));
+  const codex = await readJson(path.join(repoRoot, ".codex-plugin", "marketplace.json"));
+
+  assert.deepEqual(claude.plugins.map((plugin: any) => plugin.name).sort(), expectedNames);
+  assert.deepEqual(codex.plugins.map((plugin: any) => plugin.name).sort(), expectedNames);
+});
+
+test("every plugin bundle has a Gemini extension manifest", async () => {
+  const bundles = await readJson(path.join(repoRoot, "plugin-bundles.json"));
+
+  for (const plugin of bundles.plugins) {
+    const manifestPath = path.join(repoRoot, "plugins", plugin.name, "gemini-extension.json");
+    const manifest = await readJson(manifestPath);
+    assert.equal(manifest.name, plugin.name);
+    assert.equal(manifest.contextFileName, "GEMINI.md");
+  }
 });
