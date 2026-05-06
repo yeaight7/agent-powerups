@@ -49,6 +49,12 @@ apx install claude --dry-run
 apx install gemini --dry-run
 ```
 
+Show per-file paths:
+
+```powershell
+apx install codex --verbose
+```
+
 Use a non-default agent root:
 
 ```powershell
@@ -133,9 +139,10 @@ Install optional tools only when a specific skill requires them.
 claude --version
 codex --version
 gemini --version
-python -m pip install markitdown
-npm install -g defuddle
+python -m pip install --dry-run markitdown
 ```
+
+After review and approval, install optional tools in a controlled environment such as a virtual environment or pinned global toolchain.
 
 Agents can preview supported installs without running them:
 
