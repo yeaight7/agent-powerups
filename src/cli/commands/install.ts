@@ -29,6 +29,7 @@ export interface NativeInstallOptions {
   dryRun: boolean;
   full: boolean;
   force: boolean;
+  verbose: boolean;
 }
 
 export interface NativeInstallData {
@@ -407,7 +408,7 @@ async function copyFullSupportAssets(
   return { copiedFiles, skippedFiles };
 }
 
-function formatNativeInstallOutput(data: NativeInstallData): string {
+function formatNativeInstallOutput(data: NativeInstallData, verbose: boolean): string {
   const lines = [
     data.dryRun
       ? `native install dry-run${data.full ? " [full]" : ""}: ${data.agent}`
@@ -425,8 +426,10 @@ function formatNativeInstallOutput(data: NativeInstallData): string {
 
   for (const [label, values] of sections) {
     lines.push(`${label}: ${values.length}`);
-    for (const value of values) {
-      lines.push(`  - ${value}`);
+    if (verbose || label === "manual steps still required") {
+      for (const value of values) {
+        lines.push(`  - ${value}`);
+      }
     }
   }
 
@@ -549,13 +552,14 @@ export async function runNativeInstallCommand(
   };
 
   return createResult({
-    stdout: formatNativeInstallOutput(data),
+    stdout: formatNativeInstallOutput(data, options.verbose),
     warnings: skippedFiles.filter((item) => item.includes("not overwritten") || item.includes("manual edit")),
     actions: [
-      ...data.createdDirectories.map((item) => `mkdir ${item}`),
-      ...data.copiedFiles.map((item) => `copy ${item}`),
-      ...data.modifiedFiles.map((item) => `modify ${item}`),
-      ...data.backupFiles.map((item) => `backup ${item}`),
+      `mkdir ${data.createdDirectories.length} directorie(s)`,
+      `copy ${data.copiedFiles.length} file(s)`,
+      `skip ${data.skippedFiles.length} file(s)`,
+      `modify ${data.modifiedFiles.length} file(s)`,
+      `backup ${data.backupFiles.length} file(s)`,
     ],
     data,
   });
