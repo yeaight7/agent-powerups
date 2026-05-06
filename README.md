@@ -77,9 +77,10 @@ apx install codex
 apx install claude
 apx install gemini
 apx install codex --full
+apx install codex --verbose
 ```
 
-Default native install copies all root skills and plugin bundles into the selected agent root. `--full` also stages support assets under `agent-powerups/` and updates existing global instructions with a backup.
+Default native install copies all root skills and plugin bundles into the selected agent root. Human output shows counts by default; use `--verbose` for per-file paths. `--full` also stages support assets under `agent-powerups/` and updates existing global instructions with a backup.
 
 6. Work with plugin bundles:
 
@@ -151,8 +152,8 @@ apx setup codex --mode full --yes       # broad staging
 #### Manual Setup (Primary)
 
 ```sh
-apx install <codex|claude|claude-code|gemini>
-apx install <codex|claude|claude-code|gemini> --full
+apx install <codex|claude|claude-code|gemini> [--verbose]
+apx install <codex|claude|claude-code|gemini> --full [--verbose]
 ```
 
 Default manual install:
