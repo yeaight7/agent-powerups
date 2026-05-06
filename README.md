@@ -12,10 +12,10 @@ Today, this repo ships:
 - validation and requirement-check scripts
 - verified local GitHub MCP check, smoke, and install flow
 - command, hook, workflow, examples, and AGENTS.md templates
-- 14 plugin bundles (7 beta, 7 experimental) with `apx plugins` discovery, validation, and install flow
+- 16 plugin bundles (7 beta, 9 experimental) with native install, marketplace metadata, and `apx plugins` inspection
 - user-intent profiles with `apx profiles` for curated skill/plugin sets
 
-Everything else stays conservative. No global mutation. No hidden install hooks. No fake marketplace claims.
+Native install is direct for humans. Safety boundaries stay around external tools, secrets, shell profiles, and MCP enablement.
 
 ## What Is Here
 
@@ -27,7 +27,7 @@ Everything else stays conservative. No global mutation. No hidden install hooks.
 | `commands/` | shipped | Review-first command prompts plus safe runnable checks |
 | `hooks/` | shipped | Review-before-use hook recipes plus safe runnable checks |
 | `workflows/` | shipped | Scenario guides |
-| `plugins/` | shipped | 14 plugin bundles (7 beta, 7 experimental) with local-first discovery, validation, and install commands |
+| `plugins/` | shipped | 16 plugin bundles (7 beta, 9 experimental) with local-first discovery, validation, native install, and marketplace metadata |
 | `scripts/` | shipped | Validation and tool-check helpers for this repo |
 | `examples/` | shipped | Minimal safe setup examples |
 
@@ -69,7 +69,19 @@ apx mcp smoke github-local --json
 apx mcp install github-local --target codex --dry-run
 ```
 
-5. Work with plugin bundles:
+5. Manual native install:
+
+```sh
+apx install codex --dry-run
+apx install codex
+apx install claude
+apx install gemini
+apx install codex --full
+```
+
+Default native install copies all root skills and plugin bundles into the selected agent root. `--full` also stages support assets under `agent-powerups/` and updates existing global instructions with a backup.
+
+6. Work with plugin bundles:
 
 ```sh
 apx plugins list
@@ -96,12 +108,12 @@ apx relay status second-opinion
 apx relay stop second-opinion
 ```
 
-8. Browse profiles and apply one:
+8. Browse profiles:
 
 ```sh
 apx profiles list
 apx profiles info safe-core
-apx profiles apply safe-core --dry-run
+apx profiles plan safe-core --target codex
 ```
 
 9. Check deps without installing:
@@ -120,14 +132,14 @@ apx check defuddle --install-missing --dry-run
 apx check markitdown-file-intake --install-missing --dry-run
 ```
 
-10. Dry-run safe install:
+10. Install a single asset explicitly:
 
 ```sh
 apx install markitdown-file-intake --target codex --dry-run
 apx install ask-claude --target codex --dry-run
 ```
 
-11. Agent setup:
+11. Agent-curated setup compatibility path:
 
 ```sh
 apx setup codex --dry-run
@@ -136,7 +148,20 @@ apx setup codex --mode recommended --yes  # main agent setup (recommended)
 apx setup codex --mode full --yes       # broad staging
 ```
 
-#### Agent-managed setup (recommended)
+#### Manual Setup (Primary)
+
+```sh
+apx install <codex|claude|claude-code|gemini>
+apx install <codex|claude|claude-code|gemini> --full
+```
+
+Default manual install:
+
+- root `skills/` -> `<agent-root>/skills/`
+- Codex/Claude plugin bundles -> `<agent-root>/plugins/`
+- Gemini plugin bundles -> `<agent-root>/extensions/`
+
+#### Agent-Managed Setup
 
 Give your agent access to this repo and ask it to run:
 
@@ -147,15 +172,6 @@ apx setup <codex|claude-code|gemini> --mode recommended --yes
 ```
 
 Agent will inspect available skills/plugins, propose a plan, and apply it.
-
-#### Manual setup
-
-Dry-run first, then apply:
-
-```sh
-apx setup codex --dry-run
-apx setup codex --mode recommended --yes
-```
 
 Agent setup docs:
 
@@ -258,6 +274,8 @@ Current shipped plugin bundles (experimental):
 - `spec-driven-development`
 - `spec-quality-gates`
 - `context-efficiency`
+- `tool-integrations`
+- `agent-evaluation-lab`
 
 Schema details: [`docs/catalog-schema.md`](./docs/catalog-schema.md)
 
@@ -273,7 +291,7 @@ Compatibility claims in this repo are intentionally narrow:
 | `commands/` | yes | Review-first markdown command prompts; Claude Code and Codex targets where provided |
 | `hooks/` | yes | Documentation recipes only; not installed automatically |
 | `workflows/` | yes | Plain text scenario guides |
-| `plugins/` | yes | 14 plugin bundles (7 beta, 7 experimental) with `apx plugins` discovery, validation, and install support |
+| `plugins/` | yes | 16 plugin bundles (7 beta, 9 experimental) with native install, marketplace metadata, and `apx plugins` inspection |
 | `scripts/` | yes | Generic Python scripts |
 | `examples/` | yes | Plain text setup examples only |
 
@@ -323,6 +341,11 @@ apx relay stop second-opinion --json
 apx ship-check --json
 apx no-secrets-preflight --all --json
 apx using-powerups
+apx install codex --dry-run
+apx install codex
+apx install claude
+apx install gemini
+apx install codex --full
 apx install markitdown-file-intake --target codex --dry-run
 apx setup codex --dry-run
 apx setup claude-code --dry-run
@@ -334,7 +357,7 @@ apx setup gemini --mode recommended --yes
 
 ### Migration note (v0.x)
 
-`apx setup <agent> --yes` previously installed all assets. It now defaults to minimal (bootstrap) mode. Use `--mode full --yes` for the previous broad-install behavior.
+`apx install <agent>` is now the primary manual install path and writes native skills/plugins by default. `apx setup <agent>` remains for compatibility and agent-curated setup; it is still dry-run by default unless `--yes` is passed.
 
 Extra surfaces:
 
@@ -362,7 +385,7 @@ apx plugins validate --all
 apx plugins install dev-vitals --target codex --dry-run
 apx profiles list
 apx profiles info safe-core
-apx profiles apply safe-core --dry-run
+apx profiles plan safe-core --target codex
 apx relay init second-opinion
 apx relay start second-opinion --provider gemini --json
 apx relay ask second-opinion "Review this plan" --json
@@ -378,12 +401,13 @@ apx install ask-claude --target codex --dest .agent-powerups/installed/ask-claud
 
 ## Plugin Bundles
 
-Plugin bundles ship under [`plugins/`](./plugins/) and are registered in both [`.claude-plugin/marketplace.json`](./.claude-plugin/marketplace.json) and [`.codex-plugin/marketplace.json`](./.codex-plugin/marketplace.json).
+Plugin bundles ship under [`plugins/`](./plugins/). They are registered in both [`.claude-plugin/marketplace.json`](./.claude-plugin/marketplace.json) and [`.codex-plugin/marketplace.json`](./.codex-plugin/marketplace.json). Gemini CLI uses local extensions; each plugin bundle includes `gemini-extension.json` and `GEMINI.md`.
 
 - use `apx plugins list` to discover bundles
 - use `apx plugins info <name>` to inspect a single bundle
 - use `apx plugins validate --all` to verify bundle structure
 - use `apx plugins install <name> --target <codex|claude-code|generic> --dry-run` before any write
+- use `apx install <codex|claude|gemini>` for full manual native install
 
 ## Safety Warning
 
