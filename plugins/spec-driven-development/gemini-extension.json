@@ -1,0 +1,6 @@
+{
+  "name": "spec-driven-development",
+  "version": "0.1.0",
+  "description": "Spec-driven project lifecycle: discuss/plan/execute/verify phase pipeline with research and goal-backward planning.",
+  "contextFileName": "GEMINI.md"
+}
