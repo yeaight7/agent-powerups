@@ -66,7 +66,7 @@ apx ask-codex <prompt> [--artifact-dir <path>] [--json]
 apx ship-check [--full] [--json]
 apx no-secrets-preflight [--path <path> | --all] [--json]
 apx using-powerups
-apx install <codex|claude|claude-code|gemini> [--full] [--dry-run] [--agent-root <path>] [--instructions-file <path>] [--force] [--json]
+apx install <codex|claude|claude-code|gemini> [--full] [--dry-run] [--agent-root <path>] [--instructions-file <path>] [--force] [--verbose] [--json]
 apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--dest <path>]
 apx setup <codex|claude-code|gemini> [--mode minimal|recommended|full] [--dry-run|--yes] [--agent-root <path>] [--instructions-file <path>] [--json]
 apx mcp list
@@ -286,6 +286,7 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
             dryRun: hasFlag(argv, "--dry-run"),
             full: hasFlag(argv, "--full"),
             force: hasFlag(argv, "--force"),
+            verbose: hasFlag(argv, "--verbose"),
           }),
           json,
         );
