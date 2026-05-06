@@ -2,5 +2,13 @@
   "name": "security-guardrails",
   "version": "0.1.0",
   "description": "Security vulnerability detection: OWASP Top 10 analysis, secrets scanning, dependency audits.",
+  "author": {
+    "name": "Javier Rivero Iglesias",
+    "email": "javierrivero@genially.com"
+  },
+  "homepage": "https://github.com/yeaight7/agent-powerups#readme",
+  "repository": "https://github.com/yeaight7/agent-powerups",
+  "license": "Apache-2.0",
+  "keywords": ["security", "owasp", "secrets-scanning", "dependency-audit", "vulnerabilities"],
   "maturity": "experimental"
 }
