@@ -86,6 +86,29 @@ test("plugin marketplaces list every plugin bundle for Claude and Codex", async 
 
   assert.deepEqual(claude.plugins.map((plugin: any) => plugin.name).sort(), expectedNames);
   assert.deepEqual(codex.plugins.map((plugin: any) => plugin.name).sort(), expectedNames);
+
+  for (const bundle of bundles.plugins) {
+    const pluginDir = path.join(repoRoot, "plugins", bundle.name);
+    await fs.access(pluginDir);
+
+    const claudeEntry = claude.plugins.find((plugin: any) => plugin.name === bundle.name);
+    assert.ok(claudeEntry, `missing Claude marketplace entry: ${bundle.name}`);
+    assert.equal(claudeEntry.source, `./plugins/${bundle.name}`);
+    assert.equal(claudeEntry.description, bundle.description);
+    assert.equal(claudeEntry.version, "0.1.0");
+    assert.equal(claudeEntry.license, "Apache-2.0");
+    assert.equal(claudeEntry.category, "Developer Tools");
+    await fs.access(path.join(repoRoot, claudeEntry.source));
+
+    const codexEntry = codex.plugins.find((plugin: any) => plugin.name === bundle.name);
+    assert.ok(codexEntry, `missing Codex marketplace entry: ${bundle.name}`);
+    assert.equal(codexEntry.source.source, "local");
+    assert.equal(codexEntry.source.path, `./plugins/${bundle.name}`);
+    assert.equal(codexEntry.policy.installation, "AVAILABLE");
+    assert.equal(codexEntry.policy.authentication, "NONE");
+    assert.equal(codexEntry.category, "Developer Tools");
+    await fs.access(path.join(repoRoot, codexEntry.source.path));
+  }
 });
 
 test("every plugin bundle has a Gemini extension manifest", async () => {
@@ -95,6 +118,9 @@ test("every plugin bundle has a Gemini extension manifest", async () => {
     const manifestPath = path.join(repoRoot, "plugins", plugin.name, "gemini-extension.json");
     const manifest = await readJson(manifestPath);
     assert.equal(manifest.name, plugin.name);
+    assert.equal(manifest.description, plugin.description);
+    assert.equal(manifest.version, "0.1.0");
     assert.equal(manifest.contextFileName, "GEMINI.md");
+    await fs.access(path.join(repoRoot, "plugins", plugin.name, manifest.contextFileName));
   }
 });
