@@ -2,5 +2,13 @@
   "name": "quality-gates",
   "version": "0.1.0",
   "description": "Quality enforcement: TDD discipline, code review workflows, release verification, and CI failure analysis.",
+  "author": {
+    "name": "Javier Rivero Iglesias",
+    "email": "javierrivero@genially.com"
+  },
+  "homepage": "https://github.com/yeaight7/agent-powerups#readme",
+  "repository": "https://github.com/yeaight7/agent-powerups",
+  "license": "Apache-2.0",
+  "keywords": ["tdd", "code-review", "release", "ci", "quality"],
   "maturity": "draft"
 }
