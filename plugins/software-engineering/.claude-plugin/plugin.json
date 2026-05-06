@@ -2,5 +2,13 @@
   "name": "software-engineering",
   "version": "0.1.0",
   "description": "Full-lifecycle software delivery: parallel execution, requirements clarification, autonomous pipeline, persistent completion loops, and hard-won skill extraction.",
+  "author": {
+    "name": "Javier Rivero Iglesias",
+    "email": "javierrivero@genially.com"
+  },
+  "homepage": "https://github.com/yeaight7/agent-powerups#readme",
+  "repository": "https://github.com/yeaight7/agent-powerups",
+  "license": "Apache-2.0",
+  "keywords": ["software-engineering", "delivery", "requirements", "autonomous", "pipeline"],
   "maturity": "experimental"
 }
