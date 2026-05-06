@@ -3,9 +3,10 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 
-import { runPluginDiffCommand, runPluginValidateCommand } from "./plugin.js";
+import { runPluginValidateCommand } from "./plugin.js";
 import { runValidateCatalogCommand, runValidateSkillsCommand } from "./validate.js";
 import type { CatalogService } from "../utils/catalog.js";
+import { getPluginBundles } from "../utils/plugins.js";
 import { checkRequirements } from "../utils/requirements.js";
 import { createResult, type ExecutionResult } from "../utils/result.js";
 
@@ -40,6 +41,15 @@ async function readJson(filePath: string): Promise<any> {
   return JSON.parse(await fs.readFile(filePath, "utf8"));
 }
 
+async function fileExists(filePath: string): Promise<boolean> {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function checkLicenseConsistency(repoRoot: string): Promise<DoctorCheck> {
   const licenseText = await fs.readFile(path.join(repoRoot, "LICENSE"), "utf8");
   const rootLicense = licenseText.includes("Apache License") && licenseText.includes("Version 2.0") ? "Apache-2.0" : "UNKNOWN";
@@ -53,19 +63,101 @@ async function checkLicenseConsistency(repoRoot: string): Promise<DoctorCheck> {
     mismatches.push(`package.json=${packageJson.license ?? "missing"}`);
   }
 
-  const pluginJsonPath = path.join(repoRoot, "plugins", "agent-powerups", ".codex-plugin", "plugin.json");
-  try {
-    const pluginJson = await readJson(pluginJsonPath);
-    if (pluginJson.license !== rootLicense) {
-      mismatches.push(`plugin.json=${pluginJson.license ?? "missing"}`);
+  for (const bundle of await getPluginBundles(repoRoot)) {
+    if (!bundle.name) {
+      continue;
     }
-  } catch {
-    // plugins/ dir is optional (gitignored when publishing from source)
+    const pluginJsonPath = path.join(repoRoot, "plugins", bundle.name, ".claude-plugin", "plugin.json");
+    if (!(await fileExists(pluginJsonPath))) {
+      continue;
+    }
+    const pluginJson = await readJson(pluginJsonPath);
+    if (pluginJson.license && pluginJson.license !== rootLicense) {
+      mismatches.push(`${bundle.name}/plugin.json=${pluginJson.license}`);
+    }
   }
 
   return mismatches.length > 0
     ? fail("package/license consistency", mismatches.join(", "))
     : ok("package/license consistency", rootLicense);
+}
+
+async function checkPluginMetadata(repoRoot: string): Promise<DoctorCheck> {
+  const bundles = await getPluginBundles(repoRoot);
+  if (bundles.length === 0) {
+    return warn("plugin metadata", "no plugin bundles defined");
+  }
+
+  const issues: string[] = [];
+  for (const bundle of bundles) {
+    if (!bundle.name) {
+      continue;
+    }
+    const pluginPath = path.join(repoRoot, "plugins", bundle.name);
+    if (!(await fileExists(pluginPath))) {
+      issues.push(`${bundle.name}: missing plugin directory`);
+      continue;
+    }
+    try {
+      const result = await runPluginValidateCommand(pluginPath);
+      if (result.exitCode !== 0) {
+        issues.push(`${bundle.name}: ${result.stderr || result.stdout}`);
+      }
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      issues.push(`${bundle.name}: ${msg}`);
+    }
+  }
+
+  return issues.length > 0
+    ? fail("plugin metadata", issues.slice(0, 5).join("; "))
+    : ok("plugin metadata", `${bundles.length} bundle(s) valid`);
+}
+
+async function checkPluginMirrorSync(repoRoot: string): Promise<DoctorCheck> {
+  const bundles = await getPluginBundles(repoRoot);
+  if (bundles.length === 0) {
+    return warn("plugin mirror sync", "no plugin bundles defined");
+  }
+
+  const issues: string[] = [];
+  for (const bundle of bundles) {
+    if (!bundle.name) {
+      continue;
+    }
+    const pluginPath = path.join(repoRoot, "plugins", bundle.name);
+    const codexPath = path.join(pluginPath, ".codex-plugin", "plugin.json");
+    const claudePath = path.join(pluginPath, ".claude-plugin", "plugin.json");
+    const geminiPath = path.join(pluginPath, "gemini-extension.json");
+    const geminiContextPath = path.join(pluginPath, "GEMINI.md");
+    for (const requiredPath of [codexPath, claudePath, geminiPath, geminiContextPath]) {
+      if (!(await fileExists(requiredPath))) {
+        issues.push(`${bundle.name}: missing ${path.relative(pluginPath, requiredPath).replaceAll("\\", "/")}`);
+      }
+    }
+    if (!(await fileExists(codexPath)) || !(await fileExists(claudePath)) || !(await fileExists(geminiPath))) {
+      continue;
+    }
+    const [codex, claude, gemini] = await Promise.all([readJson(codexPath), readJson(claudePath), readJson(geminiPath)]);
+    for (const manifest of [codex, claude, gemini]) {
+      if (manifest.name !== bundle.name) {
+        issues.push(`${bundle.name}: manifest name mismatch`);
+      }
+      if (manifest.description !== bundle.description) {
+        issues.push(`${bundle.name}: manifest description mismatch`);
+      }
+      if (manifest.version !== "0.1.0") {
+        issues.push(`${bundle.name}: manifest version mismatch`);
+      }
+    }
+    if (gemini.contextFileName !== "GEMINI.md") {
+      issues.push(`${bundle.name}: Gemini contextFileName mismatch`);
+    }
+  }
+
+  return issues.length > 0
+    ? fail("plugin mirror sync", issues.slice(0, 5).join("; "))
+    : ok("plugin mirror sync", `${bundles.length} bundle(s) checked`);
 }
 
 async function checkPath(name: string, targetPath: string): Promise<DoctorCheck> {
@@ -198,29 +290,8 @@ export async function runDoctorCommand(
   checks.push(await checkLicenseConsistency(service.repoRoot));
   checks.push(await checkSkills(service.repoRoot));
 
-  const pluginPath = path.join(service.repoRoot, "plugins", "agent-powerups");
-  let pluginDirExists = false;
-  try {
-    await fs.access(pluginPath);
-    pluginDirExists = true;
-  } catch {
-    // plugins/ dir is optional
-  }
-
-  if (pluginDirExists) {
-    try {
-      const pluginValidation = await runPluginValidateCommand(pluginPath);
-      checks.push(pluginValidation.exitCode === 0 ? ok("plugin metadata", pluginValidation.stdout) : fail("plugin metadata", pluginValidation.stderr || pluginValidation.stdout));
-    } catch (error) {
-      const msg = error instanceof Error ? error.message : String(error);
-      checks.push(fail("plugin metadata", msg));
-    }
-    const pluginDiff = await runPluginDiffCommand(service, pluginPath);
-    checks.push(pluginDiff.exitCode === 0 ? ok("plugin mirror sync", pluginDiff.stdout) : fail("plugin mirror sync", pluginDiff.data?.diffs.join("; ") ?? pluginDiff.stdout));
-  } else {
-    checks.push(warn("plugin metadata", "plugins/ not present"));
-    checks.push(warn("plugin mirror sync", "plugins/ not present"));
-  }
+  checks.push(await checkPluginMetadata(service.repoRoot));
+  checks.push(await checkPluginMirrorSync(service.repoRoot));
 
   const missingRequirements = service
     .listAssets()
