@@ -1,6 +1,6 @@
 # Gemini Setup
 
-Status: conservative local setup. This documents what `apx setup gemini` does; it is not an official Gemini CLI integration claim.
+Status: compatibility and agent-curated setup path. For manual install, prefer `apx install gemini` or `apx install gemini --full`. This document describes what `apx setup gemini` still does; it is not an official Gemini CLI integration claim.
 
 ## Setup Modes
 
