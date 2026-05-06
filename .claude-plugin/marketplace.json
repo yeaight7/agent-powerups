@@ -159,7 +159,7 @@
     {
       "name": "codebase-intelligence",
       "source": "./plugins/codebase-intelligence",
-      "description": "Codebase mapping and analysis: parallel mapper agents producing structured codebase documents (STACK, ARCHITECTURE, CONVENTIONS, CONCERNS, etc.).",
+      "description": "Codebase mapping: parallel agent analysis producing structured architecture, stack, conventions, and quality documents.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "keywords": [
@@ -174,7 +174,7 @@
     {
       "name": "spec-driven-development",
       "source": "./plugins/spec-driven-development",
-      "description": "Spec-driven project lifecycle: new-project initialization, discuss/plan/execute/verify phase pipeline with research and goal-backward planning.",
+      "description": "Spec-driven project lifecycle: discuss/plan/execute/verify phase pipeline with research and goal-backward planning.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "keywords": [
@@ -189,7 +189,7 @@
     {
       "name": "spec-quality-gates",
       "source": "./plugins/spec-quality-gates",
-      "description": "Spec-driven quality gates: plan verification before execution, adversarial code review with severity classification, and goal-backward plan checking.",
+      "description": "Quality gates for spec-driven development: adversarial plan verification and structured code review.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "keywords": [
@@ -204,7 +204,7 @@
     {
       "name": "context-efficiency",
       "source": "./plugins/context-efficiency",
-      "description": "Context-efficient routing: lightweight dispatch commands that route user intent to the right workflow, review, or codebase-intelligence skill without loading full context.",
+      "description": "Context-efficient routing: dispatch tables for workflow, review, and codebase-intelligence commands.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "keywords": [
@@ -219,7 +219,7 @@
     {
       "name": "tool-integrations",
       "source": "./plugins/tool-integrations",
-      "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative safety boundaries.",
+      "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "keywords": [
