@@ -55,7 +55,7 @@ test("release workflow publishes v tags with npm trusted publishing", async () =
   assert.match(workflow, /id-token:\s*write/);
   assert.match(workflow, /contents:\s*write/);
   assert.match(workflow, /node-version:\s*24/);
-  assert.match(workflow, /npm install -g npm@latest/);
+  assert.doesNotMatch(workflow, /npm install -g npm@latest/);
   assert.match(workflow, /npm publish --access public/);
   assert.match(workflow, /gh release view "\$GITHUB_REF_NAME"/);
   assert.doesNotMatch(workflow, /NODE_AUTH_TOKEN|NPM_TOKEN/);
