@@ -1,6 +1,6 @@
 # Claude Code Setup
 
-Status: conservative local setup. This documents what `apx setup claude-code` does; it is not an official Claude Code integration claim.
+Status: compatibility and agent-curated setup path. For manual install, prefer `apx install claude` or `apx install claude --full`. This document describes what `apx setup claude-code` still does; it is not an official Claude Code integration claim.
 
 ## Setup Modes
 
