@@ -73,6 +73,9 @@ async function validateSkills(
     }
     if (!fm["name"]) errors.push(`[${entry}] frontmatter missing required field: name`);
     if (!fm["description"]) errors.push(`[${entry}] frontmatter missing required field: description`);
+    if (fm["name"] && fm["name"] !== entry) {
+      errors.push(`[${entry}] frontmatter name does not match directory name: ${fm["name"]}`);
+    }
 
     for (const ref of extractFileRefs(content)) {
       const basename = path.basename(ref);
