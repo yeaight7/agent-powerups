@@ -1,7 +1,7 @@
 {
   "name": "spec-quality-gates",
   "version": "0.1.0",
-  "description": "Spec-driven quality gates: plan verification before execution, adversarial code review with severity classification, and goal-backward plan checking.",
+  "description": "Quality gates for spec-driven development: adversarial plan verification and structured code review.",
   "author": {
     "name": "Javier Rivero Iglesias",
     "email": "javierrivero@genially.com"
@@ -9,6 +9,12 @@
   "homepage": "https://github.com/yeaight7/agent-powerups#readme",
   "repository": "https://github.com/yeaight7/agent-powerups",
   "license": "Apache-2.0",
-  "keywords": ["spec", "quality-gates", "plan-verification", "adversarial-review", "severity"],
+  "keywords": [
+    "spec",
+    "quality-gates",
+    "plan-verification",
+    "adversarial-review",
+    "severity"
+  ],
   "maturity": "experimental"
 }
