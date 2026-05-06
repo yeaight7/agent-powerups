@@ -1,0 +1,6 @@
+{
+  "name": "agentic-systems",
+  "version": "0.1.0",
+  "description": "Multi-model orchestration and advisor routing: tri-model review and canonical advisor routing.",
+  "contextFileName": "GEMINI.md"
+}
