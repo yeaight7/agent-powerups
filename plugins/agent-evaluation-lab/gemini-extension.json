@@ -1,0 +1,6 @@
+{
+  "name": "agent-evaluation-lab",
+  "version": "0.1.0",
+  "description": "Prompt, skill, red-team, and agent behavior evaluation workflows.",
+  "contextFileName": "GEMINI.md"
+}
