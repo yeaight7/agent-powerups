@@ -281,6 +281,84 @@ test("explicit dry-run reports planned copy", async () => {
   assert.match(result.stdout, /systematic-debugging/);
 });
 
+test("install claude writes root skills and plugins to native Claude directories", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-claude-"));
+  const result = await execute(["install", "claude", "--agent-root", agentRoot, "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.agent, "claude-code");
+  assert.equal(json.data.full, false);
+  assert.equal(json.data.dryRun, false);
+  await fs.access(path.join(agentRoot, "skills", "systematic-debugging", "SKILL.md"));
+  await fs.access(path.join(agentRoot, "plugins", "dev-vitals", ".claude-plugin", "plugin.json"));
+  await assert.rejects(fs.access(path.join(agentRoot, "agent-powerups")));
+});
+
+test("install codex writes root skills and plugins to native Codex directories", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-codex-"));
+  const result = await execute(["install", "codex", "--agent-root", agentRoot, "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.agent, "codex");
+  await fs.access(path.join(agentRoot, "skills", "using-powerups", "SKILL.md"));
+  await fs.access(path.join(agentRoot, "plugins", "tool-integrations", ".codex-plugin", "plugin.json"));
+});
+
+test("install gemini writes root skills and Gemini extension plugin directories", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-gemini-"));
+  const result = await execute(["install", "gemini", "--agent-root", agentRoot, "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.agent, "gemini");
+  await fs.access(path.join(agentRoot, "skills", "repo-map", "SKILL.md"));
+
+  const manifestPath = path.join(agentRoot, "extensions", "dev-vitals", "gemini-extension.json");
+  const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
+  assert.equal(manifest.name, "dev-vitals");
+  assert.equal(manifest.contextFileName, "GEMINI.md");
+});
+
+test("install --full stages support assets and updates existing global instructions with backup", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-full-"));
+  const instructionFile = path.join(agentRoot, "AGENTS.md");
+  await fs.writeFile(instructionFile, "# Existing instructions\n", "utf8");
+
+  const result = await execute(["install", "codex", "--agent-root", agentRoot, "--full", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.full, true);
+  assert.ok(json.data.modifiedFiles.includes(instructionFile));
+  await fs.access(path.join(agentRoot, "agent-powerups", "mcp", "codex", "github-local.toml"));
+  await fs.access(path.join(agentRoot, "agent-powerups", "instructions", "agent-powerups.md"));
+
+  const updated = await fs.readFile(instructionFile, "utf8");
+  assert.match(updated, /<!-- BEGIN agent-powerups -->/);
+  assert.match(updated, /agent-powerups\/skills\/using-powerups\/SKILL\.md/);
+
+  const backups = (await fs.readdir(agentRoot)).filter((name) => name.startsWith("AGENTS.md.") && name.endsWith(".bak"));
+  assert.equal(backups.length, 1);
+});
+
+test("install skips changed existing files unless --force is provided", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-force-"));
+  const skillPath = path.join(agentRoot, "skills", "using-powerups", "SKILL.md");
+  await fs.mkdir(path.dirname(skillPath), { recursive: true });
+  await fs.writeFile(skillPath, "custom local skill\n", "utf8");
+
+  const first = await execute(["install", "codex", "--agent-root", agentRoot, "--json"]);
+  assert.equal(first.exitCode, 0);
+  assert.equal(await fs.readFile(skillPath, "utf8"), "custom local skill\n");
+  assert.ok(parseJson(first.stdout).data.skippedFiles.some((item: string) => item.includes("using-powerups")));
+
+  const second = await execute(["install", "codex", "--agent-root", agentRoot, "--force", "--json"]);
+  assert.equal(second.exitCode, 0);
+  assert.match(await fs.readFile(skillPath, "utf8"), /name: using-powerups/);
+});
+
 test("mcp list prints available configs", async () => {
   const result = await execute(["mcp", "list"]);
 
