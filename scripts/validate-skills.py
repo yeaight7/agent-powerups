@@ -24,6 +24,7 @@ RECOMMENDED_SECTIONS = [
 
 errors: list[str] = []
 warnings: list[str] = []
+STYLE_WARNINGS = "--style" in sys.argv
 
 
 def referenced_support_files(content: str) -> list[str]:
@@ -100,14 +101,15 @@ def check_skill(skill_dir: str) -> None:
         errors.append(f"[{skill_name}] SKILL.md has no prose content")
 
     if frontmatter.get("name") and frontmatter["name"] != skill_name:
-        warnings.append(
+        errors.append(
             f"[{skill_name}] frontmatter name does not match directory name: {frontmatter['name']}"
         )
 
-    for section in RECOMMENDED_SECTIONS:
-        pattern = rf"^##\s+{re.escape(section)}\s*$"
-        if not re.search(pattern, content, re.MULTILINE):
-            warnings.append(f"[{skill_name}] missing recommended section: ## {section}")
+    if STYLE_WARNINGS:
+        for section in RECOMMENDED_SECTIONS:
+            pattern = rf"^##\s+{re.escape(section)}\s*$"
+            if not re.search(pattern, content, re.MULTILINE):
+                warnings.append(f"[{skill_name}] missing recommended section: ## {section}")
 
     for ref in referenced_support_files(content):
         if not support_ref_exists(skill_dir, ref):
