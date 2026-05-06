@@ -2,5 +2,13 @@
   "name": "codebase-intelligence",
   "version": "0.1.0",
   "description": "Codebase mapping and analysis: parallel mapper agents producing structured codebase documents (STACK, ARCHITECTURE, CONVENTIONS, CONCERNS, etc.).",
+  "author": {
+    "name": "Javier Rivero Iglesias",
+    "email": "javierrivero@genially.com"
+  },
+  "homepage": "https://github.com/yeaight7/agent-powerups#readme",
+  "repository": "https://github.com/yeaight7/agent-powerups",
+  "license": "Apache-2.0",
+  "keywords": ["codebase-mapping", "architecture", "analysis", "conventions", "documentation"],
   "maturity": "experimental"
 }
