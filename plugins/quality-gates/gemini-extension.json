@@ -1,0 +1,6 @@
+{
+  "name": "quality-gates",
+  "version": "0.1.0",
+  "description": "Quality enforcement: TDD discipline, code review workflows, release verification, and CI failure analysis.",
+  "contextFileName": "GEMINI.md"
+}
