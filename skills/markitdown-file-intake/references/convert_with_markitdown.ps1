@@ -26,7 +26,7 @@ if (-not $pythonExe) {
 try {
     & $pythonExe -m markitdown --help 2>&1 | Out-Null
 } catch {
-    throw "MarkItDown is not available. Install with: pip install markitdown`nOr set MARKITDOWN_HOME to your virtual environment path."
+    throw "MarkItDown is not available. Preview install with: python -m pip install --dry-run markitdown`nThen install in a virtual environment after approval, or set MARKITDOWN_HOME to your virtual environment path."
 }
 
 $isUrl = $Source -match '^[a-zA-Z][a-zA-Z0-9+.-]*://'
