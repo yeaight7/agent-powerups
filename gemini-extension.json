@@ -1,0 +1,7 @@
+{
+  "name": "agent-powerups",
+  "version": "0.1.4",
+  "description": "Local-first CLI for browsing, validating, running, and explicitly writing agent powerups.",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yeaight7/agent-powerups"
+}
