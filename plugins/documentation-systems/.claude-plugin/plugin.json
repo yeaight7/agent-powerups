@@ -2,5 +2,13 @@
   "name": "documentation-systems",
   "version": "0.1.0",
   "description": "Documentation architecture, API reference authoring, ADR writing, readme hardening, and doc quality.",
+  "author": {
+    "name": "Javier Rivero Iglesias",
+    "email": "javierrivero@genially.com"
+  },
+  "homepage": "https://github.com/yeaight7/agent-powerups#readme",
+  "repository": "https://github.com/yeaight7/agent-powerups",
+  "license": "Apache-2.0",
+  "keywords": ["documentation", "api-reference", "adr", "readme", "doc-quality"],
   "maturity": "draft"
 }
