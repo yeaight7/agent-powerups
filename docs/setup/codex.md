@@ -1,6 +1,6 @@
 # Codex Setup
 
-Status: conservative local setup. This documents what `apx setup codex` does; it is not an official Codex integration claim.
+Status: compatibility and agent-curated setup path. For manual install, prefer `apx install codex` or `apx install codex --full`. This document describes what `apx setup codex` still does; it is not an official Codex integration claim.
 
 ## Setup Modes
 
