@@ -1,7 +1,7 @@
 {
   "name": "spec-driven-development",
   "version": "0.1.0",
-  "description": "Spec-driven project lifecycle: new-project initialization, discuss/plan/execute/verify phase pipeline with research and goal-backward planning.",
+  "description": "Spec-driven project lifecycle: discuss/plan/execute/verify phase pipeline with research and goal-backward planning.",
   "author": {
     "name": "Javier Rivero Iglesias",
     "email": "javierrivero@genially.com"
@@ -9,6 +9,12 @@
   "homepage": "https://github.com/yeaight7/agent-powerups#readme",
   "repository": "https://github.com/yeaight7/agent-powerups",
   "license": "Apache-2.0",
-  "keywords": ["spec", "planning", "phase-pipeline", "research", "goal-backward"],
+  "keywords": [
+    "spec",
+    "planning",
+    "phase-pipeline",
+    "research",
+    "goal-backward"
+  ],
   "maturity": "experimental"
 }
