@@ -2,5 +2,13 @@
   "name": "data-engineering",
   "version": "0.1.0",
   "description": "Analytics engineering, dbt patterns, BigQuery optimization, data quality, and pipeline workflows.",
+  "author": {
+    "name": "Javier Rivero Iglesias",
+    "email": "javierrivero@genially.com"
+  },
+  "homepage": "https://github.com/yeaight7/agent-powerups#readme",
+  "repository": "https://github.com/yeaight7/agent-powerups",
+  "license": "Apache-2.0",
+  "keywords": ["dbt", "analytics", "bigquery", "data-quality", "pipelines"],
   "maturity": "draft"
 }
