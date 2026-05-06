@@ -2,5 +2,13 @@
   "name": "codebase-maintenance",
   "version": "0.1.0",
   "description": "Safe refactoring, dead-code removal, legacy modernization, and dependency hygiene.",
+  "author": {
+    "name": "Javier Rivero Iglesias",
+    "email": "javierrivero@genially.com"
+  },
+  "homepage": "https://github.com/yeaight7/agent-powerups#readme",
+  "repository": "https://github.com/yeaight7/agent-powerups",
+  "license": "Apache-2.0",
+  "keywords": ["refactoring", "dead-code", "modernization", "dependencies", "code-quality"],
   "maturity": "draft"
 }
