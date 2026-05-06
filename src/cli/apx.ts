@@ -10,7 +10,7 @@ import { runCheckCommand } from "./commands/check.js";
 import { runDoctorCommand } from "./commands/doctor.js";
 import { runNoSecretsPreflightCommand } from "./commands/hooks.js";
 import { runInfoCommand } from "./commands/info.js";
-import { runInstallCommand } from "./commands/install.js";
+import { parseNativeInstallAgent, runInstallCommand, runNativeInstallCommand } from "./commands/install.js";
 import { runListCommand } from "./commands/list.js";
 import { runMcpCheckCommand, runMcpInstallCommand, runMcpListCommand, runMcpPrintCommand, runMcpSmokeCommand, runMcpWriteCommand } from "./commands/mcp.js";
 import { runPluginBuildCommand, runPluginDiffCommand, runPluginValidateCommand } from "./commands/plugin.js";
@@ -66,6 +66,7 @@ apx ask-codex <prompt> [--artifact-dir <path>] [--json]
 apx ship-check [--full] [--json]
 apx no-secrets-preflight [--path <path> | --all] [--json]
 apx using-powerups
+apx install <codex|claude|claude-code|gemini> [--full] [--dry-run] [--agent-root <path>] [--instructions-file <path>] [--force] [--json]
 apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--dest <path>]
 apx setup <codex|claude-code|gemini> [--mode minimal|recommended|full] [--dry-run|--yes] [--agent-root <path>] [--instructions-file <path>] [--json]
 apx mcp list
@@ -273,6 +274,21 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
       const assetName = argv[1];
       if (!assetName) {
         throw new Error("Missing asset name for install");
+      }
+      const nativeAgent = parseNativeInstallAgent(assetName);
+      if (nativeAgent) {
+        return writeExecutionResult(
+          io,
+          await runNativeInstallCommand(service, {
+            agent: nativeAgent,
+            agentRoot: parseOption(argv, "--agent-root"),
+            instructionsFile: parseOption(argv, "--instructions-file"),
+            dryRun: hasFlag(argv, "--dry-run"),
+            full: hasFlag(argv, "--full"),
+            force: hasFlag(argv, "--force"),
+          }),
+          json,
+        );
       }
       const result = await runInstallCommand(service, assetName, {
         cwd: io.cwd,
