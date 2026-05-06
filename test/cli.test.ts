@@ -321,6 +321,31 @@ test("install gemini writes root skills and Gemini extension plugin directories"
   assert.equal(manifest.contextFileName, "GEMINI.md");
 });
 
+test("native install human output is concise unless --verbose is passed", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-output-"));
+  const concise = await execute(["install", "codex", "--agent-root", agentRoot, "--dry-run"]);
+
+  assert.equal(concise.exitCode, 0);
+  assert.match(concise.stdout, /copied files: \d+/);
+  assert.doesNotMatch(concise.stdout, /skills[\\/]using-powerups[\\/]SKILL\.md/);
+
+  const verbose = await execute(["install", "codex", "--agent-root", agentRoot, "--dry-run", "--verbose"]);
+
+  assert.equal(verbose.exitCode, 0);
+  assert.match(verbose.stdout, /skills[\\/]using-powerups[\\/]SKILL\.md/);
+});
+
+test("native install json keeps data detail but actions are concise", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-actions-"));
+  const result = await execute(["install", "codex", "--agent-root", agentRoot, "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.ok(json.data.copiedFiles.some((item: string) => item.includes(path.join("skills", "using-powerups", "SKILL.md"))));
+  assert.ok(json.actions.includes(`copy ${json.data.copiedFiles.length} file(s)`));
+  assert.ok(json.actions.every((item: string) => !item.includes(path.join("skills", "using-powerups", "SKILL.md"))));
+});
+
 test("install --full stages support assets and updates existing global instructions with backup", async () => {
   const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-full-"));
   const instructionFile = path.join(agentRoot, "AGENTS.md");
@@ -453,6 +478,8 @@ test("doctor --json returns execution result shape", async () => {
   assert.equal(typeof json.stdout, "string");
   assert.ok(json.data.checks.some((check: { name: string }) => check.name === "package/license consistency"));
   assert.ok(json.data.checks.some((check: { name: string }) => check.name === "plugin mirror sync"));
+  assert.ok(json.data.checks.some((check: { name: string; detail?: string }) => check.name === "plugin metadata" && /16 bundle/.test(check.detail ?? "")));
+  assert.doesNotMatch(json.stdout, /plugins\/agent-powerups|plugins\\agent-powerups/);
   assert.deepEqual(json.actions, []);
   assert.ok(Array.isArray(json.warnings));
 });
@@ -1437,6 +1464,18 @@ test("audit target claude-code returns structured JSON", async () => {
   assert.equal(result.exitCode, 0);
   const json = parseJson(result.stdout);
   assert.equal(json.data.scope, "target:claude-code");
+});
+
+test("audit target gemini-cli counts generic compatibility separately", async () => {
+  const result = await execute(["audit", "target", "gemini-cli", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  const assets = json.data.checks.find((c: any) => c.name === "assets-for-gemini-cli");
+  assert.ok(assets);
+  assert.match(assets.detail, /explicit=\d+/);
+  assert.match(assets.detail, /generic=\d+/);
+  assert.doesNotMatch(assets.detail, /^3 of 98/);
 });
 
 test("audit target rejects invalid target", async () => {
