@@ -212,9 +212,18 @@ async function auditTargetCompatibility(service: CatalogService, target: string)
       : pass(`mcp-target-${target}`, `${mcpConfigs.length} MCP configs checked`),
   );
 
-  // Assets declaring this target in compatible_with
-  const compatible = service.listAssets().filter((a) => a.compatible_with.includes(target as never));
-  checks.push(pass(`assets-for-${target}`, `${compatible.length} of ${service.listAssets().length} assets support ${target}`));
+  // Assets declaring this target or generic support in compatible_with.
+  const allAssets = service.listAssets();
+  const explicit = allAssets.filter((a) => a.compatible_with.includes(target as never));
+  const generic = target === "generic"
+    ? []
+    : allAssets.filter((a) => !a.compatible_with.includes(target as never) && a.compatible_with.includes("generic"));
+  checks.push(
+    pass(
+      `assets-for-${target}`,
+      `${explicit.length + generic.length} of ${allAssets.length} assets support ${target} (explicit=${explicit.length}, generic=${generic.length})`,
+    ),
+  );
 
   return checks;
 }
