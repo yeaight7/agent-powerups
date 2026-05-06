@@ -2,5 +2,13 @@
   "name": "agent-evaluation-lab",
   "version": "0.1.0",
   "description": "Prompt, skill, red-team, and agent behavior evaluation workflows.",
+  "author": {
+    "name": "Javier Rivero Iglesias",
+    "email": "javierrivero@genially.com"
+  },
+  "homepage": "https://github.com/yeaight7/agent-powerups#readme",
+  "repository": "https://github.com/yeaight7/agent-powerups",
+  "license": "Apache-2.0",
+  "keywords": ["evaluation", "testing", "red-team", "skills", "agent-behavior"],
   "maturity": "draft"
 }
