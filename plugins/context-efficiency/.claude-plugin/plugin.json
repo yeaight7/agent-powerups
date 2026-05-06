@@ -1,7 +1,7 @@
 {
   "name": "context-efficiency",
   "version": "0.1.0",
-  "description": "Context-efficient routing: lightweight dispatch commands that route user intent to the right workflow, review, or codebase-intelligence skill without loading full context.",
+  "description": "Context-efficient routing: dispatch tables for workflow, review, and codebase-intelligence commands.",
   "author": {
     "name": "Javier Rivero Iglesias",
     "email": "javierrivero@genially.com"
@@ -9,6 +9,12 @@
   "homepage": "https://github.com/yeaight7/agent-powerups#readme",
   "repository": "https://github.com/yeaight7/agent-powerups",
   "license": "Apache-2.0",
-  "keywords": ["context", "routing", "dispatch", "lightweight", "workflow"],
+  "keywords": [
+    "context",
+    "routing",
+    "dispatch",
+    "lightweight",
+    "workflow"
+  ],
   "maturity": "experimental"
 }
