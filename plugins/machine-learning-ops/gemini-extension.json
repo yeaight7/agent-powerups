@@ -1,0 +1,6 @@
+{
+  "name": "machine-learning-ops",
+  "version": "0.1.0",
+  "description": "ML pipeline design, experiment tracking, model evaluation, training debugging, and reproducibility.",
+  "contextFileName": "GEMINI.md"
+}
