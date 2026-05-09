@@ -232,6 +232,21 @@
       "category": "Developer Tools"
     },
     {
+      "name": "memory-optimization",
+      "source": "./plugins/memory-optimization",
+      "description": "Graph-backed memory and context optimization workflows with graphify first and document conversion helpers second.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "keywords": [
+        "graphify",
+        "memory",
+        "optimization",
+        "markdown",
+        "obsidian"
+      ],
+      "category": "Developer Tools"
+    },
+    {
       "name": "agent-evaluation-lab",
       "source": "./plugins/agent-evaluation-lab",
       "description": "Prompt, skill, red-team, and agent behavior evaluation workflows.",
