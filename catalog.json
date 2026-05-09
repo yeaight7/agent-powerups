@@ -447,8 +447,8 @@
     "type": "skill",
     "summary": "Use upstream graphify and the official graphifyy package to build and query knowledge graphs from local corpora.",
     "path": "skills/graphify",
-    "compatible_with": ["claude-code", "codex"],
-    "tags": ["knowledge-graph", "json-canvas", "visualization", "mcp"],
+    "compatible_with": ["claude-code", "codex", "gemini-cli"],
+    "tags": ["knowledge-graph", "json-canvas", "visualization", "mcp", "tree-sitter", "graphrag", "rag", "obsidian", "graphify"],
     "maturity": "beta",
     "requires": {
       "commands": ["graphify"],
