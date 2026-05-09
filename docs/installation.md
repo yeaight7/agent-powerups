@@ -139,7 +139,9 @@ Install optional tools only when a specific skill requires them.
 claude --version
 codex --version
 gemini --version
-python -m pip install --dry-run markitdown
+python -m pip install markitdown
+python -m pip install graphifyy
+npm install -g defuddle
 ```
 
 After review and approval, install optional tools in a controlled environment such as a virtual environment or pinned global toolchain.
@@ -149,6 +151,7 @@ Agents can preview supported installs without running them:
 ```powershell
 apx check markitdown-file-intake --install-missing --dry-run
 apx check defuddle --install-missing --dry-run
+apx check graphify --install-missing --dry-run
 ```
 
 Do not auto-install tools in scripts or hooks without explicit user approval. Use `--install-missing --yes` only after approval.
