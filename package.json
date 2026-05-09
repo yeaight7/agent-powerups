@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/yeaight7/agent-powerups/issues"
   },
-  "homepage": "https://github.com/yeaight7/agent-powerups#readme",
+  "homepage": "https://github.com/yeaight7/agent-powerups",
   "keywords": [
     "claude-code",
     "codex",
@@ -19,7 +19,11 @@
     "skills",
     "mcp",
     "developer-tools",
-    "cli"
+    "cli",
+	"gemini-cli",
+	"gemini",
+	"skill-pack",
+	"plugin"
   ],
   "bin": {
     "apx": "dist/cli/apx.js"
