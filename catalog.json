@@ -445,11 +445,15 @@
   {
     "name": "graphify",
     "type": "skill",
-    "summary": "Convert any input into a structured knowledge graph using MCP server and JSON Canvas.",
+    "summary": "Use upstream graphify and the official graphifyy package to build and query knowledge graphs from local corpora.",
     "path": "skills/graphify",
-    "compatible_with": ["claude-code"],
+    "compatible_with": ["claude-code", "codex"],
     "tags": ["knowledge-graph", "json-canvas", "visualization", "mcp"],
-    "maturity": "beta"
+    "maturity": "beta",
+    "requires": {
+      "commands": ["graphify"],
+      "python_packages": ["graphifyy"]
+    }
   },
   {
     "name": "brainstorming",
