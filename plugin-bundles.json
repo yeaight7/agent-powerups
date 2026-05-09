@@ -6,7 +6,7 @@
     {
       "name": "dev-vitals",
       "description": "Core developer workflow skills: planning, execution, communication, and powerup discovery.",
-      "maturity": "beta",
+      "maturity": "stable",
       "skills": [
         { "name": "repo-map", "origin": "root-copy" },
         { "name": "writing-plans", "origin": "root-copy" },
@@ -40,7 +40,7 @@
     {
       "name": "debugging-diagnostics",
       "description": "Error diagnosis, fault isolation, log forensics, and incident investigation.",
-      "maturity": "beta",
+      "maturity": "stable",
       "overlap_with_root": [
         { "root_skill": "systematic-debugging", "rule": "Root covers general root-cause discipline; plugin adds log forensics, flaky tests, regression bisecting." },
         { "root_skill": "bug-hunt", "rule": "Root covers single-bug isolation; plugin adds multi-system correlation and reproduction workflows." }
@@ -184,7 +184,7 @@
     {
       "name": "quality-gates",
       "description": "Quality enforcement: TDD discipline, code review workflows, release verification, and CI failure analysis.",
-      "maturity": "beta",
+      "maturity": "stable",
       "overlap_with_root": [
         { "root_skill": "test-driven-development", "rule": "Root covers RED→GREEN→REFACTOR discipline; plugin adds orchestration agents and multi-stage review pipeline." },
         { "root_skill": "requesting-code-review", "rule": "Root covers review request pattern; plugin adds multi-agent review and formal scoring." },
@@ -287,7 +287,7 @@
     {
       "name": "codebase-intelligence",
       "description": "Codebase mapping: parallel agent analysis producing structured architecture, stack, conventions, and quality documents.",
-      "maturity": "experimental",
+      "maturity": "beta",
       "agents": [
         { "name": "codebase-mapper", "origin": "first-party-seed" }
       ],
@@ -312,7 +312,7 @@
     {
       "name": "spec-driven-development",
       "description": "Spec-driven project lifecycle: discuss/plan/execute/verify phase pipeline with research and goal-backward planning.",
-      "maturity": "experimental",
+      "maturity": "beta",
       "agents": [
         { "name": "phase-researcher", "origin": "first-party-seed" },
         { "name": "phase-planner", "origin": "first-party-seed" },
@@ -329,7 +329,7 @@
     {
       "name": "spec-quality-gates",
       "description": "Quality gates for spec-driven development: adversarial plan verification and structured code review.",
-      "maturity": "experimental",
+      "maturity": "beta",
       "agents": [
         { "name": "plan-checker", "origin": "first-party-seed" },
         { "name": "structured-code-reviewer", "origin": "first-party-seed" }
@@ -341,7 +341,7 @@
     {
       "name": "context-efficiency",
       "description": "Context-efficient routing: dispatch tables for workflow, review, and codebase-intelligence commands.",
-      "maturity": "experimental",
+      "maturity": "beta",
       "commands": [
         { "name": "workflow-router", "origin": "first-party-seed" },
         { "name": "review-router", "origin": "first-party-seed" },
@@ -351,7 +351,7 @@
     {
       "name": "tool-integrations",
       "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
-      "maturity": "experimental",
+      "maturity": "beta",
       "skills": [
         { "name": "browser-automation-safety", "origin": "root-copy" },
         { "name": "managed-codebase-context", "origin": "root-copy" },
@@ -365,7 +365,7 @@
     {
       "name": "memory-optimization",
       "description": "Graph-backed memory and context optimization workflows with graphify first and document conversion helpers second.",
-      "maturity": "experimental",
+      "maturity": "beta",
       "overlap_with_root": [
         { "root_skill": "graphify", "rule": "Root skill covers direct graphify operation; plugin adds command-first memory build, query, and optimization workflows around it." },
         { "root_skill": "markitdown-file-intake", "rule": "Root skill covers document conversion; plugin uses it only as graph-preprocessing guidance." },
