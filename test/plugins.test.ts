@@ -48,6 +48,14 @@ test("plugins command: info", async () => {
   assert.match(res.stdout, /Skills/);
 });
 
+test("plugins command: info memory-optimization", async () => {
+  const res = await execute(["plugins", "info", "memory-optimization"]);
+  assert.equal(res.exitCode, 0);
+  assert.match(res.stdout, /Plugin: memory-optimization/);
+  assert.match(res.stdout, /memory-build/);
+  assert.match(res.stdout, /graphify/);
+});
+
 test("plugins command: validate --all", async () => {
   const res = await execute(["plugins", "validate", "--all"]);
   assert.equal(res.exitCode, 0);
@@ -61,10 +69,31 @@ test("plugins command: validate single", async () => {
   assert.match(res.stdout, /Plugin 'dev-vitals' is valid/);
 });
 
+test("plugins command: validate memory-optimization", async () => {
+  const res = await execute(["plugins", "validate", "memory-optimization"]);
+  assert.equal(res.exitCode, 0);
+  assert.match(res.stdout, /Plugin 'memory-optimization' is valid/);
+});
+
 test("plugins command: install dry-run", async () => {
   const res = await execute(["plugins", "install", "dev-vitals", "--target", "generic", "--dry-run"]);
   assert.equal(res.exitCode, 0);
   assert.match(res.stdout, /Would install plugin 'dev-vitals' to/);
+});
+
+test("plugins command: install dry-run memory-optimization", async () => {
+  const res = await execute(["plugins", "install", "memory-optimization", "--target", "generic", "--dry-run"]);
+  assert.equal(res.exitCode, 0);
+  assert.match(res.stdout, /Would install plugin 'memory-optimization' to/);
+});
+
+test("plugins command: install memory-optimization copies bundle files", async () => {
+  const destPath = await tempPath("memory-optimization-install");
+  const res = await execute(["plugins", "install", "memory-optimization", "--target", "generic", "--dest", destPath, "--yes"]);
+  assert.equal(res.exitCode, 0);
+  await fs.access(path.join(destPath, "commands", "memory-build.md"));
+  await fs.access(path.join(destPath, "skills", "graphify", "SKILL.md"));
+  await fs.access(path.join(destPath, "references", "GRAPHIFY_PROVENANCE.md"));
 });
 
 test("plugins command: install failure on existing dir without force", async () => {
