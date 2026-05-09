@@ -24,7 +24,7 @@
     {
       "name": "dev-loop",
       "description": "Full developer loop: workflow vitals, debugging diagnostics, and quality gates.",
-      "maturity": "beta",
+      "maturity": "stable",
       "skills": [],
       "commands": [],
       "hooks": [],
@@ -69,7 +69,7 @@
     {
       "name": "spec-core",
       "description": "Spec-driven development: discuss → plan → execute → verify phase pipeline with quality gates and codebase mapping.",
-      "maturity": "experimental",
+      "maturity": "beta",
       "skills": ["verification-before-completion"],
       "commands": [],
       "hooks": [],
@@ -109,7 +109,7 @@
     {
       "name": "tool-integrator",
       "description": "Tool-heavy workflows: browser automation, MCP integrations, retrieval, runtime loops, and session forensics.",
-      "maturity": "experimental",
+      "maturity": "beta",
       "skills": [],
       "commands": [],
       "hooks": [],
