@@ -23,6 +23,8 @@ export interface RequirementInstallResult {
 const INSTALL_HINTS: Record<string, string> = {
   claude: "Install and configure Claude Code CLI, then run: claude --version",
   markitdown: "python -m pip install markitdown",
+  graphify: "uv tool install graphifyy or pipx install graphifyy or python -m pip install graphifyy",
+  graphifyy: "uv tool install graphifyy or pipx install graphifyy or python -m pip install graphifyy",
   gemini: "Install and configure Gemini CLI, then run: gemini --version",
   defuddle: "npm install -g defuddle",
   gh: "Install GitHub CLI with your platform package manager.",
@@ -41,7 +43,7 @@ export function commandAvailable(command: string): boolean {
 }
 
 export function pythonPackageAvailable(packageName: string): boolean {
-  const result = spawnSync("python", ["-c", `import importlib.util; raise SystemExit(0 if importlib.util.find_spec("${packageName}") else 1)`], {
+  const result = spawnSync("python", ["-c", `import importlib.metadata as m; raise SystemExit(0 if m.distribution("${packageName}") else 1)`], {
     stdio: "ignore",
     shell: false,
   });
@@ -103,6 +105,12 @@ function installersForRequirements(requires?: {
         label: "python:markitdown",
         command: "python",
         args: ["-m", "pip", "install", "markitdown"],
+      });
+    } else if (packageName === "graphifyy") {
+      installers.push({
+        label: "python:graphifyy",
+        command: "python",
+        args: ["-m", "pip", "install", "graphifyy"],
       });
     }
   }
