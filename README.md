@@ -121,6 +121,7 @@ apx profiles plan safe-core --target codex
 
 ```sh
 apx check markitdown-file-intake
+apx check graphify
 apx check ask-codex
 apx check ask-claude
 apx check ask-gemini
@@ -131,6 +132,7 @@ Preview supported dependency installers before asking for approval:
 ```sh
 apx check defuddle --install-missing --dry-run
 apx check markitdown-file-intake --install-missing --dry-run
+apx check graphify --install-missing --dry-run
 ```
 
 10. Install a single asset explicitly:
@@ -211,6 +213,7 @@ Current shipped skills:
 - `sql-business-logic-review`
 - `defuddle`
 - `markitdown-file-intake`
+- `graphify`
 - `ask-claude`
 - `ask-gemini`
 - `ask-codex`
@@ -311,6 +314,7 @@ Current optional external tools used by shipped skills:
 | `ask-gemini` | Gemini CLI (`gemini`) | yes for local advisor workflow | install/configure Gemini CLI |
 | `markitdown-file-intake` | Microsoft MarkItDown (`markitdown`) | yes for conversion workflow | `python -m pip install markitdown` |
 | `defuddle` | Defuddle CLI (`defuddle`) | yes for Defuddle workflow | `npm install -g defuddle` |
+| `graphify` | Upstream Graphify CLI + Python package (`graphify`, `graphifyy`) | yes for graph workflow | `uv tool install graphifyy` or `pipx install graphifyy` or `python -m pip install graphifyy` |
 | `pr-triage` | GitHub CLI (`gh`) | optional | platform package manager |
 
 Tool policy:
@@ -333,6 +337,7 @@ apx doctor --full --json
 apx list
 apx info markitdown-file-intake
 apx check markitdown-file-intake
+apx check graphify
 apx ask-codex "Explain this code" --json
 apx ask-claude "Review this patch" --json
 apx ask-gemini "Brainstorm test cases" --json
