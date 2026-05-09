@@ -8,15 +8,6 @@ trigger: /graphify
 
 Turn any folder of files into a navigable knowledge graph with community detection, an honest audit trail, and three outputs: interactive HTML, GraphRAG-ready JSON, and a plain-language GRAPH_REPORT.md.
 
-## Upstream
-
-- Upstream project: `https://github.com/safishamsi/graphify`
-- Official PyPI package: `graphifyy` (double `y`)
-- Upstream license: MIT
-- This repo ships guidance for using the upstream tool. It does not vendor the Python package itself.
-
-Read [`UPSTREAM.md`](./UPSTREAM.md) before changing compatibility, install, or license claims.
-
 ## Requirements
 
 Required tools:
