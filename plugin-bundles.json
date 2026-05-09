@@ -363,6 +363,35 @@
       ]
     },
     {
+      "name": "memory-optimization",
+      "description": "Graph-backed memory and context optimization workflows with graphify first and document conversion helpers second.",
+      "maturity": "experimental",
+      "overlap_with_root": [
+        { "root_skill": "graphify", "rule": "Root skill covers direct graphify operation; plugin adds command-first memory build, query, and optimization workflows around it." },
+        { "root_skill": "markitdown-file-intake", "rule": "Root skill covers document conversion; plugin uses it only as graph-preprocessing guidance." },
+        { "root_skill": "defuddle", "rule": "Root skill covers web-to-Markdown extraction; plugin uses it only when graph inputs would benefit from cleaner Markdown." }
+      ],
+      "skills": [
+        { "name": "graphify", "origin": "root-copy" },
+        { "name": "markitdown-file-intake", "origin": "root-copy" },
+        { "name": "defuddle", "origin": "root-copy" },
+        { "name": "search-before-building", "origin": "root-copy" },
+        { "name": "using-powerups", "origin": "root-copy" },
+        { "name": "memory-build-workflow", "origin": "first-party-seed" },
+        { "name": "memory-query-workflow", "origin": "first-party-seed" },
+        { "name": "memory-optimization-workflow", "origin": "first-party-seed" }
+      ],
+      "agents": [
+        { "name": "memory-optimizer", "origin": "first-party-seed" },
+        { "name": "graph-memory-curator", "origin": "first-party-seed" }
+      ],
+      "commands": [
+        { "name": "memory-build", "origin": "first-party-seed" },
+        { "name": "memory-query", "origin": "first-party-seed" },
+        { "name": "memory-optimize", "origin": "first-party-seed" }
+      ]
+    },
+    {
       "name": "agent-evaluation-lab",
       "description": "Prompt, skill, red-team, and agent behavior evaluation workflows.",
       "maturity": "experimental",
