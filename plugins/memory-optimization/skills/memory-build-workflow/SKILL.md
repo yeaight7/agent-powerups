@@ -1,13 +1,28 @@
 ---
 name: memory-build-workflow
-description: Use when building or refreshing a graph-backed memory corpus from mixed local files, web pages, or converted documents with graphify as the primary engine.
+description: Use when a user needs to build or refresh persistent graph memory from a mixed corpus and the right path may include graphify, incremental update, or helper conversion before ingestion.
 ---
 
 # Memory Build Workflow
 
-Build persistent graph-backed memory with `graphify`. Use helper tools only to normalize hard-to-read sources before graph build.
+## Overview
 
-Required checks:
+Build persistent graph memory with `graphify`.
+
+Use helper tools only when source format would otherwise reduce graph quality or waste context.
+
+## When to Use
+
+- first graph build for a repo, notes folder, research corpus, or mixed raw folder
+- corpus changed enough that persistent graph memory is worth refreshing
+- input includes PDFs, Office docs, or noisy web pages that should be normalized before graph build
+- user wants durable graph outputs instead of one-shot file reading
+
+Do not use for:
+- one small plain-text file or a narrow one-off question
+- cases where an existing graph already answers the question better via query
+
+## Required Checks
 
 ```powershell
 apx check graphify
@@ -15,19 +30,43 @@ apx check markitdown-file-intake
 apx check defuddle
 ```
 
-Routing:
-- ready local corpus of code/docs/notes/images -> `graphify`
-- existing graph + changed corpus -> `graphify --update`
-- PDF / Office docs -> `markitdown` first when direct input would be noisy
-- web page / article -> `defuddle` first when HTML chrome would waste tokens
-- optional vault output -> Obsidian export after graph build
+Stop and report missing tools. Do not auto-install without approval.
 
-Rules:
-- `graphify` primary, helpers secondary
-- stop if required tool missing
-- prefer update over rebuild
+## Routing
 
-References:
+| Situation | Action |
+|---|---|
+| ready local corpus of readable files | run `graphify` |
+| existing graph plus changed sources | run `graphify --update` |
+| PDF, Office doc, slide deck, or similar hard-to-read format | convert with `markitdown-file-intake`, then build with `graphify` |
+| article or noisy web page | clean with `defuddle`, then build with `graphify` |
+| user wants vault browsing after build | offer optional Obsidian export |
+
+## Core Rules
+
+- `graphify` is the primary engine
+- prefer `graphify --update` over full rebuild when a graph already exists
+- use helpers only to improve source readability before graph ingestion
+- keep Obsidian optional and post-build
+- keep source provenance intact when converting inputs
+
+## Minimal Workflow
+
+1. Check whether a usable graph already exists.
+2. If it exists and sources changed, prefer `graphify --update`.
+3. If sources are noisy or binary, normalize them with the narrowest helper.
+4. Build or refresh with `graphify`.
+5. Offer query workflow next instead of rereading the corpus.
+
+## Common Failure Modes
+
+- missing `graphify`: stop and report; no fallback build path
+- rebuilding from scratch when update would work: unnecessary cost and churn
+- using helpers on already-readable Markdown or code: wasted step
+- treating Obsidian as required: wrong; it is optional output only
+
+## References
+
 - [`../graphify/UPSTREAM.md`](../graphify/UPSTREAM.md)
 - [`../../references/HELPER_TOOLS.md`](../../references/HELPER_TOOLS.md)
 - [`../../references/OBSIDIAN_EXPORT.md`](../../references/OBSIDIAN_EXPORT.md)
