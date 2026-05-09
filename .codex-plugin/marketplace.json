@@ -185,6 +185,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "memory-optimization",
+      "source": {
+        "source": "local",
+        "path": "./plugins/memory-optimization"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "agent-evaluation-lab",
       "source": {
         "source": "local",
