@@ -95,6 +95,34 @@ Fallback:
 - Ask before installing.
 - Fall back to another web-reading method.
 
+### `graphify`
+
+Required tools:
+- Upstream Graphify CLI (`graphify`)
+- Official Python package (`graphifyy`)
+
+Check:
+
+```powershell
+Get-Command graphify -ErrorAction SilentlyContinue
+python -c "import graphify" 2>$null
+```
+
+Install:
+
+```powershell
+uv tool install graphifyy
+pipx install graphifyy
+python -m pip install graphifyy
+apx check graphify --install-missing --dry-run
+```
+
+Fallback:
+- Tell the user Graphify is missing or not importable from `python`.
+- Ask before installing.
+- Do not claim graph extraction happened.
+- Fall back to normal repo inspection when practical.
+
 ### `pr-triage`
 
 Optional tool:
