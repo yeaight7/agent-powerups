@@ -10,3 +10,4 @@ dist/
 graphify-out/
 skills/graphify/graphify-out/
 .obsidian/
+.graphify*
