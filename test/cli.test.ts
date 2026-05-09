@@ -6,7 +6,7 @@ import path from "node:path";
 
 import { runCli } from "../src/cli/apx.js";
 import { resolveCheckExecutable } from "../src/cli/commands/run-command.js";
-import { checkRequirements } from "../src/cli/utils/requirements.js";
+import { checkRequirements, installMissingRequirements } from "../src/cli/utils/requirements.js";
 
 const repoRoot = path.resolve(import.meta.dirname, "..", "..");
 
@@ -234,6 +234,37 @@ test("requirements report npm packages as declared rather than missing", () => {
       installHint: "npm install -g defuddle",
     },
   ]);
+});
+
+test("requirements treat python packages as distributions, not import module names", async () => {
+  const fakeSite = await fs.mkdtemp(path.join(os.tmpdir(), "apx-fake-site-"));
+  const distInfo = path.join(fakeSite, "demo_dist-0.0.0.dist-info");
+  await fs.mkdir(distInfo, { recursive: true });
+  await fs.writeFile(
+    path.join(distInfo, "METADATA"),
+    ["Metadata-Version: 2.1", "Name: demo-dist", "Version: 0.0.0", ""].join("\n"),
+    "utf8",
+  );
+
+  const previousPythonPath = process.env.PYTHONPATH;
+  try {
+    process.env.PYTHONPATH = fakeSite;
+    const statuses = checkRequirements({ python_packages: ["demo-dist"] });
+    assert.deepEqual(statuses, [
+      {
+        label: "python:demo-dist",
+        status: "OK",
+        ok: true,
+        installHint: undefined,
+      },
+    ]);
+  } finally {
+    if (previousPythonPath === undefined) {
+      delete process.env.PYTHONPATH;
+    } else {
+      process.env.PYTHONPATH = previousPythonPath;
+    }
+  }
 });
 
 test("check reports npm packages as declared and does not fail because of them", async () => {
@@ -797,6 +828,17 @@ test.skip("check install-missing dry-run reports approved installer without runn
   assert.equal(result.exitCode, 1);
   const json = parseJson(result.stdout);
   assert.ok(json.actions.some((action: string) => action.includes("would install npm:defuddle")));
+});
+
+test("install-missing dry-run includes graphify python installer", async () => {
+  const result = await installMissingRequirements(
+    "graphify",
+    { python_packages: ["graphifyy"] },
+    { installMissing: true, dryRun: true, yes: false },
+  );
+
+  assert.ok(result.actions.some((action: string) => action.includes("would install python:graphifyy: python -m pip install graphifyy")));
+  assert.match(result.output, /install-missing dry-run/);
 });
 
 test("mcp write requires explicit destination and refuses overwrite", async () => {
