@@ -12,7 +12,7 @@ Today, this repo ships:
 - validation and requirement-check scripts
 - verified local GitHub MCP check, smoke, and install flow
 - command, hook, workflow, examples, and AGENTS.md templates
-- 17 plugin bundles (7 beta, 10 experimental) with native install, marketplace metadata, and `apx plugins` inspection
+- 17 plugin bundles (3 stable, 10 beta, 4 experimental) with native install, marketplace metadata, and `apx plugins` inspection
 - user-intent profiles with `apx profiles` for curated skill/plugin sets
 
 Native install is direct for humans. Safety boundaries stay around external tools, secrets, shell profiles, and MCP enablement.
@@ -27,7 +27,7 @@ Native install is direct for humans. Safety boundaries stay around external tool
 | `commands/` | shipped | Review-first command prompts plus safe runnable checks |
 | `hooks/` | shipped | Review-before-use hook recipes plus safe runnable checks |
 | `workflows/` | shipped | Scenario guides |
-| `plugins/` | shipped | 17 plugin bundles (7 beta, 10 experimental) with local-first discovery, validation, native install, and marketplace metadata |
+| `plugins/` | shipped | 17 plugin bundles (3 stable, 10 beta, 4 experimental) with local-first discovery, validation, native install, and marketplace metadata |
 | `scripts/` | shipped | Validation and tool-check helpers for this repo |
 | `examples/` | shipped | Minimal safe setup examples |
 
@@ -259,27 +259,30 @@ Current shipped workflows:
 - `feature-iteration`
 - `agent-relay`
 
-Current shipped plugin bundles (beta):
+Current shipped plugin bundles (stable):
 
 - `dev-vitals`
 - `debugging-diagnostics`
+- `quality-gates`
+
+Current shipped plugin bundles (beta):
+
 - `codebase-maintenance`
 - `data-engineering`
 - `documentation-systems`
 - `machine-learning-ops`
-- `quality-gates`
-
-Current shipped plugin bundles (experimental):
-
-- `software-engineering`
-- `agentic-systems`
-- `security-guardrails`
 - `codebase-intelligence`
 - `spec-driven-development`
 - `spec-quality-gates`
 - `context-efficiency`
 - `tool-integrations`
 - `memory-optimization`
+
+Current shipped plugin bundles (experimental):
+
+- `software-engineering`
+- `agentic-systems`
+- `security-guardrails`
 - `agent-evaluation-lab`
 
 Schema details: [`docs/catalog-schema.md`](./docs/catalog-schema.md)
@@ -296,7 +299,7 @@ Compatibility claims in this repo are intentionally narrow:
 | `commands/` | yes | Review-first markdown command prompts; Claude Code and Codex targets where provided |
 | `hooks/` | yes | Documentation recipes only; not installed automatically |
 | `workflows/` | yes | Plain text scenario guides |
-| `plugins/` | yes | 17 plugin bundles (7 beta, 10 experimental) with native install, marketplace metadata, and `apx plugins` inspection |
+| `plugins/` | yes | 17 plugin bundles (3 stable, 10 beta, 4 experimental) with native install, marketplace metadata, and `apx plugins` inspection |
 | `scripts/` | yes | Generic Python scripts |
 | `examples/` | yes | Plain text setup examples only |
 
