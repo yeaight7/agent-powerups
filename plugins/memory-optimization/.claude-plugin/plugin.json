@@ -1,0 +1,19 @@
+{
+  "name": "memory-optimization",
+  "version": "0.1.0",
+  "description": "Graph-backed memory and context optimization workflows with graphify first and document conversion helpers second.",
+  "author": {
+    "name": "yeaight7"
+  },
+  "homepage": "https://github.com/yeaight7/agent-powerups#readme",
+  "repository": "https://github.com/yeaight7/agent-powerups",
+  "license": "Apache-2.0",
+  "keywords": [
+    "graphify",
+    "memory",
+    "optimization",
+    "markdown",
+    "obsidian"
+  ],
+  "maturity": "experimental"
+}
