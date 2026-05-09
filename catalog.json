@@ -722,7 +722,7 @@
     "path": "plugins/dev-vitals",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "core", "workflow"],
-    "maturity": "beta"
+    "maturity": "stable"
   },
   {
     "name": "debugging-diagnostics",
@@ -731,7 +731,7 @@
     "path": "plugins/debugging-diagnostics",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "debugging", "diagnostics"],
-    "maturity": "beta"
+    "maturity": "stable"
   },
   {
     "name": "codebase-maintenance",
@@ -776,7 +776,7 @@
     "path": "plugins/quality-gates",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "quality", "ci"],
-    "maturity": "beta"
+    "maturity": "stable"
   },
   {
     "name": "software-engineering",
@@ -920,7 +920,7 @@
     "path": "plugins/tool-integrations",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "mcp", "browser", "tools"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "agent-evaluation-lab",
