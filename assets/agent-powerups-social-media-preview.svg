@@ -1,26 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
     <defs>
-        <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#020617" />
-            <stop offset="100%" stop-color="#0B1121" />
-        </linearGradient>
-
-        <radialGradient id="ambient-glow" cx="70%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.10" />
-            <stop offset="50%" stop-color="#A855F7" stop-opacity="0.05" />
-            <stop offset="100%" stop-color="#020617" stop-opacity="0" />
-        </radialGradient>
-
-        <linearGradient id="powerups-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#38BDF8" />
-            <stop offset="100%" stop-color="#A855F7" />
-        </linearGradient>
-
-        <linearGradient id="icon-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#0F172A" />
-            <stop offset="100%" stop-color="#020617" />
-        </linearGradient>
-
         <pattern id="dot-grid" width="24" height="24" patternUnits="userSpaceOnUse">
             <circle cx="2" cy="2" r="1.5" fill="#334155" opacity="0.4" />
         </pattern>
@@ -29,19 +8,14 @@
             <feGaussianBlur stdDeviation="10" result="blur" />
             <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
-        
-        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-            <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5"/>
-        </filter>
     </defs>
 
-    <rect width="100%" height="100%" fill="url(#bg-grad)" />
+	<rect width="100%" height="100%" fill="#020617" />
     <rect width="100%" height="100%" fill="url(#dot-grid)" />
-    <rect width="100%" height="100%" fill="url(#ambient-glow)" />
 
 	<g transform="translate(5, 125)">
-      <g transform="translate(80, 65)" filter="url(#shadow)">
-          <rect x="0" y="0" width="72" height="72" rx="14" fill="url(#icon-bg)" stroke="#1E293B" stroke-width="2" />
+      <g transform="translate(80, 65)">
+          <rect x="0" y="0" width="72" height="72" rx="14" fill="#0F172A" stroke="#1E293B" stroke-width="2" />
           <path d="M 13 22 L 27 35 L 13 48" fill="none" stroke="#38BDF8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
           <path d="M 35 52 L 55 52" fill="none" stroke="#A855F7" stroke-width="4" stroke-linecap="round">
               <animate attributeName="opacity" values="1;0" calcMode="discrete" dur="1s" repeatCount="indefinite" />
@@ -50,7 +24,7 @@
   
       <text x="80" y="190" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="52" letter-spacing="-1.5">
           <tspan fill="#FFFFFF">Agent </tspan>
-          <tspan fill="url(#powerups-grad)">Powerups</tspan>
+          <tspan fill="#A855F7">Powerups</tspan>
       </text>
   
       <text x="80" y="235" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="500" fill="#E2E8F0">
@@ -101,22 +75,21 @@
           <circle cx="1095" cy="280" fill="#818CF8" />
       </g>
   
-      <g filter="url(#shadow)">
-          <rect x="640" y="110" width="540" height="140" rx="10" fill="#020617" stroke="#334155" stroke-width="1.5" />
-          <path d="M 640 120 Q 640 110 650 110 L 1170 110 Q 1180 110 1180 120 L 1180 136 L 640 136 Z" fill="#0F172A" stroke="#334155" stroke-width="1.5" />
-          <circle cx="660" cy="123" r="5" fill="#EF4444" />
-          <circle cx="676" cy="123" r="5" fill="#F59E0B" />
-          <circle cx="692" cy="123" r="5" fill="#10B981" />
-          <text x="910" y="127" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" fill="#64748B" text-anchor="middle">apx master terminal</text>
-          
-          <g transform="translate(660, 148)">
-              <text y="15" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="15" font-weight="500">
-                  <tspan fill="#38BDF8">❯</tspan>
-                  <tspan fill="#fa6b12"> npm </tspan>
-	  			<tspan fill="#ffffff">install </tspan>
-	  			<tspan fill="#fff200">-g </tspan>
-                  <tspan fill="#ffffff">agent-powerups</tspan>
-              </text>
+        <rect x="640" y="110" width="540" height="140" rx="10" fill="#020617" stroke="#334155" stroke-width="1.5" />
+        <path d="M 640 120 Q 640 110 650 110 L 1170 110 Q 1180 110 1180 120 L 1180 136 L 640 136 Z" fill="#0F172A" stroke="#334155" stroke-width="1.5" />
+        <circle cx="660" cy="123" r="5" fill="#EF4444" />
+        <circle cx="676" cy="123" r="5" fill="#F59E0B" />
+        <circle cx="692" cy="123" r="5" fill="#10B981" />
+        <text x="910" y="127" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" fill="#64748B" text-anchor="middle">apx master terminal</text>
+        
+        <g transform="translate(660, 148)">
+            <text y="15" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="15" font-weight="500">
+                <tspan fill="#38BDF8">❯</tspan>
+                <tspan fill="#fa6b12"> npm </tspan>
+			<tspan fill="#ffffff">install </tspan>
+			<tspan fill="#fff200">-g </tspan>
+                <tspan fill="#ffffff">agent-powerups</tspan>
+            </text>
 	  		<text y="45" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="15" font-weight="500">
                   <tspan fill="#38BDF8">❯</tspan>
                   <tspan fill="#fa6b12"> apx </tspan>
@@ -133,10 +106,9 @@
               <!-- <text y="92" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="14" fill="#94A3B8">
                   <tspan fill="#34D399">✔</tspan> Ready. Run <tspan fill="#E2E8F0">apx start</tspan> to begin.
               </text> -->
-          </g>
-      </g>
+        </g>
   
-      <g font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#E2E8F0" filter="url(#shadow)">
+      <g font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#E2E8F0">
           
           <g transform="translate(775, 40)">
               <rect width="100" height="36" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5" />
