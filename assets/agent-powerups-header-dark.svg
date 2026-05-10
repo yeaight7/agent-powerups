@@ -39,10 +39,12 @@
     <rect width="100%" height="100%" fill="url(#dot-grid)" />
     <rect width="100%" height="100%" fill="url(#ambient-glow)" />
 
-    <g transform="translate(80, 85)" filter="url(#shadow)">
-        <rect x="0" y="0" width="56" height="56" rx="14" fill="url(#icon-bg)" stroke="#1E293B" stroke-width="2" />
-        <path d="M 18 20 L 26 28 L 18 36" fill="none" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M 30 36 L 40 36" fill="none" stroke="#A855F7" stroke-width="3" stroke-linecap="round" />
+    <g transform="translate(80, 65)" filter="url(#shadow)">
+        <rect x="0" y="0" width="72" height="72" rx="14" fill="url(#icon-bg)" stroke="#1E293B" stroke-width="2" />
+        <path d="M 13 22 L 27 35 L 13 48" fill="none" stroke="#38BDF8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M 35 52 L 55 52" fill="none" stroke="#A855F7" stroke-width="4" stroke-linecap="round">
+            <animate attributeName="opacity" values="1;0" calcMode="discrete" dur="1s" repeatCount="indefinite" />
+        </path>
     </g>
 
     <text x="80" y="190" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="52" letter-spacing="-1.5">
@@ -59,7 +61,7 @@
 
 
     <g stroke="#1E293B" stroke-width="2" fill="none">
-        <path d="M 725 76 L 725 110" /> <path d="M 925 76 L 925 110" /> <path d="M 510 148 L 540 148" /> <path d="M 510 208 L 540 208" /> <path d="M 745 280 L 745 250" /> <path d="M 995 280 L 995 250" /> </g>
+        <path d="M 825 76 L 825 110" /> <path d="M 1025 76 L 1025 110" /> <path d="M 610 148 L 640 148" /> <path d="M 610 208 L 640 208" /> <path d="M 845 280 L 845 250" /> <path d="M 1095 280 L 1095 250" /> </g>
 
     <g stroke-width="2" fill="none" stroke-linecap="round">
         <path d="M 825 76 L 825 110" stroke="#38BDF8" stroke-dasharray="4 8">
@@ -104,7 +106,7 @@
         <circle cx="660" cy="123" r="5" fill="#EF4444" />
         <circle cx="676" cy="123" r="5" fill="#F59E0B" />
         <circle cx="692" cy="123" r="5" fill="#10B981" />
-        <text x="810" y="127" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" fill="#64748B" text-anchor="middle">apx master terminal</text>
+        <text x="910" y="127" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" fill="#64748B" text-anchor="middle">apx master terminal</text>
         
         <g transform="translate(660, 148)">
             <text y="15" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="15" font-weight="500">
@@ -137,8 +139,8 @@
         
         <g transform="translate(775, 40)">
             <rect width="100" height="36" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5" />
-            <circle cx="16" cy="18" r="4" fill="#38BDF8" />
-            <text x="28" y="22.5">skills</text>
+            <circle cx="20" cy="18" r="4" fill="#38BDF8" />
+            <text x="38" y="22">skills</text>
         </g>
 
         <g transform="translate(975, 40)">
@@ -150,13 +152,13 @@
         <g transform="translate(510, 130)">
             <rect width="100" height="36" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5" />
             <circle cx="16" cy="18" r="4" fill="#F472B6" />
-            <text x="28" y="22.5">hooks</text>
+            <text x="36" y="22">hooks</text>
         </g>
 
-        <g transform="translate(510, 190)">
-            <rect width="100" height="36" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5" />
+        <g transform="translate(505, 190)">
+            <rect width="105" height="36" rx="18" fill="#0F172A" stroke="#334155" stroke-width="1.5" />
             <circle cx="16" cy="18" r="4" fill="#34D399" />
-            <text x="28" y="22.5">commands</text>
+            <text x="27" y="22">commands</text>
         </g>
 
         <g transform="translate(795, 280)">
