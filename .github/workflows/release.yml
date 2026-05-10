@@ -8,11 +8,10 @@ on:
 permissions:
   contents: write
   id-token: write
-  packages: write
 
 jobs:
   publish:
-    name: Publish npm package, GitHub package, and GitHub release
+    name: Publish npm package and GitHub release
     runs-on: ubuntu-latest
 
     steps:
@@ -32,27 +31,8 @@ jobs:
       - name: Run release preflight
         run: npm run release:check
 
-      - name: Publish to npmjs
+      - name: Publish to npm
         run: npm publish --access public
-
-      - name: Set up Node.js for GitHub Packages
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          registry-url: https://npm.pkg.github.com
-          scope: "@yeaight7"
-          cache: npm
-
-      - name: Rewrite package metadata for GitHub Packages
-        run: |
-          npm pkg set name="@yeaight7/agent-powerups"
-          npm pkg set publishConfig.registry="https://npm.pkg.github.com"
-          npm pkg delete publishConfig.access
-
-      - name: Publish to GitHub Packages
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create GitHub release
         run: gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes --title "$GITHUB_REF_NAME"
