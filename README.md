@@ -1,6 +1,50 @@
-# Agent Powerups
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/agent-powerups-header-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="./assets/agent-powerups-header-light.svg">
+    <img src="./assets/agent-powerups-header-dark.svg" alt="Agent Powerups" width="100%">
+  </picture>
+</p>
 
-**Oh My Zsh for coding agents.**
+<h1 align="center">Agent Powerups</h1>
+
+<p align="center">
+  <strong>Oh My Zsh for coding agents.</strong>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/agent-powerups">
+    <img alt="npm version" src="https://img.shields.io/npm/v/agent-powerups?logo=npm&label=npm" />
+  </a>
+  <a href="https://www.npmjs.com/package/agent-powerups">
+    <img alt="npm weekly downloads" src="https://img.shields.io/npm/dw/agent-powerups?logo=npm&label=downloads" />
+  </a>
+  <a href="https://github.com/yeaight7/agent-powerups/actions/workflows/ci.yml">
+    <img alt="CI" src="https://github.com/yeaight7/agent-powerups/actions/workflows/ci.yml/badge.svg" />
+  </a>
+  <a href="https://github.com/yeaight7/agent-powerups/releases">
+    <img alt="GitHub release" src="https://img.shields.io/github/v/release/yeaight7/agent-powerups?display_name=tag&logo=github&label=release" />
+  </a>
+  <a href="https://github.com/yeaight7/agent-powerups/blob/main/LICENSE">
+    <img alt="License" src="https://img.shields.io/npm/l/agent-powerups?label=license" />
+  </a>
+    <img alt="Node.js version" src="https://img.shields.io/node/v/agent-powerups?label=node" />
+  <a href="https://github.com/yeaight7/agent-powerups/stargazers">
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/yeaight7/agent-powerups?logo=github" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="#quickstart">Quickstart</a>
+  ·
+  <a href="#plugin-bundles">Plugin Bundles</a>
+  ·
+  <a href="./docs/installation.md">Installation</a>
+  ·
+  <a href="./docs/security-model.md">Security Model</a>
+  ·
+  <a href="./CONTRIBUTING.md">Contributing</a>
+</p>
 
 Agent Powerups is an Oh My Zsh-style collection of reusable skills, slash commands, MCP configs, hooks, AGENTS.md templates, and workflows for coding agents.
 
@@ -19,17 +63,17 @@ Native install is direct for humans. Safety boundaries stay around external tool
 
 ## What Is Here
 
-| Path | Status | Notes |
-|------|--------|-------|
-| `skills/` | shipped | Reusable agent workflows such as `systematic-debugging` and `writing-plans` |
-| `mcp/` | shipped | Local-first GitHub MCP config with check, smoke, and explicit install commands |
-| `agents-md/` | shipped | Starter AGENTS.md templates |
-| `commands/` | shipped | Review-first command prompts plus safe runnable checks |
-| `hooks/` | shipped | Review-before-use hook recipes plus safe runnable checks |
-| `workflows/` | shipped | Scenario guides |
-| `plugins/` | shipped | 17 plugin bundles (3 stable, 10 beta, 4 experimental) with local-first discovery, validation, native install, and marketplace metadata |
-| `scripts/` | shipped | Validation and tool-check helpers for this repo |
-| `examples/` | shipped | Minimal safe setup examples |
+|  Path  | Status | Notes |
+|--------|--------|-------|
+|  `skills/`  | shipped | Reusable agent workflows such as `systematic-debugging` and `writing-plans` |
+|  `mcp/`  | shipped | Local-first GitHub MCP config with check, smoke, and explicit install commands |
+|  `agents-md/`  | shipped | Starter AGENTS.md templates |
+|  `commands/`  | shipped | Review-first command prompts plus safe runnable checks |
+|  `hooks/`  | shipped | Review-before-use hook recipes plus safe runnable checks |
+|  `workflows/`  | shipped | Scenario guides |
+|  `plugins/`  | shipped | 17 plugin bundles (3 stable, 10 beta, 4 experimental) with local-first discovery, validation, native install, and marketplace metadata |
+|  `scripts/`  | shipped | Validation and tool-check helpers for this repo |
+|  `examples/`  | shipped | Minimal safe setup examples |
 
 ## Quickstart
 
