@@ -1,0 +1,45 @@
+name: Publish GitHub Package
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish-github-package:
+    name: Publish to GitHub Packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js for GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+          scope: "@yeaight7"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run release preflight
+        run: npm run release:check
+
+      - name: Rewrite package metadata for GitHub Packages
+        run: |
+          npm pkg set name="@yeaight7/agent-powerups"
+          npm pkg set publishConfig.registry="https://npm.pkg.github.com"
+          npm pkg delete publishConfig.access
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
