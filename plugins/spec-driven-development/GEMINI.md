@@ -1,6 +1,6 @@
 # spec-driven-development
 
-Spec-driven project lifecycle: discuss/plan/execute/verify phase pipeline with research and goal-backward planning.
+Requirements clarification, phase planning, workstreams, and wave-based execution for reviewable delivery.
 
 Use this extension as a local Agent Powerups bundle. Inspect relevant files under this extension before applying a workflow:
 
