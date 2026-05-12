@@ -1,6 +1,6 @@
 {
   "name": "spec-driven-development",
   "version": "0.1.0",
-  "description": "Spec-driven project lifecycle: discuss/plan/execute/verify phase pipeline with research and goal-backward planning.",
+  "description": "Requirements clarification, phase planning, workstreams, and wave-based execution for reviewable delivery.",
   "maturity": "experimental"
 }
