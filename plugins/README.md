@@ -16,11 +16,15 @@ Domain-specific plugin bundles for Agent Powerups. Each plugin extends the base 
 | [`agent-evaluation-lab`](agent-evaluation-lab/) | Prompt, skill, red-team, and agent behavior evaluation | experimental |
 | [`tool-integrations`](tool-integrations/) | Browser, MCP, retrieval, and runtime tool integrations | beta |
 | [`memory-optimization`](memory-optimization/) | Graph-backed memory workflows with graphify-first optimization and Markdown helper tools | beta |
-| [`software-engineering`](software-engineering/) | Parallel execution, requirements clarification, autonomous delivery | experimental |
+| [`software-engineering`](software-engineering/) | Subagent orchestration, worktrees, persistent completion, migrations | experimental |
 | [`agentic-systems`](agentic-systems/) | Multi-model orchestration, canonical advisor routing | experimental |
 | [`security-guardrails`](security-guardrails/) | Security vulnerability detection, secrets scanning, dependency audits | experimental |
-| [`codebase-intelligence`](codebase-intelligence/) | Parallel codebase mapping: architecture, stack, conventions, concerns | beta |
-| [`spec-driven-development`](spec-driven-development/) | Spec-driven lifecycle: discuss → plan → execute → verify | beta |
+| [`codebase-intelligence`](codebase-intelligence/) | Search-first codebase understanding, mapping, patterns, project intel | beta |
+| [`spec-driven-development`](spec-driven-development/) | Requirements clarification, phase planning, workstreams, execution | beta |
+| [`mcp-development`](mcp-development/) | Workflow-first MCP server design and evaluation discipline | beta |
+| [`skill-authoring`](skill-authoring/) | Reusable skill creation and hard-won workflow extraction | beta |
+| [`github-ops`](github-ops/) | GitHub review feedback, CI triage, and PR iteration loops | beta |
+| [`connected-apps`](connected-apps/) | Review-first connected-app runbooks and deployment sequencing | experimental |
 | [`spec-quality-gates`](spec-quality-gates/) | Adversarial plan verification and structured code review | beta |
 | [`context-efficiency`](context-efficiency/) | Context-efficient dispatch routers for workflow, review, and codebase commands | beta |
 
