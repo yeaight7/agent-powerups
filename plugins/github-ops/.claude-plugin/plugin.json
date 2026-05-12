@@ -1,19 +1,20 @@
 {
-  "name": "tool-integrations",
+  "name": "github-ops",
   "version": "0.1.0",
-  "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
+  "description": "GitHub review, comment handling, and CI triage workflows with approval-gated write actions.",
   "author": {
-    "name": "yeaight7"
+    "name": "Javier Rivero",
+    "email": "jriveroiglesias@al.uloyola.es"
   },
   "homepage": "https://github.com/yeaight7/agent-powerups#readme",
   "repository": "https://github.com/yeaight7/agent-powerups",
   "license": "Apache-2.0",
   "keywords": [
-    "browser",
-    "mcp",
-    "retrieval",
-    "agent-runtime",
-    "integrations"
+    "github",
+    "pull-requests",
+    "ci",
+    "reviews",
+    "triage"
   ],
-  "maturity": "draft"
+  "maturity": "beta"
 }
