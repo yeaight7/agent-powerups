@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Review-first runbooks for connected-app workflows and multi-system deployment sequencing.",
   "author": {
-    "name": "yeaight7"
+    "name": "Javier Rivero",
+    "email": "jriveroiglesias@al.uloyola.es"
   },
   "homepage": "https://github.com/yeaight7/agent-powerups#readme",
   "repository": "https://github.com/yeaight7/agent-powerups",
