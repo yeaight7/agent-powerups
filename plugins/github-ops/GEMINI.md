@@ -1,6 +1,6 @@
-# tool-integrations
+# github-ops
 
-Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.
+GitHub review, comment handling, and CI triage workflows with approval-gated write actions.
 
 Use this extension as a local Agent Powerups bundle. Inspect relevant files under this extension before applying a workflow:
 
