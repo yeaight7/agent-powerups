@@ -38,12 +38,12 @@ Most non-trivial software tasks require coordinated phases: understanding requir
    - **If requirements clarifier spec exists**: Skip expansion, use the pre-validated spec directly. Continue to Phase 1 (Planning).
    - **If input is vague** (no file paths, function names, or concrete anchors): Offer redirect to requirements clarifier for Socratic clarification
    - **Otherwise**: Extract requirements and create technical specification
-   - Output: `spec.md`
+   - Output: a written specification document
 
 2. **Phase 1 - Planning**: Create an implementation plan from the spec
    - Create plan
    - Validate plan
-   - Output: `implementation-plan.md`
+   - Output: a written implementation plan
 
 3. **Phase 2 - Execution**: Implement the plan
    - Run independent tasks in parallel
