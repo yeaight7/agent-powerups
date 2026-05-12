@@ -1,6 +1,6 @@
 {
-  "name": "tool-integrations",
+  "name": "mcp-development",
   "version": "0.1.0",
-  "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
+  "description": "Workflow-first MCP server design with schema-first tools, context-aware outputs, and evaluation discipline.",
   "contextFileName": "GEMINI.md"
 }
