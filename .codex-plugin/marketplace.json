@@ -149,6 +149,54 @@
       "category": "Developer Tools"
     },
     {
+      "name": "mcp-development",
+      "source": {
+        "source": "local",
+        "path": "./plugins/mcp-development"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "skill-authoring",
+      "source": {
+        "source": "local",
+        "path": "./plugins/skill-authoring"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "github-ops",
+      "source": {
+        "source": "local",
+        "path": "./plugins/github-ops"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "connected-apps",
+      "source": {
+        "source": "local",
+        "path": "./plugins/connected-apps"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "spec-quality-gates",
       "source": {
         "source": "local",
