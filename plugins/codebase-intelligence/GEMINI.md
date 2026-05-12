@@ -1,6 +1,6 @@
 # codebase-intelligence
 
-Codebase mapping: parallel agent analysis producing structured architecture, stack, conventions, and quality documents.
+Search-first codebase understanding, context retrieval, mapping, pattern detection, and living project intelligence.
 
 Use this extension as a local Agent Powerups bundle. Inspect relevant files under this extension before applying a workflow:
 
