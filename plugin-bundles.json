@@ -224,26 +224,27 @@
     },
     {
       "name": "software-engineering",
-      "description": "Full-lifecycle software delivery: parallel execution, requirements clarification, autonomous pipeline, persistent completion loops, and hard-won skill extraction.",
+      "description": "Subagent orchestration, wave execution, worktree isolation, persistent completion, autonomous delivery, and migration batching.",
       "maturity": "experimental",
       "skills": [
-        { "name": "parallel-execution-engine", "origin": "first-party-seed" },
-        { "name": "requirements-clarifier", "origin": "first-party-seed" },
-        { "name": "persistent-completion-loop", "origin": "first-party-seed" },
-        { "name": "autonomous-delivery-pipeline", "origin": "first-party-seed" },
-        { "name": "hard-won-skill-extractor", "origin": "first-party-seed" }
+        { "name": "subagent-team-orchestration", "origin": "root-copy" },
+        { "name": "parallel-execution-engine", "origin": "root-copy" },
+        { "name": "worktree-session-manager", "origin": "root-copy" },
+        { "name": "persistent-completion-loop", "origin": "root-copy" },
+        { "name": "autonomous-delivery-pipeline", "origin": "root-copy" },
+        { "name": "codebase-migration-batches", "origin": "root-copy" }
       ],
       "agents": [
         { "name": "repo-explorer", "origin": "first-party-seed" },
-        { "name": "architecture-reviewer", "origin": "first-party-seed" },
         { "name": "implementation-planner", "origin": "first-party-seed" },
-        { "name": "test-engineer", "origin": "first-party-seed" }
-      ],
-      "commands": [
-        { "name": "clarify-requirements", "origin": "placeholder" },
-        { "name": "plan-implementation", "origin": "placeholder" },
-        { "name": "parallel-work", "origin": "placeholder" },
-        { "name": "finish-loop", "origin": "placeholder" }
+        { "name": "architecture-reviewer", "origin": "first-party-seed" },
+        { "name": "plan-critic", "origin": "first-party-seed" },
+        { "name": "code-reviewer", "origin": "first-party-seed" },
+        { "name": "security-reviewer", "origin": "first-party-seed" },
+        { "name": "test-engineer", "origin": "first-party-seed" },
+        { "name": "debugger", "origin": "first-party-seed" },
+        { "name": "technical-writer", "origin": "first-party-seed" },
+        { "name": "code-simplifier", "origin": "first-party-seed" }
       ]
     },
     {
@@ -286,10 +287,12 @@
     },
     {
       "name": "codebase-intelligence",
-      "description": "Codebase mapping: parallel agent analysis producing structured architecture, stack, conventions, and quality documents.",
+      "description": "Search-first codebase understanding, context retrieval, mapping, pattern detection, and living project intelligence.",
       "maturity": "beta",
       "agents": [
-        { "name": "codebase-mapper", "origin": "first-party-seed" }
+        { "name": "codebase-mapper", "origin": "first-party-seed" },
+        { "name": "pattern-mapper", "origin": "first-party-seed" },
+        { "name": "intel-updater", "origin": "first-party-seed" }
       ],
       "commands": [
         { "name": "map-codebase", "origin": "first-party-seed" }
@@ -304,15 +307,17 @@
         { "name": "CONCERNS" }
       ],
       "skills": [
-        { "name": "structured-code-search-mcp", "origin": "root-copy" },
-        { "name": "managed-codebase-context", "origin": "root-copy" },
-        { "name": "local-rag-mcp", "origin": "root-copy" }
+        { "name": "search-before-building", "origin": "root-copy" },
+        { "name": "context-retrieval-loop", "origin": "root-copy" }
       ]
     },
     {
       "name": "spec-driven-development",
-      "description": "Spec-driven project lifecycle: discuss/plan/execute/verify phase pipeline with research and goal-backward planning.",
+      "description": "Requirements clarification, phase planning, workstreams, and wave-based execution for reviewable delivery.",
       "maturity": "beta",
+      "skills": [
+        { "name": "requirements-clarifier", "origin": "root-copy" }
+      ],
       "agents": [
         { "name": "phase-researcher", "origin": "first-party-seed" },
         { "name": "phase-planner", "origin": "first-party-seed" },
@@ -323,7 +328,43 @@
         { "name": "discuss-phase", "origin": "first-party-seed" },
         { "name": "plan-phase", "origin": "first-party-seed" },
         { "name": "execute-phase", "origin": "first-party-seed" },
+        { "name": "workstreams", "origin": "first-party-seed" },
         { "name": "verify-work", "origin": "first-party-seed" }
+      ]
+    },
+    {
+      "name": "mcp-development",
+      "description": "Workflow-first MCP server design with schema-first tools, context-aware outputs, and evaluation discipline.",
+      "maturity": "beta",
+      "skills": [
+        { "name": "mcp-server-builder", "origin": "root-copy" }
+      ]
+    },
+    {
+      "name": "skill-authoring",
+      "description": "Skill creation and extraction workflows for reusable agent guidance.",
+      "maturity": "beta",
+      "skills": [
+        { "name": "skill-authoring-guide", "origin": "root-copy" },
+        { "name": "hard-won-skill-extractor", "origin": "root-copy" }
+      ]
+    },
+    {
+      "name": "github-ops",
+      "description": "GitHub review, comment handling, and CI triage workflows with approval-gated write actions.",
+      "maturity": "beta",
+      "skills": [
+        { "name": "github-ci-failure-triage", "origin": "root-copy" },
+        { "name": "gh-address-comments", "origin": "root-copy" },
+        { "name": "pr-review-ci-loop", "origin": "root-copy" }
+      ]
+    },
+    {
+      "name": "connected-apps",
+      "description": "Review-first runbooks for connected-app workflows and multi-system deployment sequencing.",
+      "maturity": "experimental",
+      "skills": [
+        { "name": "deploy-pipeline-runbook", "origin": "root-copy" }
       ]
     },
     {
