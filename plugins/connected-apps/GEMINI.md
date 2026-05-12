@@ -1,6 +1,6 @@
-# tool-integrations
+# connected-apps
 
-Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.
+Review-first runbooks for connected-app workflows and multi-system deployment sequencing.
 
 Use this extension as a local Agent Powerups bundle. Inspect relevant files under this extension before applying a workflow:
 
