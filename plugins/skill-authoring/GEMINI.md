@@ -1,6 +1,6 @@
-# tool-integrations
+# skill-authoring
 
-Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.
+Skill creation and extraction workflows for reusable agent guidance.
 
 Use this extension as a local Agent Powerups bundle. Inspect relevant files under this extension before applying a workflow:
 
