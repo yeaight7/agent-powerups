@@ -1,7 +1,7 @@
 {
-  "name": "tool-integrations",
+  "name": "connected-apps",
   "version": "0.1.0",
-  "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
+  "description": "Review-first runbooks for connected-app workflows and multi-system deployment sequencing.",
   "author": {
     "name": "yeaight7"
   },
@@ -9,11 +9,11 @@
   "repository": "https://github.com/yeaight7/agent-powerups",
   "license": "Apache-2.0",
   "keywords": [
-    "browser",
-    "mcp",
-    "retrieval",
-    "agent-runtime",
-    "integrations"
+    "deploy",
+    "integrations",
+    "runbooks",
+    "release",
+    "approval"
   ],
-  "maturity": "draft"
+  "maturity": "experimental"
 }
