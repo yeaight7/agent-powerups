@@ -31,9 +31,9 @@ Complex tasks often fail silently: partial implementations get declared "done", 
 </Why_This_Exists>
 
 <PRD_Mode>
-A scaffold `prd.json` is auto-generated when the loop starts if none exists.
+A scaffold PRD file is auto-generated when the loop starts if none exists.
 
-**Startup gate:** Always initialize and validate `prd.json` at startup.
+**Startup gate:** Always initialize and validate the PRD at startup.
 
 **Reviewer selection:** The completion reviewer validates the stories, and **the reviewer cannot be the same writer lane/agent that implemented the code**.
 </PRD_Mode>
@@ -48,7 +48,7 @@ A scaffold `prd.json` is auto-generated when the loop starts if none exists.
 
 <Steps>
 1. **PRD Setup** (first iteration only):
-   a. Check for existing PRD file.
+   a. Check for an existing PRD file.
    b. If none exists, auto-generate a scaffold.
    c. **CRITICAL: Refine the scaffold.** Replace generic criteria with task-specific criteria:
       - Break the original task into right-sized user stories
@@ -102,8 +102,8 @@ A scaffold `prd.json` is auto-generated when the loop starts if none exists.
 </Escalation_And_Stop_Conditions>
 
 <Final_Checklist>
-- [ ] All prd.json stories have `passes: true`
-- [ ] prd.json acceptance criteria are task-specific
+- [ ] All PRD stories have `passes: true`
+- [ ] PRD acceptance criteria are task-specific
 - [ ] All requirements from the original task are met (no scope reduction)
 - [ ] Zero pending TODO items
 - [ ] Fresh test run output shows all tests pass
