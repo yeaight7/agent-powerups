@@ -1,19 +1,20 @@
 {
-  "name": "tool-integrations",
+  "name": "mcp-development",
   "version": "0.1.0",
-  "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
+  "description": "Workflow-first MCP server design with schema-first tools, context-aware outputs, and evaluation discipline.",
   "author": {
-    "name": "yeaight7"
+    "name": "Javier Rivero Iglesias",
+    "email": "jriveroiglesias@al.uloyola.es"
   },
   "homepage": "https://github.com/yeaight7/agent-powerups#readme",
   "repository": "https://github.com/yeaight7/agent-powerups",
   "license": "Apache-2.0",
   "keywords": [
-    "browser",
     "mcp",
-    "retrieval",
-    "agent-runtime",
-    "integrations"
+    "servers",
+    "tooling",
+    "agent-workflows",
+    "schema-first"
   ],
-  "maturity": "draft"
+  "maturity": "beta"
 }
