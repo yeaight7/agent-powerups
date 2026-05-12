@@ -1,6 +1,6 @@
 {
-  "name": "tool-integrations",
+  "name": "skill-authoring",
   "version": "0.1.0",
-  "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
+  "description": "Skill creation and extraction workflows for reusable agent guidance.",
   "contextFileName": "GEMINI.md"
 }
