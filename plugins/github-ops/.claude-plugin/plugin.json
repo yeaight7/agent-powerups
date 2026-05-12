@@ -1,0 +1,19 @@
+{
+  "name": "tool-integrations",
+  "version": "0.1.0",
+  "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
+  "author": {
+    "name": "yeaight7"
+  },
+  "homepage": "https://github.com/yeaight7/agent-powerups#readme",
+  "repository": "https://github.com/yeaight7/agent-powerups",
+  "license": "Apache-2.0",
+  "keywords": [
+    "browser",
+    "mcp",
+    "retrieval",
+    "agent-runtime",
+    "integrations"
+  ],
+  "maturity": "draft"
+}
