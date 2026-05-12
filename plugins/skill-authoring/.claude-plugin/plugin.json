@@ -1,19 +1,20 @@
 {
-  "name": "tool-integrations",
+  "name": "skill-authoring",
   "version": "0.1.0",
-  "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
+  "description": "Skill creation and extraction workflows for reusable agent guidance.",
   "author": {
-    "name": "yeaight7"
+    "name": "Javier Rivero Iglesias",
+    "email": "jriveroiglesias@al.uloyola.es"
   },
   "homepage": "https://github.com/yeaight7/agent-powerups#readme",
   "repository": "https://github.com/yeaight7/agent-powerups",
   "license": "Apache-2.0",
   "keywords": [
-    "browser",
-    "mcp",
-    "retrieval",
-    "agent-runtime",
-    "integrations"
+    "skills",
+    "authoring",
+    "workflow",
+    "reuse",
+    "agents"
   ],
-  "maturity": "draft"
+  "maturity": "beta"
 }
