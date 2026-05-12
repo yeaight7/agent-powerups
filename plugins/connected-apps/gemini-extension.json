@@ -1,6 +1,6 @@
 {
-  "name": "tool-integrations",
+  "name": "connected-apps",
   "version": "0.1.0",
-  "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
+  "description": "Review-first runbooks for connected-app workflows and multi-system deployment sequencing.",
   "contextFileName": "GEMINI.md"
 }
