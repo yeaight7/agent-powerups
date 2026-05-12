@@ -1,6 +1,6 @@
-# tool-integrations
+# mcp-development
 
-Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.
+Workflow-first MCP server design with schema-first tools, context-aware outputs, and evaluation discipline.
 
 Use this extension as a local Agent Powerups bundle. Inspect relevant files under this extension before applying a workflow:
 
