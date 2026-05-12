@@ -1,6 +1,6 @@
 {
-  "name": "tool-integrations",
+  "name": "github-ops",
   "version": "0.1.0",
-  "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
+  "description": "GitHub review, comment handling, and CI triage workflows with approval-gated write actions.",
   "contextFileName": "GEMINI.md"
 }
