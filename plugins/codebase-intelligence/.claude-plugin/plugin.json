@@ -1,10 +1,9 @@
 {
   "name": "codebase-intelligence",
   "version": "0.1.0",
-  "description": "Codebase mapping: parallel agent analysis producing structured architecture, stack, conventions, and quality documents.",
+  "description": "Search-first codebase understanding, context retrieval, mapping, pattern detection, and living project intelligence.",
   "author": {
-    "name": "Javier Rivero Iglesias",
-    "email": "javierrivero@genially.com"
+    "name": "yeaight7"
   },
   "homepage": "https://github.com/yeaight7/agent-powerups#readme",
   "repository": "https://github.com/yeaight7/agent-powerups",
