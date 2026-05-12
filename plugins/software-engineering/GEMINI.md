@@ -1,6 +1,6 @@
 # software-engineering
 
-Full-lifecycle software delivery: parallel execution, requirements clarification, autonomous pipeline, persistent completion loops, and hard-won skill extraction.
+Subagent orchestration, wave execution, worktree isolation, persistent completion, autonomous delivery, and migration batching.
 
 Use this extension as a local Agent Powerups bundle. Inspect relevant files under this extension before applying a workflow:
 
