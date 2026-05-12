@@ -1,6 +1,6 @@
 {
   "name": "software-engineering",
   "version": "0.1.0",
-  "description": "Full-lifecycle software delivery: parallel execution, requirements clarification, autonomous pipeline, persistent completion loops, and hard-won skill extraction.",
+  "description": "Subagent orchestration, wave execution, worktree isolation, persistent completion, autonomous delivery, and migration batching.",
   "contextFileName": "GEMINI.md"
 }
