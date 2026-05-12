@@ -114,7 +114,7 @@
     {
       "name": "software-engineering",
       "source": "./plugins/software-engineering",
-      "description": "Full-lifecycle software delivery: parallel execution, requirements clarification, autonomous pipeline, persistent completion loops, and hard-won skill extraction.",
+      "description": "Subagent orchestration, wave execution, worktree isolation, persistent completion, autonomous delivery, and migration batching.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "keywords": [
@@ -159,7 +159,7 @@
     {
       "name": "codebase-intelligence",
       "source": "./plugins/codebase-intelligence",
-      "description": "Codebase mapping: parallel agent analysis producing structured architecture, stack, conventions, and quality documents.",
+      "description": "Search-first codebase understanding, context retrieval, mapping, pattern detection, and living project intelligence.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "keywords": [
@@ -174,7 +174,7 @@
     {
       "name": "spec-driven-development",
       "source": "./plugins/spec-driven-development",
-      "description": "Spec-driven project lifecycle: discuss/plan/execute/verify phase pipeline with research and goal-backward planning.",
+      "description": "Requirements clarification, phase planning, workstreams, and wave-based execution for reviewable delivery.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "keywords": [
@@ -183,6 +183,66 @@
         "phase-pipeline",
         "research",
         "goal-backward"
+      ],
+      "category": "Developer Tools"
+    },
+    {
+      "name": "mcp-development",
+      "source": "./plugins/mcp-development",
+      "description": "Workflow-first MCP server design with schema-first tools, context-aware outputs, and evaluation discipline.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "keywords": [
+        "mcp",
+        "servers",
+        "tooling",
+        "agent-workflows",
+        "schema-first"
+      ],
+      "category": "Developer Tools"
+    },
+    {
+      "name": "skill-authoring",
+      "source": "./plugins/skill-authoring",
+      "description": "Skill creation and extraction workflows for reusable agent guidance.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "keywords": [
+        "skills",
+        "authoring",
+        "workflow",
+        "reuse",
+        "agents"
+      ],
+      "category": "Developer Tools"
+    },
+    {
+      "name": "github-ops",
+      "source": "./plugins/github-ops",
+      "description": "GitHub review, comment handling, and CI triage workflows with approval-gated write actions.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "keywords": [
+        "github",
+        "pull-requests",
+        "ci",
+        "reviews",
+        "triage"
+      ],
+      "category": "Developer Tools"
+    },
+    {
+      "name": "connected-apps",
+      "source": "./plugins/connected-apps",
+      "description": "Review-first runbooks for connected-app workflows and multi-system deployment sequencing.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "keywords": [
+        "deploy",
+        "integrations",
+        "runbooks",
+        "release",
+        "approval"
       ],
       "category": "Developer Tools"
     },
