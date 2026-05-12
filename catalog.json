@@ -680,6 +680,123 @@
     "maturity": "beta"
   },
   {
+    "name": "requirements-clarifier",
+    "type": "skill",
+    "summary": "Turn vague implementation requests into testable requirements before coding, using one-question-at-a-time clarification and explicit ambiguity reduction.",
+    "path": "skills/requirements-clarifier",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["requirements", "planning", "spec", "clarity"],
+    "maturity": "beta"
+  },
+  {
+    "name": "hard-won-skill-extractor",
+    "type": "skill",
+    "summary": "Extract a difficult, codebase-specific lesson from a session and turn it into a reusable skill candidate.",
+    "path": "skills/hard-won-skill-extractor",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["skills", "learning", "workflow", "reuse"],
+    "maturity": "beta"
+  },
+  {
+    "name": "persistent-completion-loop",
+    "type": "skill",
+    "summary": "Keep working story-by-story until the task is complete and verified, with a structured PRD and reviewer gate before completion.",
+    "path": "skills/persistent-completion-loop",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["execution", "verification", "persistence", "delivery"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "autonomous-delivery-pipeline",
+    "type": "skill",
+    "summary": "Coordinate spec expansion, planning, implementation, QA, and validation as an opt-in autonomous delivery workflow.",
+    "path": "skills/autonomous-delivery-pipeline",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["delivery", "automation", "planning", "verification"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "subagent-team-orchestration",
+    "type": "skill",
+    "summary": "Coordinate multiple subagents through dependency-aware waves, stage handoffs, monitoring, and verification loops.",
+    "path": "skills/subagent-team-orchestration",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["subagents", "orchestration", "waves", "execution"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "parallel-execution-engine",
+    "type": "skill",
+    "summary": "Run independent work in parallel with explicit wave boundaries, lightweight coordination, and bounded verification.",
+    "path": "skills/parallel-execution-engine",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["parallelism", "execution", "subagents", "latency"],
+    "maturity": "beta"
+  },
+  {
+    "name": "worktree-session-manager",
+    "type": "skill",
+    "summary": "Create isolated git worktrees and optional local sessions for issues, PRs, and feature branches with safe setup and cleanup defaults.",
+    "path": "skills/worktree-session-manager",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["git", "worktrees", "sessions", "isolation"],
+    "maturity": "beta"
+  },
+  {
+    "name": "codebase-migration-batches",
+    "type": "skill",
+    "summary": "Run large codebase migrations in reviewable local batches with codemods, checkpoints, and verification.",
+    "path": "skills/codebase-migration-batches",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["migration", "codemods", "refactor", "batching"],
+    "maturity": "beta"
+  },
+  {
+    "name": "mcp-server-builder",
+    "type": "skill",
+    "summary": "Design workflow-first MCP servers with schema-first tools, context-aware outputs, and actionable error paths.",
+    "path": "skills/mcp-server-builder",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["mcp", "server", "tooling", "design"],
+    "maturity": "beta"
+  },
+  {
+    "name": "skill-authoring-guide",
+    "type": "skill",
+    "summary": "Create or refactor high-quality skills with strong frontmatter, progressive disclosure, and optional helper assets.",
+    "path": "skills/skill-authoring-guide",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["skills", "authoring", "documentation", "workflow"],
+    "maturity": "beta"
+  },
+  {
+    "name": "github-ci-failure-triage",
+    "type": "skill",
+    "summary": "Inspect GitHub PR checks, fetch actionable failure logs, summarize the breakage, and propose a local fix plan before changing code.",
+    "path": "skills/github-ci-failure-triage",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["github", "ci", "triage", "debugging"],
+    "maturity": "beta"
+  },
+  {
+    "name": "pr-review-ci-loop",
+    "type": "skill",
+    "summary": "Run a review and CI loop around a pull request with explicit approval gates for code changes, remote writes, and follow-up actions.",
+    "path": "skills/pr-review-ci-loop",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["github", "review", "ci", "workflow"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "deploy-pipeline-runbook",
+    "type": "skill",
+    "summary": "Coordinate multi-system deployment steps as a review-first runbook with explicit approval before any external write or promotion action.",
+    "path": "skills/deploy-pipeline-runbook",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["deployment", "runbook", "release", "approval"],
+    "maturity": "experimental"
+  },
+  {
     "name": "security-audit",
     "type": "command",
     "summary": "Audit agent configuration files for security vulnerabilities and misconfigurations. Classifies findings as P0 or P1.",
@@ -781,7 +898,7 @@
   {
     "name": "software-engineering",
     "type": "pack",
-    "summary": "Full-lifecycle software delivery: parallel execution, autonomous pipeline.",
+    "summary": "Subagent orchestration, wave execution, worktree isolation, persistent completion, autonomous delivery, and migration batching.",
     "path": "plugins/software-engineering",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "software-engineering", "delivery"],
@@ -803,6 +920,60 @@
     "path": "plugins/security-guardrails",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "security", "guardrails"],
+    "maturity": "experimental"
+  },
+  {
+    "name": "codebase-intelligence",
+    "type": "pack",
+    "summary": "Search-first codebase understanding, context retrieval, mapping, pattern detection, and living project intelligence.",
+    "path": "plugins/codebase-intelligence",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "codebase", "mapping", "architecture"],
+    "maturity": "beta"
+  },
+  {
+    "name": "spec-driven-development",
+    "type": "pack",
+    "summary": "Requirements clarification, phase planning, workstreams, and wave-based execution for reviewable delivery.",
+    "path": "plugins/spec-driven-development",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "spec", "planning", "workflow"],
+    "maturity": "beta"
+  },
+  {
+    "name": "mcp-development",
+    "type": "pack",
+    "summary": "Workflow-first MCP server design with schema-first tools, context-aware outputs, and evaluation discipline.",
+    "path": "plugins/mcp-development",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "mcp", "server", "tooling"],
+    "maturity": "beta"
+  },
+  {
+    "name": "skill-authoring",
+    "type": "pack",
+    "summary": "Skill creation and extraction workflows for reusable agent guidance.",
+    "path": "plugins/skill-authoring",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "skills", "authoring", "workflow"],
+    "maturity": "beta"
+  },
+  {
+    "name": "github-ops",
+    "type": "pack",
+    "summary": "GitHub review, comment handling, and CI triage workflows with approval-gated write actions.",
+    "path": "plugins/github-ops",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "github", "review", "ci"],
+    "maturity": "beta"
+  },
+  {
+    "name": "connected-apps",
+    "type": "pack",
+    "summary": "Review-first runbooks for connected-app workflows and multi-system deployment sequencing.",
+    "path": "plugins/connected-apps",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["plugins", "deploy", "runbook", "integrations"],
     "maturity": "experimental"
   },
   {
