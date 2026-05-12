@@ -509,7 +509,7 @@ test("doctor --json returns execution result shape", async () => {
   assert.equal(typeof json.stdout, "string");
   assert.ok(json.data.checks.some((check: { name: string }) => check.name === "package/license consistency"));
   assert.ok(json.data.checks.some((check: { name: string }) => check.name === "plugin mirror sync"));
-  assert.ok(json.data.checks.some((check: { name: string; detail?: string }) => check.name === "plugin metadata" && /17 bundle/.test(check.detail ?? "")));
+  assert.ok(json.data.checks.some((check: { name: string; detail?: string }) => check.name === "plugin metadata" && /21 bundle/.test(check.detail ?? "")));
   assert.doesNotMatch(json.stdout, /plugins\/agent-powerups|plugins\\agent-powerups/);
   assert.deepEqual(json.actions, []);
   assert.ok(Array.isArray(json.warnings));
