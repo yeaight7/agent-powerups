@@ -1,100 +1,70 @@
 ---
 name: parallel-execution-engine
-description: Parallel execution engine for high-throughput task completion
-argument-hint: "<task description with parallel work items>"
+description: Run independent work in parallel with explicit wave boundaries, lightweight coordination, and bounded verification. Use when latency matters and the work does not need a persistent completion loop.
 ---
 
-<Purpose>
-Parallel Execution Engine is an execution protocol for independent work. It emphasizes intent grounding, parallel context gathering, dependency-aware task graphs for non-trivial work, and concise evidence-backed execution summaries.
-</Purpose>
+# Parallel Execution Engine
 
-<Use_When>
-- Multiple independent tasks can run simultaneously
-- You need to delegate work to multiple agents at once
-- Task benefits from concurrent execution but the user will manage completion themselves
-</Use_When>
+Use this skill when the task benefits from concurrency, but does not need the full orchestration stack.
 
-<Do_Not_Use_When>
-- Task requires guaranteed completion with verification -- use a persistent loop instead
-- Task requires a full autonomous pipeline -- use autonomous delivery instead
-- There is only one sequential task with no parallelism opportunity -- delegate directly to an executor agent
-</Do_Not_Use_When>
+## When to Use
 
-<Why_This_Exists>
-Sequential task execution wastes time when tasks are independent. This engine enables firing multiple agents simultaneously and routing each to the right model tier, reducing total execution time while controlling token costs.
-</Why_This_Exists>
+- Multiple independent tasks can run at the same time
+- You want faster turnaround on a bounded implementation or investigation
+- The task graph is shallow and easy to reason about
+- You need waves, not long-lived persistence
 
-<Execution_Policy>
-- Fire all independent agent calls simultaneously -- never serialize independent work
-- Always pass the `model` or `tier` parameter explicitly when delegating
-- Use background execution for operations over ~30 seconds (installs, builds, tests)
-- Run quick commands (git status, file reads, simple checks) in the foreground
-- Resolve intent and uncertainty before implementation; explore first, ask only when still blocked
-- For non-trivial tasks, produce a dependency-aware plan with parallel waves before execution
-- Keep delegated-task reports concise: short summary, files touched, verification status, blockers
-- Manual QA is required for implemented behavior, not just diagnostics
-- Dry-run and default-safe behaviors apply.
-</Execution_Policy>
+## Do Not Use
 
-<Steps>
-1. **Ground intent first**: Confirm whether the request is implementation, investigation, evaluation, or research; do not code before that is clear
-2. **Gather context in parallel**:
-   - direct tools for quick reads/searches
-   - exploration/docs agents for broad context
-3. **Classify tasks by independence**: Identify which tasks can run in parallel vs which have dependencies
-4. **Create a task graph for non-trivial work**:
-   - Parallel Execution Waves
-   - Dependency Matrix
-   - acceptance criteria and verification steps per task
-5. **Route to correct tiers**:
-   - Simple lookups/definitions: LOW tier
-   - Standard implementation: MEDIUM tier
-   - Complex analysis/refactoring: HIGH tier
-6. **Fire independent tasks simultaneously**: Launch all parallel-safe tasks at once
-7. **Run dependent tasks sequentially**: Wait for prerequisites before launching dependent work
-8. **Background long operations**: Builds, installs, and test suites run in background
-9. **Verify when all tasks complete** (lightweight):
-   - Build/typecheck passes
-   - Affected tests pass
-   - Manual QA completed for implemented behavior
-   - No new errors introduced
-</Steps>
+- Dependencies are complex enough to need stage-based orchestration
+- The user expects guaranteed completion across retries
+- The task still needs clarification or planning before execution
 
-<Tool_Usage>
-- Use appropriate models/agents based on task complexity
-- Use background process execution for package installs, builds, and test suites
-- Use foreground execution for quick status checks and file operations
-</Tool_Usage>
+## Core Rules
 
-<Examples>
-<Good>
-Independent tasks fired simultaneously using parallel tool calls.
-Why good: Independent tasks at appropriate tiers, all fired at once.
-</Good>
+- Launch independent work together, not sequentially
+- Keep each worker bounded to a narrow objective
+- Separate wave boundaries explicitly
+- Use the smallest suitable worker capability for each task
+- Run lightweight validation after each wave
+- Escalate to a persistent completion loop if repeated failures appear
 
-<Good>
-Correct use of background execution: Long build runs in background while short task runs in foreground.
-</Good>
+## Workflow
 
-<Bad>
-Sequential execution of independent work.
-Why bad: These tasks are independent. Running them sequentially wastes time.
-</Bad>
+1. **Classify the work**
+   - Independent tasks
+   - Dependency-gated tasks
+   - Verification tasks
 
-<Bad>
-Wrong tier selection (e.g. using the most capable, expensive model for a trivial fix).
-</Bad>
-</Examples>
+2. **Build waves**
+   - Wave 0 for setup or discovery if needed
+   - Parallel waves for independent execution
+   - Final wave for integration and checks
 
-<Escalation_And_Stop_Conditions>
-- Apply lightweight verification only -- build passes, tests pass, no new errors
-- If a task fails repeatedly across retries, report the issue rather than retrying indefinitely
-- Escalate to the user when tasks have unclear dependencies or conflicting requirements
-</Escalation_And_Stop_Conditions>
+3. **Route intelligently**
+   - Fast workers for mechanical lookups or edits
+   - Standard workers for typical implementation
+   - Deep workers only for architecture, security, or stubborn failures
 
-<Final_Checklist>
-- [ ] All parallel tasks completed
-- [ ] Build/typecheck passes
-- [ ] Affected tests pass
-- [ ] No new errors introduced
-</Final_Checklist>
+4. **Launch by wave**
+   - Fire every parallel-safe task in the same wave at once
+   - Keep prompts short, scoped, and file-aware
+   - Avoid overlapping ownership
+
+5. **Collect and verify**
+   - Summarize outputs by task
+   - Run only the checks that match the changed surface first
+   - Broaden validation only when needed
+
+## Output Format
+
+```text
+Wave 0:
+- ...
+
+Wave 1:
+- ...
+
+Validation:
+- ...
+```
