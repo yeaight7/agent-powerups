@@ -153,3 +153,38 @@ test("every plugin bundle has a Gemini extension manifest", async () => {
     await fs.access(path.join(repoRoot, "plugins", plugin.name, manifest.contextFileName));
   }
 });
+
+test("plugin bundle metadata does not ship placeholder surfaces", async () => {
+  const bundles = await readJson(path.join(repoRoot, "plugin-bundles.json"));
+
+  for (const bundle of bundles.plugins) {
+    for (const key of ["skills", "agents", "commands", "templates"] as const) {
+      for (const entry of bundle[key] ?? []) {
+        assert.notEqual(
+          entry.origin,
+          "placeholder",
+          `bundle ${bundle.name} still advertises placeholder ${key.slice(0, -1)} '${entry.name}'`
+        );
+      }
+    }
+  }
+});
+
+test("shipped worktree session manager examples stay generic", async () => {
+  const files = [
+    "skills/worktree-session-manager/lib/config.sh",
+    "skills/worktree-session-manager/lib/parse.sh",
+    "skills/worktree-session-manager/psm.sh",
+    "skills/worktree-session-manager/templates/projects.json",
+    "plugins/software-engineering/skills/worktree-session-manager/lib/config.sh",
+    "plugins/software-engineering/skills/worktree-session-manager/lib/parse.sh",
+    "plugins/software-engineering/skills/worktree-session-manager/psm.sh",
+    "plugins/software-engineering/skills/worktree-session-manager/templates/projects.json",
+  ];
+
+  for (const relPath of files) {
+    const text = await fs.readFile(path.join(repoRoot, relPath), "utf8");
+    assert.doesNotMatch(text, /Yeachan-Heo\/oh-my-claudecode/);
+    assert.doesNotMatch(text, /anthropics\/claude-code/);
+  }
+});
