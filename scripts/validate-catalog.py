@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 
 REPO_ROOT = os.environ.get("APX_REPO_ROOT") or os.path.dirname(
@@ -42,6 +43,21 @@ ALLOWED_MCP_KEYS = {"required_env", "server_package", "warning", "output_hints"}
 
 errors: list[str] = []
 warnings: list[str] = []
+
+
+def is_gitignored(path: str) -> bool:
+    rel_path = os.path.relpath(path, REPO_ROOT).replace(os.sep, "/")
+    try:
+        result = subprocess.run(
+            ["git", "check-ignore", "-q", "--", rel_path],
+            cwd=REPO_ROOT,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+    except OSError:
+        return False
+    return result.returncode == 0
 
 
 def detect_root_license() -> str:
@@ -216,6 +232,8 @@ def validate_asset_coverage(catalog: list[dict]) -> None:
             full_path = os.path.join(SKILLS_DIR, entry)
             if not os.path.isdir(full_path):
                 continue
+            if is_gitignored(full_path):
+                continue
             expected = f"skills/{entry}"
             if expected not in cataloged_paths:
                 errors.append(f"[{entry}] skill directory exists but has no catalog entry")
@@ -223,6 +241,8 @@ def validate_asset_coverage(catalog: list[dict]) -> None:
     if os.path.isdir(SCRIPTS_DIR):
         for entry in sorted(os.listdir(SCRIPTS_DIR)):
             if not entry.endswith(".py"):
+                continue
+            if is_gitignored(os.path.join(SCRIPTS_DIR, entry)):
                 continue
             expected = f"scripts/{entry}"
             if expected not in cataloged_paths:
@@ -240,6 +260,8 @@ def validate_asset_coverage(catalog: list[dict]) -> None:
                 if filename == ".gitkeep" or not filename.endswith(suffix):
                     continue
                 full_path = os.path.join(current_dir, filename)
+                if is_gitignored(full_path):
+                    continue
                 rel_path = os.path.relpath(full_path, REPO_ROOT).replace(os.sep, "/")
                 if rel_path not in cataloged_paths:
                     errors.append(f"[{rel_path}] {asset_type} file exists but has no catalog entry")
@@ -248,6 +270,8 @@ def validate_asset_coverage(catalog: list[dict]) -> None:
         for entry in sorted(os.listdir(AGENTS_MD_DIR)):
             expected = f"agents-md/{entry}/AGENTS.md"
             full_path = os.path.join(REPO_ROOT, expected)
+            if is_gitignored(full_path):
+                continue
             if os.path.isfile(full_path) and expected not in cataloged_paths:
                 errors.append(f"[{entry}] AGENTS.md template exists but has no catalog entry")
 
