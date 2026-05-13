@@ -1,6 +1,6 @@
 # software-engineering
 
-Subagent orchestration, wave execution, worktree isolation, persistent completion, autonomous delivery, and migration batching.
+Subagent orchestration, wave execution, persistent completion, autonomous delivery, and migration batching.
 
 Use this extension as a local Agent Powerups bundle. Inspect relevant files under this extension before applying a workflow:
 
