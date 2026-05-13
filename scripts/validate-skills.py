@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import os
 import re
+import subprocess
 import sys
 
 REPO_ROOT = os.environ.get("APX_REPO_ROOT") or os.path.dirname(
@@ -25,6 +26,25 @@ RECOMMENDED_SECTIONS = [
 errors: list[str] = []
 warnings: list[str] = []
 STYLE_WARNINGS = "--style" in sys.argv
+
+
+def repo_rel_path(path: str) -> str:
+    return os.path.relpath(path, REPO_ROOT).replace(os.sep, "/")
+
+
+def is_gitignored(path: str) -> bool:
+    rel_path = repo_rel_path(path)
+    try:
+        result = subprocess.run(
+            ["git", "check-ignore", "-q", "--", rel_path],
+            cwd=REPO_ROOT,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+    except OSError:
+        return False
+    return result.returncode == 0
 
 
 def referenced_support_files(content: str) -> list[str]:
@@ -125,6 +145,7 @@ def main() -> int:
         os.path.join(SKILLS_DIR, entry)
         for entry in sorted(os.listdir(SKILLS_DIR))
         if os.path.isdir(os.path.join(SKILLS_DIR, entry))
+        and not is_gitignored(os.path.join(SKILLS_DIR, entry))
     ]
 
     if not skill_dirs:
