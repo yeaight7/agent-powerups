@@ -114,7 +114,7 @@
     {
       "name": "software-engineering",
       "source": "./plugins/software-engineering",
-      "description": "Subagent orchestration, wave execution, worktree isolation, persistent completion, autonomous delivery, and migration batching.",
+      "description": "Subagent orchestration, wave execution, persistent completion, autonomous delivery, and migration batching.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "keywords": [
