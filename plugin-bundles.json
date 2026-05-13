@@ -224,12 +224,11 @@
     },
     {
       "name": "software-engineering",
-      "description": "Subagent orchestration, wave execution, worktree isolation, persistent completion, autonomous delivery, and migration batching.",
+      "description": "Subagent orchestration, wave execution, persistent completion, autonomous delivery, and migration batching.",
       "maturity": "experimental",
       "skills": [
         { "name": "subagent-team-orchestration", "origin": "root-copy" },
         { "name": "parallel-execution-engine", "origin": "root-copy" },
-        { "name": "worktree-session-manager", "origin": "root-copy" },
         { "name": "persistent-completion-loop", "origin": "root-copy" },
         { "name": "autonomous-delivery-pipeline", "origin": "root-copy" },
         { "name": "codebase-migration-batches", "origin": "root-copy" }
