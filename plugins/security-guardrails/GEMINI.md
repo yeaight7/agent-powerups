@@ -1,6 +1,6 @@
 # security-guardrails
 
-Security vulnerability detection: OWASP Top 10 analysis, secrets scanning, dependency audits.
+Security review guidance for agent configs, MCP and filesystem exposure, red-team scenarios, and audit prompts.
 
 Use this extension as a local Agent Powerups bundle. Inspect relevant files under this extension before applying a workflow:
 
