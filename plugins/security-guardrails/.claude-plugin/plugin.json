@@ -1,10 +1,10 @@
 {
   "name": "security-guardrails",
   "version": "0.1.0",
-  "description": "Security vulnerability detection: OWASP Top 10 analysis, secrets scanning, dependency audits.",
+  "description": "Security review guidance for agent configs, MCP and filesystem exposure, red-team scenarios, and audit prompts.",
   "author": {
     "name": "Javier Rivero Iglesias",
-    "email": "javierrivero@genially.com"
+    "email": "jriveroiglesias@al.uloyola.es"
   },
   "homepage": "https://github.com/yeaight7/agent-powerups#readme",
   "repository": "https://github.com/yeaight7/agent-powerups",
