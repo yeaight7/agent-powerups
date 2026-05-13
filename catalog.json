@@ -734,15 +734,6 @@
     "maturity": "beta"
   },
   {
-    "name": "worktree-session-manager",
-    "type": "skill",
-    "summary": "Create isolated git worktrees and optional local sessions for issues, PRs, and feature branches with safe setup and cleanup defaults.",
-    "path": "skills/worktree-session-manager",
-    "compatible_with": ["claude-code", "codex", "generic"],
-    "tags": ["git", "worktrees", "sessions", "isolation"],
-    "maturity": "beta"
-  },
-  {
     "name": "codebase-migration-batches",
     "type": "skill",
     "summary": "Run large codebase migrations in reviewable local batches with codemods, checkpoints, and verification.",
@@ -898,7 +889,7 @@
   {
     "name": "software-engineering",
     "type": "pack",
-    "summary": "Subagent orchestration, wave execution, worktree isolation, persistent completion, autonomous delivery, and migration batching.",
+    "summary": "Subagent orchestration, wave execution, persistent completion, autonomous delivery, and migration batching.",
     "path": "plugins/software-engineering",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "software-engineering", "delivery"],
