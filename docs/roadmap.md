@@ -6,6 +6,7 @@ Scope stays narrow until the repo is public-ready.
 
 - tighten README, docs, catalog, and validation flow
 - normalize existing skills, especially tool-dependent ones
+- work through `docs/feature-retrieval-checklist.md` before reclaiming more harvested behavior
 - harden command, hook, workflow, MCP, setup examples, and AGENTS.md assets after docs and metadata stay solid
 
 ## Next Assets
