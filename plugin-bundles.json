@@ -259,20 +259,15 @@
         { "name": "agent-harness-design", "origin": "first-party-seed" }
       ],
       "commands": [
-        { "name": "tri-review", "origin": "placeholder" },
-        { "name": "ask-all", "origin": "placeholder" },
         { "name": "model-route", "origin": "root-copy" }
       ]
     },
     {
       "name": "security-guardrails",
-      "description": "Security vulnerability detection: OWASP Top 10 analysis, secrets scanning, dependency audits.",
+      "description": "Security review guidance for agent configs, MCP and filesystem exposure, red-team scenarios, and audit prompts.",
       "maturity": "experimental",
       "skills": [
         { "name": "agent-config-security-audit", "origin": "root-copy" },
-        { "name": "hook-safety-review", "origin": "placeholder" },
-        { "name": "mcp-risk-review", "origin": "placeholder" },
-        { "name": "secret-leak-preflight", "origin": "placeholder" },
         { "name": "red-team-eval-authoring", "origin": "root-copy" },
         { "name": "filesystem-mcp-guardrails", "origin": "root-copy" }
       ],
@@ -280,9 +275,7 @@
         { "name": "security-reviewer", "origin": "first-party-seed" }
       ],
       "commands": [
-        { "name": "security-audit", "origin": "root-copy" },
-        { "name": "mcp-risk-check", "origin": "placeholder" },
-        { "name": "hook-risk-check", "origin": "placeholder" }
+        { "name": "security-audit", "origin": "root-copy" }
       ]
     },
     {
