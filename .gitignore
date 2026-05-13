@@ -12,3 +12,6 @@ skills/graphify/graphify-out/
 .obsidian/
 .graphify*
 docs/feature*
+staging/*-skills/
+skills/worktree-session-manager/
+plugins/software-engineering/skills/worktree-session-manager/
