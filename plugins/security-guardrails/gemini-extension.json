@@ -1,6 +1,6 @@
 {
   "name": "security-guardrails",
   "version": "0.1.0",
-  "description": "Security vulnerability detection: OWASP Top 10 analysis, secrets scanning, dependency audits.",
+  "description": "Security review guidance for agent configs, MCP and filesystem exposure, red-team scenarios, and audit prompts.",
   "contextFileName": "GEMINI.md"
 }
