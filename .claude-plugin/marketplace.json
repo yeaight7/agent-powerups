@@ -3,7 +3,7 @@
   "description": "Reusable AI agent skills, commands, hooks, and workflows for Claude Code, Codex, and Gemini — an Oh My Zsh-style collection of developer powerups.",
   "owner": {
     "name": "Javier Rivero Iglesias",
-    "email": "javierrivero@genially.com"
+    "email": "jriveroiglesias@al.uloyola.es"
   },
   "plugins": [
     {
@@ -144,7 +144,7 @@
     {
       "name": "security-guardrails",
       "source": "./plugins/security-guardrails",
-      "description": "Security vulnerability detection: OWASP Top 10 analysis, secrets scanning, dependency audits.",
+      "description": "Security review guidance for agent configs, MCP and filesystem exposure, red-team scenarios, and audit prompts.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "keywords": [
