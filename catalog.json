@@ -1092,5 +1092,172 @@
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "evals", "quality", "red-team"],
     "maturity": "beta"
+  },
+  {
+    "name": "context7",
+    "type": "mcp-config",
+    "summary": "Fetch up-to-date library and framework documentation via the Context7 MCP server.",
+    "path": "mcp/generic/context7.json",
+    "compatible_with": ["generic", "codex", "claude-code"],
+    "tags": ["mcp", "docs", "context", "retrieval"],
+    "maturity": "beta",
+    "requires": {
+      "commands": ["npx"]
+    },
+    "mcp": {
+      "required_env": [],
+      "server_package": "@upstash/context7-mcp",
+      "warning": "Makes remote HTTP requests to retrieve documentation. Optional: set CONTEXT7_API_KEY for higher rate limits.",
+      "output_hints": { "generic": ".mcp.json", "claude-code": ".mcp.json", "codex": "config.toml" }
+    },
+    "targets": { "codex": "mcp/codex/context7.toml", "claude-code": "mcp/claude-code/context7.json", "generic": "mcp/generic/context7.json" }
+  },
+  {
+    "name": "sequential-thinking",
+    "type": "mcp-config",
+    "summary": "Enable structured, multi-step reasoning chains via the MCP sequential-thinking server.",
+    "path": "mcp/generic/sequential-thinking.json",
+    "compatible_with": ["generic", "codex", "claude-code"],
+    "tags": ["mcp", "reasoning", "planning", "thinking"],
+    "maturity": "stable",
+    "requires": {
+      "commands": ["npx"]
+    },
+    "mcp": {
+      "required_env": [],
+      "server_package": "@modelcontextprotocol/server-sequential-thinking",
+      "warning": "Low risk. No filesystem or remote write access. Safe for most environments.",
+      "output_hints": { "generic": ".mcp.json", "claude-code": ".mcp.json", "codex": "config.toml" }
+    },
+    "targets": { "codex": "mcp/codex/sequential-thinking.toml", "claude-code": "mcp/claude-code/sequential-thinking.json", "generic": "mcp/generic/sequential-thinking.json" }
+  },
+  {
+    "name": "playwright",
+    "type": "mcp-config",
+    "summary": "Browser automation via Microsoft Playwright MCP server. Runs headless by default.",
+    "path": "mcp/generic/playwright.json",
+    "compatible_with": ["generic", "codex", "claude-code"],
+    "tags": ["mcp", "browser", "automation", "testing"],
+    "maturity": "beta",
+    "requires": {
+      "commands": ["npx"]
+    },
+    "mcp": {
+      "required_env": [],
+      "server_package": "@playwright/mcp",
+      "warning": "High browser-automation risk. Can visit arbitrary URLs, download files, and interact with web UIs. Runs headless by default; remove --headless for headed mode. Restrict allowed origins in production environments.",
+      "output_hints": { "generic": ".mcp.json", "claude-code": ".mcp.json", "codex": "config.toml" }
+    },
+    "targets": { "codex": "mcp/codex/playwright.toml", "claude-code": "mcp/claude-code/playwright.json", "generic": "mcp/generic/playwright.json" }
+  },
+  {
+    "name": "filesystem-repo-scoped",
+    "type": "mcp-config",
+    "summary": "Filesystem MCP server scoped to the repository root. Requires replacing the ${REPO_ROOT} placeholder before use.",
+    "path": "mcp/generic/filesystem-repo-scoped.json",
+    "compatible_with": ["generic", "codex", "claude-code"],
+    "tags": ["mcp", "filesystem", "local", "scoped"],
+    "maturity": "beta",
+    "requires": {
+      "commands": ["npx"]
+    },
+    "mcp": {
+      "required_env": [],
+      "server_package": "@modelcontextprotocol/server-filesystem",
+      "warning": "High local file risk. Grants the agent full read/write access to all files under the scoped path. Replace ${REPO_ROOT} with the absolute path of the repository root. Never scope to the home directory.",
+      "output_hints": { "generic": ".mcp.json", "claude-code": ".mcp.json", "codex": "config.toml" }
+    },
+    "targets": { "codex": "mcp/codex/filesystem-repo-scoped.toml", "claude-code": "mcp/claude-code/filesystem-repo-scoped.json", "generic": "mcp/generic/filesystem-repo-scoped.json" }
+  },
+  {
+    "name": "memory",
+    "type": "mcp-config",
+    "summary": "Persistent local memory via the MCP memory server. Stores and retrieves facts across sessions.",
+    "path": "mcp/generic/memory.json",
+    "compatible_with": ["generic", "codex", "claude-code"],
+    "tags": ["mcp", "memory", "context", "persistence"],
+    "maturity": "beta",
+    "requires": {
+      "commands": ["npx"]
+    },
+    "mcp": {
+      "required_env": [],
+      "server_package": "@modelcontextprotocol/server-memory",
+      "warning": "Persists conversation context to a local JSON file. Do not store secrets, credentials, or personal data in memory. Review the memory file location before use in shared environments.",
+      "output_hints": { "generic": ".mcp.json", "claude-code": ".mcp.json", "codex": "config.toml" }
+    },
+    "targets": { "codex": "mcp/codex/memory.toml", "claude-code": "mcp/claude-code/memory.json", "generic": "mcp/generic/memory.json" }
+  },
+  {
+    "name": "destructive-bash-guard",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for blocking hard-to-reverse Bash commands like rm -rf and git reset --hard.",
+    "path": "hooks/safety/destructive-bash-guard.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "safety", "bash", "guard"],
+    "maturity": "stable"
+  },
+  {
+    "name": "mcp-write-guard",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for intercepting MCP write-class tool calls and requiring explicit approval.",
+    "path": "hooks/mcp/mcp-write-guard.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "mcp", "safety", "approval"],
+    "maturity": "beta"
+  },
+  {
+    "name": "mcp-config-change-approval",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for requiring approval before any MCP server configuration file is modified.",
+    "path": "hooks/mcp/mcp-config-change-approval.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "mcp", "safety", "config"],
+    "maturity": "beta"
+  },
+  {
+    "name": "env-file-mutation-approval",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for blocking writes to .env files without explicit approval.",
+    "path": "hooks/safety/env-file-mutation-approval.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "safety", "secrets", "env"],
+    "maturity": "beta"
+  },
+  {
+    "name": "generated-file-warning",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for warning when an agent attempts to edit a generated file.",
+    "path": "hooks/quality/generated-file-warning.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "quality", "generated", "code-generation"],
+    "maturity": "beta"
+  },
+  {
+    "name": "console-log-check",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for catching debug statements in staged changes before a commit.",
+    "path": "hooks/quality/console-log-check.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "quality", "debugging", "cleanup"],
+    "maturity": "beta"
+  },
+  {
+    "name": "large-diff-warning",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for warning on oversized commits and prompting to split or confirm.",
+    "path": "hooks/git/large-diff-warning.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "git", "quality", "review"],
+    "maturity": "beta"
+  },
+  {
+    "name": "session-log",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for appending a timestamped audit trail of agent tool calls to a local log file.",
+    "path": "hooks/productivity/session-log.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "productivity", "logging", "audit"],
+    "maturity": "beta"
   }
 ]
