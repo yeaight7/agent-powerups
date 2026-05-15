@@ -1,0 +1,6 @@
+# Sources: https://github.com/modelcontextprotocol/servers (filesystem)
+# WARNING: Replace ${REPO_ROOT} with the absolute path of the repository root before use.
+# Scope strictly to the repo root — never use the home directory.
+[mcp_servers.filesystem-repo-scoped]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-filesystem", "${REPO_ROOT}"]
