@@ -1259,5 +1259,120 @@
     "compatible_with": ["generic"],
     "tags": ["hooks", "productivity", "logging", "audit"],
     "maturity": "beta"
+  },
+  {
+    "name": "release-readiness-protocol",
+    "type": "skill",
+    "summary": "Check version bump, changelog, compare range, package metadata, validation commands, publish steps, and rollback plan before cutting a release.",
+    "path": "skills/release-readiness-protocol",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["release", "versioning", "publishing", "changelog"],
+    "maturity": "beta"
+  },
+  {
+    "name": "changelog-generator",
+    "type": "skill",
+    "summary": "Turn commits, PRs, or diffs into user-facing release notes or an internal changelog, with modes for breaking-change scanning.",
+    "path": "skills/changelog-generator",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["changelog", "release", "git", "documentation"],
+    "maturity": "beta"
+  },
+  {
+    "name": "build-fix-minimal-diff",
+    "type": "skill",
+    "summary": "Fix broken builds, type errors, or test failures with the smallest safe diff — no opportunistic refactors, no cleanup.",
+    "path": "skills/build-fix-minimal-diff",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["build", "debugging", "testing", "minimal-diff"],
+    "maturity": "beta"
+  },
+  {
+    "name": "environment-doctor",
+    "type": "skill",
+    "summary": "Diagnose local agent and project setup problems — missing commands, broken MCP configs, stale generated assets, bad paths, and missing env vars.",
+    "path": "skills/environment-doctor",
+    "compatible_with": ["claude-code", "codex", "gemini-cli", "generic"],
+    "tags": ["setup", "debugging", "mcp", "environment"],
+    "maturity": "beta"
+  },
+  {
+    "name": "webapp-visual-testing",
+    "type": "skill",
+    "summary": "Inspect and test web UIs using screenshots, browser automation, accessibility snapshots, and console/network signals.",
+    "path": "skills/webapp-visual-testing",
+    "compatible_with": ["claude-code", "codex", "generic"],
+    "tags": ["browser", "testing", "accessibility", "visual"],
+    "maturity": "beta"
+  },
+  {
+    "name": "release",
+    "type": "command",
+    "summary": "Run a release-readiness checklist and produce a go/no-go readout before tagging or publishing.",
+    "path": "commands/generic/release.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "release", "publishing", "versioning"],
+    "maturity": "beta",
+    "targets": { "codex": "commands/codex/release.md", "generic": "commands/generic/release.md", "claude-code": "commands/claude-code/release.md" }
+  },
+  {
+    "name": "changelog",
+    "type": "command",
+    "summary": "Generate user-facing release notes or a changelog entry from commits, PRs, or a diff.",
+    "path": "commands/generic/changelog.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "changelog", "release", "git"],
+    "maturity": "beta",
+    "targets": { "codex": "commands/codex/changelog.md", "generic": "commands/generic/changelog.md", "claude-code": "commands/claude-code/changelog.md" }
+  },
+  {
+    "name": "build-fix",
+    "type": "command",
+    "summary": "Fix a failing build, type check, or test suite with the smallest safe diff.",
+    "path": "commands/generic/build-fix.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "build", "debugging", "testing"],
+    "maturity": "beta",
+    "targets": { "codex": "commands/codex/build-fix.md", "generic": "commands/generic/build-fix.md", "claude-code": "commands/claude-code/build-fix.md" }
+  },
+  {
+    "name": "doctor",
+    "type": "command",
+    "summary": "Diagnose environment, tooling, and agent setup problems with a structured report.",
+    "path": "commands/generic/doctor.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "setup", "debugging", "environment"],
+    "maturity": "beta",
+    "targets": { "codex": "commands/codex/doctor.md", "generic": "commands/generic/doctor.md", "claude-code": "commands/claude-code/doctor.md" }
+  },
+  {
+    "name": "visual-review",
+    "type": "command",
+    "summary": "Inspect a web UI with browser evidence: screenshots, accessibility, console/network signals, structured findings.",
+    "path": "commands/generic/visual-review.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "browser", "testing", "visual"],
+    "maturity": "beta",
+    "targets": { "codex": "commands/codex/visual-review.md", "generic": "commands/generic/visual-review.md", "claude-code": "commands/claude-code/visual-review.md" }
+  },
+  {
+    "name": "mcp-check",
+    "type": "command",
+    "summary": "Check MCP server prerequisites and configuration before activating or using a server.",
+    "path": "commands/generic/mcp-check.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "mcp", "setup", "prerequisites"],
+    "maturity": "beta",
+    "targets": { "codex": "commands/codex/mcp-check.md", "generic": "commands/generic/mcp-check.md", "claude-code": "commands/claude-code/mcp-check.md" }
+  },
+  {
+    "name": "mcp-smoke",
+    "type": "command",
+    "summary": "Test that an MCP server starts and responds before adding it to an agent configuration.",
+    "path": "commands/generic/mcp-smoke.md",
+    "compatible_with": ["generic", "claude-code", "codex"],
+    "tags": ["commands", "mcp", "testing", "smoke"],
+    "maturity": "beta",
+    "targets": { "codex": "commands/codex/mcp-smoke.md", "generic": "commands/generic/mcp-smoke.md", "claude-code": "commands/claude-code/mcp-smoke.md" }
   }
 ]
