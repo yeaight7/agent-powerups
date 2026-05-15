@@ -1,0 +1,6 @@
+# Sources: https://github.com/microsoft/playwright-mcp
+# WARNING: High browser-automation risk. Runs headless by default.
+# Remove --headless for headed mode. Restrict allowed origins in production.
+[mcp_servers.playwright]
+command = "npx"
+args = ["@playwright/mcp@latest", "--headless"]
