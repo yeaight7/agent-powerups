@@ -1,0 +1,6 @@
+# Sources: https://developers.cloudflare.com/mcp
+# DRAFT: Verify the SSE endpoint URL against current Cloudflare MCP documentation before use.
+# No authentication is required for read-only documentation access.
+[mcp_servers.cloudflare-docs]
+type = "http"
+url = "https://docs.mcp.cloudflare.com/sse"
