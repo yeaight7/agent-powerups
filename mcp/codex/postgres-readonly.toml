@@ -1,0 +1,9 @@
+# Sources: https://github.com/modelcontextprotocol/servers (postgres)
+# WARNING: Set POSTGRES_READONLY_DSN to a SELECT-only connection string.
+# WARNING: Never use production write credentials or a superuser role.
+[mcp_servers.postgres-readonly]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-postgres", "${POSTGRES_READONLY_DSN}"]
+
+[mcp_servers.postgres-readonly.env]
+POSTGRES_READONLY_DSN = "${POSTGRES_READONLY_DSN}"
