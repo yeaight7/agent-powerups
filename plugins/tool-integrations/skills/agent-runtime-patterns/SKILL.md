@@ -6,30 +6,49 @@ description: Use when optimizing agent runtime loops, card packs, MCP session li
 # Agent Runtime Patterns
 
 ## When to use
-Use when designing efficient agent runtimes, implementing "smart card" style prompt packs, or experimenting with novel MCP session management.
+- Optimizing a slow or over-spending agent loop (too many tool calls, high token use).
+- Designing multi-agent orchestration topology for a new workflow.
+- Managing MCP session lifecycle for experimental data-layer sessions.
+- Reducing redundant search or file-read loops.
 
-## Requirements / Checks
-- Applies when optimizing an agent's execution loop, card packs, MCP server usage, or session handling.
-- Treat agent runtime/session concepts as experimental until validated locally.
-- Check whether existing Agent Powerups skills already cover the workflow before creating new runtime abstractions.
+## Core Patterns
+
+| Pattern | Use when | Avoid when |
+|---|---|---|
+| **Direct execution** | Single agent, clear scope, no subagent benefits | Task genuinely requires parallel sub-agents or specialized routing |
+| **Routing** | Input type determines which specialized agent to invoke | Agents share context and can't be isolated |
+| **Chaining** | Output of A is strict input of B | Agents need to share partial context |
+| **Orchestrator-worker** | Parallel independent subtasks with a coordinator | Tasks are tightly coupled or sequential |
+| **Agents-as-tools** | Callable child agent inside a parent's tool loop | The child needs user interaction |
+
+## Knowledge Cards
+
+A **card** is a compact, high-signal instruction block — typically 3–10 lines — for a specific operation. Cards are preferable to loading full documentation into context.
+
+Good card: step sequence + key constraint + example invocation.
+Bad card: copied README sections, multiple unrelated topics in one block.
+
+Pack cards for the current task only. Swap cards between phases rather than accumulating them.
 
 ## Workflow
-1. **Analyze bottleneck**: Identify redundant search loops, bloated prompts, serial subagent calls, or slow MCP tools.
-2. **Pack knowledge**: Use compact "cards" for high-signal instructions; avoid bundling full docs unless needed.
-3. **Bound search loops**: Prefer a tool-only search subagent or hook that normalizes search calls and caps retries.
-4. **Compose agents carefully**: Use routing, chaining, orchestrator-worker, or agents-as-tools only when simpler direct execution is insufficient.
-5. **Model sessions explicitly**: For experimental MCP sessions, track create/delete lifecycle, request `_meta` session IDs, and missing-session errors.
-6. **Measure before/after**: Compare latency, tool count, token use, and task quality.
+
+1. **Identify the bottleneck** — measure before optimizing: count tool calls, token usage, and latency. Name the specific slow or expensive step.
+2. **Choose the right pattern** — use the table above. Default to direct execution; add orchestration only when simpler approaches are insufficient.
+3. **Pack knowledge as cards** — replace large prompt docs with targeted 5–10 line cards per operation.
+4. **Bound search loops** — cap retries (e.g., max 3 search attempts), normalize query construction, prefer a dedicated search subagent over inline ad-hoc loops.
+5. **Model MCP sessions explicitly** — for experimental sessions: track create/delete lifecycle, request `_meta` session IDs, handle missing-session errors without silent retries.
+6. **Measure after** — compare latency, tool-call count, token use, and task success rate before/after.
 
 ## Safety Constraints
-- Experimental features must be sandboxed.
-- Do not apply unproven runtime optimizations to critical production flows without verification.
-- Do not add runtime layers to hide unclear requirements; simplify task design first.
-- Do not persist session state that contains secrets without explicit storage policy.
+- Sandbox experimental runtime changes; do not deploy to production flows without verified before/after comparison.
+- Do not add orchestration layers to compensate for unclear requirements — clarify the task first.
+- Do not persist session state containing secrets without an explicit storage policy.
+- Do not retry failed sessions silently; surface the error.
 
 ## Validation / Done Criteria
-- Before/after evidence shows lower latency, fewer tool calls, lower token use, or higher task success.
-- Session lifecycle and cleanup behavior are documented.
+- Measurable before/after evidence: fewer tool calls, lower latency, lower token use, or higher task success.
+- Chosen orchestration pattern is named and justified.
+- Session lifecycle and cleanup behavior are documented if MCP sessions were introduced.
 
 ## References
 - `references/runtime-patterns.md`
