@@ -1,0 +1,10 @@
+# Sources: https://vercel.com/docs/mcp
+# DRAFT: HTTP-type MCP format for Codex TOML — verify syntax against current Codex documentation.
+# WARNING: VERCEL_TOKEN grants access to your Vercel projects and deployments.
+# WARNING: Use a narrowly scoped token. Prefer read-only access unless deployment actions are required.
+[mcp_servers.vercel]
+type = "http"
+url = "https://mcp.vercel.com/sse"
+
+[mcp_servers.vercel.headers]
+Authorization = "Bearer ${VERCEL_TOKEN}"
