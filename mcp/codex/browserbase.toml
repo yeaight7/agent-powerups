@@ -1,0 +1,11 @@
+# Sources: https://docs.browserbase.com/integrations/mcp
+# WARNING: Browserbase sessions can interact with live authenticated web applications.
+# WARNING: BROWSERBASE_API_KEY and BROWSERBASE_PROJECT_ID are required.
+# WARNING: Treat every session as if it can access real user accounts and production services.
+[mcp_servers.browserbase]
+command = "npx"
+args = ["-y", "@browserbasehq/mcp"]
+
+[mcp_servers.browserbase.env]
+BROWSERBASE_API_KEY = "${BROWSERBASE_API_KEY}"
+BROWSERBASE_PROJECT_ID = "${BROWSERBASE_PROJECT_ID}"
