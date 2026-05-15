@@ -1,0 +1,5 @@
+# Sources: https://github.com/modelcontextprotocol/servers (time)
+# Low risk: timezone/time conversion only, no filesystem or network write.
+[mcp_servers.time]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-time"]
