@@ -1,0 +1,12 @@
+# Sources: https://developer.atlassian.com/cloud/mcp
+# DRAFT: Verify exact package name and env vars against current @atlassian/mcp-server docs.
+# WARNING: ATLASSIAN_API_TOKEN grants access to Jira and Confluence projects.
+# WARNING: Use read-only scopes where possible. Avoid write permissions for agent automation.
+[mcp_servers.atlassian]
+command = "npx"
+args = ["-y", "@atlassian/mcp-server"]
+
+[mcp_servers.atlassian.env]
+ATLASSIAN_API_TOKEN = "${ATLASSIAN_API_TOKEN}"
+ATLASSIAN_EMAIL = "${ATLASSIAN_EMAIL}"
+ATLASSIAN_DOMAIN = "${ATLASSIAN_DOMAIN}"
