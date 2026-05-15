@@ -1,0 +1,9 @@
+# Sources: https://e2b.dev/docs/mcp
+# WARNING: E2B executes code in remote sandboxes. E2B_API_KEY is required.
+# WARNING: Do not send secrets, production credentials, or proprietary code to E2B without policy approval.
+[mcp_servers.e2b-sandbox]
+command = "npx"
+args = ["-y", "@e2b/mcp-server"]
+
+[mcp_servers.e2b-sandbox.env]
+E2B_API_KEY = "${E2B_API_KEY}"
