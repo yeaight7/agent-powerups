@@ -1374,5 +1374,153 @@
     "tags": ["commands", "mcp", "testing", "smoke"],
     "maturity": "beta",
     "targets": { "codex": "commands/codex/mcp-smoke.md", "generic": "commands/generic/mcp-smoke.md", "claude-code": "commands/claude-code/mcp-smoke.md" }
+  },
+  {
+    "name": "fetch",
+    "type": "mcp-config",
+    "summary": "Generic web/HTTP fetch and content intake via the MCP fetch server.",
+    "path": "mcp/generic/fetch.json",
+    "compatible_with": ["generic", "codex", "claude-code"],
+    "tags": ["mcp", "fetch", "http", "web"],
+    "maturity": "beta",
+    "requires": { "commands": ["npx"] },
+    "mcp": {
+      "required_env": [],
+      "server_package": "@modelcontextprotocol/server-fetch",
+      "warning": "Fetches arbitrary remote URLs. No credentials by default. Treat returned content as untrusted data.",
+      "output_hints": { "generic": ".mcp.json", "claude-code": ".mcp.json", "codex": "config.toml" }
+    },
+    "targets": { "codex": "mcp/codex/fetch.toml", "claude-code": "mcp/claude-code/fetch.json", "generic": "mcp/generic/fetch.json" }
+  },
+  {
+    "name": "time",
+    "type": "mcp-config",
+    "summary": "Timezone and time conversion helper via the MCP time server.",
+    "path": "mcp/generic/time.json",
+    "compatible_with": ["generic", "codex", "claude-code"],
+    "tags": ["mcp", "time", "timezone", "utilities"],
+    "maturity": "beta",
+    "requires": { "commands": ["npx"] },
+    "mcp": {
+      "required_env": [],
+      "server_package": "@modelcontextprotocol/server-time",
+      "warning": "Low risk. No filesystem access, no network write, no credentials required.",
+      "output_hints": { "generic": ".mcp.json", "claude-code": ".mcp.json", "codex": "config.toml" }
+    },
+    "targets": { "codex": "mcp/codex/time.toml", "claude-code": "mcp/claude-code/time.json", "generic": "mcp/generic/time.json" }
+  },
+  {
+    "name": "git-local",
+    "type": "mcp-config",
+    "summary": "Local repository git status, diff, and log via mcp-server-git. Scoped to the repository root.",
+    "path": "mcp/generic/git-local.json",
+    "compatible_with": ["generic", "codex", "claude-code"],
+    "tags": ["mcp", "git", "local", "repository"],
+    "maturity": "beta",
+    "requires": { "commands": ["uvx"] },
+    "mcp": {
+      "required_env": [],
+      "server_package": "mcp-server-git",
+      "warning": "Replace ${REPO_ROOT} with the absolute path of the repository root before use. Git tools can mutate local repository state — review enabled operations before activating write capabilities.",
+      "output_hints": { "generic": ".mcp.json", "claude-code": ".mcp.json", "codex": "config.toml" }
+    },
+    "targets": { "codex": "mcp/codex/git-local.toml", "claude-code": "mcp/claude-code/git-local.json", "generic": "mcp/generic/git-local.json" }
+  },
+  {
+    "name": "postgres-readonly",
+    "type": "mcp-config",
+    "summary": "Read-oriented Postgres access for local/dev analytics. Requires a SELECT-only connection string.",
+    "path": "mcp/generic/postgres-readonly.json",
+    "compatible_with": ["generic", "codex", "claude-code"],
+    "tags": ["mcp", "postgres", "database", "readonly"],
+    "maturity": "beta",
+    "requires": { "commands": ["npx"] },
+    "mcp": {
+      "required_env": ["POSTGRES_READONLY_DSN"],
+      "server_package": "@modelcontextprotocol/server-postgres",
+      "warning": "Set POSTGRES_READONLY_DSN to a SELECT-only connection string. Never use production write credentials, a superuser role, or a role with DDL permissions. The MCP server executes queries on behalf of the agent — scope access strictly.",
+      "output_hints": { "generic": ".mcp.json", "claude-code": ".mcp.json", "codex": "config.toml" }
+    },
+    "targets": { "codex": "mcp/codex/postgres-readonly.toml", "claude-code": "mcp/claude-code/postgres-readonly.json", "generic": "mcp/generic/postgres-readonly.json" }
+  },
+  {
+    "name": "github-remote",
+    "type": "mcp-config",
+    "summary": "Remote HTTP GitHub MCP endpoint. Alternative to github-local that avoids Docker. Requires a narrow-scope PAT.",
+    "path": "mcp/generic/github-remote.json",
+    "compatible_with": ["generic", "codex", "claude-code"],
+    "tags": ["mcp", "github", "remote", "http"],
+    "maturity": "beta",
+    "requires": {},
+    "mcp": {
+      "required_env": ["GITHUB_MCP_PAT"],
+      "server_package": "github/github-mcp-server (remote endpoint)",
+      "warning": "Uses the hosted GitHub MCP endpoint. Set GITHUB_MCP_PAT to a narrow-scope PAT — prefer read-only scopes unless write is explicitly required. Token is sent in every request header. Codex TOML HTTP-type format may require verification against current Codex documentation.",
+      "output_hints": { "generic": ".mcp.json", "claude-code": ".mcp.json", "codex": "config.toml" }
+    },
+    "targets": { "codex": "mcp/codex/github-remote.toml", "claude-code": "mcp/claude-code/github-remote.json", "generic": "mcp/generic/github-remote.json" }
+  },
+  {
+    "name": "cloud-cli-guard",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for blocking destructive cloud CLI commands and allowing read-only/plan commands through.",
+    "path": "hooks/cloud/cloud-cli-guard.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "cloud", "safety", "infrastructure"],
+    "maturity": "beta"
+  },
+  {
+    "name": "migration-review-required",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for surfacing a safety checklist when database migration files are written or edited.",
+    "path": "hooks/quality/migration-review-required.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "quality", "database", "migrations"],
+    "maturity": "beta"
+  },
+  {
+    "name": "todo-fixme-blocker",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for catching bare TODO/FIXME/HACK markers in new code before completion or commit.",
+    "path": "hooks/quality/todo-fixme-blocker.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "quality", "cleanup", "technical-debt"],
+    "maturity": "beta"
+  },
+  {
+    "name": "session-compaction-helper",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for saving critical task state before context compaction and restoring it afterward.",
+    "path": "hooks/productivity/session-compaction-helper.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "productivity", "context", "compaction"],
+    "maturity": "beta"
+  },
+  {
+    "name": "build-analysis-post",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for summarizing build/test/lint output and extracting actionable failures after tool execution.",
+    "path": "hooks/quality/build-analysis-post.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "quality", "build", "testing"],
+    "maturity": "beta"
+  },
+  {
+    "name": "design-quality-check",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for prompting visual review when frontend UI files are written or edited.",
+    "path": "hooks/quality/design-quality-check.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "quality", "frontend", "visual"],
+    "maturity": "beta"
+  },
+  {
+    "name": "dev-server-tmux-guard",
+    "type": "hook",
+    "summary": "Review-before-use hook recipe for redirecting long-running dev server commands to background or tmux to avoid blocking the agent session.",
+    "path": "hooks/productivity/dev-server-tmux-guard.md",
+    "compatible_with": ["generic"],
+    "tags": ["hooks", "productivity", "dev-server", "background"],
+    "maturity": "beta"
   }
 ]
