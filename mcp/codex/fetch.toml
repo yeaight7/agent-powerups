@@ -1,0 +1,5 @@
+# Sources: https://github.com/modelcontextprotocol/servers (fetch)
+# Risk: fetches arbitrary remote URLs. No credentials by default.
+[mcp_servers.fetch]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-fetch"]
