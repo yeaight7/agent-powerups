@@ -163,7 +163,7 @@
   {
     "name": "bigquery-cost-audit",
     "type": "skill",
-    "summary": "Analyze BigQuery usage for cost hotspots, repeated failures, and practical optimization opportunities.",
+    "summary": "Audit BigQuery costs with INFORMATION_SCHEMA query templates for hotspot detection, failure analysis, and partition or clustering optimization.",
     "path": "skills/bigquery-cost-audit",
     "compatible_with": ["generic"],
     "tags": ["bigquery", "cost", "analytics", "review"],
@@ -208,7 +208,7 @@
   {
     "name": "metric-impact-analyzer",
     "type": "skill",
-    "summary": "Evaluate metric and semantic model changes for BI breakage and business meaning drift.",
+    "summary": "Classify metric and semantic model changes by risk level and identify downstream BI breakage, required validation, and stakeholder sign-off.",
     "path": "skills/metric-impact-analyzer",
     "compatible_with": ["generic"],
     "tags": ["metrics", "semantic-layer", "bi", "review"],
@@ -704,7 +704,7 @@
     "path": "skills/persistent-completion-loop",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["execution", "verification", "persistence", "delivery"],
-    "maturity": "experimental"
+    "maturity": "draft"
   },
   {
     "name": "autonomous-delivery-pipeline",
@@ -713,7 +713,7 @@
     "path": "skills/autonomous-delivery-pipeline",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["delivery", "automation", "planning", "verification"],
-    "maturity": "experimental"
+    "maturity": "draft"
   },
   {
     "name": "subagent-team-orchestration",
@@ -722,7 +722,7 @@
     "path": "skills/subagent-team-orchestration",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["subagents", "orchestration", "waves", "execution"],
-    "maturity": "experimental"
+    "maturity": "draft"
   },
   {
     "name": "parallel-execution-engine",
@@ -745,7 +745,7 @@
   {
     "name": "mcp-server-builder",
     "type": "skill",
-    "summary": "Design workflow-first MCP servers with schema-first tools, context-aware outputs, and actionable error paths.",
+    "summary": "Design workflow-first MCP servers with typed schemas, size-bounded outputs, corrective error messages, and a server-readiness checklist.",
     "path": "skills/mcp-server-builder",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["mcp", "server", "tooling", "design"],
@@ -754,7 +754,7 @@
   {
     "name": "skill-authoring-guide",
     "type": "skill",
-    "summary": "Create or refactor high-quality skills with strong frontmatter, progressive disclosure, and optional helper assets.",
+    "summary": "Create or refactor skills using a frontmatter template, good/bad description examples, a length guide, and progressive-disclosure structure.",
     "path": "skills/skill-authoring-guide",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["skills", "authoring", "documentation", "workflow"],
@@ -772,20 +772,20 @@
   {
     "name": "pr-review-ci-loop",
     "type": "skill",
-    "summary": "Run a review and CI loop around a pull request with explicit approval gates for code changes, remote writes, and follow-up actions.",
+    "summary": "Review a PR and triage CI failures in one pass, producing a structured readout of blocking findings, likely fixes, and a validation plan.",
     "path": "skills/pr-review-ci-loop",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["github", "review", "ci", "workflow"],
-    "maturity": "experimental"
+    "maturity": "draft"
   },
   {
     "name": "deploy-pipeline-runbook",
     "type": "skill",
-    "summary": "Coordinate multi-system deployment steps as a review-first runbook with explicit approval before any external write or promotion action.",
+    "summary": "Coordinate multi-system deployments as a step-by-step runbook with structured approval checkpoints, explicit rollback plans, and side-effect disclosure.",
     "path": "skills/deploy-pipeline-runbook",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["deployment", "runbook", "release", "approval"],
-    "maturity": "experimental"
+    "maturity": "draft"
   },
   {
     "name": "security-audit",
@@ -893,7 +893,7 @@
     "path": "plugins/software-engineering",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "software-engineering", "delivery"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "agentic-systems",
@@ -902,7 +902,7 @@
     "path": "plugins/agentic-systems",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "agentic-systems", "orchestration"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "security-guardrails",
@@ -911,7 +911,7 @@
     "path": "plugins/security-guardrails",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "security", "guardrails"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "codebase-intelligence",
@@ -965,7 +965,7 @@
     "path": "plugins/connected-apps",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "deploy", "runbook", "integrations"],
-    "maturity": "experimental"
+    "maturity": "draft"
   },
   {
     "name": "browser-automation-safety",
@@ -974,7 +974,7 @@
     "path": "skills/browser-automation-safety",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["browser", "playwright", "ui", "safety"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "managed-codebase-context",
@@ -983,16 +983,16 @@
     "path": "skills/managed-codebase-context",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["mcp", "codebase", "context", "sessions"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "context-compression",
     "type": "skill",
-    "summary": "Compact bloated conversation context into a safe continuation handoff without losing goals, constraints, artifacts, or validation state.",
+    "summary": "Compact bloated conversation context into a structured handoff artifact using a fill-in template, quality probes, and an anti-loss checklist.",
     "path": "skills/context-compression",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["context", "handoff", "tokens", "workflow"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "prompt-evaluation-runner",
@@ -1001,7 +1001,7 @@
     "path": "skills/prompt-evaluation-runner",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["evals", "prompts", "testing", "models"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "agent-runtime-patterns",
@@ -1010,16 +1010,16 @@
     "path": "skills/agent-runtime-patterns",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["agents", "runtime", "mcp", "performance"],
-    "maturity": "experimental"
+    "maturity": "draft"
   },
   {
     "name": "filesystem-mcp-guardrails",
     "type": "skill",
-    "summary": "Design and review filesystem MCP access with allowed roots, method allowlists, traversal tests, and safe local file operation policy.",
+    "summary": "Configure and review filesystem MCP access with a path-boundary checklist, method allowlists, and enforced out-of-root request refusal.",
     "path": "skills/filesystem-mcp-guardrails",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["mcp", "filesystem", "security", "safety"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "local-rag-mcp",
@@ -1028,7 +1028,7 @@
     "path": "skills/local-rag-mcp",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["mcp", "rag", "retrieval", "privacy"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "review-comment-style-mining",
@@ -1037,43 +1037,43 @@
     "path": "skills/review-comment-style-mining",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["documentation", "pull-requests", "writing", "review"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "structured-code-search-mcp",
     "type": "skill",
-    "summary": "Use or design MCP-backed structured code search with bounded text search, AST query, symbol inventory, and scoped extraction.",
+    "summary": "Use MCP-backed structured code search by routing queries to text search, AST query, symbol inventory, or bounded extraction tools in order.",
     "path": "skills/structured-code-search-mcp",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["mcp", "code-search", "symbols", "context"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "red-team-eval-authoring",
     "type": "skill",
-    "summary": "Create and review red-team eval plugins, attack templates, grader rubrics, safety fixtures, and model-risk test metadata.",
+    "summary": "Author red-team eval plugins with structured grader outputs, plugin registration templates, attack prompt fixtures, and explicit harm-class boundaries.",
     "path": "skills/red-team-eval-authoring",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["security", "evals", "red-team", "graders"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "agent-session-forensics",
     "type": "skill",
-    "summary": "Diagnose agent session histories, interrupted tool loops, missing tool results, timing bottlenecks, and subagent trace correlation.",
+    "summary": "Diagnose interrupted agent sessions using jq-based message inspection, tool-call/result correlation, and a failure-pattern triage table.",
     "path": "skills/agent-session-forensics",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["agents", "debugging", "sessions", "forensics"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "skill-evaluation-workbench",
     "type": "skill",
-    "summary": "Design, run, and debug deterministic evaluation suites for skills, prompts, tool workflows, and MCP-backed cases.",
+    "summary": "Design deterministic eval suites with a minimal-case structure, grader-type selection table, and failure-classification guide before editing.",
     "path": "skills/skill-evaluation-workbench",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["skills", "evals", "testing", "workbench"],
-    "maturity": "experimental"
+    "maturity": "beta"
   },
   {
     "name": "tool-integrations",
@@ -1091,6 +1091,6 @@
     "path": "plugins/agent-evaluation-lab",
     "compatible_with": ["claude-code", "codex", "generic"],
     "tags": ["plugins", "evals", "quality", "red-team"],
-    "maturity": "experimental"
+    "maturity": "beta"
   }
 ]
