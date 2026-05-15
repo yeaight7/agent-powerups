@@ -1,0 +1,5 @@
+# Sources: https://github.com/modelcontextprotocol/servers (memory)
+# WARNING: Persists conversation context to a local JSON file. Do not store secrets.
+[mcp_servers.memory]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-memory"]
