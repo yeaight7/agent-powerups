@@ -1,0 +1,9 @@
+# Sources: https://docs.exa.ai/reference/mcp
+# WARNING: EXA_API_KEY is required. Queries are sent to Exa's remote search API.
+# WARNING: Avoid sending proprietary queries or sensitive code fragments via search.
+[mcp_servers.exa-search]
+command = "npx"
+args = ["-y", "exa-mcp-server"]
+
+[mcp_servers.exa-search.env]
+EXA_API_KEY = "${EXA_API_KEY}"
