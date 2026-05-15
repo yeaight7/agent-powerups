@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "postgres-readonly": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "${POSTGRES_READONLY_DSN}"],
+      "env": {
+        "POSTGRES_READONLY_DSN": "${POSTGRES_READONLY_DSN}"
+      }
+    }
+  }
+}
