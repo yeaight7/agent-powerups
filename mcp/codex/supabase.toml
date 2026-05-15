@@ -1,0 +1,10 @@
+# Sources: https://github.com/supabase-community/supabase-mcp
+# DRAFT: Verify exact flags against current @supabase/mcp-server-supabase docs before use.
+# WARNING: SUPABASE_ACCESS_TOKEN grants Supabase management API access.
+# WARNING: Use a project-scoped token. Never use a service role key or admin token in agent workflows.
+[mcp_servers.supabase]
+command = "npx"
+args = ["-y", "@supabase/mcp-server-supabase"]
+
+[mcp_servers.supabase.env]
+SUPABASE_ACCESS_TOKEN = "${SUPABASE_ACCESS_TOKEN}"
