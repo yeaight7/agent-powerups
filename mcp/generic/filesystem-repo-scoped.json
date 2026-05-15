@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "filesystem-repo-scoped": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${REPO_ROOT}"]
+    }
+  }
+}
