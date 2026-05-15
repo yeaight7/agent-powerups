@@ -1,0 +1,6 @@
+# Sources: https://github.com/modelcontextprotocol/servers (git)
+# WARNING: Replace ${REPO_ROOT} with the absolute path of the repository root before use.
+# WARNING: git tools can mutate local repo state. Review before enabling write operations.
+[mcp_servers.git-local]
+command = "uvx"
+args = ["mcp-server-git", "--repository", "${REPO_ROOT}"]
