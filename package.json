@@ -23,7 +23,8 @@
 	"gemini-cli",
 	"gemini",
 	"skill-pack",
-	"plugin"
+	"plugin",
+	"gemini-cli-extension"
   ],
   "bin": {
     "apx": "dist/cli/apx.js"
