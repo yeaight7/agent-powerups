@@ -1,0 +1,12 @@
+# Sources: https://github.com/github/github-mcp-server (remote/hosted variant)
+# DRAFT: Codex TOML format for HTTP-type MCP servers may differ from this template.
+# Verify against current Codex documentation before use.
+# WARNING: Use a narrow-scope PAT. Prefer read-only toolsets unless write is required.
+# WARNING: This connects to GitHub's hosted endpoint, not a local Docker image.
+# See mcp/codex/github-local.toml for the Docker-based local variant.
+[mcp_servers.github-remote]
+type = "http"
+url = "https://api.githubcopilot.com/mcp/"
+
+[mcp_servers.github-remote.headers]
+Authorization = "Bearer ${GITHUB_MCP_PAT}"
