@@ -1,0 +1,4 @@
+# Sources: https://github.com/modelcontextprotocol/servers (sequential-thinking)
+[mcp_servers.sequential-thinking]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
