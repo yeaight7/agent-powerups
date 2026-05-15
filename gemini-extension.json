@@ -1,7 +1,6 @@
 {
   "name": "agent-powerups",
   "version": "0.3.0",
-  "description": "Local-first CLI for browsing, validating, running, and explicitly writing agent powerups.",
-  "license": "Apache-2.0",
-  "repository": "https://github.com/yeaight7/agent-powerups"
+  "description": "Curated power-ups for coding agents: skills, slash commands, MCP configs, hooks, and workflows for Claude Code, Codex, and Gemini CLI.",
+  "contextFileName": "GEMINI.md"
 }
