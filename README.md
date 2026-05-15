@@ -238,30 +238,77 @@ python scripts/check-requirements.py
 
 Current shipped skills:
 
-- `systematic-debugging`
-- `no-fluff`
-- `writing-plans`
+- `agent-config-security-audit`
+- `agent-harness-design`
+- `agent-runtime-patterns`
+- `agent-session-forensics`
 - `ai-slop-cleaner`
+- `ask-claude`
+- `ask-codex`
+- `ask-gemini`
+- `autonomous-delivery-pipeline`
 - `bigquery-cost-audit`
+- `brainstorming`
+- `browser-automation-safety`
+- `bug-hunt`
+- `build-fix-minimal-diff`
+- `changelog-generator`
+- `codebase-migration-batches`
+- `context-compression`
+- `context-retrieval-loop`
 - `data-quality`
 - `dbt-incremental-strategy-audit`
 - `dbt-preflight`
 - `dbt-strategy`
-- `metric-impact-analyzer`
-- `requesting-code-review`
-- `receiving-code-review`
-- `pr-triage`
-- `repo-map`
-- `bug-hunt`
-- `safe-refactor`
-- `sql-business-logic-review`
 - `defuddle`
-- `markitdown-file-intake`
+- `deploy-pipeline-runbook`
+- `dispatching-parallel-agents`
+- `environment-doctor`
+- `filesystem-mcp-guardrails`
+- `finishing-a-development-branch`
+- `gh-address-comments`
+- `github-ci-failure-triage`
 - `graphify`
-- `ask-claude`
-- `ask-gemini`
-- `ask-codex`
+- `hard-won-skill-extractor`
+- `json-canvas`
+- `local-rag-mcp`
+- `managed-codebase-context`
+- `markitdown-file-intake`
+- `mcp-server-builder`
+- `metric-impact-analyzer`
+- `model-routing`
+- `no-fluff`
+- `parallel-execution-engine`
+- `persistent-completion-loop`
+- `pr-review-ci-loop`
+- `pr-triage`
+- `prompt-evaluation-runner`
+- `receiving-code-review`
+- `red-team-eval-authoring`
+- `relay-claude`
+- `relay-codex`
+- `relay-gemini`
+- `release-readiness-protocol`
+- `repo-map`
+- `requesting-code-review`
+- `requirements-clarifier`
+- `review-comment-style-mining`
+- `safe-refactor`
+- `search-before-building`
+- `skill-authoring-guide`
+- `skill-evaluation-workbench`
+- `sql-business-logic-review`
+- `structured-code-search-mcp`
+- `subagent-team-orchestration`
+- `systematic-debugging`
+- `test-driven-development`
+- `using-git-worktrees`
 - `using-powerups`
+- `verification-before-completion`
+- `webapp-visual-testing`
+- `worktree-session-manager`
+- `writing-plans`
+- `writing-skills`
 
 Current shipped scripts:
 
@@ -272,6 +319,23 @@ Current shipped scripts:
 Current shipped MCP configs:
 
 - `github-local`
+- `github-remote`
+- `context7`
+- `sequential-thinking`
+- `playwright`
+- `filesystem-repo-scoped`
+- `memory`
+- `fetch`
+- `time`
+- `git-local`
+- `postgres-readonly`
+- `supabase`
+- `vercel`
+- `cloudflare-docs`
+- `exa-search`
+- `atlassian`
+- `browserbase`
+- `e2b-sandbox`
 
 Current shipped AGENTS.md templates:
 
@@ -283,14 +347,62 @@ Current shipped AGENTS.md templates:
 
 Current shipped command packs:
 
+- `build-fix`
+- `changelog`
+- `debug`
+- `doctor`
+- `implement`
+- `mcp-check`
+- `mcp-smoke`
+- `plan`
+- `release`
+- `review`
 - `ship-check`
-- `using-powerups-command`
+- `triage`
+- `using-powerups`
+- `visual-review`
 
 Current shipped hook examples:
 
+Safety:
 - `no-secrets-preflight`
-- `handoff-summary`
+- `destructive-bash-guard`
+- `env-file-mutation-approval`
+- `dependency-review`
+
+Quality:
 - `validation-required`
+- `test-gate`
+- `lint-check`
+- `console-log-check`
+- `generated-file-warning`
+- `large-diff-warning`
+- `build-analysis-post`
+- `design-quality-check`
+- `migration-review-required`
+- `todo-fixme-blocker`
+- `pre-commit-quality-check`
+- `quality-gate-after-edit`
+- `typescript-post-edit-check`
+- `doc-file-warning`
+
+Productivity:
+- `handoff-summary`
+- `handoff-completeness-check`
+- `session-context-restore`
+- `session-log`
+- `session-compaction-helper`
+- `session-lifecycle-state`
+- `auto-commit-message`
+- `dev-server-tmux-guard`
+
+Cloud:
+- `cloud-cli-guard`
+
+MCP:
+- `mcp-config-change-approval`
+- `mcp-write-guard`
+- `mcp-elicitation-guard`
 
 Current shipped examples:
 
@@ -338,7 +450,7 @@ Compatibility claims in this repo are intentionally narrow:
 | Asset class | Shipped today | Compatibility claim |
 |-------------|---------------|---------------------|
 | Root `skills/` | yes | Generic text-based skills; some also mention known agent surfaces |
-| `mcp/` | yes | Verified local GitHub MCP check/smoke/install flow for the official Docker-backed server |
+| `mcp/` | yes | 18 MCP configs for local and remote servers (GitHub, Supabase, Vercel, Cloudflare, Exa, Atlassian, Browserbase, E2B, and more); `github-local` has a full check/smoke/install flow |
 | `agents-md/` | yes | Plain text templates |
 | `commands/` | yes | Review-first markdown command prompts; Claude Code and Codex targets where provided |
 | `hooks/` | yes | Documentation recipes only; not installed automatically |
