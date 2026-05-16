@@ -35,9 +35,9 @@
         </filter>
     </defs>
 
-    <rect width="100%" height="100%" fill="url(#bg-grad)" />
-    <rect width="100%" height="100%" fill="url(#dot-grid)" />
-    <rect width="100%" height="100%" fill="url(#ambient-glow)" />
+    <rect width="100%" height="100%" rx="44" fill="url(#bg-grad)" />
+    <rect width="100%" height="100%" rx="44" fill="url(#dot-grid)" />
+    <rect width="100%" height="100%" rx="44" fill="url(#ambient-glow)" />
 
     <g transform="translate(80, 65)" filter="url(#shadow)">
         <rect x="0" y="0" width="72" height="72" rx="14" fill="url(#icon-bg)" stroke="#1E293B" stroke-width="2" />
