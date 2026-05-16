@@ -231,19 +231,21 @@ async function writeTextFile(
 }
 
 function instructionBlock(agentRoot: string): string {
-  const normalizedRoot = agentRoot.replaceAll("\\", "/");
+  const normalizedRoot = path.join(agentRoot, "agent-powerups").replaceAll("\\", "/");
   return [
     START_MARKER,
     "",
     "## Agent Powerups",
     "",
-    `Agent Powerups native assets are installed at \`${normalizedRoot}\`.`,
+    `Agent Powerups assets are installed at \`${normalizedRoot}\`.`,
     "",
     "Use these local assets when relevant:",
-    "- Skills are installed in `skills/`.",
-    "- Plugins are installed in the native provider plugin or extension directory.",
-    "- Read `agent-powerups/skills/using-powerups/SKILL.md` before first use when full support assets are staged.",
-    "- MCP configs are staged for review only; do not enable MCP servers without explicit approval.",
+    "- Read `agent-powerups/skills/using-powerups/SKILL.md` before first use.",
+    "- Use `apx` commands to discover, inspect, validate, and extend setup. Do not manually edit config files without running `apx` first.",
+    "- Skills are at `agent-powerups/skills/`. Plugin bundles are at `agent-powerups/plugins/`.",
+    "- Run `apx profiles list` to see curated skill sets for specific workflows.",
+    "- Treat hooks in `agent-powerups/hooks/` as review-before-use recipes, not active hooks.",
+    "- MCP configs are staged at `agent-powerups/mcp/` but NOT enabled. Run `apx mcp check` and `apx mcp smoke` before enabling any MCP server.",
     "- External tools require user approval before install.",
     "",
     END_MARKER,
