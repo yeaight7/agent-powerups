@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./assets/agent-powerups-header-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="./assets/agent-powerups-header-light.svg">
-    <img src="./assets/agent-powerups-header-dark.svg" alt="Agent Powerups" width="100%">
+    <img src="./assets/agent-powerups-header-dark.svg" alt="Agent-Powerups" width="100%">
   </picture>
 </p>
 
