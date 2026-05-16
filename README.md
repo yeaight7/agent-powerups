@@ -77,6 +77,15 @@ Native install is direct for humans. Safety boundaries stay around external tool
 
 ## Quickstart
 
+### Using npm (Recommended)
+
+```sh
+npm install -g agent-powerups
+apx install claude --full
+```
+
+This installs the `apx` CLI globally and runs a full Claude Code setup — copies skills, plugins, and commands into `~/.claude/` and patches your `CLAUDE.md`. Use `--dry-run` to preview changes first.
+
 ### Using Source Checkout (Development)
 
 1. Clone and install deps:

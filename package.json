@@ -1,6 +1,6 @@
 {
   "name": "agent-powerups",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Local-first CLI for browsing, validating, running, and explicitly writing agent powerups.",
   "license": "Apache-2.0",
   "type": "module",
@@ -50,6 +50,7 @@
     "!docs/superpowers/",
     "examples/",
     "catalog.json",
+    "scripts/*.py",
     "plugins/",
     "!plugins/software-engineering/skills/worktree-session-manager/",
     "plugin-bundles.json",

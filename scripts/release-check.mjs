@@ -71,10 +71,51 @@ function runCheck([label, command, args, options = {}]) {
   });
 }
 
+async function checkCatalogCoverage() {
+  const label = "catalog pack coverage";
+  console.log(`\n> ${label}`);
+  try {
+    const catalog = JSON.parse(
+      await readFile(new URL("../catalog.json", import.meta.url), "utf8"),
+    );
+    const packJson = await new Promise((resolve, reject) => {
+      const launch = resolveLaunch("npm", ["pack", "--dry-run", "--json"]);
+      const child = spawn(launch.command, launch.args, {
+        cwd: process.cwd(),
+        env: process.env,
+        shell: false,
+        windowsHide: true,
+      });
+      let stdout = "";
+      child.stdout.on("data", (chunk) => (stdout += chunk));
+      child.stderr.on("data", (chunk) => process.stderr.write(chunk));
+      child.on("close", (code) => (code === 0 ? resolve(stdout) : reject(new Error(`exit ${code}`))));
+      child.on("error", reject);
+    });
+    const packedPaths = JSON.parse(packJson)[0].files.map((f) => f.path.replace(/\\/g, "/"));
+    const packed = new Set(packedPaths);
+    // Catalog paths may be files (scripts/foo.py) or directories (skills/foo).
+    // For directories, check that at least one packed file lives under that prefix.
+    const isCovered = (p) => {
+      const normalized = p.replace(/\\/g, "/");
+      return packed.has(normalized) || packedPaths.some((f) => f.startsWith(normalized + "/"));
+    };
+    const expected = catalog.flatMap((a) => [a.path, ...Object.values(a.targets ?? {})]);
+    const missing = expected.filter((p) => !isCovered(p));
+    if (missing.length > 0) {
+      return { label, ok: false, detail: `not packed: ${missing.join(", ")}` };
+    }
+    return { label, ok: true };
+  } catch (error) {
+    return { label, ok: false, detail: error.message };
+  }
+}
+
 const results = [];
 for (const check of checks) {
   results.push(await runCheck(check));
 }
+results.push(await checkCatalogCoverage());
 
 const failures = results.filter((result) => !result.ok);
 if (failures.length > 0) {
