@@ -10,7 +10,7 @@ function getAgentPluginDir(target: string): string {
   if (target === "codex") {
     return path.join(homeDir, ".codex", "plugins");
   } else if (target === "claude-code") {
-    return path.join(homeDir, ".claude", "plugins");
+    return path.join(homeDir, ".claude", "plugins", "cache", "agent-powerups");
   }
   return process.cwd();
 }
