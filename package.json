@@ -1,6 +1,6 @@
 {
   "name": "agent-powerups",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Local-first CLI for browsing, validating, running, and explicitly writing agent powerups.",
   "license": "Apache-2.0",
   "type": "module",
