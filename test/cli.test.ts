@@ -312,7 +312,7 @@ test("explicit dry-run reports planned copy", async () => {
   assert.match(result.stdout, /systematic-debugging/);
 });
 
-test("install claude writes root skills and plugins to native Claude directories", async () => {
+test("install claude writes root skills and plugins to native Claude cache directories", async () => {
   const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-claude-"));
   const result = await execute(["install", "claude", "--agent-root", agentRoot, "--json"]);
 
@@ -322,8 +322,24 @@ test("install claude writes root skills and plugins to native Claude directories
   assert.equal(json.data.full, false);
   assert.equal(json.data.dryRun, false);
   await fs.access(path.join(agentRoot, "skills", "systematic-debugging", "SKILL.md"));
-  await fs.access(path.join(agentRoot, "plugins", "dev-vitals", ".claude-plugin", "plugin.json"));
+  await fs.access(path.join(agentRoot, "plugins", "cache", "agent-powerups", "dev-vitals", ".claude-plugin", "plugin.json"));
+  await assert.rejects(fs.access(path.join(agentRoot, "plugins", "dev-vitals", ".claude-plugin", "plugin.json")));
   await assert.rejects(fs.access(path.join(agentRoot, "agent-powerups")));
+});
+
+test("install claude --full writes plugin bundles to the Agent Powerups plugin cache", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-claude-full-"));
+  const instructionFile = path.join(agentRoot, "CLAUDE.md");
+  await fs.writeFile(instructionFile, "# Existing instructions\n", "utf8");
+
+  const result = await execute(["install", "claude", "--agent-root", agentRoot, "--full", "--json"]);
+
+  assert.equal(result.exitCode, 0);
+  const json = parseJson(result.stdout);
+  assert.equal(json.data.agent, "claude-code");
+  assert.equal(json.data.full, true);
+  await fs.access(path.join(agentRoot, "plugins", "cache", "agent-powerups", "dev-vitals", ".claude-plugin", "plugin.json"));
+  await assert.rejects(fs.access(path.join(agentRoot, "plugins", "dev-vitals", ".claude-plugin", "plugin.json")));
 });
 
 test("install codex writes root skills and plugins to native Codex directories", async () => {
