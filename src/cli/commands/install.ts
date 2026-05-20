@@ -333,6 +333,16 @@ function geminiExtensionManifest(bundle: any): string {
   )}\n`;
 }
 
+function nativePluginDestBase(agentRoot: string, profile: NativeProfile): string {
+  if (profile.agent === "gemini") {
+    return path.join(agentRoot, "extensions");
+  }
+  if (profile.agent === "claude-code") {
+    return path.join(agentRoot, "plugins", "cache", "agent-powerups");
+  }
+  return path.join(agentRoot, "plugins");
+}
+
 async function collectNativePluginInstalls(
   service: CatalogService,
   agentRoot: string,
@@ -349,7 +359,7 @@ async function collectNativePluginInstalls(
     }
 
     const sourceDir = path.join(service.repoRoot, "plugins", bundle.name);
-    const destBase = profile.agent === "gemini" ? path.join(agentRoot, "extensions") : path.join(agentRoot, "plugins");
+    const destBase = nativePluginDestBase(agentRoot, profile);
     const destDir = path.join(destBase, bundle.name);
     const copied = await copyDirectoryContents(sourceDir, destDir, options);
     copiedFiles.push(...copied.copiedFiles);
@@ -496,7 +506,7 @@ export async function runNativeInstallCommand(
   await ensureDirectory(agentRoot, options.dryRun, createdDirectorySet);
   await ensureDirectory(path.join(agentRoot, "skills"), options.dryRun, createdDirectorySet);
   await ensureDirectory(
-    options.agent === "gemini" ? path.join(agentRoot, "extensions") : path.join(agentRoot, "plugins"),
+    nativePluginDestBase(agentRoot, profile),
     options.dryRun,
     createdDirectorySet,
   );
