@@ -1,6 +1,6 @@
 {
   "name": "agent-powerups",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "Local-first CLI for browsing, validating, running, and explicitly writing agent powerups.",
   "license": "Apache-2.0",
   "type": "module",
@@ -20,11 +20,11 @@
     "mcp",
     "developer-tools",
     "cli",
-	"gemini-cli",
-	"gemini",
-	"skill-pack",
-	"plugin",
-	"gemini-cli-extension"
+    "gemini-cli",
+    "gemini",
+    "skill-pack",
+    "plugin",
+    "gemini-cli-extension"
   ],
   "bin": {
     "apx": "dist/cli/apx.js"

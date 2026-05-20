@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { InstallTarget } from "./paths.js";
 
@@ -17,24 +18,48 @@ export interface PluginInfo {
 const PLUGINS_DIR = "plugins";
 const BUNDLES_FILE = "plugin-bundles.json";
 
+async function findPluginRoot(startDir: string): Promise<string | null> {
+  let current = path.resolve(startDir);
+  while (true) {
+    try {
+      await fs.stat(path.join(current, BUNDLES_FILE));
+      return current;
+    } catch {
+      const parent = path.dirname(current);
+      if (parent === current) return null;
+      current = parent;
+    }
+  }
+}
+
+async function resolvePluginRoot(cwd: string): Promise<string> {
+  // Walk up from cwd first, then from the installed package location.
+  const fromCwd = await findPluginRoot(cwd);
+  if (fromCwd) return fromCwd;
+  const fromPkg = await findPluginRoot(path.dirname(fileURLToPath(import.meta.url)));
+  return fromPkg ?? cwd;
+}
+
 export async function getPluginBundles(cwd: string): Promise<any[]> {
+  const root = await resolvePluginRoot(cwd);
   try {
-    const data = await fs.readFile(path.join(cwd, BUNDLES_FILE), "utf8");
+    const data = await fs.readFile(path.join(root, BUNDLES_FILE), "utf8");
     const parsed = JSON.parse(data);
     return Array.isArray(parsed.plugins) ? parsed.plugins : [];
-  } catch (error) {
+  } catch {
     return [];
   }
 }
 
 export async function listPlugins(cwd: string): Promise<PluginInfo[]> {
+  const root = await resolvePluginRoot(cwd);
   const bundles = await getPluginBundles(cwd);
   const result: PluginInfo[] = [];
 
   for (const bundle of bundles) {
     if (!bundle.name) continue;
 
-    const pluginPath = path.join(cwd, PLUGINS_DIR, bundle.name);
+    const pluginPath = path.join(root, PLUGINS_DIR, bundle.name);
 
     try {
       await fs.stat(pluginPath);
@@ -64,6 +89,7 @@ export async function getPluginInfo(cwd: string, name: string): Promise<PluginIn
 
 export async function validatePlugin(cwd: string, name: string): Promise<{ valid: boolean, errors: string[] }> {
   const errors: string[] = [];
+  const root = await resolvePluginRoot(cwd);
   const bundles = await getPluginBundles(cwd);
   const bundle = bundles.find(b => b.name === name);
 
@@ -71,7 +97,7 @@ export async function validatePlugin(cwd: string, name: string): Promise<{ valid
     return { valid: false, errors: [`Plugin '${name}' not found in ${BUNDLES_FILE}`] };
   }
 
-  const pluginPath = path.join(cwd, PLUGINS_DIR, name);
+  const pluginPath = path.join(root, PLUGINS_DIR, name);
 
   try {
     await fs.stat(pluginPath);
