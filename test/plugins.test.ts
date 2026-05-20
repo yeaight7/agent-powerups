@@ -81,6 +81,14 @@ test("plugins command: install dry-run", async () => {
   assert.match(res.stdout, /Would install plugin 'dev-vitals' to/);
 });
 
+test("plugins command: install claude-code dry-run uses Agent Powerups cache", async () => {
+  const res = await execute(["plugins", "install", "dev-vitals", "--target", "claude-code", "--dry-run"]);
+
+  assert.equal(res.exitCode, 0);
+  assert.match(res.stdout, /Would install plugin 'dev-vitals' to/);
+  assert.match(res.stdout, /[\\/]plugins[\\/]cache[\\/]agent-powerups[\\/]dev-vitals/);
+});
+
 test("plugins command: install dry-run memory-optimization", async () => {
   const res = await execute(["plugins", "install", "memory-optimization", "--target", "generic", "--dry-run"]);
   assert.equal(res.exitCode, 0);
