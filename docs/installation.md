@@ -34,7 +34,7 @@ Default native install writes immediately and installs:
 | Agent | Skills | Plugins |
 |------|--------|---------|
 | Codex | `%USERPROFILE%\.codex\skills\` | `%USERPROFILE%\.codex\plugins\` |
-| Claude Code | `%USERPROFILE%\.claude\skills\` | `%USERPROFILE%\.claude\plugins\` |
+| Claude Code | `%USERPROFILE%\.claude\skills\` | `%USERPROFILE%\.claude\plugins\cache\agent-powerups\` |
 | Gemini CLI | `%USERPROFILE%\.gemini\skills\` | `%USERPROFILE%\.gemini\extensions\` |
 
 `claude` and `claude-code` are aliases for the same target.
