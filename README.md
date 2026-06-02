@@ -315,7 +315,6 @@ Current shipped skills:
 - `using-powerups`
 - `verification-before-completion`
 - `webapp-visual-testing`
-- `worktree-session-manager`
 - `writing-plans`
 - `writing-skills`
 
