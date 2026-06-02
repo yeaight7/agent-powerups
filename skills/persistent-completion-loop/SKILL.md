@@ -9,6 +9,7 @@ Persistent Completion Loop is a PRD-driven persistence loop that keeps working o
 </Purpose>
 
 <Use_When>
+
 - Task requires guaranteed completion with verification (not just "do your best")
 - User says "don't stop", "must complete", "finish this", or "keep going until done"
 - Work may span multiple iterations and needs persistence across retries
@@ -47,6 +48,7 @@ A scaffold PRD file is auto-generated when the loop starts if none exists.
 </Execution_Policy>
 
 <Steps>
+
 1. **PRD Setup** (first iteration only):
    a. Check for an existing PRD file.
    b. If none exists, auto-generate a scaffold.
@@ -81,13 +83,13 @@ A scaffold PRD file is auto-generated when the loop starts if none exists.
    - The reviewer verifies against the SPECIFIC acceptance criteria from prd.json
    - **On APPROVAL: immediately proceed to Step 7.5.**
 
-7.5 **Mandatory Cleanup Pass** (runs after Step 7 approval, unless configured otherwise):
-   - Run the code cleanup skill on files changed during the current session only.
-   - Keep the scope bounded to the changed-file set.
+   7.5 **Mandatory Cleanup Pass** (runs after Step 7 approval, unless configured otherwise):
+      - Run the code cleanup skill on files changed during the current session only.
+      - Keep the scope bounded to the changed-file set.
 
-7.6 **Regression Re-verification**:
-   - After the cleanup pass, re-run all relevant tests, build, and lint checks.
-   - If regression fails, fix it, then rerun until it passes.
+   7.6 **Regression Re-verification**:
+      - After the cleanup pass, re-run all relevant tests, build, and lint checks.
+      - If regression fails, fix it, then rerun until it passes.
 
 8. **On approval**: Report completion and clean up all intermediate state files.
 
