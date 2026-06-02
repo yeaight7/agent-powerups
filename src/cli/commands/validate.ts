@@ -3,6 +3,24 @@ import path from "node:path";
 import type { CatalogService } from "../utils/catalog.js";
 import { createResult, type ExecutionResult } from "../utils/result.js";
 
+const disallowedTopLevelSectionTags = [
+  "Purpose",
+  "Workflow",
+  "Use_When",
+  "Do_Not_Use_When",
+  "Why_This_Exists",
+  "PRD_Mode",
+  "Execution_Policy",
+  "Steps",
+  "Escalation_And_Stop_Conditions",
+  "Final_Checklist",
+] as const;
+
+const disallowedTopLevelSectionRe = new RegExp(
+  `^\\s*</?(?<tag>${disallowedTopLevelSectionTags.join("|")})(?:\\s[^>]*)?>\\s*$`,
+  "gm",
+);
+
 function parseFrontmatter(content: string): Record<string, string> | null {
   if (!content.startsWith("---")) return null;
   const match = content.match(/^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/);
@@ -14,6 +32,10 @@ function parseFrontmatter(content: string): Record<string, string> | null {
     fields[line.slice(0, idx).trim()] = line.slice(idx + 1).trim();
   }
   return fields;
+}
+
+function stripFencedCode(content: string): string {
+  return content.replace(/```[\s\S]*?```/g, "");
 }
 
 function extractFileRefs(content: string): string[] {
@@ -75,6 +97,17 @@ async function validateSkills(
     if (!fm["description"]) errors.push(`[${entry}] frontmatter missing required field: description`);
     if (fm["name"] && fm["name"] !== entry) {
       errors.push(`[${entry}] frontmatter name does not match directory name: ${fm["name"]}`);
+    }
+
+    const prose = stripFencedCode(content);
+    const disallowedTags = new Set<string>();
+    for (const match of prose.matchAll(disallowedTopLevelSectionRe)) {
+      disallowedTags.add(match.groups?.["tag"] ?? match[1]);
+    }
+    for (const tag of [...disallowedTags].sort()) {
+      errors.push(
+        `[${entry}] SKILL.md uses XML-like top-level section tag <${tag}>; use Markdown headings instead`,
+      );
     }
 
     for (const ref of extractFileRefs(content)) {
