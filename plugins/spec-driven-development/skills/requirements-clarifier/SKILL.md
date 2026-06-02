@@ -3,26 +3,27 @@ name: requirements-clarifier
 description: Turn vague implementation requests into testable requirements before coding.
 ---
 
-<Purpose>
-Requirements Clarifier implements Socratic questioning with mathematical ambiguity scoring. It replaces vague ideas with crystal-clear specifications by asking targeted questions that expose hidden assumptions, measuring clarity across weighted dimensions, and refusing to proceed until ambiguity drops below the resolved threshold. The output feeds into planning and execution, ensuring maximum clarity at every stage.
-</Purpose>
+## Purpose
 
-<Use_When>
+Requirements Clarifier implements Socratic questioning with mathematical ambiguity scoring. It replaces vague ideas with crystal-clear specifications by asking targeted questions that expose hidden assumptions, measuring clarity across weighted dimensions, and refusing to proceed until ambiguity drops below the resolved threshold. The output feeds into planning and execution, ensuring maximum clarity at every stage.
+
+## When to Use
+
 - User has a vague idea and wants thorough requirements gathering before execution
 - User says "deep interview", "interview me", "ask me everything", "don't assume", "make sure you understand"
 - User wants to avoid "that's not what I meant" outcomes from autonomous execution
 - Task is complex enough that jumping to code would waste cycles on scope discovery
 - User wants mathematically-validated clarity before committing to execution
-</Use_When>
 
-<Do_Not_Use_When>
+## Do Not Use When
+
 - User has a detailed, specific request with file paths, function names, or acceptance criteria -- execute directly
 - User wants to explore options or brainstorm -- use the plan skill instead
 - User wants a quick fix or single change -- execute directly
 - User says "just do it" or "skip the questions" -- respect their intent
-</Do_Not_Use_When>
 
-<Execution_Policy>
+## Execution Policy
+
 - Ask ONE question at a time -- never batch multiple questions
 - Target the WEAKEST clarity dimension with each question
 - Make weakest-dimension targeting explicit every round: name the weakest dimension, state its score/gap, and explain why the next question is aimed there
@@ -31,9 +32,8 @@ Requirements Clarifier implements Socratic questioning with mathematical ambigui
 - Score ambiguity after every answer -- display the score transparently
 - Do not proceed to execution until ambiguity ≤ the resolved threshold for this run
 - Allow early exit with a clear warning if ambiguity is still high
-</Execution_Policy>
 
-<Steps>
+## Workflow
 
 ## Phase 1: Initialize
 
@@ -174,21 +174,19 @@ After the spec is written, present execution options:
 2. **Execute directly** — Implement from spec, no additional planning
 3. **Refine further** — Continue interviewing to improve clarity
 
-</Steps>
+## Escalation and Stop Conditions
 
-<Escalation_And_Stop_Conditions>
 - **Hard cap at 20 rounds**: Proceed with whatever clarity exists, noting the risk
 - **Soft warning at 10 rounds**: Offer to continue or proceed
 - **Early exit (round 3+)**: Allow with warning if ambiguity > threshold
 - **User says "stop", "cancel", "abort"**: Stop immediately
 - **Ambiguity stalls** (same score +-0.05 for 3 rounds): Activate Ontologist mode to reframe
-</Escalation_And_Stop_Conditions>
 
-<Final_Checklist>
+## Final Checklist
+
 - [ ] Interview completed (ambiguity ≤ threshold OR user chose early exit)
 - [ ] Ambiguity score displayed after every round
 - [ ] Every round explicitly names the weakest dimension
 - [ ] Challenge agents activated at correct thresholds (round 4, 6, 8)
 - [ ] Spec file written
 - [ ] Spec includes: goal, constraints, acceptance criteria, clarity breakdown
-</Final_Checklist>
