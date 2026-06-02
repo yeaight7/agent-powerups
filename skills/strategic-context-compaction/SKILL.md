@@ -10,7 +10,7 @@ Compact at logical boundaries to preserve high-value context while clearing nois
 ## When to Compact
 
 | Transition | Compact? | Reason |
-|-----------|----------|--------|
+| --- | --- | --- |
 | Research → Planning | **Yes** | Research context is bulky; the plan is the distilled output |
 | Planning → Implementation | **Yes** | Plan is saved in tasks/files; context is free to reset |
 | Implementation → Testing | **Maybe** | Keep if tests reference recent code; compact if switching focus area |
@@ -21,6 +21,7 @@ Compact at logical boundaries to preserve high-value context while clearing nois
 ## Before Compacting
 
 Save anything you cannot reconstruct cheaply:
+
 - Write the plan to a task list or file before compacting after research
 - Commit or stash work-in-progress code before compacting after debugging
 - Note key file paths in the next prompt if they will be needed again
@@ -28,7 +29,7 @@ Save anything you cannot reconstruct cheaply:
 ## What Survives Compaction
 
 | Survives | Lost |
-|----------|------|
+| --- | --- |
 | CLAUDE.md / AGENTS.md instructions | Intermediate reasoning |
 | Task list (TodoWrite) | File contents read in session |
 | Files on disk | Tool call history |
