@@ -31,7 +31,7 @@ Do not use this skill if there are no existing tests — write tests first.
 
 ## Output
 
-```
+```markdown
 Changed:
 - <structural change 1>
 - <structural change 2>
