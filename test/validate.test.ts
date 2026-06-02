@@ -74,6 +74,29 @@ test("validate skills: fails when backtick reference file is missing", async () 
   assert.match(result.stdout, /missing referenced support file/i);
 });
 
+test("validate skills: fails when SKILL.md uses XML-like top-level section tags", async () => {
+  const root = await makeTempRepo();
+  await fs.mkdir(path.join(root, "skills", "tagged-skill"), { recursive: true });
+  await fs.writeFile(
+    path.join(root, "skills", "tagged-skill", "SKILL.md"),
+    [
+      "---",
+      "name: tagged-skill",
+      "description: Use when testing",
+      "---",
+      "",
+      "<Purpose>",
+      "Test purpose.",
+      "</Purpose>",
+    ].join("\n"),
+    "utf8",
+  );
+  const service = await createCatalogService(root);
+  const result = await runValidateSkillsCommand(service);
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stdout, /XML-like top-level section tag <Purpose>/i);
+});
+
 test("validate skills: fails when skill directory has no SKILL.md", async () => {
   const root = await makeTempRepo();
   await fs.mkdir(path.join(root, "skills", "emptyskill"), { recursive: true });
@@ -81,6 +104,27 @@ test("validate skills: fails when skill directory has no SKILL.md", async () => 
   const result = await runValidateSkillsCommand(service);
   assert.equal(result.exitCode, 1);
   assert.match(result.stdout, /missing SKILL\.md/i);
+});
+
+test("python validate-skills fails when SKILL.md uses XML-like top-level section tags", async () => {
+  const root = await makeTempRepo();
+  await fs.mkdir(path.join(root, "skills", "tagged-skill"), { recursive: true });
+  await fs.writeFile(
+    path.join(root, "skills", "tagged-skill", "SKILL.md"),
+    "---\nname: tagged-skill\ndescription: Use when testing\n---\n\n<Workflow>\nTest workflow.\n</Workflow>\n",
+    "utf8",
+  );
+
+  await assert.rejects(
+    execFileAsync("python", [path.join(repoRoot, "scripts", "validate-skills.py")], {
+      env: { ...process.env, APX_REPO_ROOT: root },
+    }),
+    (error: any) => {
+      assert.equal(error.code, 1);
+      assert.match(error.stdout, /XML-like top-level section tag <Workflow>/i);
+      return true;
+    },
+  );
 });
 
 test("python validate-skills default suppresses style warnings", async () => {
