@@ -10,6 +10,7 @@ npm test        # build then run node test/*.test.ts
 ```
 
 Run a single test file:
+
 ```bash
 node --test test/cli.test.ts
 ```
@@ -17,6 +18,7 @@ node --test test/cli.test.ts
 No linter is configured. TypeScript strict mode is the primary safety net.
 
 After build, install globally once with `npm link`. Then the CLI is available as:
+
 ```bash
 apx <command>
 ```
