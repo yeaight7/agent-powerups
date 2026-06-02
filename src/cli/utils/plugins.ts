@@ -17,6 +17,35 @@ export interface PluginInfo {
 
 const PLUGINS_DIR = "plugins";
 const BUNDLES_FILE = "plugin-bundles.json";
+const DISALLOWED_TOP_LEVEL_SECTION_TAGS = [
+  "Purpose",
+  "Workflow",
+  "Use_When",
+  "Do_Not_Use_When",
+  "Why_This_Exists",
+  "PRD_Mode",
+  "Execution_Policy",
+  "Steps",
+  "Escalation_And_Stop_Conditions",
+  "Final_Checklist",
+] as const;
+const DISALLOWED_TOP_LEVEL_SECTION_RE = new RegExp(
+  `^\\s*</?(?<tag>${DISALLOWED_TOP_LEVEL_SECTION_TAGS.join("|")})(?:\\s[^>]*)?>\\s*$`,
+  "gm",
+);
+
+function stripFencedCode(content: string): string {
+  return content.replace(/```[\s\S]*?```/g, "");
+}
+
+function findDisallowedTopLevelSectionTags(content: string): string[] {
+  const prose = stripFencedCode(content);
+  const tags = new Set<string>();
+  for (const match of prose.matchAll(DISALLOWED_TOP_LEVEL_SECTION_RE)) {
+    tags.add(match.groups?.["tag"] ?? match[1]);
+  }
+  return [...tags].sort();
+}
 
 async function findPluginRoot(startDir: string): Promise<string | null> {
   let current = path.resolve(startDir);
@@ -128,8 +157,15 @@ export async function validatePlugin(cwd: string, name: string): Promise<{ valid
       errors.push(`Missing required directory: skills/`);
     }
     for (const skill of skills) {
+      const skillMd = path.join(pluginPath, "skills", skill.name, "SKILL.md");
       try {
-        await fs.stat(path.join(pluginPath, "skills", skill.name, "SKILL.md"));
+        await fs.stat(skillMd);
+        const content = await fs.readFile(skillMd, "utf8");
+        for (const tag of findDisallowedTopLevelSectionTags(content)) {
+          errors.push(
+            `Plugin skill ${skill.name} uses XML-like top-level section tag <${tag}>; use Markdown headings instead`,
+          );
+        }
       } catch {
         errors.push(`Missing SKILL.md for skill: ${skill.name}`);
       }
