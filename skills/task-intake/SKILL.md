@@ -15,4 +15,5 @@ Never start implementing blindly. When you receive a new task, you must force cl
 4. **What context is missing?** Ask the user for specific files, logs, or environment details if the request is too vague.
 
 ## Anti-Pattern: The Blind Start
+
 Do not say "I will now fix the bug." and immediately edit files. Instead, use a repo-map or grep to confirm the files exist, then state your understanding of the problem. If the user's instruction is ambiguous, explicitly pause and ask them a clarifying question.
