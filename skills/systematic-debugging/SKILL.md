@@ -20,6 +20,7 @@ Use for ANY technical issue:
 - Integration issues
 
 **Use this especially when:**
+
 - Under time pressure (emergencies make guessing tempting)
 - "Just one quick fix" seems obvious
 - You've already tried multiple fixes
@@ -27,6 +28,7 @@ Use for ANY technical issue:
 - You don't fully understand the issue
 
 **Do not skip when:**
+
 - Issue seems simple (simple bugs have root causes too)
 - You're in a hurry (rushing guarantees rework)
 - Someone wants it fixed immediately (systematic is faster than thrashing)
@@ -53,7 +55,7 @@ You MUST complete each phase before proceeding to the next.
 3. **Check recent changes** — What changed that could cause this? Git diff, recent commits, new dependencies, config changes, environmental differences.
 
 4. **Gather evidence in multi-component systems** — When the system has multiple components (CI → build → signing, API → service → database):
-   ```
+   ```md
    For EACH component boundary:
      - Log what data enters the component
      - Log what data exits the component
@@ -116,6 +118,7 @@ Verification: <how fix was confirmed>
 ## Failure Modes
 
 **Red flags — STOP and return to Phase 1:**
+
 - "Quick fix for now, investigate later"
 - "Just try changing X and see if it works"
 - Adding multiple changes at once
@@ -130,7 +133,7 @@ Verification: <how fix was confirmed>
 **Common rationalizations:**
 
 | Excuse | Reality |
-|--------|---------|
+| --- | --- |
 | "Issue is simple, don't need process" | Simple issues have root causes too. Process is fast for simple bugs. |
 | "Emergency, no time for process" | Systematic debugging is faster than guess-and-check thrashing. |
 | "Just try this first, then investigate" | First fix sets the pattern. Do it right from the start. |
@@ -141,10 +144,12 @@ Verification: <how fix was confirmed>
 ## Supporting References
 
 Techniques available in `references/`:
+
 - **`root-cause-tracing.md`** — Trace bugs backward through the call stack to find the original trigger.
 - **`defense-in-depth.md`** — Add validation at multiple layers after finding the root cause.
 - **`condition-based-waiting.md`** — Replace arbitrary timeouts with condition polling to fix flaky tests.
 - **`find-polluter.sh`** — Bisection script to identify which test creates unwanted files or state.
 
 Example implementation in `examples/`:
+
 - **`condition-based-waiting-example.ts`** — Complete TypeScript implementation of condition-based waiting utilities.
