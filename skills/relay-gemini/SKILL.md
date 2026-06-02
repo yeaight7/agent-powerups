@@ -10,12 +10,13 @@ Relay tasks to a persistent local Gemini ACP session. Gemini relay uses ACP and 
 Compatible with: `claude-code`, `codex`, `generic`
 
 Requires:
+
 - Local Gemini CLI (`gemini`)
 
 ## When to Use Relay vs Ask
 
 | Situation | Use |
-|-----------|-----|
+| --- | --- |
 | Multi-turn review or advisory dialogue | `relay` — context persists across turns |
 | Long-running code review with follow-ups | `relay` — same session, same context |
 | Single focused question, no follow-up needed | `ask-gemini` — simpler, no daemon |
