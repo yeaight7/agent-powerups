@@ -10,6 +10,7 @@ Relay tasks to a local Claude CLI. Claude relay uses `claude -p` per ask. There 
 Compatible with: `codex`, `gemini-cli`, `generic`
 
 Requires:
+
 - Local Claude Code CLI (`claude`)
 
 ## Workflow
