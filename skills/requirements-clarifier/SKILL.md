@@ -8,6 +8,7 @@ Requirements Clarifier implements Socratic questioning with mathematical ambigui
 </Purpose>
 
 <Use_When>
+
 - User has a vague idea and wants thorough requirements gathering before execution
 - User says "deep interview", "interview me", "ask me everything", "don't assume", "make sure you understand"
 - User wants to avoid "that's not what I meant" outcomes from autonomous execution
@@ -23,6 +24,7 @@ Requirements Clarifier implements Socratic questioning with mathematical ambigui
 </Do_Not_Use_When>
 
 <Execution_Policy>
+
 - Ask ONE question at a time -- never batch multiple questions
 - Target the WEAKEST clarity dimension with each question
 - Make weakest-dimension targeting explicit every round: name the weakest dimension, state its score/gap, and explain why the next question is aimed there
@@ -67,7 +69,7 @@ Repeat until `ambiguity ≤ threshold` OR user exits early:
 
 **Question styles by dimension:**
 | Dimension | Question Style | Example |
-|-----------|---------------|---------|
+| --- | --- | --- |
 | Goal Clarity | "What exactly happens when...?" | "When you say 'manage tasks', what specific action does a user take first?" |
 | Constraint Clarity | "What are the boundaries?" | "Should this work offline, or is internet connectivity assumed?" |
 | Success Criteria | "How do we know it works?" | "If I showed you the finished product, what would make you say 'yes, that's it'?" |
@@ -94,11 +96,11 @@ Brownfield: `ambiguity = 1 - (goal × 0.35 + constraints × 0.25 + criteria × 0
 
 After scoring, show the user their progress:
 
-```
+```markdown
 Round {n} complete.
 
 | Dimension | Score | Weight | Weighted | Gap |
-|-----------|-------|--------|----------|-----|
+| --- | --- | --- | --- | --- |
 | Goal | {s} | {w} | {s*w} | {gap or "Clear"} |
 | Constraints | {s} | {w} | {s*w} | {gap or "Clear"} |
 | Success Criteria | {s} | {w} | {s*w} | {gap or "Clear"} |
