@@ -78,7 +78,7 @@ Capture a screenshot after each significant state change: modal open, form submi
 
 ### 5. Document findings per scenario
 
-```
+```md
 SCENARIO: <what was tested>
 EXPECTED: <what should happen>
 OBSERVED: <what actually happened>
@@ -97,12 +97,14 @@ ACCESSIBILITY:
 ### 6. Visual regression check (when a baseline exists)
 
 If a prior screenshot is available:
+
 - Compare side-by-side for layout shifts, color changes, missing elements, overflow
 - Do not auto-approve visual diffs — present them and let the user decide
 
 ## Output
 
 Deliver:
+
 1. Screenshot filenames saved to a named artifact path (not system temp)
 2. Console error count and any non-trivial messages from load and interactions
 3. Per-scenario PASS / FAIL / NEEDS_REVIEW verdict
