@@ -13,6 +13,24 @@ REPO_ROOT = os.environ.get("APX_REPO_ROOT") or os.path.dirname(
 )
 SKILLS_DIR = os.path.join(REPO_ROOT, "skills")
 REQUIRED_FRONTMATTER_FIELDS = ["name", "description"]
+DISALLOWED_TOP_LEVEL_SECTION_TAGS = [
+    "Purpose",
+    "Workflow",
+    "Use_When",
+    "Do_Not_Use_When",
+    "Why_This_Exists",
+    "PRD_Mode",
+    "Execution_Policy",
+    "Steps",
+    "Escalation_And_Stop_Conditions",
+    "Final_Checklist",
+]
+DISALLOWED_TOP_LEVEL_SECTION_RE = re.compile(
+    r"^\s*</?(?P<tag>"
+    + "|".join(re.escape(tag) for tag in DISALLOWED_TOP_LEVEL_SECTION_TAGS)
+    + r")(?:\s[^>]*)?>\s*$",
+    re.MULTILINE,
+)
 RECOMMENDED_SECTIONS = [
     "Purpose",
     "When to Use",
@@ -73,6 +91,10 @@ def support_ref_exists(skill_dir: str, ref: str) -> bool:
     return any(os.path.exists(candidate) for candidate in candidates)
 
 
+def strip_fenced_code(content: str) -> str:
+    return re.sub(r"```.*?```", "", content, flags=re.DOTALL)
+
+
 def parse_frontmatter(content: str) -> dict[str, str] | None:
     if not content.startswith("---"):
         return None
@@ -116,9 +138,17 @@ def check_skill(skill_dir: str) -> None:
     if not re.sub(r"\s", "", content):
         errors.append(f"[{skill_name}] SKILL.md has no content")
 
-    prose = re.sub(r"```.*?```", "", content, flags=re.DOTALL)
+    prose = strip_fenced_code(content)
     if not prose.strip():
         errors.append(f"[{skill_name}] SKILL.md has no prose content")
+
+    disallowed_tags = sorted(
+        {match.group("tag") for match in DISALLOWED_TOP_LEVEL_SECTION_RE.finditer(prose)}
+    )
+    for tag in disallowed_tags:
+        errors.append(
+            f"[{skill_name}] SKILL.md uses XML-like top-level section tag <{tag}>; use Markdown headings instead"
+        )
 
     if frontmatter.get("name") and frontmatter["name"] != skill_name:
         errors.append(
