@@ -15,7 +15,7 @@ Spec for reference: [SPEC_FILE_PATH]
 ## What to Check
 
 | Category | What to Look For |
-|----------|------------------|
+| --- | --- |
 | Completeness | TODOs, placeholders, incomplete tasks, missing steps |
 | Spec Alignment | Plan covers spec requirements, no major scope creep |
 | Task Decomposition | Tasks have clear boundaries, steps are actionable |
@@ -28,6 +28,7 @@ An implementer building the wrong thing or getting stuck is an issue.
 Minor wording, stylistic preferences, and "nice to have" suggestions are not.
 
 Approve unless there are serious gaps:
+
 - Missing requirements from the spec
 - Contradictory steps
 - Placeholder content (TBD, TODO, "fill in details")
@@ -40,8 +41,10 @@ Approve unless there are serious gaps:
 **Status:** Approved | Issues Found
 
 **Issues (if any):**
+
 - [Task X, Step Y]: [specific issue] — [why it matters for implementation]
 
 **Recommendations (advisory, do not block approval):**
+
 - [suggestions for improvement]
 ```
