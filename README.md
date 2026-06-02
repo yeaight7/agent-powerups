@@ -603,4 +603,4 @@ Acknowledgements: [`ACKNOWLEDGEMENTS.md`](./ACKNOWLEDGEMENTS.md)
 
 MCP configs: [`docs/mcp-configs.md`](./docs/mcp-configs.md)
 
-Roadmap: [`docs/roadmap.md`](./docs/roadmap.md)
+Roadmap: [`roadmap.md`](./docs/roadmap.md)
