@@ -5,7 +5,7 @@ description: "Use to isolate a bug from a large application into a standalone, r
 
 # Minimal Reproduction
 
-You cannot reliably fix what you cannot reliably reproduce in isolation. 
+You cannot reliably fix what you cannot reliably reproduce in isolation.
 
 ## The Subtraction Method
 
