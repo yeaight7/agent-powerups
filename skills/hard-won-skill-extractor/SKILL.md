@@ -74,6 +74,8 @@ If the extracted idea should become a maintained, shareable skill instead of a p
 
 Every learned skill file MUST start with YAML frontmatter. Do **not** write plain markdown without frontmatter.
 
+After the frontmatter, use a pure Markdown body with headings. Do not use XML-like tags such as `<Purpose>` or `<Workflow>` as default top-level structure; reserve XML-like delimiters for nested examples, quoted input, external documents, or machine-readable prompt payloads.
+
 Minimum required frontmatter:
 
 ```yaml
