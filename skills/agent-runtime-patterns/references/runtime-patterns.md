@@ -1,6 +1,7 @@
 # Runtime Patterns
 
 ## Pattern Selection
+
 | Problem | Pattern |
 | --- | --- |
 | repeated broad search | bounded search subagent/card |
@@ -12,7 +13,9 @@
 | server state needed | explicit MCP session lifecycle |
 
 ## Measurement
+
 Track before/after:
+
 - tool calls
 - LLM calls
 - elapsed time
@@ -21,12 +24,14 @@ Track before/after:
 - number of user clarifications
 
 ## Card Rules
+
 - Card is high-signal operating guidance, not full docs.
 - One card owns one behavior.
 - Include trigger, constraints, and done criteria.
 - Avoid putting secrets or local machine paths in cards.
 
 ## MCP Session Lifecycle
+
 1. Create session.
 2. Attach session id via request metadata.
 3. Verify stateful tool behavior.
@@ -34,6 +39,7 @@ Track before/after:
 5. Delete session or document intentional persistence.
 
 ## Anti-Patterns
+
 - Adding orchestration to avoid clarifying requirements.
 - Hiding slow tools behind more agents.
 - Persisting state with no cleanup rule.
