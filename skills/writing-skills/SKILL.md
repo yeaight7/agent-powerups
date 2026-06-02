@@ -33,6 +33,8 @@ A **skill** is a reference guide for proven techniques, patterns, or tools. Skil
   - **NEVER summarize the skill's process or workflow**
   - Keep under 500 characters if possible
 
+**Body format:** Use pure Markdown headings for structure. Prefer `## Purpose`, `## When to Use`, `## Workflow`, and `## Verification`. Do not use XML-like tags such as `<Purpose>`, `<Workflow>`, or `<Use_When>` as normal top-level sectioning. Use XML-like delimiters only for nested examples, quoted input, external documents, or machine-readable prompt payloads.
+
 ````markdown
 ---
 name: skill-name-with-hyphens
@@ -126,6 +128,7 @@ Agent found new rationalization? Add explicit counter. Re-test until bulletproof
 
 - [ ] `name` uses only letters, numbers, hyphens
 - [ ] YAML frontmatter with `name` and `description`
+- [ ] Pure Markdown body with headings, not XML-like top-level section tags
 - [ ] Description starts with "Use when..." — no workflow summary
 - [ ] Keywords throughout for discovery
 - [ ] Clear overview with core principle
