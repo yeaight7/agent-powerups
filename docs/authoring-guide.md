@@ -25,6 +25,39 @@ Required keys:
 - `name`
 - `description`
 
+## Default Instruction Format
+
+Default to YAML frontmatter plus a pure Markdown body for agent instruction files. Use Markdown headings such as `## Purpose`, `## When to Use`, `## Workflow`, and `## Verification` for structure. Do not use XML-like tags such as `<Purpose>`, `<Workflow>`, or `<Use_When>` as the normal top-level sectioning style. XML-like tags are acceptable only when they are strictly necessary to delimit nested examples, quoted user input, external documents, or machine-readable prompt payloads.
+
+Preferred:
+
+```md
+---
+name: example-skill
+description: Use when ...
+---
+
+## Purpose
+
+## When to Use
+
+## Workflow
+
+## Verification
+```
+
+Avoid as default top-level structure:
+
+```md
+<Purpose>
+...
+</Purpose>
+
+<Workflow>
+...
+</Workflow>
+```
+
 ## Preferred Skill Body
 
 ```md
