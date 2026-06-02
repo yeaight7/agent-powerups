@@ -25,7 +25,7 @@ Preferred inputs:
 
 Helpful check:
 
-```powershell
+```bash
 git rev-parse --is-inside-work-tree
 ```
 
@@ -39,7 +39,7 @@ git rev-parse --is-inside-work-tree
 
 1. Get the git range when local git is available.
 
-```powershell
+```bash
 git rev-parse origin/main
 git rev-parse HEAD
 ```
