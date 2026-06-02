@@ -2511,6 +2511,720 @@
     "maturity": "beta"
   },
   {
+    "name": "agent-readable-docs",
+    "type": "skill",
+    "summary": "Use when writing technical documentation that needs to be readable by both humans and AI models, converting existing docs to HADS format, validating a HADS document, or optimizing documentation for token-efficient AI consumption.",
+    "path": "skills/agent-readable-docs",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "documentation",
+      "architecture",
+      "docs"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "ai-regression-testing",
+    "type": "skill",
+    "summary": "Deterministic checks first, agent review second, regression test for every real bug fixed or document why not. Targets the blind spot where an agent writes and reviews its own code.",
+    "path": "skills/ai-regression-testing",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "quality",
+      "ci",
+      "review"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "api-doc-review",
+    "type": "skill",
+    "summary": "Verify that API endpoints match their OpenAPI/Swagger specifications.",
+    "path": "skills/api-doc-review",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "documentation",
+      "architecture",
+      "docs"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "architecture-decision-records",
+    "type": "skill",
+    "summary": "Record why an architectural choice was made to prevent agents or humans from unintentionally reverting it.",
+    "path": "skills/architecture-decision-records",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "documentation",
+      "architecture",
+      "docs"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "architecture-simplification",
+    "type": "skill",
+    "summary": "Use to collapse over-engineered abstractions, remove unnecessary layers, or consolidate redundant logic.",
+    "path": "skills/architecture-simplification",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "refactoring",
+      "maintenance",
+      "cleanup"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "baseline-comparison-review",
+    "type": "skill",
+    "summary": "Ensure that new complex models actually outperform simple, naive baselines.",
+    "path": "skills/baseline-comparison-review",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "ml",
+      "ops",
+      "experiments"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "canonical-advisor-routing",
+    "type": "skill",
+    "summary": "Process-first advisor routing with artifact capture",
+    "path": "skills/canonical-advisor-routing",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "agentic-systems",
+      "orchestration",
+      "advisors"
+    ],
+    "maturity": "experimental"
+  },
+  {
+    "name": "change-impact-check",
+    "type": "skill",
+    "summary": "Use before submitting a PR or considering a task done to evaluate the 'blast radius' of your changes.",
+    "path": "skills/change-impact-check",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "quality",
+      "ci",
+      "review"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "ci-failure-readout",
+    "type": "skill",
+    "summary": "Use when a CI pipeline fails to extract the actual error from thousands of lines of logs.",
+    "path": "skills/ci-failure-readout",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "quality",
+      "ci",
+      "review"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "context-docs",
+    "type": "skill",
+    "summary": "Maintain short, focused Markdown files per subsystem to provide agents with isolated context.",
+    "path": "skills/context-docs",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "documentation",
+      "architecture",
+      "docs"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "context-minimization",
+    "type": "skill",
+    "summary": "Use continuously during long tasks. Teaches how to read less, output less, and keep the LLM context window lean and fast.",
+    "path": "skills/context-minimization",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "workflow",
+      "context",
+      "process"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "dataset-split-review",
+    "type": "skill",
+    "summary": "Audit the methodology used to split data into train, validation, and test sets.",
+    "path": "skills/dataset-split-review",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "ml",
+      "ops",
+      "experiments"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "dead-code-removal",
+    "type": "skill",
+    "summary": "Use to identify and safely delete unused functions, classes, exports, and files.",
+    "path": "skills/dead-code-removal",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "refactoring",
+      "maintenance",
+      "cleanup"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "dependency-cleanup",
+    "type": "skill",
+    "summary": "Use to audit and remove unused or redundant third-party dependencies from package manifests.",
+    "path": "skills/dependency-cleanup",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "refactoring",
+      "maintenance",
+      "cleanup"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "doc-consistency-check",
+    "type": "skill",
+    "summary": "Audit documentation for broken file paths, outdated commands, and renamed variables.",
+    "path": "skills/doc-consistency-check",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "documentation",
+      "architecture",
+      "docs"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "experiment-tracking-review",
+    "type": "skill",
+    "summary": "Verify that all hyperparameters, metrics, and data references are properly logged.",
+    "path": "skills/experiment-tracking-review",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "ml",
+      "ops",
+      "experiments"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "failure-triage",
+    "type": "skill",
+    "summary": "Use when confronted with an unknown failure in CI or production to rapidly categorize the issue before deep debugging.",
+    "path": "skills/failure-triage",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "debugging",
+      "diagnostics",
+      "testing"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "flaky-test-investigation",
+    "type": "skill",
+    "summary": "Use to diagnose tests that pass and fail intermittently without code changes.",
+    "path": "skills/flaky-test-investigation",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "debugging",
+      "diagnostics",
+      "testing"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "handoff-discipline",
+    "type": "skill",
+    "summary": "Use when completing a task or running out of context limit. Ensures the next session or human engineer has exactly what they need to resume work instantly.",
+    "path": "skills/handoff-discipline",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "workflow",
+      "context",
+      "process"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "handoff-documentation",
+    "type": "skill",
+    "summary": "Write state-restoration documents for passing tasks between agents or engineers.",
+    "path": "skills/handoff-documentation",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "documentation",
+      "architecture",
+      "docs"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "incident-readout",
+    "type": "skill",
+    "summary": "Use after fixing a bug to generate a blameless post-mortem summary for human review.",
+    "path": "skills/incident-readout",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "debugging",
+      "diagnostics",
+      "testing"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "incremental-migration",
+    "type": "skill",
+    "summary": "Use when migrating APIs, libraries, or patterns across a large codebase. Ensures safe, step-by-step progress rather than risky mega-commits.",
+    "path": "skills/incremental-migration",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "refactoring",
+      "maintenance",
+      "cleanup"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "log-driven-diagnosis",
+    "type": "skill",
+    "summary": "Use when debugging complex runtime failures, distributed systems, or issues where a local debugger cannot be attached.",
+    "path": "skills/log-driven-diagnosis",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "debugging",
+      "diagnostics",
+      "testing"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "memory-build-workflow",
+    "type": "skill",
+    "summary": "Use when a user needs to build or refresh persistent graph memory from a mixed corpus and the right path may include graphify, incremental update, or helper conversion before ingestion.",
+    "path": "skills/memory-build-workflow",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "memory",
+      "context",
+      "workflow"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "memory-optimization-workflow",
+    "type": "skill",
+    "summary": "Use when deciding the lowest-cost context path for a mixed corpus, especially when choosing among direct reading, helper conversion, graph build, graph update, or graph query.",
+    "path": "skills/memory-optimization-workflow",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "memory",
+      "context",
+      "workflow"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "memory-query-workflow",
+    "type": "skill",
+    "summary": "Use when a graph already exists and the user needs retrieval, tracing, explanation, or gap detection from graph memory before reopening the full corpus.",
+    "path": "skills/memory-query-workflow",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "memory",
+      "context",
+      "workflow"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "minimal-reproduction",
+    "type": "skill",
+    "summary": "Use to isolate a bug from a large application into a standalone, runnable script or single test case.",
+    "path": "skills/minimal-reproduction",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "debugging",
+      "diagnostics",
+      "testing"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "ml-leakage-check",
+    "type": "skill",
+    "summary": "Identify and prevent target leakage in ML preprocessing pipelines.",
+    "path": "skills/ml-leakage-check",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "ml",
+      "ops",
+      "experiments"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "model-evaluation-reporting",
+    "type": "skill",
+    "summary": "Standardize the reporting of model metrics to ensure statistical rigor and business relevance.",
+    "path": "skills/model-evaluation-reporting",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "ml",
+      "ops",
+      "experiments"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "naming-and-structure-cleanup",
+    "type": "skill",
+    "summary": "Use to enforce consistent naming conventions and file structures across a project without changing business logic.",
+    "path": "skills/naming-and-structure-cleanup",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "refactoring",
+      "maintenance",
+      "cleanup"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "pre-release-verification",
+    "type": "skill",
+    "summary": "Use before tagging a release or deploying to production to ensure all quality gates have passed.",
+    "path": "skills/pre-release-verification",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "quality",
+      "ci",
+      "review"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "readme-hardening",
+    "type": "skill",
+    "summary": "Ensure the project README provides immediate, exact commands for setup, testing, and deployment to help agents and humans bootstrap quickly.",
+    "path": "skills/readme-hardening",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "documentation",
+      "architecture",
+      "docs"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "regression-bisecting",
+    "type": "skill",
+    "summary": "Use when a bug was recently introduced but you don't know which commit caused it.",
+    "path": "skills/regression-bisecting",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "debugging",
+      "diagnostics",
+      "testing"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "reproducible-training-runs",
+    "type": "skill",
+    "summary": "Analyzes ML training scripts to enforce seed setting, deterministic operations, and environment tracking for exact reproducibility.",
+    "path": "skills/reproducible-training-runs",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "ml",
+      "ops",
+      "experiments"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "risk-based-review",
+    "type": "skill",
+    "summary": "Use when reviewing code (or your own plan) to allocate attention based on the danger of the change.",
+    "path": "skills/risk-based-review",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "quality",
+      "ci",
+      "review"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "semantic-layer-change-review",
+    "type": "skill",
+    "summary": "Use when modifying dbt metrics or semantic models to ensure mathematical correctness and backwards compatibility.",
+    "path": "skills/semantic-layer-change-review",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "data",
+      "metrics",
+      "review"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "strategic-context-compaction",
+    "type": "skill",
+    "summary": "Compact context at logical phase boundaries - after research, after planning, after debugging - rather than mid-task. Preserves useful state while clearing noise.",
+    "path": "skills/strategic-context-compaction",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "workflow",
+      "context",
+      "process"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "task-intake",
+    "type": "skill",
+    "summary": "Use at the beginning of a new task. Ensures you fully understand the requirements, boundaries, and acceptance criteria before writing code.",
+    "path": "skills/task-intake",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "workflow",
+      "context",
+      "process"
+    ],
+    "maturity": "stable"
+  },
+  {
+    "name": "test-preserving-refactor",
+    "type": "skill",
+    "summary": "Use to restructure code while guaranteeing that all existing tests continue to pass.",
+    "path": "skills/test-preserving-refactor",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "refactoring",
+      "maintenance",
+      "cleanup"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "training-pipeline-debugging",
+    "type": "skill",
+    "summary": "Diagnose NaN losses, out-of-memory errors, and shape mismatches in deep learning or ML pipelines.",
+    "path": "skills/training-pipeline-debugging",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "ml",
+      "ops",
+      "experiments"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "tri-model-review",
+    "type": "skill",
+    "summary": "Multi-model orchestration - route to two external advisors, then synthesize",
+    "path": "skills/tri-model-review",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "agentic-systems",
+      "orchestration",
+      "advisors"
+    ],
+    "maturity": "experimental"
+  },
+  {
+    "name": "worktree-session-manager",
+    "type": "skill",
+    "summary": "Create isolated git worktrees and optional local sessions for issues, PRs, and feature branches. Use when parallel task isolation matters and you want safe setup and cleanup defaults.",
+    "path": "skills/worktree-session-manager",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "software-engineering",
+      "worktrees",
+      "workflow"
+    ],
+    "maturity": "experimental"
+  },
+  {
     "name": "release",
     "type": "command",
     "summary": "Run a release-readiness checklist and produce a go/no-go readout before tagging or publishing.",
