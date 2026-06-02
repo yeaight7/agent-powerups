@@ -40,7 +40,7 @@ Use before tagging, publishing, or promoting a release. Goal: confirm the releas
 Run `git log <last-tag>..HEAD --oneline --no-merges` and categorize:
 
 | Commit type | Release impact |
-|---|---|
+| --- | --- |
 | `feat` / new capability | Minor or higher |
 | `fix` / bug fix | Patch |
 | `BREAKING CHANGE` / `!` suffix | Major — must be documented |
@@ -72,11 +72,11 @@ Do not release from a failing suite.
 
 Write the exact commands in sequence before executing any of them:
 
-```
-1. git tag vX.Y.Z -m "Release vX.Y.Z"
-2. git push origin vX.Y.Z
-3. npm publish --access public      (or equivalent)
-4. gh release create vX.Y.Z --notes-file CHANGELOG.md
+```bash
+git tag vX.Y.Z -m "Release vX.Y.Z"
+git push origin vX.Y.Z
+npm publish --access public      (or equivalent)
+gh release create vX.Y.Z --notes-file CHANGELOG.md
 ```
 
 Present this plan and wait for explicit approval before running step 1.
@@ -86,7 +86,7 @@ Present this plan and wait for explicit approval before running step 1.
 Define rollback for each step before executing:
 
 | Step | Rollback |
-|---|---|
+| --- | --- |
 | git tag | `git tag -d vX.Y.Z && git push origin :refs/tags/vX.Y.Z` |
 | npm publish | `npm deprecate <pkg>@<ver> "released in error"` (most registries do not allow deletion after 24h) |
 | GitHub Release | `gh release delete vX.Y.Z --yes` |
