@@ -6,9 +6,11 @@ description: Use when designing or using MCP-backed structured code search with 
 # Structured Code Search MCP
 
 ## When to use
+
 Use when an agent needs to search, navigate, or extract code using structural queries — AST patterns, symbol lookups, or cross-file reference tracing — beyond what simple grep or glob can provide, via an MCP-backed code search server.
 
 ## Requirements / Checks
+
 - Prefer installed/pinned structured code search binaries over remote `npx -y ...@latest` execution.
 - Confirm the MCP client supports the required transport and method filtering.
 - Bound any search path to the current workspace unless the user explicitly approves otherwise.
@@ -47,14 +49,17 @@ Use when an agent needs to search, navigate, or extract code using structural qu
 Exact tool names and schemas vary by implementation. Read the server's tool list before assuming names.
 
 ## Safety Constraints
+
 - Validate all input arguments against the defined JSON schema before execution.
 - Enforce strict path boundaries — refuse requests for paths outside the workspace.
 - Do not expose write or edit modes unless code modification is explicitly requested.
 - Do not include test files or broad directories by default when the task asks for production behavior only.
 
 ## Validation / Done Criteria
+
 - MCP setup has bounded paths, strict schemas, filtered methods, and timeouts configured.
 - Search and extract workflow returns enough source context without flooding the model context window.
 
 ## References
+
 - `references/code-search-tool-selection.md`
