@@ -12,6 +12,7 @@ Note that `codex` may open an interactive TUI on some versions. For non-interact
 Compatible with: `claude-code`, `gemini-cli`, `generic`
 
 Requires:
+
 - Local Codex CLI (`codex`)
 
 ## Workflow
