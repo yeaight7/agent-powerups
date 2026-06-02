@@ -21,7 +21,7 @@ Shipped assets are organized by type: `skills/`, `commands/`, `hooks/`, `mcp/`, 
 
 Use TypeScript ES modules targeting Node 20+. The project uses `strict` TypeScript, `NodeNext` modules, semicolons, double quotes, and two-space indentation. Prefer small named functions, explicit error messages, and local helpers in `src/cli/utils/` when logic is shared.
 
-Use kebab-case for asset folders and catalog names, for example `skills/systematic-debugging/`. Every skill folder must include `SKILL.md` with YAML frontmatter containing `name` and `description`.
+Use kebab-case for asset folders and catalog names, for example `skills/systematic-debugging/`. Every skill folder must include `SKILL.md` with YAML frontmatter containing `name` and `description`. Agent instruction files should use YAML frontmatter plus a pure Markdown body with headings, not XML-like tags as normal top-level sections.
 
 ## Testing Guidelines
 
