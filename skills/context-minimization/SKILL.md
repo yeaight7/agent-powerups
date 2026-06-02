@@ -13,5 +13,5 @@ Your context window is the most precious resource. Large contexts make you slow,
 2. **Silent Commands**: Always append `--silent`, `-q`, or redirect stderr/stdout to `/dev/null` for commands that produce massive logs (like `npm install` or verbose builds) unless you specifically need to debug them.
 3. **Pagination**: Disable pagers for all terminal tools. E.g., `git --no-pager log`.
 4. **Terse Responses**: Do not explain what a tool does before calling it, unless safety requires it. Do not repeat the user's instructions back to them verbatim.
-5. **Close Files**: Once you are done looking at a file, stop referring to it. 
+5. **Close Files**: Once you are done looking at a file, stop referring to it.
 6. **Parallel Ops**: If you need to search 3 files, run 3 parallel grep/read calls in a single turn instead of sequentially. This saves turns, which saves context repetition.
