@@ -24,6 +24,7 @@ A **skill** is a reference guide for proven techniques, patterns, or tools. Skil
 ## SKILL.md Structure
 
 **Frontmatter (YAML):**
+
 - Two required fields: `name` and `description`
 - `name`: Use letters, numbers, and hyphens only
 - `description`: Third-person, describes ONLY when to use (NOT what it does)
@@ -32,7 +33,7 @@ A **skill** is a reference guide for proven techniques, patterns, or tools. Skil
   - **NEVER summarize the skill's process or workflow**
   - Keep under 500 characters if possible
 
-```markdown
+````markdown
 ---
 name: skill-name-with-hyphens
 description: Use when [specific triggering conditions and symptoms]
@@ -54,7 +55,7 @@ Table or bullets for scanning common operations
 
 ## Common Mistakes
 What goes wrong + fixes
-```
+````
 
 ## Claude Search Optimization (CSO)
 
@@ -72,7 +73,7 @@ description: Use when executing implementation plans with independent tasks
 
 ## File Organization
 
-```
+```text
 skills/
   skill-name/
     SKILL.md              # Main reference (required)
@@ -94,7 +95,7 @@ This applies to NEW skills AND EDITS to existing skills.
 ## RED-GREEN-REFACTOR for Skills
 
 | TDD Concept | Skill Creation |
-|-------------|----------------|
+| --- | --- |
 | Test case | Pressure scenario with subagent |
 | RED | Agent violates rule without skill (baseline) |
 | GREEN | Agent complies with skill present |
@@ -103,6 +104,7 @@ This applies to NEW skills AND EDITS to existing skills.
 ### RED: Write Failing Test (Baseline)
 
 Run pressure scenario WITHOUT the skill. Document exact behavior:
+
 - What choices did they make?
 - What rationalizations did they use (verbatim)?
 
@@ -117,9 +119,11 @@ Agent found new rationalization? Add explicit counter. Re-test until bulletproof
 ## Skill Creation Checklist
 
 **RED Phase:**
+
 - [ ] Run baseline scenario WITHOUT skill — document violations verbatim
 
 **GREEN Phase:**
+
 - [ ] `name` uses only letters, numbers, hyphens
 - [ ] YAML frontmatter with `name` and `description`
 - [ ] Description starts with "Use when..." — no workflow summary
@@ -128,6 +132,7 @@ Agent found new rationalization? Add explicit counter. Re-test until bulletproof
 - [ ] Run scenarios WITH skill — verify compliance
 
 **REFACTOR Phase:**
+
 - [ ] Identify new rationalizations from testing
 - [ ] Add explicit counters for discipline skills
 - [ ] Build rationalization table
@@ -144,11 +149,13 @@ Agent found new rationalization? Add explicit counter. Re-test until bulletproof
 ## When to Create a Skill
 
 **Create when:**
+
 - Technique wasn't intuitively obvious
 - You'd reference this again across projects
 - Pattern applies broadly (not project-specific)
 
 **Don't create for:**
+
 - One-off solutions
 - Standard practices documented elsewhere
 - Project-specific conventions (put in CLAUDE.md instead)
