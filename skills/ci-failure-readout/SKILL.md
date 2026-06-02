@@ -5,7 +5,7 @@ description: "Use when a CI pipeline fails to extract the actual error from thou
 
 # CI Failure Readout
 
-CI logs are notoriously noisy. Do not dump the entire log into the context window. 
+CI logs are notoriously noisy. Do not dump the entire log into the context window.
 
 ## Readout Protocol
 
