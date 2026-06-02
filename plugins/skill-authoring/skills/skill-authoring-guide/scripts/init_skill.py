@@ -27,13 +27,17 @@ description: [TODO: Complete and informative explanation of what the skill does 
 
 # {skill_title}
 
-## Overview
+## Purpose
 
 [TODO: 1-2 sentences explaining what this skill enables]
 
-## Structuring This Skill
+## When to Use
 
-[TODO: Choose the structure that best fits this skill's purpose. Common patterns:
+[TODO: List concrete trigger conditions and boundaries. Include when NOT to use this skill if needed.]
+
+## Workflow
+
+[TODO: Choose the structure that best fits this skill's purpose. Use Markdown headings for normal structure; do not use XML-like tags such as <Purpose>, <Workflow>, or <Use_When> as default top-level sections. Common patterns:
 
 **1. Workflow-Based** (best for sequential processes)
 - Works well when there are clear step-by-step procedures
@@ -57,7 +61,7 @@ description: [TODO: Complete and informative explanation of what the skill does 
 
 Patterns can be mixed and matched as needed. Most skills combine patterns (e.g., start with task-based, add workflow for complex operations).
 
-Delete this entire "Structuring This Skill" section when done - it's just guidance.]
+Delete this guidance when done.]
 
 ## [TODO: Replace with the first main section based on chosen structure]
 
@@ -66,6 +70,10 @@ Delete this entire "Structuring This Skill" section when done - it's just guidan
 - Decision trees for complex workflows
 - Concrete examples with realistic user requests
 - References to scripts/templates/references as needed]
+
+## Verification
+
+[TODO: State the narrowest checks that prove this skill was followed correctly.]
 
 ## Resources (optional)
 
