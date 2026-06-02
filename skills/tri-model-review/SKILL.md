@@ -41,6 +41,7 @@ Use this when you want parallel external perspectives.
 When invoked, follow this workflow:
 
 ### 1. Decompose Request
+
 Split the user request into:
 
 - **Architecture prompt:** correctness, backend, risks, test strategy
