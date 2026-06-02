@@ -78,7 +78,7 @@ python scripts/check-requirements.py
 - **Keep it small and explicit:** Contributions should be small, explicit, and portable.
 - **No hidden actions:** Do not add hidden installers or auto-install tools without user approval. Always show the install command before running it.
 - **No secrets:** Never add secrets, machine-specific paths, or personal data.
-- **Skill Requirements:** Every skill in the `skills/` directory must include a `SKILL.md` file with YAML frontmatter containing `name` and `description`.
+- **Skill Requirements:** Every skill in the `skills/` directory must include a `SKILL.md` file with YAML frontmatter containing `name` and `description`, followed by a pure Markdown body. Use Markdown headings for structure; do not use XML-like tags as default top-level sections.
 - **Tool Dependencies:** If a skill depends on an external tool, it must document: the required command, how to check if it exists, how to install it (requiring user approval), and the fallback behavior if installation is declined.
 - **Catalog Maintenance:** Every shipped asset must be registered in `catalog.json` with a valid `type` and `maturity` level.
 - **Compatibility:** Claims about compatibility should be narrow, defensible, and not faked.
