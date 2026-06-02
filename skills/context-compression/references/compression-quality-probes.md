@@ -1,6 +1,7 @@
 # Compression Quality structured code searchs
 
 ## structured code search Types
+
 | structured code search | Question |
 | --- | --- |
 | Recall | What exact error/command/version/decision still matters? |
@@ -10,6 +11,7 @@
 | Constraint | Which user/project rules must survive? |
 
 ## Handoff Template
+
 ```text
 Goal:
 Current state:
@@ -26,6 +28,7 @@ User preferences:
 ```
 
 ## Pass Criteria
+
 - Another agent can continue without reading full transcript.
 - No stale failed approach is presented as active plan.
 - File paths and commands are exact.
@@ -33,6 +36,7 @@ User preferences:
 - Open risks are explicit.
 
 ## Common Losses
+
 | Loss | Prevention |
 | --- | --- |
 | file path drift | list exact paths |
