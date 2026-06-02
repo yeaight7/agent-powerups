@@ -3208,23 +3208,6 @@
     "maturity": "experimental"
   },
   {
-    "name": "worktree-session-manager",
-    "type": "skill",
-    "summary": "Create isolated git worktrees and optional local sessions for issues, PRs, and feature branches. Use when parallel task isolation matters and you want safe setup and cleanup defaults.",
-    "path": "skills/worktree-session-manager",
-    "compatible_with": [
-      "claude-code",
-      "codex",
-      "generic"
-    ],
-    "tags": [
-      "software-engineering",
-      "worktrees",
-      "workflow"
-    ],
-    "maturity": "experimental"
-  },
-  {
     "name": "release",
     "type": "command",
     "summary": "Run a release-readiness checklist and produce a go/no-go readout before tagging or publishing.",
