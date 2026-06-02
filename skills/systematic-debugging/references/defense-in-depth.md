@@ -14,6 +14,7 @@ When you fix a bug caused by invalid data, adding validation at one place feels 
 ## The Four Layers
 
 ### Layer 1: Entry Point Validation
+
 Reject obviously invalid input at the API boundary.
 
 ```typescript
@@ -31,6 +32,7 @@ function createProject(name: string, workingDirectory: string) {
 ```
 
 ### Layer 2: Business Logic Validation
+
 Ensure data makes sense for this specific operation.
 
 ```typescript
@@ -42,6 +44,7 @@ function initializeWorkspace(projectDir: string, sessionId: string) {
 ```
 
 ### Layer 3: Environment Guards
+
 Prevent dangerous operations in specific contexts (e.g., tests).
 
 ```typescript
@@ -60,6 +63,7 @@ async function gitInit(directory: string) {
 ```
 
 ### Layer 4: Debug Instrumentation
+
 Capture context for forensics when other layers fail.
 
 ```typescript
@@ -76,6 +80,7 @@ async function gitInit(directory: string) {
 ## Applying the Pattern
 
 When you find a bug:
+
 1. Trace the data flow — where does the bad value originate? Where is it used?
 2. Map all checkpoints — list every point data passes through.
 3. Add validation at each layer — entry, business, environment, debug.
@@ -86,12 +91,14 @@ When you find a bug:
 Bug: Empty `projectDir` caused `git init` to run in the source code directory.
 
 Data flow:
+
 1. Test setup → empty string
 2. `Project.create(name, '')`
 3. `WorkspaceManager.createWorkspace('')`
 4. `git init` runs in `process.cwd()`
 
 Four layers added:
+
 - Layer 1: `Project.create()` validates not empty/exists/writable
 - Layer 2: `WorkspaceManager` validates projectDir not empty
 - Layer 3: `WorktreeManager` refuses git init outside tmpdir in tests
@@ -102,6 +109,7 @@ Result: All 1847 tests passed, bug impossible to reproduce.
 ## Key Insight
 
 All four layers are necessary. During testing, each layer catches bugs the others miss:
+
 - Different code paths bypass entry validation.
 - Mocks bypass business logic checks.
 - Edge cases on different platforms need environment guards.
