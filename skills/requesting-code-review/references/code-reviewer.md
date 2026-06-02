@@ -4,7 +4,7 @@ Use this template when dispatching a code-reviewer subagent.
 
 ---
 
-```
+```md
 You are reviewing code changes for production readiness.
 
 ## What Was Implemented
