@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.5.2] — 2026-06-02
+
+### Changed — Instruction formatting
+
+- Standardized Agent Powerups authoring guidance on YAML frontmatter plus pure Markdown bodies for durable agent instruction files.
+- Converted shipped skill examples that used XML-like top-level section tags to Markdown headings.
+- Added validation coverage to reject XML-like top-level section tags in `SKILL.md` files while preserving explicit delimiter and prompt-payload use cases.
+
+---
+
 ## [0.5.1] — 2026-06-02
 
 ### Added — Root skills
@@ -115,6 +125,7 @@ See git log for changes prior to this changelog.
 
 ---
 
+[0.5.2]: https://github.com/yeaight7/agent-powerups/releases/tag/v0.5.2
 [0.5.1]: https://github.com/yeaight7/agent-powerups/releases/tag/v0.5.1
 [0.4.0]: https://github.com/yeaight7/agent-powerups/releases/tag/v0.4.0
 [0.3.0]: https://github.com/yeaight7/agent-powerups/releases/tag/v0.3.0
