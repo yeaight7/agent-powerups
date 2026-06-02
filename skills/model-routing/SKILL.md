@@ -76,7 +76,7 @@ Record per task:
 - Tier used
 - Approximate token count
 - Number of retries
-- Success / escalated / failed
+- Success/escalated/failed
 
 Use this to calibrate your routing decisions over time. If Standard succeeds > 90% of the time on a task type, that task does not need Deep.
 
