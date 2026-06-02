@@ -34,13 +34,14 @@ Check: Does equivalent logic already exist? Is it importable as-is, or would it 
 Search the relevant registry for the project language:
 
 | Language | Registry | Search method |
-|----------|----------|---------------|
+| --- | --- | --- |
 | TypeScript/JS | npm | `npm search <keyword>` or npmjs.com |
 | Python | PyPI | `pip index search <keyword>` or pypi.org |
 | Go | pkg.go.dev | web search `site:pkg.go.dev <keyword>` |
 | Rust | crates.io | `cargo search <keyword>` |
 
 Score each candidate:
+
 - Maintenance: last commit < 1 year, open issues ratio
 - Popularity: weekly downloads or GitHub stars
 - License: MIT / Apache-2.0 / BSD preferred; check for GPL/commercial constraints
@@ -56,6 +57,7 @@ cat .mcp.json 2>/dev/null || cat ~/.claude/settings.json | grep -A5 '"mcpServers
 ```
 
 Check the Agent Powerups catalog for MCP configs:
+
 ```bash
 apx list --type mcp-config
 ```
@@ -65,6 +67,7 @@ If a server covers the need, prefer configuring it over writing code.
 ### Step 4 — Maintenance and license risk
 
 Before adopting a package, verify:
+
 - [ ] Not abandoned (last release within 18 months)
 - [ ] License compatible with this project
 - [ ] No known critical CVEs (`npm audit` / `pip-audit` / `cargo audit`)
@@ -73,7 +76,7 @@ Before adopting a package, verify:
 ## Decision
 
 | Finding | Action |
-|---------|--------|
+| --- | --- |
 | Exact match in repo | **Reuse** — import and use; refactor only if the interface is incompatible |
 | Exact external match, acceptable risk | **Adopt** — install and use directly; do not wrap unless the API is hostile |
 | Partial match | **Wrap** — install, write a thin adapter; keep the adapter < 50 lines |
@@ -83,6 +86,7 @@ Before adopting a package, verify:
 ## Constraint: Do Not Skip
 
 This check is mandatory before:
+
 - Writing any utility over 20 lines that solves a generic problem
 - Adding a new external dependency
 - Configuring a new MCP server
