@@ -49,6 +49,8 @@ Each plugin follows the standard coding agent plugin layout:
     └── <command-name>.md
 ```
 
+Plugin skills and instruction templates should use YAML frontmatter plus a pure Markdown body. Use Markdown headings for normal structure; reserve XML-like tags only for explicit nested delimiters or machine-readable prompt payloads.
+
 ## Root Skills vs Plugin Skills
 
 Root skills in `../skills/` are general-purpose and standalone. Plugin skills are domain-specific and go deeper. A plugin skill may cover the same topic as a root skill — it must not replace or override it.
