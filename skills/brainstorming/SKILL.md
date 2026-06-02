@@ -32,29 +32,28 @@ You MUST create a task for each of these items and complete them in order:
 
 ## Process Flow
 
-```dot
-digraph brainstorming {
-    "Explore project context" [shape=box];
-    "Ask clarifying questions" [shape=box];
-    "Propose 2-3 approaches" [shape=box];
-    "Present design sections" [shape=box];
-    "User approves design?" [shape=diamond];
-    "Write design doc" [shape=box];
-    "Spec self-review\n(fix inline)" [shape=box];
-    "User reviews spec?" [shape=diamond];
-    "Invoke writing-plans skill" [shape=doublecircle];
+```mermaid
+graph TD
+    Explore["Explore project context"]
+    Ask["Ask clarifying questions"]
+    Propose["Propose 2-3 approaches"]
+    Present["Present design sections"]
+    ApproveDesign{"User approves design?"}
+    WriteDoc["Write design doc"]
+    SpecReview["Spec self-review<br/>(fix inline)"]
+    ReviewSpec{"User reviews spec?"}
+    InvokePlans((("Invoke writing-plans skill")))
 
-    "Explore project context" -> "Ask clarifying questions";
-    "Ask clarifying questions" -> "Propose 2-3 approaches";
-    "Propose 2-3 approaches" -> "Present design sections";
-    "Present design sections" -> "User approves design?";
-    "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Write design doc" [label="yes"];
-    "Write design doc" -> "Spec self-review\n(fix inline)";
-    "Spec self-review\n(fix inline)" -> "User reviews spec?";
-    "User reviews spec?" -> "Write design doc" [label="changes requested"];
-    "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
-}
+    Explore --> Ask
+    Ask --> Propose
+    Propose --> Present
+    Present --> ApproveDesign
+    ApproveDesign -->|"no, revise"| Present
+    ApproveDesign -->|"yes"| WriteDoc
+    WriteDoc --> SpecReview
+    SpecReview --> ReviewSpec
+    ReviewSpec -->|"changes requested"| WriteDoc
+    ReviewSpec -->|"approved"| InvokePlans
 ```
 
 **The terminal state is invoking writing-plans.** Do NOT invoke any other implementation skill directly. The ONLY skill you invoke after brainstorming is writing-plans.
