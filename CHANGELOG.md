@@ -5,6 +5,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.5.1] — 2026-06-02
+
+### Added — Root skills
+
+- Mirrored 41 plugin-bundled skills into the root `skills/` directory so default installs and catalog discovery expose the same reusable guidance as plugin bundles.
+- Added catalog entries for the mirrored skills across agentic systems, codebase maintenance, data engineering, debugging diagnostics, dev vitals, documentation systems, machine learning ops, memory optimization, and quality gates.
+
+### Changed — Catalog hygiene
+
+- Kept ignored `worktree-session-manager` WIP assets out of the public catalog and shipped skills list until their executable workflow is release-ready.
+
+---
+
 ## [0.4.0] — 2026-05-16
 
 ### Added — MCP configs (18 total, up from 1)
@@ -102,5 +115,6 @@ See git log for changes prior to this changelog.
 
 ---
 
+[0.5.1]: https://github.com/yeaight7/agent-powerups/releases/tag/v0.5.1
 [0.4.0]: https://github.com/yeaight7/agent-powerups/releases/tag/v0.4.0
 [0.3.0]: https://github.com/yeaight7/agent-powerups/releases/tag/v0.3.0
