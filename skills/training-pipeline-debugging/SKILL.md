@@ -17,6 +17,6 @@ ML training bugs are often silent mathematical errors rather than explicit code 
 2. **OOM (Out of Memory)**:
    - Reduce batch size.
    - Check for memory leaks in the training loop (e.g., accumulating history across epochs without `.detach()`).
-3. **Shape Mismatches**: 
+3. **Shape Mismatches**:
    - Add temporary print statements or assertions asserting `tensor.shape` before matrix multiplications or loss calculations.
 4. **The Overfit Test**: The ultimate test of a pipeline is fitting a single batch. If the model cannot achieve near 0 loss on a single batch of 10 examples, the pipeline is fundamentally broken. Do not debug full runs until the single-batch test passes.
