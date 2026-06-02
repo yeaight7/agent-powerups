@@ -20,6 +20,8 @@ description: Use when ...
 ---
 ```
 
+Use YAML frontmatter plus a pure Markdown body for `SKILL.md`, agent instruction files, templates, examples, and writing guidelines. Prefer Markdown headings such as `## Purpose`, `## When to Use`, `## Workflow`, and `## Verification`. Do not use XML-like tags such as `<Purpose>` or `<Workflow>` as default top-level sectioning; reserve them only for strict delimiters around nested examples, quoted inputs, external documents, or machine-readable prompt payloads.
+
 Tool-dependent skills must also document:
 
 - required command or package
