@@ -10,7 +10,7 @@ Over time, codebases accumulate "just in case" abstractions. This skill guides t
 ## Simplification Rules
 
 1. **Identify the Abstraction Cost**: Does this interface have only one implementation? Does this wrapper class just pass arguments straight through?
-2. **Inline the Logic**: Move the logic from the unnecessary abstraction directly into the caller. 
+2. **Inline the Logic**: Move the logic from the unnecessary abstraction directly into the caller.
 3. **Delete the Dead Code**: Remove the interface, wrapper, or factory that is no longer needed.
 4. **Test Verification**: Ensure the observable behavior of the system has not changed.
 
