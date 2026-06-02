@@ -21,17 +21,21 @@ Bugs often manifest deep in the call stack. Your instinct is to fix where the er
 ## The Tracing Process
 
 ### 1. Observe the Symptom
-```
+
+```bash
 Error: git init failed in /project/packages/core
 ```
 
 ### 2. Find Immediate Cause
+
 What code directly causes this?
+
 ```typescript
 await execFileAsync('git', ['init'], { cwd: projectDir });
 ```
 
 ### 3. Ask: What Called This?
+
 ```
 WorktreeManager.createSessionWorktree(projectDir, sessionId)
   → called by Session.initializeWorkspace()
@@ -40,13 +44,17 @@ WorktreeManager.createSessionWorktree(projectDir, sessionId)
 ```
 
 ### 4. Keep Tracing Up
+
 What value was passed?
+
 - `projectDir = ''` (empty string)
 - Empty string as `cwd` resolves to `process.cwd()`
 - That's the source code directory.
 
 ### 5. Find Original Trigger
+
 Where did the empty string come from?
+
 ```typescript
 const context = setupCoreTest(); // Returns { tempDir: '' }
 Project.create('name', context.tempDir); // Accessed before beforeEach!
@@ -73,6 +81,7 @@ async function gitInit(directory: string) {
 Use `console.error()` in tests — logger output may be suppressed.
 
 Capture and analyze:
+
 ```bash
 npm test 2>&1 | grep 'DEBUG git init'
 ```
@@ -92,6 +101,7 @@ Runs tests one-by-one, stops at the first polluter.
 Bug: `.git` created in `packages/core/` (source code directory).
 
 Trace chain:
+
 1. `git init` runs in `process.cwd()` ← empty cwd parameter
 2. WorktreeManager called with empty projectDir
 3. Session.create() passed empty string
