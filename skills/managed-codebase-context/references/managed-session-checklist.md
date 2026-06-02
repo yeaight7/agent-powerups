@@ -1,6 +1,7 @@
 # Managed MCP Session Checklist
 
 ## Before Connect
+
 - Transport selected: stdio or HTTP.
 - Workspace root explicit.
 - Server command or URL reviewed.
@@ -9,9 +10,11 @@
 - Cleanup path known.
 
 ## Stdio Session
+
 Use stdio for local one-shot work when server should die after client exits.
 
 Checklist:
+
 - Spawn with scoped cwd.
 - Track child PID.
 - Race connect with timeout.
@@ -19,22 +22,27 @@ Checklist:
 - Kill process tree on timeout or failed close.
 
 ## HTTP Session
+
 Use HTTP only when local server already exists or user approved starting one.
 
 Checklist:
+
 - URL is localhost or approved remote.
 - Auth/token handling reviewed.
 - Health endpoint or tool-list check succeeds.
 - User decides whether server remains running.
 
 ## Freshness Check
+
 Before trusting map/context:
+
 - compare git status
 - check map timestamp if available
 - verify target paths still exist
 - refresh only scoped context, not whole repo by default
 
 ## Failure Handling
+
 | Symptom | Action |
 | --- | --- |
 | connect timeout | close transport, kill process tree |
