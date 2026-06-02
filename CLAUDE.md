@@ -42,7 +42,7 @@ The `targets` field holds agent-specific path variants (e.g., `.toml` for Codex,
 
 ### Asset directories
 
-- `skills/` — each subdirectory has a `SKILL.md` with YAML frontmatter (`name`, `description`) and workflow prose
+- `skills/` — each subdirectory has a `SKILL.md` with YAML frontmatter (`name`, `description`) and pure Markdown workflow prose; use headings instead of XML-like top-level section tags
 - `commands/` — agent-specific subdirs (`codex/`, `claude-code/`, `generic/`); each `.md` is a slash-command definition
 - `hooks/` — recipe `.md` files under `safety/`, `quality/`, `productivity/`; review-before-use, not auto-applied
 - `mcp/` — MCP server configs in agent-native format (`.json` for Claude Code, `.toml` for Codex)
