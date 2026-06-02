@@ -23,6 +23,10 @@ description: Use when [trigger condition]. Does [what it does]. [Optional: NOT f
 ---
 ```
 
+## Body Format
+
+Default to a pure Markdown body after the YAML frontmatter. Use headings such as `## Purpose`, `## When to Use`, `## Workflow`, and `## Verification`. Do not use XML-like tags such as `<Purpose>`, `<Workflow>`, or `<Use_When>` as normal top-level sections. XML-like tags are acceptable only when they strictly delimit nested examples, quoted input, external documents, or machine-readable prompt payloads.
+
 **Good description** (specific, trigger-clear):
 
 ```
@@ -48,6 +52,7 @@ Helps with MCP things and file access.
 
 ### 3. Keep the body lean
 - `SKILL.md` should be readable in one focused pass — target 50–120 lines.
+- Use Markdown headings for top-level structure.
 - Move bulky reference material into `references/`.
 - Move deterministic scripts (validators, init scripts) into `scripts/`.
 - If `SKILL.md` exceeds 150 lines, split off the excess into a reference file.
