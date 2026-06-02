@@ -37,7 +37,7 @@ expect(result).toBeDefined();
 ## Quick Patterns
 
 | Scenario | Pattern |
-|----------|---------|
+| --- | --- |
 | Wait for event | `waitFor(() => events.find(e => e.type === 'DONE'))` |
 | Wait for state | `waitFor(() => machine.state === 'ready')` |
 | Wait for count | `waitFor(() => items.length >= 5)` |
@@ -85,6 +85,7 @@ await new Promise(r => setTimeout(r, 200));   // Then: wait for timed behavior
 ```
 
 Requirements for intentional delays:
+
 1. First wait for the triggering condition.
 2. Delay is based on known timing, not guessing.
 3. Comment explains WHY.
@@ -92,6 +93,7 @@ Requirements for intentional delays:
 ## Real-World Impact
 
 From a debugging session:
+
 - Fixed 15 flaky tests across 3 files.
 - Pass rate: 60% → 100%.
 - Execution time: 40% faster.
