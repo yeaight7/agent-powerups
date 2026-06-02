@@ -8,6 +8,7 @@ description: Create or refactor high-quality skills with lean frontmatter, progr
 Use this skill when creating or improving a reusable skill.
 
 ## What Good Skills Do
+
 - Trigger reliably from `name` and `description` — the description must be specific enough to avoid false triggers.
 - Stay short in `SKILL.md` and move bulk detail into `references/` or `scripts/`.
 - Teach a **workflow or decision pattern**, not just dump background information.
@@ -23,11 +24,13 @@ description: Use when [trigger condition]. Does [what it does]. [Optional: NOT f
 ```
 
 **Good description** (specific, trigger-clear):
+
 ```
 Use when designing or reviewing filesystem MCP access, path boundaries, allowed roots, and method allowlists.
 ```
 
 **Weak description** (too broad, won't trigger reliably):
+
 ```
 Helps with MCP things and file access.
 ```
@@ -70,6 +73,7 @@ Helps with MCP things and file access.
 | References total | as needed, not in `SKILL.md` |
 
 ## Bundled Helpers
+
 - `scripts/init_skill.py` — scaffold a new skill directory
 - `scripts/package_skill.py` — package for distribution
 - `scripts/quick_validate.py` — check frontmatter and dead references
@@ -77,4 +81,5 @@ Helps with MCP things and file access.
 Use them as optional helpers if they fit your workflow.
 
 ## Related Skill
+
 Use `hard-won-skill-extractor` when the challenge is turning a hard-earned session into a reusable skill candidate.
