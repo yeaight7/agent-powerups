@@ -26,4 +26,5 @@ Changes to the semantic layer directly impact dashboards and business reporting.
    - Ensure `entities` (primary/foreign keys) match the granularity of the underlying semantic model.
 
 ## Anti-Pattern
+
 Do not approve a pull request that changes the `expr` of a core metric without explicitly confirming the business requested the restatement of historical data.
