@@ -28,9 +28,9 @@
   <a href="https://github.com/yeaight7/agent-powerups/blob/main/LICENSE">
     <img alt="License" src="https://img.shields.io/npm/l/agent-powerups?label=license" />
   </a>
-    <img alt="Node.js version" src="https://img.shields.io/node/v/agent-powerups?label=node" />
+    <img alt="Node.js Version" src="https://img.shields.io/node/v/agent-powerups?label=node" />
   <a href="https://github.com/yeaight7/agent-powerups/stargazers">
-    <img alt="GitHub stars" src="https://img.shields.io/github/stars/yeaight7/agent-powerups?logo=github" />
+    <img alt="GitHub Stars" src="https://img.shields.io/github/stars/yeaight7/agent-powerups?logo=github" />
   </a>
 </p>
 
