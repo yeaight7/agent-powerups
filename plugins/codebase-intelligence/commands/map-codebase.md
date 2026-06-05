@@ -11,20 +11,21 @@ allowed-tools:
   - Task
 ---
 
-<objective>
+## Objective
+
 Analyze existing codebase using parallel codebase-mapper agents to produce structured codebase documents.
 
 Each mapper agent explores a focus area and **writes documents directly** to `.planning/codebase/`. The orchestrator only receives confirmations, keeping context usage minimal.
 
 Output: `.planning/codebase/` folder with up to 7 structured documents about the codebase state.
-</objective>
 
-<flags>
+## Flags
+
 - **--fast**: Lightweight scan mode — spawns one mapper agent instead of four. Accepts an optional `--focus` value: `tech`, `arch`, `quality`, `concerns`, or `tech+arch` (default). Faster and lower-context than the full map.
 - **(no flag)**: Full parallel map — spawns 4 mapper agents to produce all 7 codebase documents.
-</flags>
 
-<context>
+## Context
+
 Arguments: $ARGUMENTS
 
 Parse the first token of $ARGUMENTS:
@@ -38,9 +39,9 @@ Check for `.planning/STATE.md` — loads context if project is already initializ
 - Before `/new-project` (brownfield codebases) — create codebase map first
 - After `/new-project` (greenfield codebases) — update codebase map as code evolves
 - Anytime to refresh codebase understanding
-</context>
 
-<when_to_use>
+## When to Use
+
 **Use map-codebase for:**
 - Brownfield projects before initialization (understand existing code first)
 - Refreshing codebase map after significant changes
@@ -50,9 +51,8 @@ Check for `.planning/STATE.md` — loads context if project is already initializ
 **Skip map-codebase for:**
 - Greenfield projects with no code yet (nothing to map)
 - Trivial codebases (fewer than 5 files)
-</when_to_use>
 
-<process>
+## Process
 
 **Full map (no flags):**
 
@@ -73,12 +73,10 @@ Check for `.planning/STATE.md` — loads context if project is already initializ
 2. Spawn a single `codebase-mapper` agent with the specified focus.
 3. Wait for agent completion and report.
 
-</process>
+## Success Criteria
 
-<success_criteria>
 - [ ] `.planning/codebase/` directory created
 - [ ] All documents for chosen mode written by mapper agents
 - [ ] Documents follow template structure (see `templates/` directory)
 - [ ] Parallel agents completed without errors
 - [ ] User knows next steps
-</success_criteria>
