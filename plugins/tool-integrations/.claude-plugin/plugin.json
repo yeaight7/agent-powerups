@@ -16,5 +16,5 @@
     "agent-runtime",
     "integrations"
   ],
-  "maturity": "draft"
+  "maturity": "beta"
 }
