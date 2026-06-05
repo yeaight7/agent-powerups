@@ -2,5 +2,5 @@
   "name": "tool-integrations",
   "version": "0.1.0",
   "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
-  "maturity": "draft"
+  "maturity": "beta"
 }
