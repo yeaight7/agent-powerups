@@ -1,6 +1,6 @@
 ---
 name: requirements-clarifier
-description: Turn vague implementation requests into testable requirements before coding.
+description: Use when an implementation request is vague or underspecified and needs structured clarification before coding -- the user says "interview me", "ask me everything", "don't assume", or wants to avoid "that's not what I meant" outcomes from autonomous execution.
 ---
 
 ## Purpose
@@ -22,6 +22,11 @@ Requirements Clarifier implements Socratic questioning with mathematical ambigui
 - User wants a quick fix or single change -- execute directly
 - User says "just do it" or "skip the questions" -- respect their intent
 
+## Inputs
+
+- A vague or underspecified implementation idea from the user
+- For brownfield work: repo evidence (file paths, symbols, patterns) gathered by an explore agent before questions are asked
+
 ## Execution Policy
 
 - Ask ONE question at a time -- never batch multiple questions
@@ -35,7 +40,7 @@ Requirements Clarifier implements Socratic questioning with mathematical ambigui
 
 ## Workflow
 
-## Phase 1: Initialize
+### Phase 1: Initialize
 
 1. **Parse the user's idea**
 2. **Detect brownfield vs greenfield**:
@@ -53,11 +58,11 @@ Requirements Clarifier implements Socratic questioning with mathematical ambigui
 > **Project type:** {greenfield|brownfield}
 > **Current ambiguity:** 100%
 
-## Phase 2: Interview Loop
+### Phase 2: Interview Loop
 
 Repeat until `ambiguity ≤ threshold` OR user exits early:
 
-### Step 2a: Generate Next Question
+#### Step 2a: Generate Next Question
 
 **Question targeting strategy:**
 - Identify the dimension with the LOWEST clarity score
@@ -73,7 +78,7 @@ Repeat until `ambiguity ≤ threshold` OR user exits early:
 | Success Criteria | "How do we know it works?" | "If I showed you the finished product, what would make you say 'yes, that's it'?" |
 | Context Clarity (brownfield) | "How does this fit?" | "I found JWT auth middleware in `src/auth/`. Should this feature extend that path or diverge?" |
 
-### Step 2b: Ask the Question
+#### Step 2b: Ask the Question
 
 Present it with the current ambiguity context:
 
@@ -83,14 +88,14 @@ Round {n} | Targeting: {weakest_dimension} | Why now: {rationale} | Ambiguity: {
 {question}
 ```
 
-### Step 2c: Score Ambiguity
+#### Step 2c: Score Ambiguity
 
 After receiving the user's answer, score clarity across all dimensions.
 
 Greenfield: `ambiguity = 1 - (goal × 0.40 + constraints × 0.30 + criteria × 0.30)`
 Brownfield: `ambiguity = 1 - (goal × 0.35 + constraints × 0.25 + criteria × 0.25 + context × 0.15)`
 
-### Step 2d: Report Progress
+#### Step 2d: Report Progress
 
 After scoring, show the user their progress:
 
@@ -107,28 +112,31 @@ Round {n} complete.
 {score <= threshold ? "Clarity threshold met! Ready to proceed." : "Focusing next question on: {weakest_dimension}"}
 ```
 
-### Step 2e: Check Soft Limits
+#### Step 2e: Check Soft Limits
 
 - **Round 3+**: Allow early exit if user says "enough", "let's go", "build it"
 - **Round 10**: Show soft warning: "We're at 10 rounds. Current ambiguity: {score}%. Continue or proceed?"
 - **Round 20**: Hard cap: "Maximum rounds reached. Proceeding with current clarity level ({score}%)."
 
-## Phase 3: Challenge Agents
+### Phase 3: Challenge Agents
 
 At specific round thresholds, shift the questioning perspective:
 
-### Round 4+: Contrarian Mode
+#### Round 4+: Contrarian Mode
+
 Challenge the user's core assumption. Ask "What if the opposite were true?" or "What if this constraint doesn't actually exist?"
 
-### Round 6+: Simplifier Mode
+#### Round 6+: Simplifier Mode
+
 Probe whether complexity can be removed. Ask "What's the simplest version that would still be valuable?"
 
-### Round 8+: Ontologist Mode (if ambiguity still > 0.3)
+#### Round 8+: Ontologist Mode (if ambiguity still > 0.3)
+
 The ambiguity is still high after 8 rounds, suggesting we may be addressing symptoms rather than the core problem. Ask "What IS this, really?"
 
 Challenge modes are used ONCE each, then return to normal Socratic questioning.
 
-## Phase 4: Crystallize Spec
+### Phase 4: Crystallize Spec
 
 When ambiguity ≤ threshold (or hard cap / early exit):
 
@@ -166,7 +174,7 @@ Spec structure:
 ...
 ```
 
-## Phase 5: Execution Bridge
+### Phase 5: Execution Bridge
 
 After the spec is written, present execution options:
 
@@ -174,7 +182,12 @@ After the spec is written, present execution options:
 2. **Execute directly** — Implement from spec, no additional planning
 3. **Refine further** — Continue interviewing to improve clarity
 
-## Escalation and Stop Conditions
+## Output
+
+- A requirements spec written to `.specs/requirements-clarifier-{slug}.md` with goal, constraints, non-goals, acceptance criteria, and clarity breakdown
+- An execution-bridge choice presented to the user: full planning, direct execution, or further refinement
+
+## Failure Modes
 
 - **Hard cap at 20 rounds**: Proceed with whatever clarity exists, noting the risk
 - **Soft warning at 10 rounds**: Offer to continue or proceed
@@ -182,7 +195,7 @@ After the spec is written, present execution options:
 - **User says "stop", "cancel", "abort"**: Stop immediately
 - **Ambiguity stalls** (same score +-0.05 for 3 rounds): Activate Ontologist mode to reframe
 
-## Final Checklist
+## Verification
 
 - [ ] Interview completed (ambiguity ≤ threshold OR user chose early exit)
 - [ ] Ambiguity score displayed after every round
