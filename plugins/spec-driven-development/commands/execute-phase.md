@@ -14,24 +14,24 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-<objective>
+## Objective
+
 Execute all plans in a phase using wave-based parallel execution.
 
 Orchestrator stays lean: discover plans, analyze dependencies, group into waves, spawn subagents, collect results. Each subagent (`phase-executor`) handles its own plan independently.
 
 Context budget: ~15% orchestrator, 100% fresh per subagent.
-</objective>
 
-<context>
+## Context
+
 Phase: $ARGUMENTS
 
 **Available flags (active only when present in $ARGUMENTS):**
 - `--wave N` — Execute only Wave `N`. Use to pace execution or stay within usage limits.
 - `--gaps-only` — Execute only gap closure plans (plans with `gap_closure: true` in frontmatter).
 - `--interactive` — Execute plans sequentially inline (no subagents) with user checkpoints between tasks. Lower token usage, pair-programming style.
-</context>
 
-<process>
+## Process
 
 **Step 1 — Resolve Phase**
 
@@ -80,13 +80,11 @@ If incomplete plans remain after the last wave:
 - List incomplete plans and reasons
 - Suggest next step to the user
 
-</process>
+## Success Criteria
 
-<success_criteria>
 - [ ] Phase and plan files resolved
 - [ ] Plans grouped by wave with dependency order enforced
 - [ ] Each plan executed by a phase-executor subagent (or inline if --interactive)
 - [ ] Checkpoint messages surfaced to user
 - [ ] Phase completion status reported
 - [ ] User knows next step
-</success_criteria>
