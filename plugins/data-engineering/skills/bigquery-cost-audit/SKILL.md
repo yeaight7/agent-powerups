@@ -1,11 +1,11 @@
 ---
 name: bigquery-cost-audit
-description: Analyze BigQuery usage, identify cost hotspots, repeated failures, and practical optimization opportunities.
+description: Use when reviewing BigQuery spend, query failure patterns, or scan inefficiencies -- identifying which jobs, users, or projects drive cost, or preparing optimization recommendations for a cost review.
 ---
 
 # BigQuery Cost Audit
 
-## When to use
+## When to Use
 - Reviewing BigQuery query costs, failure patterns, or performance inefficiencies.
 - Identifying which jobs, users, or projects are driving the highest spend.
 - Preparing optimization recommendations for an engineering or cost-review meeting.
@@ -93,3 +93,11 @@ ORDER BY config.display_name, run.end_time DESC;
 - Do not run destructive operations.
 - Do not edit code or queries unless explicitly asked.
 - Acknowledge uncertainty when cost estimates depend on assumptions about query frequency.
+
+## Verification
+
+- [ ] Hotspots listed with job, user, bytes scanned, and estimated USD
+- [ ] Failure patterns grouped by error reason with counts and a sample query
+- [ ] Each optimization classified as a quick win or a larger refactor
+- [ ] Savings estimates state the assumptions behind them
+- [ ] Findings include both an engineering summary and a business summary
