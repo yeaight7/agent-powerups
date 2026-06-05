@@ -1,6 +1,6 @@
 ---
 name: persistent-completion-loop
-description: Self-referential loop until task completion with configurable verification reviewer
+description: Use when a task must run to verified completion rather than best effort -- the user says "don't stop", "must complete", "finish this", or "keep going until done", or the work spans multiple iterations and needs reviewer sign-off before being called done.
 argument-hint: "<task description>"
 ---
 
@@ -29,6 +29,11 @@ Complex tasks often fail silently: partial implementations get declared "done", 
 2. Iterating story-by-story until each one passes
 3. Tracking progress and learnings across iterations
 4. Requiring fresh reviewer verification against specific acceptance criteria before completion
+
+## Inputs
+
+- A task description
+- Optional: an existing PRD file; if none exists, a scaffold is auto-generated and must be refined with task-specific stories and acceptance criteria
 
 ## PRD Mode
 
@@ -82,26 +87,32 @@ A scaffold PRD file is auto-generated when the loop starts if none exists.
    - The reviewer verifies against the SPECIFIC acceptance criteria from prd.json
    - **On APPROVAL: immediately proceed to Step 7.5.**
 
-7.5 **Mandatory Cleanup Pass** (runs after Step 7 approval, unless configured otherwise):
-   - Run the code cleanup skill on files changed during the current session only.
-   - Keep the scope bounded to the changed-file set.
+   7.5 **Mandatory Cleanup Pass** (runs after Step 7 approval, unless configured otherwise):
+      - Run the code cleanup skill on files changed during the current session only.
+      - Keep the scope bounded to the changed-file set.
 
-7.6 **Regression Re-verification**:
-   - After the cleanup pass, re-run all relevant tests, build, and lint checks.
-   - If regression fails, fix it, then rerun until it passes.
+   7.6 **Regression Re-verification**:
+      - After the cleanup pass, re-run all relevant tests, build, and lint checks.
+      - If regression fails, fix it, then rerun until it passes.
 
 8. **On approval**: Report completion and clean up all intermediate state files.
 
 9. **On rejection**: Fix the issues raised, re-verify, then loop back.
 
-## Escalation and Stop Conditions
+## Output
+
+- All PRD user stories completed (`passes: true`) and reviewer-verified against their specific acceptance criteria
+- Cleanup pass applied to session-changed files, with post-cleanup regression checks passing
+- A completion report; intermediate state files removed
+
+## Failure Modes
 
 - Stop and report when a fundamental blocker requires user input (missing credentials, unclear requirements, external service down)
 - Stop when the user says "stop", "cancel", or "abort"
 - If the reviewer rejects verification, fix the issues and re-verify (do not stop)
 - If the same issue recurs across 3+ iterations, report it as a potential fundamental problem
 
-## Final Checklist
+## Verification
 
 - [ ] All PRD stories have `passes: true`
 - [ ] PRD acceptance criteria are task-specific
