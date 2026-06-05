@@ -1,26 +1,44 @@
 ---
 name: reproducible-training-runs
-description: Analyzes ML training scripts to enforce seed setting, deterministic operations, and environment tracking for exact reproducibility.
+description: Use when reviewing or modifying ML training scripts that must produce identical results across runs or machines -- runs with the "same" config differ, or a past result must be reconstructed exactly.
 ---
-# Reproducible Training Runs
 
-Use this skill when reviewing or modifying ML training scripts to ensure they produce deterministic, reproducible results across runs.
+## Purpose
 
-## Prerequisites
+Enforce seed setting, deterministic operations, and environment tracking so a training run can be reproduced exactly.
 
-- A target Python training script.
+## When to Use
 
-## Instructions
+- Reviewing or modifying a training script that must be deterministic
+- Two runs with the "same" configuration produced different results
+- A past result needs to be reconstructed exactly
 
-When applying this skill, check for and enforce the following reproducibility standards:
+## Inputs
 
-1. **Global Seed Initialization:** Ensure a single function sets seeds for all relevant libraries (`random`, `numpy`, `torch`, `tensorflow`).
-2. **Deterministic Algorithms:** For PyTorch or TensorFlow, check if deterministic algorithms are enabled (e.g., `torch.use_deterministic_algorithms(True)`).
-3. **Data Loading:** Verify that data loaders use deterministic shuffling and that worker processes are seeded correctly to avoid identical augmentations.
-4. **Environment & Config Tracking:** Ensure that the script logs the exact configuration, dependency versions, and data hashes.
+- A target Python training script
 
-## Safety & Style
+## Workflow
 
-- **Review First:** Point out missing reproducibility guards before rewriting the script.
-- **Keep it Explicit:** Provide the exact snippet for seed initialization. Do not hide side effects.
-- **Performance Trade-offs:** Warn the user if enabling deterministic algorithms will significantly impact training speed.
+1. **Global seed initialization**: ensure a single function sets seeds for all relevant libraries (`random`, `numpy`, `torch`, `tensorflow`).
+2. **Deterministic algorithms**: for PyTorch or TensorFlow, check that deterministic algorithms are enabled (e.g., `torch.use_deterministic_algorithms(True)`).
+3. **Data loading**: verify data loaders use deterministic shuffling and that worker processes are seeded correctly to avoid identical augmentations.
+4. **Environment & config tracking**: ensure the script logs the exact configuration, dependency versions, and data hashes.
+5. **Review first**: point out missing reproducibility guards before rewriting the script. Provide the exact seed-initialization snippet — do not hide side effects.
+
+## Output
+
+- A list of missing reproducibility guards with the exact code snippets to add, plus any performance trade-off warnings
+
+## Verification
+
+- [ ] All library seeds set from one place
+- [ ] Deterministic-algorithm flags enabled (or the gap explicitly accepted)
+- [ ] Loader shuffling and worker seeding deterministic
+- [ ] Configuration, dependency versions, and data hashes logged
+- [ ] User warned if determinism flags significantly slow training
+
+## Failure Modes
+
+- **Partial seeding** — seeding `random` but not the framework or loader workers still yields nondeterminism.
+- **Silent slowdown** — enabling deterministic algorithms can cost real training speed; surface the trade-off instead of hiding it.
+- **Rewriting before reviewing** — changing the script without first listing the gaps loses the audit trail.
