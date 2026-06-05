@@ -9,11 +9,12 @@ allowed-tools:
   - Grep
 ---
 
-<objective>
-Build persistent graph-backed memory for a corpus. `graphify` is primary engine. `defuddle` and `markitdown` are preprocessing helpers only.
-</objective>
+## Objective
 
-<context>
+Build persistent graph-backed memory for a corpus. `graphify` is primary engine. `defuddle` and `markitdown` are preprocessing helpers only.
+
+## Context
+
 Inputs:
 - target path from `$ARGUMENTS`, default `.` when omitted
 - `--update` to refresh an existing graph instead of rebuilding from scratch
@@ -23,9 +24,9 @@ Expected outputs:
 - `graphify-out/graph.json`
 - updated graph report or other `graphify-out/` artifacts from the graphify workflow
 - optional `graphify-out/obsidian/` only when `--obsidian` was requested
-</context>
 
-<process>
+## Process
+
 1. Resolve target path. Default to current directory. Confirm it exists before any tool invocation.
 2. Check requirements:
    - `apx check graphify`
@@ -49,17 +50,17 @@ Expected outputs:
    - requirement status
    - whether this was fresh build or update
    - exact next step if the build was blocked
-</process>
 
-<stop_conditions>
+## Stop Conditions
+
 - target path does not exist or is clearly the wrong scope
 - `graphify` requirement check fails
 - no supported or readable source material is found after inspection
 - helper conversion is needed for source quality, but the required helper is missing
 - user asked for `--update` but there is no existing graph to update; switch to fresh build only if the user intent still clearly fits
-</stop_conditions>
 
-<rules>
+## Rules
+
 - `graphify` is always the primary product and final engine
 - helpers are normalization tools, not substitutes for graph build
 - never pretend a build, refresh, or export succeeded when requirements are missing
@@ -67,4 +68,3 @@ Expected outputs:
 - do not require Obsidian for successful completion
 - when a helper is missing, fall back to direct `graphify` only if source quality is still acceptable; otherwise stop and say why
 - cite `skills/graphify/UPSTREAM.md`, `references/HELPER_TOOLS.md`, and `references/OBSIDIAN_EXPORT.md`
-</rules>
