@@ -10,5 +10,5 @@
   "repository": "https://github.com/yeaight7/agent-powerups",
   "license": "Apache-2.0",
   "keywords": ["planning", "execution", "workflow", "developer-tools", "skills", "claude-code"],
-  "maturity": "draft"
+  "maturity": "stable"
 }
