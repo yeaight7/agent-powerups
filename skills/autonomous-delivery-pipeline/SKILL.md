@@ -1,6 +1,6 @@
 ---
 name: autonomous-delivery-pipeline
-description: Full autonomous execution from idea to working code
+description: Use when the user wants end-to-end autonomous execution from a brief idea to working, verified code -- multi-phase work spanning requirements, planning, implementation, QA, and validation. Not for brainstorming, single focused changes, or quick fixes.
 argument-hint: "<product idea or task description>"
 ---
 
@@ -24,6 +24,11 @@ This skill creates an execution plan and verification loop for a coding agent. I
 ## Why This Exists
 
 Most non-trivial software tasks require coordinated phases: understanding requirements, designing a solution, implementing in parallel, testing, and validating quality. Autonomous delivery orchestrates all of these phases automatically so the user can describe what they want and receive working code without managing each step.
+
+## Inputs
+
+- A brief product idea or task description (2-3 lines is enough)
+- Optional: a pre-validated requirements-clarifier spec (`.specs/requirements-clarifier-*.md`); if present, Phase 0 expansion is skipped
 
 ## Execution Policy
 
@@ -62,14 +67,21 @@ Most non-trivial software tasks require coordinated phases: understanding requir
 
 6. **Phase 5 - Cleanup**: Remove intermediate plan artifacts on successful completion
 
-## Escalation and Stop Conditions
+## Output
+
+- A written specification document (Phase 0)
+- A written implementation plan (Phase 1)
+- Working code with passing tests and build, approved by architecture, security, and code-quality review
+- Intermediate plan artifacts removed on successful completion
+
+## Failure Modes
 
 - Stop and report when the same QA error persists across 3 cycles (fundamental issue requiring human input)
 - Stop and report when validation keeps failing after 3 re-validation rounds
 - Stop when the user says "stop", "cancel", or "abort"
 - If requirements were too vague and expansion produces an unclear spec, offer redirect to requirements clarifier
 
-## Final Checklist
+## Verification
 
 - [ ] All 5 phases completed (Expansion, Planning, Execution, QA, Validation)
 - [ ] All validators approved in Phase 4
