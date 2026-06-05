@@ -18,3 +18,4 @@ plugins/software-engineering/skills/worktree-session-manager/
 docs/roadmap.md
 .agent-session.log
 quality-audit/
+staging/refactor/
