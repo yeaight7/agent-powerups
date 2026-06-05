@@ -10,12 +10,13 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-<context>
+## Context
+
 **Flags:**
 - `--auto` — Automatic mode. After config questions, runs research → requirements → roadmap without further interaction.
-</context>
 
-<objective>
+## Objective
+
 Initialize a new project through a unified flow: questioning → research (optional) → requirements → roadmap.
 
 **Creates:**
@@ -27,9 +28,8 @@ Initialize a new project through a unified flow: questioning → research (optio
 - `.planning/STATE.md` — project memory
 
 **After this command:** Run `/discuss-phase 1` then `/plan-phase 1` to start execution.
-</objective>
 
-<process>
+## Process
 
 **Step 1 — Project Intake**
 
@@ -121,9 +121,8 @@ Create `.planning/STATE.md`:
 Show the user a summary of what was created. Tell them the next step:
 > "Run `/discuss-phase 1` to gather context for Phase 1, then `/plan-phase 1` to create the implementation plan."
 
-</process>
+## Success Criteria
 
-<success_criteria>
 - [ ] Project intake complete (name, goal, stack, scope)
 - [ ] `.planning/PROJECT.md` written with project context
 - [ ] `.planning/config.json` written
@@ -131,4 +130,3 @@ Show the user a summary of what was created. Tell them the next step:
 - [ ] `.planning/ROADMAP.md` written with phase breakdown
 - [ ] `.planning/STATE.md` written with initial state
 - [ ] User knows next steps
-</success_criteria>
