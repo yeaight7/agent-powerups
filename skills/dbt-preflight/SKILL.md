@@ -1,60 +1,64 @@
 ---
 name: dbt-preflight
-description: Inspect changed dbt assets, estimate blast radius, identify missing tests, and recommend the narrowest safe validation plan.
+description: Use when a dbt change needs preflight before a PR, review, or merge -- changed models, snapshots, seeds, macros, or semantic YAML whose blast radius and test coverage are not yet known.
 ---
 
-# dbt Preflight
+## Purpose
 
-Use this skill before opening a PR, reviewing a dbt change, or assessing risk in an analytics repository.
+Inspect a dbt change set before it ships: identify which assets changed, estimate downstream impact, detect likely gaps in testing, contracts, documentation, and YAML alignment, and recommend the narrowest safe validation path. Preflight is read-only — do not edit code unless explicitly asked.
 
-## Goals
+## When to Use
 
-- Understand which dbt assets changed.
-- Estimate downstream impact.
-- Detect likely gaps in testing, contracts, documentation, and YAML alignment.
-- Recommend the narrowest safe validation path.
+- Before opening a PR in an analytics repository
+- Reviewing someone else's dbt change
+- Assessing the risk of a change whose downstream impact is unclear
 
-## What to inspect
+## Inputs
 
-- changed models
-- changed snapshots
-- changed seeds
-- changed macros
-- changed tests
-- changed schema YAML files
-- changed semantic models
-- changed metrics
-- changed saved queries
-- changed exposures or BI-facing assets
+- The change set (branch diff or working tree)
+- The dbt project, for lineage and selector queries
 
-## Review checklist
+## Workflow
 
-Check for:
+1. **Enumerate changed assets:**
 
-- model grain changes
-- renamed columns or breaking contract changes
-- missing or weakened tests
-- YAML not updated after model changes
-- metrics or semantic definitions drifting from prior meaning
-- high blast radius due to downstream dependencies
-- incremental logic changes
-- snapshot logic changes
-- joins or filters that may alter business meaning
+   ```bash
+   git diff --name-status origin/main...HEAD
+   ```
 
-## Validation planning
+   Classify each change: models, snapshots, seeds, macros, tests, schema YAML, semantic models, metrics, saved queries, exposures or BI-facing assets.
 
-Recommend the narrowest meaningful validation path first:
+2. **Estimate blast radius.** For each changed model, list downstream dependents:
 
-1. targeted model or test checks
-2. narrow downstream or dependency checks
-3. broader PR-level validation only if needed
+   ```bash
+   dbt ls --select <model>+
+   ```
 
-If exact commands are available in the repo, use them.
-If not, say what should be validated conceptually.
+   If a production manifest is available, cover the whole change set at once:
 
-## Output format
+   ```bash
+   dbt ls --select state:modified+ --state <path-to-prod-artifacts>
+   ```
 
-Return:
+3. **Run the review checklist.** Check for:
+   - model grain changes
+   - renamed columns or breaking contract changes
+   - missing or weakened tests
+   - YAML not updated after model changes
+   - metrics or semantic definitions drifting from prior meaning
+   - high blast radius due to downstream dependencies
+   - incremental logic changes
+   - snapshot logic changes
+   - joins or filters that may alter business meaning
+
+4. **Recommend the narrowest meaningful validation path first:**
+   1. targeted checks: `dbt build --select <changed_model>`
+   2. narrow downstream checks: `dbt build --select <changed_model>+1`
+   3. broader PR-level validation only if needed: `dbt build --select state:modified+ --state <path>`
+
+   If exact commands are available in the repo (Makefile, CI config, docs), prefer them. If not, say what should be validated conceptually.
+
+## Output
 
 1. changed assets summary
 2. likely blast radius
@@ -62,8 +66,17 @@ Return:
 4. recommended validation plan
 5. items that need stakeholder or domain-owner confirmation
 
-## Rules
+## Verification
 
-- Focus on correctness and semantic impact, not style.
-- Be conservative with claims.
-- Do not edit code unless explicitly asked.
+- [ ] Every changed file classified by asset type
+- [ ] Blast radius backed by lineage (`dbt ls`), not guessed
+- [ ] Each checklist hit mapped to a recommended validation step
+- [ ] Validation plan starts with the narrowest step that covers the risk
+- [ ] Stakeholder-confirmation items listed separately
+
+## Failure Modes
+
+- **Style distraction** — preflight is about correctness and semantic impact, not formatting.
+- **Overclaiming impact** — be conservative with claims; verify lineage before asserting blast radius.
+- **Validating everything** — defaulting to a full rebuild obscures which check actually covers the risk; the goal is the narrowest safe path.
+- **Editing instead of reporting** — do not edit code unless explicitly asked.
