@@ -11,7 +11,8 @@ allowed-tools:
   - Task
 ---
 
-<objective>
+## Objective
+
 Review source files changed during a phase for bugs, security vulnerabilities, and code quality problems.
 
 Spawns the `structured-code-reviewer` agent to analyze code at the specified depth level. Produces `{padded_phase}-REVIEW.md` in the phase directory with severity-classified findings.
@@ -23,17 +24,16 @@ Arguments:
   - `standard`: Per-file analysis with language-specific checks (~5-15 min)
   - `deep`: Cross-file analysis including import graphs and call chains (~15-30 min)
 - `--files file1,file2,...` — explicit comma-separated file list (highest precedence; skips SUMMARY/git scoping)
-</objective>
 
-<context>
+## Context
+
 Phase: $ARGUMENTS (first positional argument is phase number)
 
 Optional flags parsed from $ARGUMENTS:
 - `--depth=VALUE` — depth override (quick|standard|deep)
 - `--files=file1,file2,...` — explicit file list; when provided, skips SUMMARY.md extraction and git diff fallback entirely
-</context>
 
-<process>
+## Process
 
 **Step 1 — Validate Phase**
 
@@ -72,13 +72,11 @@ After reviewer completes, show an inline summary:
 - Top 3 most critical findings with file:line and fix hint
 - Path to full REVIEW.md
 
-</process>
+## Success Criteria
 
-<success_criteria>
 - [ ] Phase validated and resolved to directory
 - [ ] File scope determined (--files > SUMMARY.md > git fallback)
 - [ ] Generated/planning files excluded from scope
 - [ ] structured-code-reviewer spawned with correct config
 - [ ] Inline summary presented to user
 - [ ] REVIEW.md artifact created in phase directory
-</success_criteria>
