@@ -12,13 +12,13 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-<objective>
+## Objective
+
 Create a practical workstream breakdown for a non-trivial implementation.
 
 This is a local planning command. It should not depend on any external SDK or remote workflow wrapper.
-</objective>
 
-<process>
+## Process
 
 1. Load the source material:
    - explicit spec or phase path when provided
@@ -39,9 +39,8 @@ This is a local planning command. It should not depend on any external SDK or re
 6. If `--tdd` is present, add test scaffolding or harness work before implementation-heavy waves.
 7. Present the workstream map in a format that can feed `plan-phase` or `execute-phase`.
 
-</process>
+## Output Format
 
-<output_format>
 ```text
 Workstream
 Owner shape
@@ -49,4 +48,3 @@ Dependencies
 Wave
 Validation
 ```
-</output_format>
