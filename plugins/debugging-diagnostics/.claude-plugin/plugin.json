@@ -10,5 +10,5 @@
   "repository": "https://github.com/yeaight7/agent-powerups",
   "license": "Apache-2.0",
   "keywords": ["debugging", "error-diagnosis", "log-analysis", "incident-investigation", "diagnostics"],
-  "maturity": "draft"
+  "maturity": "stable"
 }
