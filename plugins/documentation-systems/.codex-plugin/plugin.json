@@ -2,5 +2,5 @@
   "name": "documentation-systems",
   "version": "0.1.0",
   "description": "Documentation architecture, API reference authoring, ADR writing, readme hardening, and doc quality.",
-  "maturity": "draft"
+  "maturity": "beta"
 }
