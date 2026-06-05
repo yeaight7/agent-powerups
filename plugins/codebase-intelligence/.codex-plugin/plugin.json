@@ -2,5 +2,5 @@
   "name": "codebase-intelligence",
   "version": "0.1.0",
   "description": "Search-first codebase understanding, context retrieval, mapping, pattern detection, and living project intelligence.",
-  "maturity": "experimental"
+  "maturity": "beta"
 }
