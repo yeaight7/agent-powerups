@@ -12,7 +12,8 @@ allowed-tools:
   - Task
 ---
 
-<objective>
+## Objective
+
 Extract implementation decisions that downstream agents need — the `phase-planner` and `phase-researcher` will consume CONTEXT.md to know what to investigate and what choices are locked.
 
 **How it works:**
@@ -24,13 +25,12 @@ Extract implementation decisions that downstream agents need — the `phase-plan
 6. Create CONTEXT.md with decisions that guide research and planning
 
 **Output:** `{phase_num}-CONTEXT.md` — decisions clear enough that downstream agents can act without asking the user again
-</objective>
 
-<context>
+## Context
+
 Phase number: $ARGUMENTS (required)
-</context>
 
-<process>
+## Process
 
 **Step 1 — Load Context**
 
@@ -105,9 +105,8 @@ Ideas mentioned but out of scope for this phase:
 Tell the user:
 > "Context captured. Run `/plan-phase {phase}` to create the implementation plan."
 
-</process>
+## Success Criteria
 
-<success_criteria>
 - [ ] Prior context loaded (no re-asking already-decided questions)
 - [ ] Gray areas identified through codebase and requirement analysis
 - [ ] User chose which areas to discuss
@@ -115,4 +114,3 @@ Tell the user:
 - [ ] Scope creep redirected to deferred ideas
 - [ ] CONTEXT.md captures decisions, not vague vision
 - [ ] User knows next step (`/plan-phase`)
-</success_criteria>
