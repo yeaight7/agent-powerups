@@ -12,21 +12,21 @@ allowed-tools:
   - Task
 ---
 
-<objective>
+## Objective
+
 Validate built features through conversational testing with persistent state.
 
 Purpose: Confirm what was built actually works from the user's perspective. One test at a time, plain text responses, no interrogation. When issues are found, automatically diagnose, plan fixes, and prepare for re-execution.
 
 Output: `{phase_num}-UAT.md` tracking all test results. If issues found: diagnosed gaps and fix plans ready for `/execute-phase`.
-</objective>
 
-<context>
+## Context
+
 Phase: $ARGUMENTS (optional)
 - If provided: test specific phase (e.g., "4")
 - If not provided: check STATE.md for active phase, or ask user
-</context>
 
-<process>
+## Process
 
 **Step 1 — Load Phase Context**
 
@@ -94,13 +94,11 @@ If all tests pass:
 If tests failed:
 > "Found [N] issue(s). Gap plans created. Run `/execute-phase {phase} --gaps-only` to apply fixes."
 
-</process>
+## Success Criteria
 
-<success_criteria>
 - [ ] Phase context loaded (SUMMARY.md, requirements, roadmap)
 - [ ] Test scenarios derived from requirements and summaries
 - [ ] Tests presented one at a time with clear instructions
 - [ ] Failures diagnosed and gap PLAN.md files created
 - [ ] UAT report written with all results
 - [ ] User knows next step
-</success_criteria>
