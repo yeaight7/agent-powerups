@@ -13,15 +13,16 @@ allowed-tools:
   - WebFetch
 ---
 
-<objective>
+## Objective
+
 Create executable phase plans (PLAN.md files) for a roadmap phase with integrated research and verification.
 
 **Default flow:** Research (if needed) → Plan → Verify → Done
 
 **Orchestrator role:** Parse arguments, validate phase, run research unless skipped, spawn `phase-planner`, verify plans with `plan-checker`, iterate until pass or 3 iterations, present results.
-</objective>
 
-<context>
+## Context
+
 Phase number: $ARGUMENTS (optional — auto-detects next unplanned phase if omitted)
 
 **Flags:**
@@ -35,9 +36,8 @@ Phase number: $ARGUMENTS (optional — auto-detects next unplanned phase if omit
 - `--mvp` — Vertical MVP mode: planner organizes tasks as feature slices (UI→API→DB)
 
 Normalize phase input before any directory lookups: accept `1`, `01`, or `1-name`.
-</context>
 
-<process>
+## Process
 
 **Step 1 — Resolve Phase**
 
@@ -83,13 +83,11 @@ Show the user:
 Tell the user:
 > "Plans ready. Run `/execute-phase {phase}` to begin execution."
 
-</process>
+## Success Criteria
 
-<success_criteria>
 - [ ] Phase identified and validated
 - [ ] RESEARCH.md produced or skipped per flags
 - [ ] PLAN.md files created by phase-planner
 - [ ] Plans verified by plan-checker (or skipped per flag)
 - [ ] No BLOCKER issues remain in final plans
 - [ ] User knows next step (`/execute-phase`)
-</success_criteria>
