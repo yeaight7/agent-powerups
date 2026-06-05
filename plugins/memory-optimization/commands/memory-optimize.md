@@ -9,11 +9,12 @@ allowed-tools:
   - Grep
 ---
 
-<objective>
-Recommend the cheapest memory workflow that preserves answer quality and future reuse.
-</objective>
+## Objective
 
-<context>
+Recommend the cheapest memory workflow that preserves answer quality and future reuse.
+
+## Context
+
 Inputs:
 - optional path or URL
 - optional question or task goal
@@ -22,9 +23,9 @@ Optimization targets:
 - lower token cost now
 - lower reread cost later
 - better persistence when repeated queries are likely
-</context>
 
-<process>
+## Process
+
 1. Inspect input shape and reuse horizon:
    - plain text or small local file
    - noisy web page
@@ -51,15 +52,15 @@ Optimization targets:
 6. If a required tool for the best path is missing, either:
    - recommend the next-best lower-capability path that still preserves answer quality, or
    - stop and say the missing requirement makes the cheap path unavailable
-</process>
 
-<stop_conditions>
+## Stop Conditions
+
 - input is too ambiguous to choose between direct read, helper conversion, build, update, or query
 - the recommended path depends on a missing tool and no credible fallback preserves answer quality
 - user asks for persistent graph advice but the target path or URL is unavailable
-</stop_conditions>
 
-<rules>
+## Rules
+
 - optimization target = lower token cost, lower reread cost, better persistence
 - `graphify` is long-lived memory path
 - helpers are normalization tools only
@@ -67,4 +68,3 @@ Optimization targets:
 - do not recommend a graph build for trivial one-shot text when direct read is cheaper
 - do not claim a helper or graph path is available before requirement checks pass
 - do not claim bundled upstream code
-</rules>
