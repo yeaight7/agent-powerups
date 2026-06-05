@@ -10,5 +10,5 @@
   "repository": "https://github.com/yeaight7/agent-powerups",
   "license": "Apache-2.0",
   "keywords": ["evaluation", "testing", "red-team", "skills", "agent-behavior"],
-  "maturity": "draft"
+  "maturity": "experimental"
 }
