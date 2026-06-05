@@ -1,6 +1,6 @@
 {
   "name": "agent-powerups",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Curated power-ups for coding agents: skills, slash commands, MCP configs, hooks, and workflows for Claude Code, Codex, and Gemini CLI.",
   "contextFileName": "GEMINI.md"
 }
