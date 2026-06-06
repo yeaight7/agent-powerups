@@ -34,7 +34,7 @@ models:
         description: Subscription plan code
         data_tests:
           - accepted_values:
-              values: "{{ get_plan_code_values() }}"  # Prefer macros, not hardcoded lists
+              values: "{{ get_plan_code_values() }}"  # Use macros, not hardcoded lists
 ```
 
 ### 2. Singular Tests (assert_*.sql files)
@@ -208,11 +208,11 @@ select * from mismatched
 
 ```
 tests/
-├── accounts/                # Tests for account and team domain models
-├── adhoc/                   # Ad-hoc spot-check tests
-├── billing/                 # Finance and billing consistency tests
-├── content/                 # Content or product-domain tests
-└── generic/                 # Reusable generic test definitions
+├── accounts/         Tests for account and team domain models
+├── adhoc/            Ad-hoc spot-check tests
+├── billing/          Finance and billing consistency tests
+├── content/          Content or product-domain tests
+└── generic/          Reusable generic test definitions
 ```
 
 ## Running Tests
@@ -225,7 +225,7 @@ dbt build -s <model>              # Run + test together
 dbt test --store-failures         # Persist failures to BQ for inspection
 ```
 
-To inspect test failures in BigQuery (development), e.g.:
+To inspect test failures in BigQuery (development):
 
 ```sql
 select * from `dbt_<username>`.`dbt_test__audit`.<test_name>
