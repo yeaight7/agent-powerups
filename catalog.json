@@ -1264,6 +1264,60 @@
     "maturity": "beta"
   },
   {
+    "name": "hook-safety-review",
+    "type": "skill",
+    "summary": "Review a hook definition before enabling it: trigger surface, command injection, outbound network, silent failure, and scope, with P0/P1/Note verdicts.",
+    "path": "skills/hook-safety-review",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "security",
+      "hooks",
+      "review",
+      "preflight"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "mcp-risk-review",
+    "type": "skill",
+    "summary": "Triage an MCP server before enabling it: launch vector pinning, transport exposure, credential handling, tool surface, and scope boundaries, ending in an approval-gated verdict.",
+    "path": "skills/mcp-risk-review",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "security",
+      "mcp",
+      "risk",
+      "preflight"
+    ],
+    "maturity": "beta"
+  },
+  {
+    "name": "secret-leak-preflight",
+    "type": "skill",
+    "summary": "Scan staged changes, untracked files, and generated artifacts for credentials before committing, pushing, or publishing; on a hit, unstage and recommend rotation.",
+    "path": "skills/secret-leak-preflight",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "security",
+      "secrets",
+      "git",
+      "preflight"
+    ],
+    "maturity": "beta"
+  },
+  {
     "name": "model-routing",
     "type": "skill",
     "summary": "Vendor-neutral routing guide for choosing the right model tier. Mechanical work uses fast; implementation uses standard; architecture, security, and release audit use deep.",
@@ -2832,23 +2886,6 @@
       "process"
     ],
     "maturity": "stable"
-  },
-  {
-    "name": "handoff-documentation",
-    "type": "skill",
-    "summary": "Write state-restoration documents for passing tasks between agents or engineers.",
-    "path": "skills/handoff-documentation",
-    "compatible_with": [
-      "claude-code",
-      "codex",
-      "generic"
-    ],
-    "tags": [
-      "documentation",
-      "architecture",
-      "docs"
-    ],
-    "maturity": "beta"
   },
   {
     "name": "incident-readout",
