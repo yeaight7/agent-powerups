@@ -1,6 +1,6 @@
 ---
 name: tri-model-review
-description: Multi-model orchestration — route to two external advisors, then synthesize
+description: Use when a request needs parallel external perspectives — combined backend and UI work, code review from multiple angles, or cross-validation where different models may disagree.
 level: 5
 ---
 
@@ -41,6 +41,7 @@ Use this when you want parallel external perspectives.
 When invoked, follow this workflow:
 
 ### 1. Decompose Request
+
 Split the user request into:
 
 - **Architecture prompt:** correctness, backend, risks, test strategy
@@ -75,3 +76,10 @@ If one provider is unavailable:
 If both unavailable:
 
 - Fall back to a single-model answer and state external advisors were unavailable.
+
+## Verification
+
+- [ ] Request was decomposed into distinct architecture and UX prompts before invoking advisors
+- [ ] Both advisors were invoked via the canonical wrappers — or the missing provider was explicitly noted
+- [ ] Synthesis lists agreed recommendations, explicitly called-out conflicts, the chosen direction with rationale, and an action checklist
+- [ ] Any provider fallback was stated, including the missing perspective and its risk
