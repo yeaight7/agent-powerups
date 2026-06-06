@@ -1,6 +1,6 @@
 ---
 name: metric-impact-analyzer
-description: Evaluate metric and semantic model changes for BI/reporting breakage and business meaning drift.
+description: Use when a change may affect metrics, semantic models, dashboards, reporting, or stakeholder-facing KPIs and you need to know whether business meaning or downstream BI assets change.
 ---
 
 # Metric Impact Analyzer
