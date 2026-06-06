@@ -1,6 +1,6 @@
 ---
 name: search-before-building
-description: Check existing repo capability, external libraries, MCP options, and maintenance risk before writing custom code. Decide adopt/wrap/build with explicit criteria.
+description: Use when about to add a new helper, utility, or abstraction, a task sounds like a solved problem, a new external dependency is being considered, or custom code is proposed without checking what already exists.
 ---
 
 # Search Before Building
@@ -99,3 +99,11 @@ If time-boxed, spend at most 5 minutes on Steps 1–2 before deciding.
 - **Registry-skip**: Adding a package without checking simpler alternatives
 - **Over-wrapping**: Encapsulating a library so heavily that the benefits are lost
 - **Dependency bloat**: Pulling in a 5 MB package for a single 10-line feature
+
+## Verification
+
+- [ ] The Step 1 repo search ran before any custom code was written
+- [ ] Registry candidates were scored on maintenance, popularity, license, and size
+- [ ] MCP/tool-server coverage was checked before writing new integration code
+- [ ] Any adopted package passed the abandonment, license, CVE, and dependency-count checks
+- [ ] The decision (reuse / adopt / wrap / compose / build) is recorded — and for build, the gap the search found is documented
