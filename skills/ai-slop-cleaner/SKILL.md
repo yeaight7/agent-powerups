@@ -1,6 +1,6 @@
 ---
 name: ai-slop-cleaner
-description: Run an anti-slop cleanup workflow on AI-generated code — regression-tests-first, smell-by-smell, behavior preserved. Supports explicit review-only mode.
+description: Use when a working code path feels bloated, noisy, or over-abstracted, when asked to clean up or deslop AI-generated code, or when a reviewer-only anti-slop pass is requested.
 ---
 
 ## Purpose
