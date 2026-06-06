@@ -1,6 +1,6 @@
 ---
 name: context-retrieval-loop
-description: Deterministic 3-cycle loop for gathering documentation context before writing or updating docs. Broad search → exact source and existing docs → project conventions and setup.
+description: Use when about to write a new doc, README section, or ADR, updating existing documentation with unclear scope, or spawning a documentation subagent that needs file context.
 ---
 
 # Context Retrieval Loop (Documentation)
@@ -56,3 +56,10 @@ Missing context (if any):
 ```
 
 State gaps. Do not write documentation that contradicts undiscovered existing content.
+
+## Verification
+
+- [ ] Existing docs were searched before writing — duplication ruled out or the covering doc identified
+- [ ] The source files the docs describe were read, not assumed
+- [ ] Doc conventions (style guide, templates, contribution rules) were checked
+- [ ] Gaps are stated explicitly; nothing written contradicts existing content
