@@ -1,6 +1,6 @@
 ---
 name: agent-config-security-audit
-description: Audit agent configuration files for security vulnerabilities and misconfigurations. Covers settings.json, .mcp.json, .codex/config.toml, AGENTS.md, hooks, plugin manifests, and relay config. Classify findings as P0 or P1.
+description: Use when modifying agent config files, committing configuration changes, onboarding a repository with existing agent configs, or running a periodic config hygiene check.
 ---
 
 # Agent Config Security Audit
@@ -117,3 +117,10 @@ Summary: <N> P0, <N> P1, <N> Notes
 ```
 
 If no findings: state "No findings." explicitly.
+
+## Verification
+
+- [ ] Every config file present in the repo was checked against its checklist section — none skipped
+- [ ] Each finding is classified P0/P1/Note with file, location, and a concrete fix
+- [ ] The summary line is present, or "No findings." is stated explicitly
+- [ ] No commit or push was recommended while a P0 finding remains unfixed
