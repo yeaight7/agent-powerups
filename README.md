@@ -297,8 +297,8 @@ Current shipped skills:
 - `github-ci-failure-triage`
 - `graphify`
 - `handoff-discipline`
-- `handoff-documentation`
 - `hard-won-skill-extractor`
+- `hook-safety-review`
 - `incident-readout`
 - `incremental-migration`
 - `json-canvas`
@@ -306,6 +306,7 @@ Current shipped skills:
 - `log-driven-diagnosis`
 - `managed-codebase-context`
 - `markitdown-file-intake`
+- `mcp-risk-review`
 - `mcp-server-builder`
 - `memory-build-workflow`
 - `memory-optimization-workflow`
@@ -339,6 +340,7 @@ Current shipped skills:
 - `risk-based-review`
 - `safe-refactor`
 - `search-before-building`
+- `secret-leak-preflight`
 - `semantic-layer-change-review`
 - `skill-authoring-guide`
 - `skill-evaluation-workbench`
