@@ -1301,3 +1301,13 @@ If vertical scrolling breaks in PowerShell after running graphify, this is cause
 - Always show token cost in the report.
 - Never hide cohesion scores behind symbols - show the raw number.
 - Never run HTML viz on a graph with more than 5,000 nodes without warning the user.
+
+## Verification
+
+- [ ] Install check passed (or the user approved installation) before any pipeline step ran
+- [ ] The corpus summary was shown, and the large-corpus warning was honored when triggered
+- [ ] Semantic extraction used parallel subagents dispatched in a single message — not sequential self-reads
+- [ ] The empty-graph error stopped the run instead of proceeding to labeling or visualization
+- [ ] The expected outputs exist under the graphify-out directory, and the run's token cost was reported
+- [ ] Only the three report sections were pasted into chat, followed by the exploration offer
+- [ ] Every edge carries an EXTRACTED, INFERRED, or AMBIGUOUS tag — nothing invented
