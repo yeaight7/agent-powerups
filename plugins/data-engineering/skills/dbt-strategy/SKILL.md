@@ -338,3 +338,14 @@ dbt run -s +<model>         # Model and all upstream
 dbt run -s <model>+         # Model and all downstream
 dbt compile -s <model>      # Compile without running
 ```
+
+## Verification
+
+- [ ] Model sits in the correct layer with the matching prefix (src_/stg_/dim_/fct_/mart_); new models default to core
+- [ ] No table aliases anywhere — full CTE names referenced; the final statement is select * from final
+- [ ] Dimensions use the surrogate + natural key naming (`<object>_sk` / `<object>_id`) and include the missing-record sentinel
+- [ ] Facts join dimensions on natural keys and store surrogate-key FKs via get_id_null / get_date_id
+- [ ] Deduplication uses dbt_utils.deduplicate — no QUALIFY
+- [ ] YAML uses data_tests: and accepted-values macros instead of hardcoded enum values
+- [ ] get_model_children() was checked before touching any high-impact model
+- [ ] Writes target the development dataset; production is read-only
