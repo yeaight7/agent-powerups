@@ -1,6 +1,6 @@
 ---
 name: ai-regression-testing
-description: Deterministic checks first, agent review second, regression test for every real bug fixed or document why not. Targets the blind spot where an agent writes and reviews its own code.
+description: Use when an agent has modified logic, API routes, or data-transformation code, a bug was just fixed and must not be reintroduced, or behavior must stay identical across execution paths such as sandbox versus production.
 ---
 
 # AI Regression Testing
@@ -102,3 +102,10 @@ it("notification_settings is not undefined after SELECT * removal (regression)")
 Do not aim for coverage percentage. Write tests only for bugs that were found. Bug clusters naturally: if three bugs appeared in `/api/user/profile`, that endpoint needs tests. An endpoint that has never had a bug does not need tests yet.
 
 Tests added this way grow organically with the bug history and cannot be gamed by coverage metrics.
+
+## Verification
+
+- [ ] Test suite and build/type check were run and pass — before any agent review started
+- [ ] The four review checks were applied: path parity, query completeness, error-state cleanup, optimistic-update rollback
+- [ ] Every bug fixed has a regression test, or an explicit DEFERRED note with the reason
+- [ ] New tests assert the contract (response shape, required fields), not the implementation
