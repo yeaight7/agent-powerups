@@ -1,6 +1,6 @@
 ---
 name: environment-doctor
-description: Diagnose local agent and project setup problems — missing commands, broken MCP configs, stale generated assets, bad paths, invalid catalog entries, and missing env vars.
+description: Use when apx commands fail or assets are missing from listings, MCP servers fail to start, builds hit command-not-found or module-not-found errors, generated assets look stale, or setup works on one machine but not another.
 ---
 
 # Environment Doctor
