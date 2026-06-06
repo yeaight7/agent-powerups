@@ -135,7 +135,7 @@
         { "name": "agent-readable-docs", "origin": "first-party-seed" },
         { "name": "readme-hardening", "origin": "first-party-seed" },
         { "name": "architecture-decision-records", "origin": "first-party-seed" },
-        { "name": "handoff-documentation", "origin": "first-party-seed" },
+        { "name": "handoff-discipline", "origin": "root-copy" },
         { "name": "context-docs", "origin": "first-party-seed" },
         { "name": "api-doc-review", "origin": "first-party-seed" },
         { "name": "doc-consistency-check", "origin": "first-party-seed" },
@@ -268,7 +268,10 @@
       "skills": [
         { "name": "agent-config-security-audit", "origin": "root-copy" },
         { "name": "red-team-eval-authoring", "origin": "root-copy" },
-        { "name": "filesystem-mcp-guardrails", "origin": "root-copy" }
+        { "name": "filesystem-mcp-guardrails", "origin": "root-copy" },
+        { "name": "hook-safety-review", "origin": "root-copy" },
+        { "name": "mcp-risk-review", "origin": "root-copy" },
+        { "name": "secret-leak-preflight", "origin": "root-copy" }
       ],
       "agents": [
         { "name": "security-reviewer", "origin": "first-party-seed" }
@@ -300,7 +303,10 @@
       ],
       "skills": [
         { "name": "search-before-building", "origin": "root-copy" },
-        { "name": "context-retrieval-loop", "origin": "root-copy" }
+        { "name": "context-retrieval-loop", "origin": "root-copy" },
+        { "name": "local-rag-mcp", "origin": "root-copy" },
+        { "name": "managed-codebase-context", "origin": "root-copy" },
+        { "name": "structured-code-search-mcp", "origin": "root-copy" }
       ]
     },
     {
