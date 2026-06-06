@@ -2,5 +2,6 @@
   "name": "spec-driven-development",
   "version": "0.1.0",
   "description": "Requirements clarification, phase planning, workstreams, and wave-based execution for reviewable delivery.",
+  "maturity": "beta",
   "contextFileName": "GEMINI.md"
 }
