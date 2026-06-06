@@ -59,7 +59,7 @@ If the spec covers multiple independent subsystems, break it into separate plans
    ```code
    # Actual code here
    ```
-   - [ ] **Step 2:** Run: `<exact command>`  
+   - [ ] **Step 2:** Run: `<exact command>`
      Expected: `<exact output>`
    ````
 
@@ -82,6 +82,7 @@ If the spec covers multiple independent subsystems, break it into separate plans
 ## Output
 
 A Markdown plan file with:
+
 - Header (goal, architecture, tech stack)
 - Tasks with checkbox steps, exact file paths, actual code blocks, exact commands with expected output
 - No placeholders of any kind
