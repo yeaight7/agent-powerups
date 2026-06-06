@@ -157,6 +157,7 @@ test("every plugin bundle has a Gemini extension manifest", async () => {
     assert.equal(manifest.name, plugin.name);
     assert.equal(manifest.description, plugin.description);
     assert.equal(manifest.version, "0.1.0");
+    assert.equal(manifest.maturity, plugin.maturity);
     assert.equal(manifest.contextFileName, "GEMINI.md");
     await fs.access(path.join(repoRoot, "plugins", plugin.name, manifest.contextFileName));
   }
