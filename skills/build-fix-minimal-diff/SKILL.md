@@ -1,6 +1,6 @@
 ---
 name: build-fix-minimal-diff
-description: Fix broken builds, type errors, or test failures with the smallest safe diff — no opportunistic refactors, no cleanup, no unrelated changes.
+description: Use when a build, test, type check, or lint is failing — locally or in CI — and the fix must be the smallest safe diff with no opportunistic refactors or unrelated changes.
 ---
 
 # Build Fix — Minimal Diff
