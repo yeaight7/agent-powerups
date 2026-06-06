@@ -2,5 +2,6 @@
   "name": "github-ops",
   "version": "0.1.0",
   "description": "GitHub review, comment handling, and CI triage workflows with approval-gated write actions.",
+  "maturity": "beta",
   "contextFileName": "GEMINI.md"
 }
