@@ -1,6 +1,6 @@
 ---
 name: context-retrieval-loop
-description: Deterministic 3-cycle loop for gathering codebase context before acting. Broad search → exact source and tests → target-specific docs and setup. Stop after enough context or report what is still missing.
+description: Use when starting work in an unfamiliar area of a codebase, spawning a subagent that needs targeted file context, a first search pass missed the relevant file, or the file scope of a task is unclear.
 ---
 
 # Context Retrieval Loop
@@ -63,3 +63,10 @@ Pass file paths to subagents, not file contents:
 ```
 Relevant files: src/auth/tokens.ts, src/auth/session.ts, src/auth/tokens.test.ts
 ```
+
+## Verification
+
+- [ ] The loop stopped at a stopping condition — never past 3 cycles
+- [ ] Every gathered file is listed with a one-line relevance reason
+- [ ] Missing context is stated explicitly — no proceeding on guesses when a gap is known
+- [ ] Subagents received file paths, not inlined file contents
