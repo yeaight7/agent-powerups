@@ -1,6 +1,6 @@
 ---
 name: hard-won-skill-extractor
-description: Extract a learned skill from the current conversation manually
+description: Use when a tricky bug, non-obvious workaround, hidden gotcha, or undocumented behavior took real debugging effort to discover and should be captured as a reusable learned skill.
 ---
 
 # Hard-Won Skill Extractor
@@ -116,3 +116,11 @@ The decision-making heuristic, not just code. How should an agent THINK about th
 ## Example (Optional)
 If code helps, show it - but as illustration of the principle, not copy-paste material.
 ```
+
+## Verification
+
+- [ ] All three quality-gate questions hold: not Googleable in 5 minutes, specific to this codebase, took real debugging effort
+- [ ] The saved file starts with YAML frontmatter including name, description, and triggers
+- [ ] The body teaches the principle and recognition pattern — not copy-paste code
+- [ ] Anti-pattern content (generic patterns, library usage, boilerplate) was rejected, not extracted
+- [ ] Truly reusable insights were promoted via skill-authoring-guide instead of staying project-local
