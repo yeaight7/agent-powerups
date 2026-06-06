@@ -85,6 +85,14 @@ Helps with MCP things and file access.
 
 Use them as optional helpers if they fit your workflow.
 
+## Verification
+
+- [ ] The name field matches the skill directory name exactly
+- [ ] The description states the trigger condition and what the skill does in one sentence
+- [ ] The body reads in one focused pass — within the length guide, with bulk detail moved to references
+- [ ] Every file path mentioned in the skill exists; dead reference links were removed
+- [ ] The trigger was tested: the description reliably routes the intended use case to this skill
+
 ## Related Skill
 
 Use `hard-won-skill-extractor` when the challenge is turning a hard-earned session into a reusable skill candidate.
