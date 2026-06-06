@@ -68,6 +68,14 @@ Stop and report missing tools. Do not auto-install without approval.
 - rebuilding instead of updating
 - making helper tools feel primary instead of supportive
 
+## Verification
+
+- [ ] Required tool checks ran; missing tools were reported, not auto-installed
+- [ ] The chosen path matches the routing table — direct read for small readable scope
+- [ ] No graph was built for a tiny one-shot question
+- [ ] An existing graph was queried or updated instead of rereading the corpus
+- [ ] Helpers stayed secondary to the main graph path
+
 ## References
 
 - [`../../references/HELPER_TOOLS.md`](../../references/HELPER_TOOLS.md)
