@@ -2,5 +2,6 @@
   "name": "dev-vitals",
   "version": "0.1.0",
   "description": "Core developer workflow skills: planning, execution, communication, and powerup discovery.",
+  "maturity": "stable",
   "contextFileName": "GEMINI.md"
 }
