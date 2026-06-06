@@ -8,6 +8,7 @@ description: Create or refactor high-quality skills with lean frontmatter, progr
 Use this skill when creating or improving a reusable skill.
 
 ## What Good Skills Do
+
 - Trigger reliably from `name` and `description` — the description must be specific enough to avoid false triggers.
 - Stay short in `SKILL.md` and move bulk detail into `references/` or `scripts/`.
 - Teach a **workflow or decision pattern**, not just dump background information.
@@ -27,11 +28,13 @@ description: Use when [trigger condition]. Does [what it does]. [Optional: NOT f
 Default to a pure Markdown body after the YAML frontmatter. Use headings such as `## Purpose`, `## When to Use`, `## Workflow`, and `## Verification`. Do not use XML-like tags such as `<Purpose>`, `<Workflow>`, or `<Use_When>` as normal top-level sections. XML-like tags are acceptable only when they strictly delimit nested examples, quoted input, external documents, or machine-readable prompt payloads.
 
 **Good description** (specific, trigger-clear):
+
 ```
 Use when designing or reviewing filesystem MCP access, path boundaries, allowed roots, and method allowlists.
 ```
 
 **Weak description** (too broad, won't trigger reliably):
+
 ```
 Helps with MCP things and file access.
 ```
@@ -75,11 +78,21 @@ Helps with MCP things and file access.
 | References total | as needed, not in `SKILL.md` |
 
 ## Bundled Helpers
+
 - `scripts/init_skill.py` — scaffold a new skill directory
 - `scripts/package_skill.py` — package for distribution
 - `scripts/quick_validate.py` — check frontmatter and dead references
 
 Use them as optional helpers if they fit your workflow.
 
+## Verification
+
+- [ ] The name field matches the skill directory name exactly
+- [ ] The description states the trigger condition and what the skill does in one sentence
+- [ ] The body reads in one focused pass — within the length guide, with bulk detail moved to references
+- [ ] Every file path mentioned in the skill exists; dead reference links were removed
+- [ ] The trigger was tested: the description reliably routes the intended use case to this skill
+
 ## Related Skill
+
 Use `hard-won-skill-extractor` when the challenge is turning a hard-earned session into a reusable skill candidate.
