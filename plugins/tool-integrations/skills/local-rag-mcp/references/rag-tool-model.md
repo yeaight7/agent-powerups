@@ -1,6 +1,7 @@
 # Local RAG MCP Tool Model
 
 ## Tools
+
 | Tool | Use |
 | --- | --- |
 | `status` | Check DB size, chunks, documents, config, embedding backend. |
@@ -12,6 +13,7 @@
 | `delete_file` | Remove stale or wrongly ingested file/source. |
 
 ## Query Pattern
+
 1. Start with exact identifiers from user request.
 2. Add domain context, not synonyms only.
 3. Use `limit=5` for precision, `10` for broad exploration.
@@ -19,7 +21,9 @@
 5. Cite file/source and chunk context in synthesis.
 
 ## Ingestion Gate
+
 Do not ingest by default. First answer:
+
 - Is corpus already present?
 - Is content approved for storage?
 - Are embeddings local or remote?
@@ -27,6 +31,7 @@ Do not ingest by default. First answer:
 - Is re-ingestion needed or will query suffice?
 
 ## Failure Modes
+
 | Symptom | Likely Cause | Fix |
 | --- | --- | --- |
 | High-scoring irrelevant hits | query too broad | add exact file/name/domain terms |
