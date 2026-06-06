@@ -45,3 +45,6 @@ jobs:
 
       - name: Validate
         run: node dist/cli/apx.js validate skills && node dist/cli/apx.js validate catalog
+
+      - name: Validate Mirrors
+        run: python3 scripts/validate-mirrors.py
