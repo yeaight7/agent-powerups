@@ -1,11 +1,11 @@
 ---
 name: relay-gemini
-description: Relay questions and tasks to a persistent local Gemini ACP session with cross-turn context.
+description: Use when a persistent local Gemini ACP session should keep context across multiple advisory turns.
 ---
 
-# relay-gemini
+## Purpose
 
-Relay tasks to a persistent local Gemini ACP session. Gemini relay uses ACP and keeps cross-turn context across turns — use it when you need an ongoing advisory session, not a one-shot question.
+Use Gemini through Agent Powerups relay for multi-turn advisory work where context continuity matters more than one-shot speed.
 
 Compatible with: `claude-code`, `codex`, `generic`
 
@@ -13,43 +13,80 @@ Requires:
 
 - Local Gemini CLI (`gemini`)
 
-## When to Use Relay vs Ask
+## When to Use
 
 | Situation | Use |
 | --- | --- |
-| Multi-turn review or advisory dialogue | `relay` — context persists across turns |
-| Long-running code review with follow-ups | `relay` — same session, same context |
-| Single focused question, no follow-up needed | `ask-gemini` — simpler, no daemon |
-| Quick brainstorm, one answer expected | `ask-gemini` — lighter weight |
-| Cross-session context (resume days later) | `relay init` + `relay ask` with context.md |
+| Multi-turn review or advisory dialogue | `relay` - context persists across turns |
+| Long-running code review with follow-ups | `relay` - same session, same context |
+| Single focused question, no follow-up needed | `ask-gemini` - simpler, no daemon |
+| Quick brainstorm, one answer expected | `ask-gemini` - lighter weight |
+| Cross-session context | `relay init` + `relay ask` with context file |
+
+Do not use relay when a single `ask-gemini` turn would be enough.
+
+## Inputs
+
+- Relay session name
+- Optional seeded context file
+- Focused question or review prompt
+- Stop condition for the advisory loop
 
 ## Workflow
 
+1. Verify Gemini is available:
+
 ```bash
-# Start a named session (keeps running between asks)
-apx relay start <name> --provider gemini
-
-# Ask follow-up questions in the same session
-apx relay ask <name> "<prompt>"
-
-# Check session health
-apx relay status <name>
-
-# Stop when done
-apx relay stop <name>
+gemini --version
 ```
 
-## Context Seeding
-
-Initialise a session directory with a context file before starting:
+2. Create a context file when the session needs durable background:
 
 ```bash
 apx relay init <name>
-# Edit .apx/relay/<name>/context.md with repo background, goals, constraints
-apx relay start <name> --provider gemini
-apx relay ask <name> "Based on the context above, review this plan: ..."
 ```
 
-## Artifacts
+3. Start the session:
 
-Each `relay ask` turn writes an artifact to `.apx/relay/<name>/gemini-turn-N-<slug>-<timestamp>.md`.
+```bash
+apx relay start <name> --provider gemini
+```
+
+4. Ask follow-up questions in the same session:
+
+```bash
+apx relay ask <name> "<prompt>"
+```
+
+5. Check session health when a turn fails or times out:
+
+```bash
+apx relay status <name>
+```
+
+6. Stop the session when the advisory loop is complete:
+
+```bash
+apx relay stop <name>
+```
+
+## Output
+
+- Per-turn artifacts under the relay session directory
+- A short decision log of accepted/rejected advice
+- Explicit follow-up prompts when additional context is needed
+
+## Verification
+
+- [ ] Gemini CLI was available or missing CLI was reported.
+- [ ] Persistent context was needed; otherwise `ask-gemini` was preferred.
+- [ ] Context file was reviewed before relying on it.
+- [ ] Each artifact was read before acting on the advice.
+- [ ] Session was stopped or intentionally left running.
+
+## Failure Modes
+
+- Using relay for cheap one-off questions.
+- Letting stale context steer later answers.
+- Forgetting to stop long-running relay sessions.
+- Treating Gemini advice as validated code review without checking source and tests.
