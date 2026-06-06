@@ -5,6 +5,44 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.6.0] — 2026-06-06
+
+This release closes the catalog-wide skill quality campaign (18 audit-driven fix batches) and adds a new CI gate that prevents the root-vs-plugin skill drift that the campaign spent much of its effort repairing.
+
+### Added — Mirror-parity validation (new CI gate)
+
+- New `scripts/validate-mirrors.py`: every plugin skill copy must stay byte-identical with its root skill (root is canonical). Content drift, files missing from a plugin copy, and plugin-only files are all errors.
+- Intentional divergences are declared in an explicit in-script variant allowlist — currently the condensed dev-vitals `agent-harness-design` and the three `context-retrieval-loop` domain specializations — with hygiene warnings when an allowlisted copy becomes identical to root or an entry no longer matches anything.
+- Enforced in CI as a dedicated "Validate Mirrors" step on the full Linux/Windows/macOS matrix, and added to `npm run release:check`. The check is gitignore-aware and deterministic across platforms (CRLF-normalized comparison; byte-safe `git check-ignore` batching; files whose counterpart path could never be committed are exempt).
+- One-time restoration that the first scan demanded: 50 drifted or missing files synced root→plugin across 30 plugin copies — including plugin copies that were missing required support files (`requesting-code-review`'s bundled reviewer prompt, all five `systematic-debugging` reference/example files, `writing-plans`' reviewer prompt) and the memory-optimization `graphify` copy that had lost its upstream/license section.
+
+### Added — Security skills (security-guardrails)
+
+- `hook-safety-review` — enablement gate for one hook at a time: trigger-surface inventory, command-injection / outbound-network / silent-failure scans, and P0/P1/Note verdicts before anything is switched on.
+- `mcp-risk-review` — pre-enable triage of an MCP server: launch-vector pinning, transport exposure, credential handling, tool-surface enumeration, and scope boundaries, followed by `apx mcp check` / `apx mcp smoke` behind an explicit user-approval gate.
+- `secret-leak-preflight` — commit/publish-time secret gate over the staged diff, untracked files, and generated artifacts, with unstage-and-rotate guidance on any hit.
+- All three ship at root and in the security-guardrails plugin, with catalog entries and bundle declarations.
+
+### Added — Plugin commands materialized
+
+- `model-route` (agentic-systems) and `security-audit` (security-guardrails) now exist as command files in their plugin directories, as byte copies of the root commands. Both bundles had advertised these commands without shipping them — plugin installs now deliver what `apx plugins list` declares.
+
+### Added — Gemini extension maturity
+
+- Every plugin `gemini-extension.json` carries a `maturity` field sourced from `plugin-bundles.json` (the single source of truth). The install-time manifest generator emits it for bundles without a manifest, and the plugin test contract now asserts it for all bundles.
+
+### Changed — Skill quality campaign completed
+
+- Finished the audit-driven quality pass across the shipped skill catalog: frontmatter descriptions are trigger-only ("Use when…"), reworked skills carry Verification checklists that restate their own rules as completion assertions, and thin skills gained concrete command workflows. This release lands the final waves: documentation skills, orchestration/relay/release/PR skills, the two mechanical frontmatter sets, and the Verification-only polish wave (memory workflows, graphify, git-worktree and branch-finishing flows, skill authoring, GitHub PR comment handling).
+- `handoff-discipline` absorbed the one unique concept from `handoff-documentation` (recording dead ends so the next session doesn't retry them) and now also ships in documentation-systems; all copies are byte-identical.
+- The three codebase-context MCP skills (`local-rag-mcp`, `managed-codebase-context`, `structured-code-search-mcp`) are now declared by the codebase-intelligence bundle that already shipped them on disk, matching the established multi-bundle convention.
+
+### Removed
+
+- `handoff-documentation` skill — a near-duplicate subset of `handoff-discipline`; its content was merged there and catalog, bundle, and README references were updated.
+
+---
+
 ## [0.5.2] — 2026-06-02
 
 ### Changed — Instruction formatting

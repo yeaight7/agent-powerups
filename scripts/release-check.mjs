@@ -13,6 +13,7 @@ const checks = [
   ["node dist/cli/apx.js doctor --full", "node", ["dist/cli/apx.js", "doctor", "--full"]],
   ["python scripts/validate-skills.py", "python", ["scripts/validate-skills.py"]],
   ["python scripts/validate-catalog.py", "python", ["scripts/validate-catalog.py"]],
+  ["python scripts/validate-mirrors.py", "python", ["scripts/validate-mirrors.py"]],
   ["node dist/cli/apx.js version", "node", ["dist/cli/apx.js", "version"], { expectStdout: expectedVersionPattern }],
   ["npm pack --dry-run", "npm", ["pack", "--dry-run"]],
   ["npm publish --dry-run --access public", "npm", ["publish", "--dry-run", "--access", "public"]],
