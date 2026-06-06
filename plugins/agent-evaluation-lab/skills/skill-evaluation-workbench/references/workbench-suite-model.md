@@ -1,6 +1,7 @@
 # Workbench Suite Model
 
 ## Case Layout
+
 ```text
 suite/
   suite.yml
@@ -15,6 +16,7 @@ suite/
 ```
 
 ## Suite Parts
+
 | Part | Purpose |
 | --- | --- |
 | `references/` | skill/docs visible to agent |
@@ -26,7 +28,9 @@ suite/
 | `result` | grader evidence and pass/fail |
 
 ## Case Set
+
 Start with:
+
 - Happy path.
 - Important edge case.
 - No-tool-needed control.
@@ -34,7 +38,9 @@ Start with:
 - Missing dependency behavior.
 
 ## Failure Classification
+
 Classify before editing:
+
 - unclear skill guidance
 - missing reference material
 - brittle grader
@@ -44,4 +50,5 @@ Classify before editing:
 - model variance
 
 ## Secret Hygiene
+
 Forward only named env vars. Treat traces, preserved workspaces, stdout, and result JSON as sensitive.

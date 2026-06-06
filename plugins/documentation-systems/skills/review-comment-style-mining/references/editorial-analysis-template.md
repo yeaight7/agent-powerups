@@ -1,12 +1,14 @@
 # Editorial Analysis Template
 
 ## Inputs
+
 - PR URL or owner/repo + PR number.
 - Text file extensions in scope.
 - Max chars per file version.
 - Whether private content may be summarized.
 
 ## Analysis Output
+
 ```markdown
 # Writing Lessons From PR
 
@@ -39,6 +41,7 @@
 ```
 
 ## Guardrails
+
 - Do not quote long private text.
 - Truncate first/final dumps.
 - Preserve reviewer intent, not only final wording.

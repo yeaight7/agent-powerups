@@ -240,6 +240,7 @@ Agent setup docs:
 ```sh
 python scripts/validate-skills.py
 python scripts/validate-catalog.py
+python scripts/validate-mirrors.py
 python scripts/check-requirements.py
 ```
 
@@ -365,6 +366,7 @@ Current shipped scripts:
 
 - `scripts/validate-skills.py`
 - `scripts/validate-catalog.py`
+- `scripts/validate-mirrors.py`
 - `scripts/check-requirements.py`
 
 Current shipped MCP configs:

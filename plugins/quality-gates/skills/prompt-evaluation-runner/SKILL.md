@@ -6,9 +6,11 @@ description: Use when evaluating prompts, LLM outputs, red-team suites, or model
 # Prompt Evaluation Runner
 
 ## When to use
+
 Use when you need to evaluate an LLM app, test a prompt systematically, or run red-team/vulnerability scans against a target model or application.
 
 ## Requirements / Checks
+
 1. Check if an evaluation tool is defined in project deps, scripts, lockfiles, or local toolchain (e.g., `promptfoo`, `evals`, `braintrust`).
 2. Do not run unvetted remote runners without checking the project's toolchain first (e.g., avoid `npx promptfoo@latest` if `promptfoo` is already installed locally).
 3. If no runner exists, ask before adding a dev dependency or using an ephemeral runner.
@@ -33,6 +35,7 @@ Use when you need to evaluate an LLM app, test a prompt systematically, or run r
 3. **Use model graders sparingly** — pin the grader model and provider explicitly; document the cost and non-determinism risk.
 
 4. **Minimal config structure**:
+
    ```yaml
    description: "Test that the summarizer stays under 200 words"
    providers:
@@ -62,11 +65,13 @@ Use when you need to evaluate an LLM app, test a prompt systematically, or run r
    - Config mistake (assertion logic error)
 
 ## Safety Constraints
+
 - Do NOT log, echo, or store API keys in configuration files or chat output.
 - Do NOT run evaluations against production endpoints without user consent.
 - Do not execute arbitrary remote code or unvetted plugins during evaluation.
 
 ## Validation / Done Criteria
+
 - Eval config is valid, minimal, and uses `{{env.VAR}}` references for secrets.
 - Deterministic assertions exist where possible; model grader use is documented and justified.
 - Run scope, provider, and estimated cost are reported before execution.

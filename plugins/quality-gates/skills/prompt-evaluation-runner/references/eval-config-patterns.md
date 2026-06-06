@@ -1,6 +1,7 @@
 # Eval Config Patterns
 
 ## Minimal Shape
+
 ```yaml
 description: "Short behavior check"
 
@@ -29,6 +30,7 @@ tests:
 ```
 
 ## Assertion Order
+
 Use deterministic assertions first:
 
 | Need | Assertion |
@@ -43,12 +45,14 @@ Use deterministic assertions first:
 | subjective quality | `llm-rubric` with pinned grader |
 
 ## Env Rules
+
 - Use `{{env.NAME}}`, not shell `$NAME`.
 - Do not hardcode secrets.
 - Do not ask user to paste keys into chat.
 - State provider, model, expected cost, and network target before running.
 
 ## Analysis Template
+
 ```text
 Eval:
 Provider/model:

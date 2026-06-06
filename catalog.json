@@ -722,6 +722,22 @@
     "maturity": "beta"
   },
   {
+    "name": "validate-mirrors",
+    "type": "script",
+    "summary": "Validate that plugin skill copies stay byte-identical with their root skills, with an explicit allowlist for intentional variants.",
+    "path": "scripts/validate-mirrors.py",
+    "compatible_with": [
+      "generic"
+    ],
+    "tags": [
+      "validation",
+      "skills",
+      "plugins",
+      "mirrors"
+    ],
+    "maturity": "beta"
+  },
+  {
     "name": "check-requirements",
     "type": "script",
     "summary": "Report availability of external commands and packages declared in catalog requirements.",

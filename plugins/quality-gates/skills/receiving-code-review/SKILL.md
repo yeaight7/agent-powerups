@@ -42,6 +42,7 @@ If any item is unclear: stop, ask for clarification on all unclear items before 
 ### Feedback from External Reviewers
 
 Before implementing:
+
 1. Is it technically correct for this codebase?
 2. Does it break existing functionality?
 3. Is there a reason the current implementation exists?
@@ -55,14 +56,17 @@ If it conflicts with prior architectural decisions: stop and discuss with the pr
 ### YAGNI Check
 
 If a reviewer suggests "implementing properly" a feature or endpoint:
+
 ```bash
 grep -r "feature_name" .
 ```
+
 If unused: propose removal (YAGNI). If used: implement.
 
 ### Implementation Order
 
 For multi-item feedback:
+
 1. Clarify anything unclear first.
 2. Then implement in order: blocking issues → simple fixes → complex fixes.
 3. Test each fix individually.
@@ -71,11 +75,13 @@ For multi-item feedback:
 ## Output
 
 For each review item:
+
 - Status: implementing / pushing back / needs clarification
 - Rationale (if pushing back or clarifying)
 - What changed (if implementing)
 
 When feedback is correct:
+
 ```
 ✅ "Fixed. [Brief description of what changed]"
 ✅ "Good catch. Fixed in [location]."
@@ -102,7 +108,7 @@ No performative agreement ("you're absolutely right", "great point", "thanks for
 ### Common Mistakes
 
 | Mistake | Fix |
-|---------|-----|
+| --- | --- |
 | Performative agreement | State requirement or just act |
 | Blind implementation | Verify against codebase first |
 | Batch without testing | One at a time, test each |

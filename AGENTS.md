@@ -15,6 +15,7 @@ Shipped assets are organized by type: `skills/`, `commands/`, `hooks/`, `mcp/`, 
 - `apx list`: inspect catalog entries.
 - `python scripts/validate-skills.py`: validate skill metadata and required files.
 - `python scripts/validate-catalog.py`: validate `catalog.json`.
+- `python scripts/validate-mirrors.py`: validate that plugin skill copies match their root skills (variant allowlist inside the script).
 - `python scripts/check-requirements.py`: check documented tool requirements.
 
 ## Coding Style & Naming Conventions

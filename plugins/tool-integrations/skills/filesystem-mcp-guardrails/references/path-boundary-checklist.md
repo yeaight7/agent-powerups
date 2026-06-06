@@ -1,6 +1,7 @@
 # Filesystem MCP Path Boundary Checklist
 
 ## Config Requirements
+
 - Explicit allowed roots.
 - No home, drive root, `/`, or broad parent dirs by default.
 - Read/write methods separated.
@@ -8,6 +9,7 @@
 - Symlink and path traversal behavior tested.
 
 ## Operation Policy
+
 | Operation | Default |
 | --- | --- |
 | read/list/stat | allowed inside root |
@@ -18,6 +20,7 @@
 | shell execution | not filesystem MCP responsibility |
 
 ## Validation Cases
+
 - `../outside` denied.
 - symlink to outside root denied or resolved safely.
 - absolute path outside root denied.
@@ -25,6 +28,7 @@
 - recursive operation cannot escape root.
 
 ## Report
+
 ```text
 Allowed roots:
 Enabled methods:

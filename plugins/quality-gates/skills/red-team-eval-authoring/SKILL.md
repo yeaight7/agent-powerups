@@ -6,11 +6,13 @@ description: Use when creating or reviewing red-team eval plugins, attack templa
 # Red-Team Eval Authoring
 
 ## When To Use
+
 - Adding a new red-team plugin or grader.
 - Editing attack templates, rubric tags, or plugin metadata.
 - Reviewing multimodal or tool-use safety evals for false positives/negatives.
 
 ## Requirements / Checks
+
 - Confirm the target eval framework and repo layout before editing.
 - Prefer deterministic shape checks for templates before adding model-graded rubrics.
 - Ask before running networked evals, paid model graders, or large red-team suites.
@@ -56,16 +58,19 @@ description: Use when creating or reviewing red-team eval plugins, attack templa
    - One edge case testing a rubric parsing boundary.
 
 ## Safety Constraints
+
 - Do not paste real secrets, private prompts, or customer data into attack templates.
 - Do not store base64 image payloads in text-only grader variables — use a text-only field instead.
 - Do not broaden a plugin from one risk class to another without updating docs, metadata, and tests.
 - Do not run harmful prompt generation against production systems without explicit approval.
 
 ## Validation / Done Criteria
+
 - Plugin metadata, generator, grader, and docs all refer to the same risk category and harm class.
 - Rubric tags are consistent and not deprecated.
 - Benign and harmful fixtures both execute locally and produce structured `{ reason, pass, score }` output.
 - Results show reasoned pass/fail, not only raw scores.
 
 ## References
+
 - `references/redteam-grader-checklist.md`

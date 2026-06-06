@@ -1,6 +1,9 @@
 ---
 name: no-fluff
-description: Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler, articles, and pleasantries while keeping full technical accuracy. Use when user says "no fluff", "be concise", "use less tokens", or similar.
+description: >
+  Ultra-compressed communication mode. Cuts token usage ~75% by dropping
+  filler, articles, and pleasantries while keeping full technical accuracy.
+  Use when user says "no fluff", "be concise", "use less tokens", or similar.
 ---
 
 ## Purpose
