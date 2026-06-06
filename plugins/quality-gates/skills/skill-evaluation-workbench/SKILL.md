@@ -6,12 +6,14 @@ description: Use when designing, running, debugging, or hardening deterministic 
 # Skill Evaluation Workbench
 
 ## When To Use
+
 - A skill or prompt needs repeatable quality checks across models or configurations.
 - A workflow needs file-based graders, command traces, or local artifact checks.
 - A tool or MCP skill needs a hidden service fixture or sandboxed test workspace.
 - A previous agent attempt failed and you need trace-driven diagnosis before editing instructions.
 
 ## Requirements / Checks
+
 - Confirm an eval runner exists locally before running anything. Do not install deps without approval.
 - Prefer local deterministic graders over model-graded assertions.
 - If Docker, remote models, API keys, or live services are involved, ask before execution.
@@ -65,6 +67,7 @@ Place fixtures in `cases/`, skill/reference material in `references/`, and grade
 6. **Edit only the classified cause**, then re-run the same case.
 
 ## Safety Constraints
+
 - Do not forward broad env vars into eval sandboxes — pass only named test variables.
 - Do not print secrets in prompts, graders, traces, or artifacts.
 - Do not mock a CLI or API unless the mock faithfully matches validation, output, and failure modes.
@@ -72,10 +75,12 @@ Place fixtures in `cases/`, skill/reference material in `references/`, and grade
 - Do not auto-enable host or user MCP configs inside eval containers.
 
 ## Validation / Done Criteria
+
 - Suite has deterministic pass/fail evidence for all cases.
 - Failure triage points to a concrete cause before any edits are made.
 - Re-run proves the targeted change fixed the failing case without breaking passing cases.
 - Output includes: command used, model(s), trial count, failures, and artifact paths.
 
 ## References
+
 - `references/workbench-suite-model.md`
