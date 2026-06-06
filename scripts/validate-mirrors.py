@@ -49,23 +49,32 @@ def repo_rel_path(path: str) -> str:
 
 
 def batch_gitignored(rel_paths: list[str]) -> set[str]:
-    """Return the subset of repo-relative paths that are gitignored."""
+    """Return the subset of repo-relative paths that are gitignored.
+
+    Tracked paths are never reported as ignored by git, so "ignored" here
+    means "could never be committed". Paths do not need to exist. Bytes I/O
+    is deliberate: text mode would translate the newline separators to CRLF
+    on Windows and git check-ignore would then match nothing.
+    """
     if not rel_paths:
         return set()
     try:
         result = subprocess.run(
             ["git", "check-ignore", "--stdin"],
             cwd=REPO_ROOT,
-            input="\n".join(rel_paths),
+            input="\n".join(rel_paths).encode("utf-8"),
             capture_output=True,
-            text=True,
         )
     except OSError:
         return set()
     # Exit 0 = some paths ignored, 1 = none ignored, 128 = usage error.
     if result.returncode not in (0, 1):
         return set()
-    return {line.strip() for line in result.stdout.splitlines() if line.strip()}
+    return {
+        line.strip()
+        for line in result.stdout.decode("utf-8", "replace").splitlines()
+        if line.strip()
+    }
 
 
 def files_under(directory: str) -> list[str]:
@@ -79,9 +88,17 @@ def files_under(directory: str) -> list[str]:
     return sorted(found)
 
 
-def read_bytes(path: str) -> bytes:
+def read_normalized(path: str) -> bytes:
+    """Read file bytes with CRLF normalized to LF.
+
+    .gitattributes pins the relevant text types to eol=lf in the repository,
+    but local working trees (especially on Windows) can legitimately carry
+    CRLF bytes while git still reports them clean. Comparing normalized
+    content matches what actually lands in the repository and keeps the
+    validator's verdict identical across platforms.
+    """
     with open(path, "rb") as handle:
-        return handle.read()
+        return handle.read().replace(b"\r\n", b"\n")
 
 
 def compare_copy(plugin_dir: str, root_dir: str, ignored: set[str]) -> tuple[list[str], int]:
@@ -105,7 +122,7 @@ def compare_copy(plugin_dir: str, root_dir: str, ignored: set[str]) -> tuple[lis
             issues.append(f"file missing from the plugin copy: {rel}")
         else:
             checked += 1
-            if read_bytes(plugin_file) != read_bytes(root_file):
+            if read_normalized(plugin_file) != read_normalized(root_file):
                 issues.append(f"content drift from root skill: {rel}")
     return issues, checked
 
@@ -137,15 +154,20 @@ def main() -> int:
 
     ignored_dirs = batch_gitignored(dir_candidates)
 
-    # Batch the per-file gitignore check across every copy.
+    # Batch the per-file gitignore check across every copy. Both prospective
+    # locations of every file are checked — even when one side does not exist
+    # on disk — so a file whose counterpart path is gitignored (and therefore
+    # could never be committed) is exempt from parity instead of reported as
+    # missing.
     file_candidates: list[str] = []
     for plugin_rel, plugin_dir, root_dir in copies:
         if plugin_rel in ignored_dirs or repo_rel_path(root_dir) in ignored_dirs:
             continue
-        if os.path.isdir(root_dir):
-            for rel in files_under(root_dir):
-                file_candidates.append(f"{repo_rel_path(root_dir)}/{rel}")
-        for rel in files_under(plugin_dir):
+        if not os.path.isdir(root_dir):
+            continue
+        union = set(files_under(root_dir)) | set(files_under(plugin_dir))
+        for rel in union:
+            file_candidates.append(f"{repo_rel_path(root_dir)}/{rel}")
             file_candidates.append(f"{plugin_rel}/{rel}")
     ignored_files = batch_gitignored(file_candidates)
 
