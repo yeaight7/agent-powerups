@@ -1,6 +1,6 @@
 ---
 name: webapp-visual-testing
-description: Inspect and test web UIs using screenshots, browser automation, accessibility snapshots, and console/network signals with structured visual evidence collection.
+description: Use when a browser-facing UI needs visual verification, a layout bug or visual regression is reported, accessibility of an interactive component needs checking, or a browser workflow must be exercised end-to-end.
 ---
 
 # Webapp Visual Testing
