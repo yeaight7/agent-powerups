@@ -2,5 +2,6 @@
   "name": "codebase-maintenance",
   "version": "0.1.0",
   "description": "Safe refactoring, dead-code removal, legacy modernization, and dependency hygiene.",
+  "maturity": "beta",
   "contextFileName": "GEMINI.md"
 }
