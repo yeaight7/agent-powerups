@@ -22,7 +22,7 @@ When ending a session, handing a task back to the user, or preparing to swap to 
 
 1. **State the end condition.** Explain exactly why you are stopping (e.g., "Task complete", "Blocked on PR", "Context window too large").
 
-2. **Leave a breadcrumb.** If the task is incomplete, summarize the last successful step, the current failing step, and the *exact next command* to run.
+2. **Leave a breadcrumb.** If the task is incomplete, summarize the last successful step, the current failing step, and the *exact next command* to run. Record discovered constraints and dead ends so the next session doesn't retry them.
 
 3. **Commit or stash.** Ensure the working directory is clean. Either commit the work, tell the user to commit, or stash it. Do not leave unverified messy state:
 
@@ -43,6 +43,7 @@ When ending a session, handing a task back to the user, or preparing to swap to 
    - ✅ Completed: [What works]
    - 🚧 In Progress: [What is broken or partial]
    - 🛑 Blockers: [What stopped us]
+   - ⚠️ Dead ends: [Approaches tried that failed, and why]
 
    ### 3. Next Steps
    1. Run `npm test ...`
