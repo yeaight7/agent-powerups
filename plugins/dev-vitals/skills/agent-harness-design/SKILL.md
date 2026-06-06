@@ -1,6 +1,6 @@
 ---
 name: agent-harness-design
-description: Design agent tool sets with stable names, narrow schemas, deterministic output shapes, and explicit error paths. No catch-all tools unless unavoidable.
+description: Use when designing tool definitions for a new agent or subagent, an agent shows high retry rates, ambiguous tool invocations, or silent failures, or an existing agent harness needs a quality review.
 ---
 
 # Agent Harness Design
@@ -41,3 +41,12 @@ Define in harness, not inside tools:
 - Keep system prompt fixed and minimal
 - Load large guidance from skills on demand
 - Compact at phase boundaries, not mid-task
+
+## Verification
+
+- [ ] Every tool has an explicit, stable name and exactly one distinct operation
+- [ ] Schemas use required fields and enums — no free-text mode strings, no behavior-changing optionals
+- [ ] Every tool response carries `status`, `summary`, `next_actions`, and `artifacts`
+- [ ] Every tool defines its invalid-input, transient-failure, and non-recoverable paths
+- [ ] Retry ceiling and stop conditions are declared in the harness, not inside tools
+- [ ] Any catch-all tool is documented with its risk and guarded by an allowlist or preflight check
