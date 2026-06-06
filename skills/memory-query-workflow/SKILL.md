@@ -53,6 +53,14 @@ apx check graphify
 - using `query` for a question that clearly needs a path trace
 - treating no-result output as proof the corpus lacks the concept
 
+## Verification
+
+- [ ] Graph existence was confirmed before any query ran
+- [ ] The command matched the question shape: query for breadth, path for traces, explain for one node
+- [ ] The answer is grounded in graph nodes and edges — no overclaiming
+- [ ] Staleness, sparseness, or weak node matches were stated explicitly
+- [ ] Escalation to build, update, or targeted reread happened only when graph evidence was insufficient
+
 ## Reference
 
 - [`../graphify/UPSTREAM.md`](../graphify/UPSTREAM.md)
