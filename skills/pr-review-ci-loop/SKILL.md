@@ -1,55 +1,72 @@
 ---
 name: pr-review-ci-loop
-description: Run a review and CI loop around a pull request with explicit approval gates for code changes, remote writes, and follow-up actions.
+description: Use when a pull request needs one bounded review and CI triage cycle with explicit approval before edits or remote writes.
 ---
 
-# PR Review CI Loop
+## Purpose
 
-Experimental skill for trust-sensitive PR iteration. Review and CI are inputs to a human-controlled loop — not permission for autonomous remote actions.
+Combine PR review and CI failure triage into one human-controlled loop. Review findings and CI logs are inputs; they are not permission for autonomous remote actions.
 
 ## When to Use
 
-- A PR needs both technical review and CI failure triage in one workflow.
-- The user wants a single inspect → summarize → patch → recheck cycle.
+- A PR needs both technical review and CI failure triage.
+- The user wants a single inspect -> summarize -> patch -> recheck cycle.
 - Local fixes depend on accurate PR diff and CI log context.
+
+Do not use when the user only asked for a review, only asked for CI diagnosis, or has not approved edits.
 
 ## Core Rules
 
-- Remote writes (push, comment, request re-review) are always opt-in.
+- Remote writes such as push, comment, and request re-review are always opt-in.
 - Local changes must be grounded in specific review findings or failing CI checks.
-- Prefer GitHub-first flows; treat other CI providers as optional adaptations.
-- Do not apply speculative fixes — only fix what the review or CI explicitly identified.
+- Prefer GitHub-first flows; treat other CI providers as adaptations.
+- Do not apply speculative fixes.
 
-## Loop
+## Inputs
 
-### Step 1 — Read the PR
+- PR number, branch, or URL
+- Repository remote and base branch
+- CI provider access, preferably `gh` for GitHub-hosted PRs
+- User approval boundary for local edits and remote writes
 
-- Fetch diff and PR metadata (title, description, labels, reviewers, target branch).
-- Note: file count, line count, and whether any auto-generated files are included.
+## Workflow
 
-### Step 2 — Identify review risks
+### 1. Read PR metadata and diff
+
+```bash
+gh pr view <pr> --json number,title,author,baseRefName,headRefName,mergeStateStatus,reviewDecision,statusCheckRollup
+gh pr diff <pr> --stat
+gh pr diff <pr>
+```
+
+Record file count, risky areas, generated files, and public API changes.
+
+### 2. Identify review risks
 
 Classify findings by severity:
 
 | Category | What to check |
-|---|---|
+| --- | --- |
 | Correctness | Logic errors, off-by-one, wrong assumptions |
 | Tests | Missing coverage for changed behavior, broken assertions |
 | Public API | Breaking changes to exports, signatures, or contracts |
 | Security | Injection risks, exposed secrets, auth bypass |
 | Migration / release risk | Schema changes, feature flags, rollback difficulty |
 
-### Step 3 — Inspect CI failures (if present)
+### 3. Inspect CI failures
 
-- Identify which checks failed: lint, type-check, unit tests, integration tests, build.
-- Distinguish: flaky failure vs code error vs environment issue vs config problem.
-- Extract the first failing assertion or error line — not the full log.
-
-### Step 4 — Produce one combined readout
-
+```bash
+gh pr checks <pr>
+gh run view <run-id> --log-failed
 ```
+
+Extract the first failing assertion or error line. Categorize each failure as code error, flaky, environment, or config.
+
+### 4. Produce one readout
+
+```text
 REVIEW FINDINGS:
-  [blocking] <description> — <file:line or section>
+  [blocking] <description> - <file:line or section>
   [non-blocking] <description>
 
 CI FAILURES:
@@ -65,32 +82,41 @@ VALIDATION PLAN:
   - Expected: <outcome>
 ```
 
-### Step 5 — Apply approved local fixes
+### 5. Apply approved local fixes
 
 - Apply only what the user approves from the readout.
 - Run local validation after each fix.
+- Keep commits and pushes separate from local edits unless approved.
 
-### Step 6 — Remote follow-up (opt-in only)
+### 6. Remote follow-up
 
-If the user wants remote action, state the exact operation first:
+State the exact operation before running it:
 
-```
+```text
 NEXT REMOTE ACTION: git push origin <branch>
 EFFECT: updates the remote branch, triggering CI re-run
 Approve?
 ```
 
-## Validation / Done Criteria
+## Output
 
-- PR diff was fully read and all changed files were considered.
-- Every review finding is classified as blocking or non-blocking with a specific location.
-- Every CI failure is attributed to a cause category (code error / flaky / env / config).
-- Any local fix applied was validated locally before a remote action was proposed.
-- Remote follow-up action (if any) was explicitly stated and approved before execution.
+- Combined PR review and CI readout
+- Approved local diff, if any
+- Validation commands and results
+- Proposed remote action, if requested
 
-## Stop Conditions
+## Verification
 
-- Ambiguous review feedback that cannot be resolved without the PR author.
-- No access to the PR or its CI logs.
+- [ ] PR metadata and full diff were read.
+- [ ] Every changed file was considered or explicitly excluded with reason.
+- [ ] Review findings have severity and location.
+- [ ] CI failures have a cause category and first useful error line.
+- [ ] Any local fix was validated before proposing remote follow-up.
+- [ ] Remote follow-up was explicitly approved before execution.
+
+## Failure Modes
+
+- Ambiguous review feedback that needs the PR author.
+- No access to the PR or CI logs.
 - CI failure requires infrastructure changes outside this codebase.
 - Fix would require unattended remote writes.
