@@ -1,6 +1,6 @@
 ---
 name: model-routing
-description: Vendor-neutral routing guide for choosing the right model tier by task type. Mechanical work uses a smaller/faster model; implementation uses a standard model; architecture, security, and release audit use the most capable model.
+description: Use when selecting a model for a new task or subagent, deciding whether to escalate after a failed attempt, or designing a multi-agent pipeline with mixed task complexity.
 ---
 
 # Model Routing
@@ -86,3 +86,10 @@ Use this to calibrate your routing decisions over time. If Standard succeeds > 9
 - **Anxiety escalation**: Using Deep because the task feels important, not because it's complex
 - **Under-routing**: Using Fast for a multi-file refactor and then retrying three times
 - **Model pinning**: Hard-coding specific model IDs in configs instead of tier references
+
+## Verification
+
+- [ ] Tier was chosen from the routing table before the task started — Standard by default when unsure
+- [ ] Deep was used only for a listed Deep criterion or after a Standard attempt exposed a reasoning gap
+- [ ] No specific model IDs were hard-coded — tier references only
+- [ ] Tier, retries, and outcome were recorded for future calibration
