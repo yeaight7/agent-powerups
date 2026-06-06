@@ -326,6 +326,7 @@ function geminiExtensionManifest(bundle: any): string {
       name: bundle.name,
       version: "0.1.0",
       description: bundle.description ?? `Agent Powerups plugin bundle: ${bundle.name}`,
+      maturity: bundle.maturity ?? "experimental",
       contextFileName: "GEMINI.md",
     },
     null,
