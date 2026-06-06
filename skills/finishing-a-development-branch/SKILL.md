@@ -131,3 +131,11 @@ git worktree remove <worktree-path>
 - Present exactly 4 options
 - Get typed confirmation for Option 4
 - Clean up worktree for Options 1 & 4 only
+
+## Verification
+
+- [ ] Tests were verified passing before the options were presented
+- [ ] Exactly the four standard options were offered, without extra explanation
+- [ ] Option 1 reran tests on the merged result before deleting the branch
+- [ ] Option 4 proceeded only after the user typed the exact confirmation word
+- [ ] Worktree cleanup matched the option table — removed for 1 and 4, kept for 2 and 3
