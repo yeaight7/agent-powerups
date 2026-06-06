@@ -2,5 +2,6 @@
   "name": "mcp-development",
   "version": "0.1.0",
   "description": "Workflow-first MCP server design with schema-first tools, context-aware outputs, and evaluation discipline.",
+  "maturity": "beta",
   "contextFileName": "GEMINI.md"
 }
