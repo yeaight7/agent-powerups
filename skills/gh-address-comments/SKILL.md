@@ -76,3 +76,11 @@ gh api graphql -f query='
   }
 ' -f owner=OWNER -f repo=REPO -F pr=NUMBER
 ```
+
+## Verification
+
+- [ ] Review state came from thread-aware GraphQL reads, not flat comments alone
+- [ ] Actionable threads were clustered, numbered, and scope-confirmed before any edit
+- [ ] Every change is traceable to the thread or feedback cluster it addresses
+- [ ] No GitHub replies, thread resolutions, or review submissions happened without an explicit user request
+- [ ] The summary lists addressed threads, intentionally open threads, and the tests or checks supporting the changes
