@@ -1,6 +1,6 @@
 ---
 name: deploy-pipeline-runbook
-description: Coordinate multi-system deployment steps as a review-first runbook with explicit approval before any external write or promotion action.
+description: Use when a release spans multiple systems or vendors, order of operations matters with rollback planned up front, or a failed step in one system could corrupt state in a downstream system.
 ---
 
 # Deploy Pipeline Runbook
