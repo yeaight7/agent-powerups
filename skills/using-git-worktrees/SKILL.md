@@ -141,3 +141,11 @@ Ready to implement <feature-name>
 - Verify directory is ignored for project-local
 - Auto-detect and run project setup
 - Verify clean test baseline
+
+## Verification
+
+- [ ] Directory choice followed the priority order: existing directory, then config preference, then asking
+- [ ] A project-local worktree directory was verified gitignored before the worktree was created
+- [ ] Project setup was auto-detected and run in the new worktree
+- [ ] The baseline test run happened — failures were reported and confirmed, never skipped past
+- [ ] The final report names the worktree path and the test status
