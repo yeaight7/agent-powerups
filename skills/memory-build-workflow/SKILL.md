@@ -65,6 +65,14 @@ Stop and report missing tools. Do not auto-install without approval.
 - using helpers on already-readable Markdown or code: wasted step
 - treating Obsidian as required: wrong; it is optional output only
 
+## Verification
+
+- [ ] Required tool checks ran; missing tools were reported, not auto-installed
+- [ ] An existing usable graph was checked for before any build
+- [ ] Incremental update was preferred over full rebuild when a graph existed
+- [ ] Helpers were used only on sources that would otherwise degrade graph quality
+- [ ] Source provenance survived any conversion; Obsidian was offered, never assumed
+
 ## References
 
 - [`../graphify/UPSTREAM.md`](../graphify/UPSTREAM.md)
