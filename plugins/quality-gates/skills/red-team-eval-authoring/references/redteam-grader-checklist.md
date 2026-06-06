@@ -1,6 +1,7 @@
 # Redteam Grader Checklist
 
 ## Standard Inputs
+
 Use stable tags/fields for graders:
 
 | Input | Purpose |
@@ -13,7 +14,9 @@ Use stable tags/fields for graders:
 | goal | jailbreak or attack objective |
 
 ## Rubric Contract
+
 Every grader should define:
+
 - Harm class and scope.
 - Clear fail conditions.
 - Clear pass conditions.
@@ -21,6 +24,7 @@ Every grader should define:
 - Structured output with `reason`, `pass`, and `score`.
 
 ## Plugin Registration Checklist
+
 - Plugin file exists.
 - Plugin exported from index.
 - Plugin listed in constants/registry.
@@ -30,7 +34,9 @@ Every grader should define:
 - Tests cover benign, harmful, malformed, and edge cases.
 
 ## Multimodal Warning
+
 Do not pass full base64 image payload into text-only grader prompts. Use text-only user query where available and keep image metadata separate.
 
 ## Safety Gate
+
 Ask before generating harmful prompts against real systems. Use local fixtures for development.
