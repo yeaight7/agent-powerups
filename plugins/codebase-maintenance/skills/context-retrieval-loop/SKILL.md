@@ -1,6 +1,6 @@
 ---
 name: context-retrieval-loop
-description: Deterministic 3-cycle loop for gathering codebase context before refactoring or maintenance work. Broad search → exact source and tests → config and build setup.
+description: Use when about to refactor, rename, or remove code, assessing dead code before deletion, or unsure of the blast radius of a change.
 ---
 
 # Context Retrieval Loop (Codebase Maintenance)
@@ -60,3 +60,10 @@ Missing context (if any):
 ```
 
 Do not start a refactor without knowing the blast radius. If callers are unclear after Cycle 3, stop and report.
+
+## Verification
+
+- [ ] Cycles ran in order and stopped at the first satisfied condition — never past 3
+- [ ] Blast radius is reported: caller count, files affected, test coverage status
+- [ ] Re-exports, barrel files, and public API surfaces were checked before concluding
+- [ ] No refactor started while callers remained unclear — stopped and reported instead
