@@ -1,6 +1,6 @@
 ---
 name: codebase-migration-batches
-description: Run large codebase migrations in reviewable local batches with codemods, checkpoints, and verification. Use when a wide refactor is too risky to ship as one monolithic change.
+description: Use when a wide refactor or migration is too large to ship as one change — API renames across many files, framework or config migrations, or mechanical codemod-backed refactors that need reviewable batches.
 ---
 
 # Codebase Migration Batches
@@ -65,3 +65,10 @@ Transform rule
 Validation run
 Known exceptions
 ```
+
+## Verification
+
+- [ ] The transform was defined precisely — what changes, what does not — before the first file edit
+- [ ] Each batch held one migration theme and passed validation before the next began
+- [ ] The batch ledger records files, transform rule, validation run, and exceptions for every batch
+- [ ] No already-migrated file was touched twice; no auto-commit, auto-push, or auto-PR occurred
