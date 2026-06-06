@@ -30,6 +30,7 @@ Do not force a powerup when none fits. Say no matching powerup applies and proce
 
 ```sh
 apx list
+apx plugins list
 apx list --type skill
 apx list --type command
 apx list --type mcp-config
@@ -43,7 +44,7 @@ If `apx` is unavailable, inspect local folders: `skills/`, `commands/`, `mcp/`, 
 Prefer the narrowest asset whose description matches the current task. Examples:
 
 | Task signal | Asset type to inspect |
-|-------------|-----------------------|
+| --- | --- |
 | bug, failing test, regression | debugging skill |
 | implementation spec | planning skill |
 | file or URL intake | file-intake skill |
@@ -57,10 +58,11 @@ For a candidate asset:
 
 ```sh
 apx info <name>
-apx check <name>
 ```
 
 Then read the asset file. Do not rely only on the catalog summary.
+
+Most powerups won't require steps 4 and 5. Only use `apx check` in cases where the asset instructions specify requirements or dependencies that may not be met in the current environment. Do not run `apx check` for every asset by default.
 
 4. Check requirements.
 
