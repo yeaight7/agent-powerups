@@ -1,6 +1,6 @@
 ---
 name: changelog-generator
-description: Turn commits, PRs, or diffs into user-facing release notes or an internal changelog, with modes for breaking-change scanning.
+description: Use when preparing release notes or a changelog entry from commits, PRs, or diffs, summarizing a sprint or version range, or scanning a range for breaking changes before publishing.
 ---
 
 # Changelog Generator
