@@ -17,6 +17,7 @@ Verify the CLI:
 ```powershell
 apx doctor
 apx list
+apx discover "fix a failing test" --target codex
 ```
 
 ## Manual Native Install
@@ -40,6 +41,8 @@ Default native install writes immediately and installs:
 `claude` and `claude-code` are aliases for the same target.
 
 Existing identical files are skipped. Existing changed files are not overwritten unless `--force` is passed.
+
+Native install also writes `discovery-index.json` beside native skills and plugin bundles so agents and tools can inspect installed capabilities without scanning every file.
 
 Preview first:
 
@@ -92,6 +95,7 @@ apx install codex --full --instructions-file C:\path\AGENTS.md
 ```
 
 MCP snippets are staged for review only. No MCP server is enabled automatically.
+Full mode also writes a staged `<agent-root>\agent-powerups\discovery-index.json` for agents that inspect the support directory rather than native skill/plugin directories.
 
 ## Agent-Curated Setup
 
@@ -125,15 +129,23 @@ Plugin bundle commands remain useful for inspection and targeted install:
 ```powershell
 apx plugins list
 apx plugins info dev-vitals
+apx plugins info dev-vitals --json
 apx plugins validate --all
 apx plugins install dev-vitals --target codex --dry-run
 ```
 
 Plugin bundles are registered for Claude and Codex marketplace-style discovery. Gemini uses local extensions under `.gemini/extensions/`; each bundle includes `gemini-extension.json` and `GEMINI.md`.
 
+Use discovery commands when an agent or user wants task-based selection rather than a raw catalog list:
+
+```powershell
+apx inventory --target codex --json
+apx discover "review this risky refactor" --target codex --json
+```
+
 ## Optional Tools
 
-Install optional tools only when a specific skill requires them.
+Install optional tools only when a specific skill requires them. `apx check` is dependency-only; it is not a generic proof that an asset was selected or used.
 
 ```powershell
 claude --version

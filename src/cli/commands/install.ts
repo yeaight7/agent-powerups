@@ -4,6 +4,7 @@ import path from "node:path";
 
 import type { CatalogService } from "../utils/catalog.js";
 import { copyAsset } from "../utils/copy.js";
+import { buildDiscoveryIndexJson } from "../utils/discovery.js";
 import { getPluginBundles } from "../utils/plugins.js";
 import { defaultInstallDestination, resolveAssetPath, type InstallTarget } from "../utils/paths.js";
 import { createResult, type ExecutionResult } from "../utils/result.js";
@@ -240,11 +241,14 @@ function instructionBlock(agentRoot: string): string {
     `Agent Powerups assets are installed at \`${normalizedRoot}\`.`,
     "",
     "Use these local assets when relevant:",
-    "- Read `agent-powerups/skills/using-powerups/SKILL.md` before first use.",
-    "- Use `apx` commands to discover, inspect, validate, and extend setup. Do not manually edit config files without running `apx` first.",
-    "- Skills are at `agent-powerups/skills/`. Plugin bundles are at `agent-powerups/plugins/`.",
+    "- Run `apx discover \"<task>\" --target <agent>` for task-based powerup suggestions.",
+    "- Run `apx inventory --target <agent> --json` to inspect available skills, plugin contents, staged assets, and installed-only skills.",
+    "- Read `skills/using-powerups/SKILL.md` or `agent-powerups/skills/using-powerups/SKILL.md` before first use.",
+    "- Native skills are installed at `<agent-root>/skills/`; full support copies are staged at `agent-powerups/skills/`.",
+    "- Plugin bundles are installed under the native plugin directory and staged at `agent-powerups/plugins/` in full mode.",
     "- Run `apx profiles list` to see curated skill sets for specific workflows.",
     "- Treat hooks in `agent-powerups/hooks/` as review-before-use recipes, not active hooks.",
+    "- `apx check` is dependency-only. Do not use it as proof that a skill was read or applied.",
     "- MCP configs are staged at `agent-powerups/mcp/` but NOT enabled. Run `apx mcp check` and `apx mcp smoke` before enabling any MCP server.",
     "- External tools require user approval before install.",
     "",
@@ -294,6 +298,31 @@ async function writeGeneratedInstructions(
     copiedFiles: result.copied ? [result.copied] : [],
     skippedFiles: result.skipped ? [result.skipped] : [],
   };
+}
+
+async function writeDiscoveryIndexes(
+  service: CatalogService,
+  agentRoot: string,
+  profile: NativeProfile,
+  dryRun: boolean,
+  force: boolean,
+  full: boolean,
+  createdDirectorySet: Set<string>,
+): Promise<{ copiedFiles: string[]; skippedFiles: string[] }> {
+  const content = await buildDiscoveryIndexJson(service, profile.agent === "gemini" ? "gemini" : profile.agent);
+  const destinations = [path.join(agentRoot, "discovery-index.json")];
+  if (full) {
+    destinations.push(path.join(agentRoot, "agent-powerups", "discovery-index.json"));
+  }
+
+  const copiedFiles: string[] = [];
+  const skippedFiles: string[] = [];
+  for (const destination of destinations) {
+    const result = await writeTextFile(destination, content, { dryRun, force, createdDirectorySet });
+    if (result.copied) copiedFiles.push(result.copied);
+    if (result.skipped) skippedFiles.push(result.skipped);
+  }
+  return { copiedFiles, skippedFiles };
 }
 
 async function updateInstructionFile(
@@ -525,6 +554,18 @@ export async function runNativeInstallCommand(
   const plugins = await collectNativePluginInstalls(service, agentRoot, profile, copyOptions);
   copiedFiles.push(...plugins.copiedFiles);
   skippedFiles.push(...plugins.skippedFiles);
+
+  const discoveryIndexes = await writeDiscoveryIndexes(
+    service,
+    agentRoot,
+    profile,
+    options.dryRun,
+    options.force,
+    options.full,
+    createdDirectorySet,
+  );
+  copiedFiles.push(...discoveryIndexes.copiedFiles);
+  skippedFiles.push(...discoveryIndexes.skippedFiles);
 
   if (options.full) {
     const block = instructionBlock(agentRoot);

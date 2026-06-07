@@ -5,11 +5,13 @@ Most assets in this repo are plain text and require no extra tooling. A small nu
 ## Rules
 
 - Do not assume a tool is installed.
-- Check first.
+- Check first when the selected asset declares external tooling or the workflow fails because a tool is missing.
 - Show the install command before running it.
 - Ask for approval before installing anything.
-- Use `apx check <asset> --install-missing --dry-run` to preview supported installers.
+- Use `apx check <asset>` only for assets with declared requirements.
+- Use `apx check <asset> --install-missing --dry-run` to preview supported installers for those assets.
 - Use `apx check <asset> --install-missing --yes` only after approval.
+- Do not treat a successful `apx check` as proof that a skill, command, or workflow was actually used.
 - If installation is declined, say so and use the documented fallback.
 - Do not claim a conversion or fetch happened if the tool was missing.
 

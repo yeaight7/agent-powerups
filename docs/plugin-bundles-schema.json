@@ -25,6 +25,35 @@
         "origin": {
           "type": "string",
           "enum": ["root-copy", "first-party-seed", "new-skill", "placeholder"]
+        },
+        "use_when": {
+          "description": "Optional task triggers for auto-discovery.",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "avoid_when": {
+          "description": "Optional negative triggers for auto-discovery.",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "signals": {
+          "type": "array",
+          "description": "Short task keywords or phrases that should route to this asset.",
+          "items": { "type": "string" }
+        },
+        "capabilities": {
+          "type": "array",
+          "description": "Short capability labels exposed by this asset.",
+          "items": { "type": "string" }
+        },
+        "activation": { "type": "string" },
+        "check_policy": {
+          "type": "string",
+          "enum": ["none", "requires-only", "mcp-only", "manual"]
         }
       }
     },

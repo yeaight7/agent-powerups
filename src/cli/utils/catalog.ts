@@ -23,6 +23,12 @@ const catalogEntrySchema = z.object({
   compatible_with: z.array(z.enum(["claude-code", "codex", "gemini-cli", "cursor", "generic"])).min(1),
   tags: z.array(z.string().min(1)),
   maturity: z.enum(["draft", "beta", "stable", "experimental"]),
+  use_when: z.union([z.string().min(1), z.array(z.string().min(1))]).optional(),
+  avoid_when: z.union([z.string().min(1), z.array(z.string().min(1))]).optional(),
+  signals: z.array(z.string().min(1)).optional(),
+  capabilities: z.array(z.string().min(1)).optional(),
+  activation: z.string().min(1).optional(),
+  check_policy: z.enum(["none", "requires-only", "mcp-only", "manual"]).optional(),
   requires: z
     .object({
       commands: z.array(z.string().min(1)).optional(),

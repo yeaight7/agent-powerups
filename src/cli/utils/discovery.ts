@@ -1,0 +1,606 @@
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+
+import type { CatalogEntry, CatalogService } from "./catalog.js";
+import { extractMarkdownSection, fieldAsArray, fieldAsString, parseFrontmatter } from "./frontmatter.js";
+import { getPluginBundles } from "./plugins.js";
+
+export type DiscoveryTarget = "codex" | "claude-code" | "gemini" | "generic";
+export type PowerupSource = "catalog" | "plugin" | "installed" | "staged";
+
+export interface PowerupAsset {
+  name: string;
+  type: string;
+  summary: string;
+  path: string;
+  sourcePath: string;
+  entrypoint?: string;
+  source: PowerupSource;
+  sources: PowerupSource[];
+  compatible_with: string[];
+  tags: string[];
+  maturity?: string;
+  requires?: CatalogEntry["requires"];
+  plugin?: string;
+  plugins: string[];
+  origin?: string;
+  installed: boolean;
+  installedOnly: boolean;
+  installedPaths: string[];
+  stagedPaths: string[];
+  use_when: string[];
+  avoid_when: string[];
+  signals: string[];
+  capabilities: string[];
+  activation?: string;
+  check_policy?: string;
+}
+
+export interface InventoryData {
+  target: DiscoveryTarget;
+  repoRoot: string;
+  agentRoot?: string;
+  assets: PowerupAsset[];
+  counts: Record<string, number>;
+}
+
+export interface DiscoveryCandidate {
+  asset: PowerupAsset;
+  score: number;
+  rationale: string[];
+  next_action: string;
+}
+
+export interface DiscoverData {
+  target: DiscoveryTarget;
+  task: string;
+  primary: DiscoveryCandidate[];
+  supporting: DiscoveryCandidate[];
+  approval_required: DiscoveryCandidate[];
+  no_match: boolean;
+}
+
+interface BuildOptions {
+  target: DiscoveryTarget;
+  agentRoot?: string;
+  includeInstalled?: boolean;
+}
+
+const TARGET_COMPAT: Record<DiscoveryTarget, string> = {
+  codex: "codex",
+  "claude-code": "claude-code",
+  gemini: "gemini-cli",
+  generic: "generic",
+};
+
+const TARGET_ROOTS: Record<Exclude<DiscoveryTarget, "generic">, { env: string[]; dir: string }> = {
+  codex: { env: ["CODEX_HOME"], dir: path.join(os.homedir(), ".codex") },
+  "claude-code": { env: ["CLAUDE_CONFIG_DIR", "CLAUDE_HOME"], dir: path.join(os.homedir(), ".claude") },
+  gemini: { env: ["GEMINI_HOME"], dir: path.join(os.homedir(), ".gemini") },
+};
+
+function uniq<T>(items: T[]): T[] {
+  return [...new Set(items.filter((item) => item !== undefined && item !== null))];
+}
+
+async function pathExists(filePath: string): Promise<boolean> {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function listDirectories(root: string): Promise<string[]> {
+  if (!(await pathExists(root))) {
+    return [];
+  }
+  const entries = await fs.readdir(root, { withFileTypes: true });
+  return entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort();
+}
+
+function targetDefaultRoot(target: DiscoveryTarget): string | undefined {
+  if (target === "generic") {
+    return undefined;
+  }
+  const config = TARGET_ROOTS[target];
+  for (const envName of config.env) {
+    const value = process.env[envName];
+    if (value) {
+      return path.resolve(value);
+    }
+  }
+  return config.dir;
+}
+
+function isCompatible(entry: CatalogEntry, target: DiscoveryTarget): boolean {
+  if (target === "generic") {
+    return true;
+  }
+  const targetCompat = TARGET_COMPAT[target];
+  return entry.compatible_with.includes(targetCompat as any) || entry.compatible_with.includes("generic");
+}
+
+function arrayFromUnknown(value: unknown): string[] {
+  if (!value) {
+    return [];
+  }
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === "string" && item.length > 0);
+  }
+  if (typeof value === "string") {
+    return value
+      .split(/[,;]/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
+function catalogAsset(entry: CatalogEntry, service: CatalogService): PowerupAsset {
+  const metadata = entry as CatalogEntry & {
+    use_when?: string[] | string;
+    avoid_when?: string[] | string;
+    signals?: string[] | string;
+    capabilities?: string[] | string;
+    activation?: string;
+    check_policy?: string;
+  };
+  const fullPath = path.resolve(service.repoRoot, entry.path);
+  return {
+    name: entry.name,
+    type: entry.type,
+    summary: entry.summary,
+    path: entry.path,
+    sourcePath: fullPath,
+    entrypoint: entry.type === "skill" ? path.join(fullPath, "SKILL.md") : fullPath,
+    source: "catalog",
+    sources: ["catalog"],
+    compatible_with: entry.compatible_with,
+    tags: entry.tags,
+    maturity: entry.maturity,
+    requires: entry.requires,
+    plugins: [],
+    installed: false,
+    installedOnly: false,
+    installedPaths: [],
+    stagedPaths: [],
+    use_when: arrayFromUnknown(metadata.use_when),
+    avoid_when: arrayFromUnknown(metadata.avoid_when),
+    signals: arrayFromUnknown(metadata.signals),
+    capabilities: arrayFromUnknown(metadata.capabilities),
+    activation: metadata.activation,
+    check_policy: metadata.check_policy,
+  };
+}
+
+function frontmatterAsset(options: {
+  name: string;
+  type: string;
+  source: PowerupSource;
+  sourcePath: string;
+  entrypoint: string;
+  target: DiscoveryTarget;
+  plugin?: string;
+  origin?: string;
+  fallbackSummary: string;
+  content: string;
+}): PowerupAsset {
+  const parsed = parseFrontmatter(options.content);
+  const name = fieldAsString(parsed.fields, "name") ?? options.name;
+  const description = fieldAsString(parsed.fields, "description") ?? options.fallbackSummary;
+  const whenToUse = extractMarkdownSection(parsed.body, "When to Use");
+  return {
+    name,
+    type: options.type,
+    summary: description,
+    path: options.sourcePath,
+    sourcePath: options.sourcePath,
+    entrypoint: options.entrypoint,
+    source: options.source,
+    sources: [options.source],
+    compatible_with: [TARGET_COMPAT[options.target] ?? "generic", "generic"],
+    tags: fieldAsArray(parsed.fields, "tags"),
+    plugin: options.plugin,
+    plugins: options.plugin ? [options.plugin] : [],
+    origin: options.origin,
+    installed: options.source === "installed",
+    installedOnly: options.source === "installed",
+    installedPaths: options.source === "installed" ? [options.sourcePath] : [],
+    stagedPaths: options.source === "staged" ? [options.sourcePath] : [],
+    use_when: fieldAsArray(parsed.fields, "use_when").concat(whenToUse ? [whenToUse] : []),
+    avoid_when: fieldAsArray(parsed.fields, "avoid_when"),
+    signals: fieldAsArray(parsed.fields, "signals"),
+    capabilities: fieldAsArray(parsed.fields, "capabilities"),
+    activation: fieldAsString(parsed.fields, "activation"),
+    check_policy: fieldAsString(parsed.fields, "check_policy"),
+  };
+}
+
+function mergeAssets(existing: PowerupAsset, incoming: PowerupAsset): PowerupAsset {
+  const installedPaths = uniq(existing.installedPaths.concat(incoming.installedPaths));
+  const stagedPaths = uniq(existing.stagedPaths.concat(incoming.stagedPaths));
+  const sources = uniq(existing.sources.concat(incoming.sources));
+  const plugins = uniq(existing.plugins.concat(incoming.plugins));
+  const preferIncomingEntrypoint = incoming.source === "installed" || (incoming.source === "staged" && !existing.installed);
+
+  return {
+    ...existing,
+    summary: existing.summary || incoming.summary,
+    sourcePath: preferIncomingEntrypoint ? incoming.sourcePath : existing.sourcePath,
+    entrypoint: preferIncomingEntrypoint ? incoming.entrypoint : existing.entrypoint,
+    source: sources[0],
+    sources,
+    compatible_with: uniq(existing.compatible_with.concat(incoming.compatible_with)),
+    tags: uniq(existing.tags.concat(incoming.tags)),
+    requires: existing.requires ?? incoming.requires,
+    plugin: existing.plugin ?? incoming.plugin,
+    plugins,
+    installed: existing.installed || incoming.installed,
+    installedOnly: !sources.includes("catalog") && !sources.includes("plugin") && (existing.installedOnly || incoming.installedOnly),
+    installedPaths,
+    stagedPaths,
+    use_when: uniq(existing.use_when.concat(incoming.use_when)),
+    avoid_when: uniq(existing.avoid_when.concat(incoming.avoid_when)),
+    signals: uniq(existing.signals.concat(incoming.signals)),
+    capabilities: uniq(existing.capabilities.concat(incoming.capabilities)),
+    activation: existing.activation ?? incoming.activation,
+    check_policy: existing.check_policy ?? incoming.check_policy,
+  };
+}
+
+function upsertAsset(assets: Map<string, PowerupAsset>, asset: PowerupAsset): void {
+  const key = `${asset.type}:${asset.name}`;
+  const existing = assets.get(key);
+  assets.set(key, existing ? mergeAssets(existing, asset) : asset);
+}
+
+async function scanSkillDirectory(root: string, source: PowerupSource, target: DiscoveryTarget): Promise<PowerupAsset[]> {
+  const assets: PowerupAsset[] = [];
+  for (const name of await listDirectories(root)) {
+    const entrypoint = path.join(root, name, "SKILL.md");
+    if (!(await pathExists(entrypoint))) {
+      continue;
+    }
+    const content = await fs.readFile(entrypoint, "utf8");
+    assets.push(
+      frontmatterAsset({
+        name,
+        type: "skill",
+        source,
+        sourcePath: path.join(root, name),
+        entrypoint,
+        target,
+        fallbackSummary: `Installed skill: ${name}`,
+        content,
+      }),
+    );
+  }
+  return assets;
+}
+
+async function readPluginContent(pluginPath: string, type: string, name: string): Promise<{ entrypoint: string; content: string } | null> {
+  const candidates =
+    type === "skill"
+      ? [path.join(pluginPath, "skills", name, "SKILL.md")]
+      : type === "agent"
+        ? [path.join(pluginPath, "agents", `${name}.md`)]
+        : [path.join(pluginPath, "commands", `${name}.md`)];
+
+  for (const candidate of candidates) {
+    if (await pathExists(candidate)) {
+      return { entrypoint: candidate, content: await fs.readFile(candidate, "utf8") };
+    }
+  }
+  return null;
+}
+
+async function pluginAssets(service: CatalogService, target: DiscoveryTarget): Promise<PowerupAsset[]> {
+  const assets: PowerupAsset[] = [];
+  const bundles = await getPluginBundles(service.repoRoot);
+  for (const bundle of bundles) {
+    if (!bundle.name) {
+      continue;
+    }
+    const pluginPath = path.join(service.repoRoot, "plugins", bundle.name);
+    for (const [type, refs] of [
+      ["skill", bundle.skills ?? []],
+      ["agent", bundle.agents ?? []],
+      ["command", bundle.commands ?? []],
+    ] as const) {
+      for (const ref of refs as Array<{ name?: string; origin?: string }>) {
+        if (!ref.name) {
+          continue;
+        }
+        const loaded = await readPluginContent(pluginPath, type, ref.name);
+        if (!loaded) {
+          continue;
+        }
+        const sourcePath = type === "skill" ? path.dirname(loaded.entrypoint) : loaded.entrypoint;
+        assets.push(
+          frontmatterAsset({
+            name: ref.name,
+            type,
+            source: "plugin",
+            sourcePath,
+            entrypoint: loaded.entrypoint,
+            target,
+            plugin: bundle.name,
+            origin: ref.origin,
+            fallbackSummary: `${bundle.name} ${type}: ${ref.name}`,
+            content: loaded.content,
+          }),
+        );
+      }
+    }
+  }
+  return assets;
+}
+
+function installedRoots(cwd: string, options: BuildOptions): string[] {
+  const roots: string[] = [];
+  const agentRoot = options.agentRoot ? path.resolve(options.agentRoot) : targetDefaultRoot(options.target);
+  if (agentRoot) {
+    roots.push(path.join(agentRoot, "skills"));
+    roots.push(path.join(agentRoot, "agent-powerups", "skills"));
+  }
+  roots.push(path.join(cwd, "agent-powerups", "skills"));
+  roots.push(path.join(cwd, ".agent-powerups", "skills"));
+  return uniq(roots);
+}
+
+export async function buildInventory(
+  service: CatalogService,
+  options: BuildOptions,
+  cwd = service.repoRoot,
+): Promise<InventoryData> {
+  const assets = new Map<string, PowerupAsset>();
+
+  for (const entry of service.listAssets()) {
+    if (isCompatible(entry, options.target)) {
+      upsertAsset(assets, catalogAsset(entry, service));
+    }
+  }
+
+  for (const asset of await pluginAssets(service, options.target)) {
+    upsertAsset(assets, asset);
+  }
+
+  if (options.includeInstalled !== false) {
+    for (const root of installedRoots(cwd, options)) {
+      const source: PowerupSource = root.includes(`agent-powerups${path.sep}skills`) ? "staged" : "installed";
+      for (const asset of await scanSkillDirectory(root, source, options.target)) {
+        upsertAsset(assets, asset);
+      }
+    }
+  }
+
+  const sortedAssets = [...assets.values()]
+    .map((asset) => ({
+      ...asset,
+      installedOnly: !asset.sources.includes("catalog") && !asset.sources.includes("plugin") && asset.installed,
+    }))
+    .sort((left, right) => left.type.localeCompare(right.type) || left.name.localeCompare(right.name));
+  const counts: Record<string, number> = {};
+  for (const asset of sortedAssets) {
+    counts[asset.type] = (counts[asset.type] ?? 0) + 1;
+  }
+
+  return {
+    target: options.target,
+    repoRoot: service.repoRoot,
+    agentRoot: options.agentRoot ? path.resolve(options.agentRoot) : targetDefaultRoot(options.target),
+    assets: sortedAssets,
+    counts,
+  };
+}
+
+function textForAsset(asset: PowerupAsset): string {
+  return [
+    asset.name,
+    asset.type,
+    asset.summary,
+    asset.tags.join(" "),
+    asset.use_when.join(" "),
+    asset.signals.join(" "),
+    asset.capabilities.join(" "),
+    asset.plugins.join(" "),
+  ]
+    .join(" ")
+    .toLowerCase();
+}
+
+function hasRequires(asset: PowerupAsset): boolean {
+  const req = asset.requires;
+  return Boolean((req?.commands?.length ?? 0) + (req?.python_packages?.length ?? 0) + (req?.npm_packages?.length ?? 0));
+}
+
+function needsApproval(asset: PowerupAsset): boolean {
+  return asset.type === "mcp-config" || asset.type === "hook" || hasRequires(asset) || asset.activation === "approval-required";
+}
+
+function addNameBoost(asset: PowerupAsset, names: string[], value: number, reason: string, score: { value: number; rationale: string[] }): void {
+  if (names.includes(asset.name)) {
+    score.value += value;
+    score.rationale.push(reason);
+  }
+}
+
+function scoreAsset(asset: PowerupAsset, task: string): { value: number; rationale: string[] } {
+  const lower = task.toLowerCase();
+  const haystack = textForAsset(asset);
+  const score = { value: 0, rationale: [] as string[] };
+  const taskTokens = uniq(lower.split(/[^a-z0-9]+/).filter((token) => token.length > 2));
+
+  for (const token of taskTokens) {
+    if (haystack.includes(token)) {
+      score.value += 1;
+    }
+  }
+  if (score.value > 0) {
+    score.rationale.push("metadata overlaps with task terms");
+  }
+
+  if (/bug|failing|failure|error|regression|unexpected|broken|flaky|crash|stack trace/.test(lower)) {
+    addNameBoost(asset, ["systematic-debugging"], 24, "task is a bug/failure signal", score);
+    addNameBoost(asset, ["bug-hunt"], 20, "task needs reproduce-isolate-fix workflow", score);
+    addNameBoost(asset, ["minimal-reproduction", "failure-triage", "log-driven-diagnosis", "flaky-test-investigation"], 12, "debugging diagnostic support", score);
+    if (asset.type === "agent" && /debug|diagnos|repro|flaky|failure/.test(asset.name)) {
+      score.value += 10;
+      score.rationale.push("debugging agent matches failure task");
+    }
+  }
+
+  if (/tdd|test first|test-first|red.?green|failing test first|write.*test/.test(lower)) {
+    addNameBoost(asset, ["test-driven-development"], 26, "task requests test-first workflow", score);
+    addNameBoost(asset, ["ai-regression-testing", "verification-before-completion"], 10, "testing/verification support", score);
+    if (asset.type === "agent" && /test/.test(asset.name)) {
+      score.value += 12;
+      score.rationale.push("test agent matches task");
+    }
+  }
+
+  if (/implement|build|feature|careful|multi-step|plan|architecture|design/.test(lower)) {
+    addNameBoost(asset, ["writing-plans"], 16, "task benefits from implementation planning", score);
+    addNameBoost(asset, ["search-before-building", "repo-map", "verification-before-completion"], 9, "implementation support workflow", score);
+    addNameBoost(asset, ["test-driven-development"], 8, "implementation may need test coverage", score);
+  }
+
+  if (/review|pull request|pr|diff|code review|quality|merge/.test(lower)) {
+    addNameBoost(asset, ["risk-based-review", "requesting-code-review", "receiving-code-review", "change-impact-check"], 18, "task is review-oriented", score);
+    if (asset.type === "agent" && /review|quality|gate|critic/.test(asset.name)) {
+      score.value += 14;
+      score.rationale.push("review agent matches task");
+    }
+    if (asset.type === "command" && /review|quality/.test(asset.name)) {
+      score.value += 10;
+      score.rationale.push("review command matches task");
+    }
+  }
+
+  if (/file|document|docx|pdf|ppt|pptx|xlsx|csv|markdown|convert|intake|url|web page|webpage|html|extract/.test(lower)) {
+    addNameBoost(asset, ["markitdown-file-intake"], 22, "task involves external file/document intake", score);
+    addNameBoost(asset, ["defuddle"], 18, "task involves web content extraction", score);
+    addNameBoost(asset, ["graphify", "memory-build-workflow"], 8, "document context can feed memory/graph workflows", score);
+  }
+
+  if (/concise|brief|short|focused|no fluff|less tokens|compress/.test(lower)) {
+    addNameBoost(asset, ["no-fluff"], 24, "task asks for compressed communication", score);
+    addNameBoost(asset, ["context-minimization"], 10, "task may need context discipline", score);
+  }
+
+  if (/mcp|tool|server|filesystem|browser|playwright|github|postgres|vercel|supabase/.test(lower)) {
+    if (asset.type === "mcp-config") {
+      score.value += 14;
+      score.rationale.push("MCP config matches tool/server task");
+    }
+    addNameBoost(asset, ["mcp-risk-review", "filesystem-mcp-guardrails", "browser-automation-safety"], 12, "tool integration safety support", score);
+  }
+
+  if (/security|secret|vulnerab|owasp|credential|token|auth|permission/.test(lower)) {
+    addNameBoost(asset, ["secret-leak-preflight", "agent-config-security-audit", "mcp-risk-review", "risk-based-review"], 18, "task has security risk signal", score);
+    if (asset.type === "agent" && /security/.test(asset.name)) {
+      score.value += 14;
+      score.rationale.push("security agent matches task");
+    }
+  }
+
+  if (/dbt|sql|bigquery|warehouse|semantic|metric|analytics|data quality/.test(lower)) {
+    addNameBoost(asset, ["dbt-preflight", "dbt-strategy", "sql-business-logic-review", "semantic-layer-change-review", "metric-impact-analyzer", "data-quality"], 20, "task matches data engineering workflow", score);
+  }
+
+  if (/refactor|cleanup|dead code|dependency|rename|migration|simplify|legacy/.test(lower)) {
+    addNameBoost(asset, ["safe-refactor", "test-preserving-refactor", "dead-code-removal", "dependency-cleanup", "naming-and-structure-cleanup", "architecture-simplification"], 18, "task matches maintenance/refactor workflow", score);
+  }
+
+  if (/readme|docs|documentation|adr|api reference|handoff|changelog/.test(lower)) {
+    addNameBoost(asset, ["readme-hardening", "doc-consistency-check", "architecture-decision-records", "api-doc-review", "handoff-discipline", "changelog-generator"], 18, "task matches documentation workflow", score);
+  }
+
+  if (asset.type === "pack") {
+    score.value -= 4;
+  }
+  if (asset.type === "example" || asset.type === "script") {
+    score.value -= 3;
+  }
+
+  return {
+    value: Math.max(0, score.value),
+    rationale: uniq(score.rationale),
+  };
+}
+
+function nextAction(asset: PowerupAsset): string {
+  if (asset.type === "mcp-config") {
+    return `Run apx mcp check ${asset.name} --target <agent>, then smoke/install only with approval.`;
+  }
+  if (asset.type === "hook") {
+    return `Print/read hook ${asset.name}; treat it as review-before-use and do not enable automatically.`;
+  }
+  if (hasRequires(asset)) {
+    return `Read ${asset.entrypoint ?? asset.sourcePath}; run apx check ${asset.name} only if this workflow needs its external tool.`;
+  }
+  if (asset.type === "skill") {
+    return `Read ${asset.entrypoint ?? path.join(asset.sourcePath, "SKILL.md")} before applying it.`;
+  }
+  if (asset.type === "command") {
+    return `Print/read command ${asset.name} before invoking its workflow.`;
+  }
+  if (asset.type === "agent") {
+    return `Use agent prompt ${asset.name} only if delegation is available and useful.`;
+  }
+  return `Inspect ${asset.entrypoint ?? asset.sourcePath} before use.`;
+}
+
+export async function discoverPowerups(
+  service: CatalogService,
+  options: BuildOptions & { task: string },
+  cwd = service.repoRoot,
+): Promise<DiscoverData> {
+  const inventory = await buildInventory(service, options, cwd);
+  const ranked = inventory.assets
+    .map((asset) => {
+      const scored = scoreAsset(asset, options.task);
+      return {
+        asset,
+        score: scored.value,
+        rationale: scored.rationale,
+        next_action: nextAction(asset),
+      };
+    })
+    .filter((candidate) => candidate.score >= 4)
+    .sort((left, right) => right.score - left.score || left.asset.type.localeCompare(right.asset.type) || left.asset.name.localeCompare(right.asset.name));
+
+  const approvalRequired = ranked.filter((candidate) => needsApproval(candidate.asset)).slice(0, 8);
+  const normal = ranked.filter((candidate) => !needsApproval(candidate.asset));
+  const primary = normal.slice(0, 5);
+  const supporting = normal.slice(5, 13);
+
+  return {
+    target: options.target,
+    task: options.task,
+    primary,
+    supporting,
+    approval_required: approvalRequired,
+    no_match: primary.length === 0 && supporting.length === 0 && approvalRequired.length === 0,
+  };
+}
+
+export async function buildDiscoveryIndexJson(
+  service: CatalogService,
+  target: DiscoveryTarget,
+): Promise<string> {
+  const inventory = await buildInventory(service, { target, includeInstalled: false });
+  return `${JSON.stringify(
+    {
+      generated_by: "agent-powerups",
+      target,
+      assets: inventory.assets,
+      counts: inventory.counts,
+    },
+    null,
+    2,
+  )}\n`;
+}

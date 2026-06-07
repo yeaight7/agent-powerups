@@ -14,7 +14,23 @@
       "root-cause",
       "testing"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "use_when": [
+      "A bug, failing test, regression, or unexpected behavior needs root-cause diagnosis before a fix."
+    ],
+    "signals": [
+      "bug",
+      "failing test",
+      "regression",
+      "unexpected behavior",
+      "root cause"
+    ],
+    "capabilities": [
+      "reproduce failure",
+      "isolate cause",
+      "verify hypothesis"
+    ],
+    "check_policy": "none"
   },
   {
     "name": "no-fluff",
@@ -31,7 +47,21 @@
       "brevity",
       "tokens"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "use_when": [
+      "The user asks for concise, compressed, focused, or no-fluff communication."
+    ],
+    "signals": [
+      "no fluff",
+      "concise",
+      "brief",
+      "less tokens",
+      "compress"
+    ],
+    "capabilities": [
+      "compressed communication"
+    ],
+    "check_policy": "none"
   },
   {
     "name": "writing-plans",
@@ -48,7 +78,23 @@
       "implementation",
       "spec"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "use_when": [
+      "A multi-step implementation needs an executable plan before code changes."
+    ],
+    "signals": [
+      "plan",
+      "implementation plan",
+      "multi-step",
+      "spec",
+      "requirements"
+    ],
+    "capabilities": [
+      "implementation planning",
+      "test plan",
+      "acceptance criteria"
+    ],
+    "check_policy": "none"
   },
   {
     "name": "ai-slop-cleaner",
@@ -150,7 +196,23 @@
       "testing",
       "bug-fix"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "use_when": [
+      "A specific bug needs a minimal reproduce-isolate-fix loop."
+    ],
+    "signals": [
+      "bug",
+      "fix",
+      "reproduce",
+      "failing test",
+      "broken behavior"
+    ],
+    "capabilities": [
+      "minimal fix",
+      "reproduction",
+      "targeted validation"
+    ],
+    "check_policy": "none"
   },
   {
     "name": "safe-refactor",
@@ -183,6 +245,21 @@
       "content-extraction"
     ],
     "maturity": "beta",
+    "use_when": [
+      "A web page or HTML source should be extracted into clean Markdown context."
+    ],
+    "signals": [
+      "web page",
+      "html",
+      "url",
+      "extract markdown",
+      "defuddle"
+    ],
+    "capabilities": [
+      "web to markdown",
+      "content extraction"
+    ],
+    "check_policy": "requires-only",
     "requires": {
       "commands": [
         "defuddle"
@@ -206,6 +283,23 @@
       "documents"
     ],
     "maturity": "stable",
+    "use_when": [
+      "A document file should be converted into Markdown for agent-readable context."
+    ],
+    "signals": [
+      "file intake",
+      "document",
+      "pdf",
+      "docx",
+      "pptx",
+      "xlsx",
+      "convert to markdown"
+    ],
+    "capabilities": [
+      "document conversion",
+      "markdown extraction"
+    ],
+    "check_policy": "requires-only",
     "requires": {
       "commands": [
         "markitdown"
@@ -299,7 +393,23 @@
       "mcp",
       "setup"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "use_when": [
+      "A task may benefit from installed Agent Powerups and needs task-based discovery before choosing a workflow."
+    ],
+    "signals": [
+      "powerups",
+      "discover",
+      "which skill",
+      "workflow",
+      "plugin"
+    ],
+    "capabilities": [
+      "powerup discovery",
+      "task routing",
+      "safe activation"
+    ],
+    "check_policy": "none"
   },
   {
     "name": "bigquery-cost-audit",
@@ -904,7 +1014,24 @@
       "quality",
       "process"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "use_when": [
+      "New behavior or risky logic should be implemented test-first with RED/GREEN/REFACTOR discipline."
+    ],
+    "signals": [
+      "tdd",
+      "test first",
+      "test-first",
+      "red green refactor",
+      "new behavior",
+      "failing test first"
+    ],
+    "capabilities": [
+      "test-first implementation",
+      "regression coverage",
+      "red green refactor"
+    ],
+    "check_policy": "none"
   },
   {
     "name": "verification-before-completion",
@@ -922,7 +1049,23 @@
       "completion",
       "process"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "use_when": [
+      "Before claiming work is complete, requirements and validation evidence must be checked explicitly."
+    ],
+    "signals": [
+      "verify",
+      "complete",
+      "done",
+      "handoff",
+      "validation"
+    ],
+    "capabilities": [
+      "completion gate",
+      "validation evidence",
+      "handoff safety"
+    ],
+    "check_policy": "none"
   },
   {
     "name": "writing-skills",
@@ -2612,7 +2755,24 @@
       "ci",
       "review"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "use_when": [
+      "A code review, plan review, or self-review needs attention allocated by risk and blast radius."
+    ],
+    "signals": [
+      "review",
+      "code review",
+      "plan review",
+      "risk",
+      "blast radius",
+      "pr"
+    ],
+    "capabilities": [
+      "risk-based review",
+      "severity triage",
+      "test gap analysis"
+    ],
+    "check_policy": "none"
   },
   {
     "name": "api-doc-review",

@@ -40,6 +40,7 @@ ALLOWED_REQUIRE_KEYS = {"commands", "python_packages", "npm_packages"}
 ALLOWED_TARGET_KEYS = {"codex", "claude-code", "generic"}
 ALLOWED_RUN_KINDS = {"ship-check"}
 ALLOWED_MCP_KEYS = {"required_env", "server_package", "warning", "output_hints"}
+ALLOWED_CHECK_POLICY = {"none", "requires-only", "mcp-only", "manual"}
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -158,6 +159,41 @@ def validate_mcp(label: str, mcp: object) -> None:
                     errors.append(f"[{label}] mcp.output_hints.{target} must be a non-empty string")
 
 
+def validate_discovery_metadata(label: str, entry: dict) -> None:
+    for key in ("use_when", "avoid_when"):
+        if key not in entry:
+            continue
+        value = entry[key]
+        if isinstance(value, str):
+            if not value.strip():
+                errors.append(f"[{label}] {key} must not be empty")
+        elif isinstance(value, list):
+            for item in value:
+                if not isinstance(item, str) or not item.strip():
+                    errors.append(f"[{label}] {key} contains non-string or empty value")
+        else:
+            errors.append(f"[{label}] {key} must be a string or string array")
+
+    for key in ("signals", "capabilities"):
+        if key not in entry:
+            continue
+        value = entry[key]
+        if not isinstance(value, list):
+            errors.append(f"[{label}] {key} must be an array")
+            continue
+        for item in value:
+            if not isinstance(item, str) or not item.strip():
+                errors.append(f"[{label}] {key} contains non-string or empty value")
+
+    activation = entry.get("activation")
+    if activation is not None and (not isinstance(activation, str) or not activation.strip()):
+        errors.append(f"[{label}] activation must be a non-empty string")
+
+    check_policy = entry.get("check_policy")
+    if check_policy is not None and check_policy not in ALLOWED_CHECK_POLICY:
+        errors.append(f"[{label}] invalid check_policy '{check_policy}'")
+
+
 def validate_entry(index: int, entry: dict, seen_names: dict[str, int]) -> None:
     label = entry.get("name", f"entry[{index}]")
 
@@ -218,6 +254,7 @@ def validate_entry(index: int, entry: dict, seen_names: dict[str, int]) -> None:
         validate_run(label, entry["run"])
     if "mcp" in entry:
         validate_mcp(label, entry["mcp"])
+    validate_discovery_metadata(label, entry)
 
 
 def validate_asset_coverage(catalog: list[dict]) -> None:

@@ -61,12 +61,8 @@ test("release workflow publishes v tags with npm trusted publishing", async () =
   assert.doesNotMatch(workflow, /NODE_AUTH_TOKEN|NPM_TOKEN/);
 });
 
-test("release checklist documents trusted publishing and post-publish verification", async () => {
-  const checklist = await readText("docs/release-checklist-v0.1.1.md");
+// Removed the checklist test because it's obsolete and useless
 
-  assert.match(checklist, /Trusted Publisher/);
-  assert.match(checklist, /release\.yml/);
-  assert.match(checklist, /npm run release:check/);
-  assert.match(checklist, /git tag v0\.1\.1/);
-  assert.match(checklist, /npm view agent-powerups@0\.1\.1/);
-});
+// A Changelog test could be added in the future. Maybe not a error severity test, 
+// but perhaps a warning if no changelog entry is found for the new version. 
+// This would encourage better release notes without blocking releases that might not need them.

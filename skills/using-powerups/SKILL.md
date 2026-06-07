@@ -7,7 +7,7 @@ description: Use when starting work in a repository with Agent Powerups installe
 
 ## Purpose
 
-Find and apply installed Agent Powerups before improvising. A powerup is useful only after you inspect it, confirm requirements, and report how it shaped the work.
+Find and apply installed Agent Powerups before improvising. A powerup is useful only after you discover likely matches, inspect the actual asset, follow its instructions, and verify the user task with task-specific evidence.
 
 ## When to Use
 
@@ -22,26 +22,26 @@ Do not force a powerup when none fits. Say no matching powerup applies and proce
 - User task.
 - Current repo or agent root.
 - Installed `agent-powerups` location, usually `agent-powerups/` under the agent root or the package repo.
-- Optional CLI access to `apx`.
+- Optional CLI access to `apx` for discovery only.
 
 ## Workflow
 
 1. Discover available assets.
 
 ```sh
-apx list
+apx discover "<user task>" --target <codex|claude-code|gemini|generic>
+apx inventory --target <codex|claude-code|gemini|generic> --json
+apx list --json --verbose
 apx plugins list
-apx list --type skill
-apx list --type command
-apx list --type mcp-config
-apx using-powerups
 ```
 
 If `apx` is unavailable, inspect local folders: `skills/`, `commands/`, `mcp/`, `agents-md/`, `hooks/`, `workflows/`.
 
 2. Match the task to assets.
 
-Prefer the narrowest asset whose description matches the current task. Examples:
+Prefer the narrowest high-ranked asset whose description matches the current task. Treat `apx discover` output as a shortlist, not as proof that a powerup has been used.
+
+Examples:
 
 | Task signal | Asset type to inspect |
 | --- | --- |
@@ -62,7 +62,7 @@ apx info <name>
 
 Then read the asset file. Do not rely only on the catalog summary.
 
-Most powerups won't require steps 4 and 5. Only use `apx check` in cases where the asset instructions specify requirements or dependencies that may not be met in the current environment. Do not run `apx check` for every asset by default.
+Most powerups do not require step 4. Only use `apx check` when the asset declares external requirements or its own instructions say a dependency check is needed. Do not run `apx check` for every asset by default.
 
 4. Check requirements.
 
@@ -77,9 +77,9 @@ Follow the asset instructions. Keep scope local to the user task. For GitHub MCP
 Final response should name:
 
 - powerup used
-- requirement check result
+- requirement check result, or `not needed`
 - important fallback or skipped asset
-- validation performed
+- task-specific validation performed
 
 ## Output
 
@@ -90,6 +90,7 @@ Used: <asset-name>
 Why: <task signal>
 Requirements: <OK / missing / not needed>
 Result: <how it changed the work>
+Validation: <real task-specific checks, not apx check>
 ```
 
 When none applies:
@@ -103,8 +104,9 @@ No matching Agent Powerup found. Proceeded with normal repo inspection.
 Before claiming setup or use succeeded:
 
 - Asset was read, not guessed from name.
-- Requirements were checked.
+- Requirements were checked only when the selected asset declared external dependencies.
 - Missing tools were reported, not bypassed silently.
+- `apx check` output was not presented as proof that the skill was used or the task succeeded.
 - No secrets were written.
 - No global config, shell profile, hook, MCP server, or dependency install was changed without explicit user approval.
 
