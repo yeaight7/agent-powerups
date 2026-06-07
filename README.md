@@ -71,7 +71,7 @@ Native install is direct for humans. Safety boundaries stay around external tool
 |  `commands/`  | shipped | Review-first command prompts plus safe runnable checks |
 |  `hooks/`  | shipped | Review-before-use hook recipes plus safe runnable checks |
 |  `workflows/`  | shipped | Scenario guides |
-|  `plugins/`  | shipped | 17 plugin bundles (3 stable, 10 beta, 4 experimental) with local-first discovery, validation, native install, and marketplace metadata |
+|  `plugins/`  | shipped | 21 plugin bundles (3 stable, 13 beta, 5 experimental) with local-first discovery, validation, native install, and marketplace metadata |
 |  `scripts/`  | shipped | Validation and tool-check helpers for this repo |
 |  `examples/`  | shipped | Minimal safe setup examples |
 
@@ -110,10 +110,13 @@ apx doctor
 apx doctor --full
 ```
 
-4. Browse catalog:
+4. Discover relevant powerups and browse the catalog:
 
 ```sh
+apx discover "fix a failing test regression" --target codex
+apx inventory --target codex --json
 apx list
+apx list --json --verbose
 apx info markitdown-file-intake
 apx commands run ship-check
 apx hooks run no-secrets-preflight --all
@@ -133,7 +136,7 @@ apx install codex --full
 apx install codex --verbose
 ```
 
-Default native install copies all root skills and plugin bundles into the selected agent root. Human output shows counts by default; use `--verbose` for per-file paths. `--full` also stages support assets under `agent-powerups/` and updates existing global instructions with a backup.
+Default native install copies all root skills and plugin bundles into the selected agent root and writes a `discovery-index.json` beside them. Human output shows counts by default; use `--verbose` for per-file paths. `--full` also stages support assets and another discovery index under `agent-powerups/`, then updates existing global instructions with a backup.
 
 6. Work with plugin bundles:
 
@@ -170,15 +173,14 @@ apx profiles info safe-core
 apx profiles plan safe-core --target codex
 ```
 
-9. Check deps without installing:
+9. Check declared external deps without installing:
 
 ```sh
 apx check markitdown-file-intake
 apx check graphify
-apx check ask-codex
-apx check ask-claude
-apx check ask-gemini
 ```
+
+Use `apx check` only for assets that declare external requirements. A successful dependency check does not mean the skill or workflow was used correctly.
 
 Preview supported dependency installers before asking for approval:
 
@@ -548,6 +550,9 @@ npm link
 apx doctor
 apx doctor --full --json
 apx list
+apx list --json --verbose
+apx inventory --target codex --json
+apx discover "fix a failing test" --target codex --json
 apx info markitdown-file-intake
 apx check markitdown-file-intake
 apx check graphify
@@ -624,8 +629,10 @@ Plugin bundles ship under [`plugins/`](./plugins/). They are registered in both 
 
 - use `apx plugins list` to discover bundles
 - use `apx plugins info <name>` to inspect a single bundle
+- use `apx plugins info <name> --json` to inspect contained skill, command, agent, and template metadata
 - use `apx plugins validate --all` to verify bundle structure
 - use `apx plugins install <name> --target <codex|claude-code|generic> --dry-run` before any write
+- installed plugin bundles include `discovery-index.json` so contained assets are queryable directly
 - use `apx install <codex|claude|gemini>` for full manual native install
 
 ## Safety Warning
