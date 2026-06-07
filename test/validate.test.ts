@@ -10,6 +10,7 @@ import {
   runValidateCatalogCommand,
   runValidateDriftCommand,
   runValidateMetadataCommand,
+  runValidatePluginsCommand,
   runValidateSkillsCommand,
 } from "../src/cli/commands/validate.js";
 
@@ -311,4 +312,83 @@ test("validate metadata: skips non-routable types (hook, mcp-config, pack)", asy
   const result = await runValidateMetadataCommand(await createCatalogService(root));
   assert.equal(result.exitCode, 0);
   assert.match(result.stdout, /Checked 0 routable asset\(s\)\. 0 warning/i);
+});
+
+async function writeJson(root: string, relPath: string, value: unknown): Promise<void> {
+  const fullPath = path.join(root, relPath);
+  await fs.mkdir(path.dirname(fullPath), { recursive: true });
+  await fs.writeFile(fullPath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+async function makePluginMetadataRepo(options: { packageVersion: string; emittedVersion?: string }): Promise<string> {
+  const root = await makeTempRepo();
+  const emittedVersion = options.emittedVersion ?? options.packageVersion;
+  const bundle = {
+    name: "demo-plugin",
+    description: "Demo plugin.",
+    maturity: "beta",
+  };
+
+  await writeJson(root, "package.json", { version: options.packageVersion });
+  await writeJson(root, "plugin-bundles.json", { version: "0.1.0", plugins: [bundle] });
+  await writeJson(root, "plugins/demo-plugin/.codex-plugin/plugin.json", {
+    name: bundle.name,
+    version: emittedVersion,
+    description: bundle.description,
+    maturity: bundle.maturity,
+  });
+  await writeJson(root, "plugins/demo-plugin/.claude-plugin/plugin.json", {
+    name: bundle.name,
+    version: emittedVersion,
+    description: bundle.description,
+    maturity: bundle.maturity,
+  });
+  await writeJson(root, "plugins/demo-plugin/gemini-extension.json", {
+    name: bundle.name,
+    version: emittedVersion,
+    description: bundle.description,
+    maturity: bundle.maturity,
+    contextFileName: "GEMINI.md",
+  });
+  await fs.writeFile(path.join(root, "plugins", "demo-plugin", "GEMINI.md"), "# Demo\n", "utf8");
+  await writeJson(root, ".claude-plugin/marketplace.json", {
+    plugins: [
+      {
+        name: bundle.name,
+        source: "./plugins/demo-plugin",
+        version: emittedVersion,
+        description: bundle.description,
+        maturity: bundle.maturity,
+      },
+    ],
+  });
+  await writeJson(root, ".codex-plugin/marketplace.json", {
+    plugins: [
+      {
+        name: bundle.name,
+        source: { source: "local", path: "./plugins/demo-plugin" },
+        version: emittedVersion,
+        description: bundle.description,
+        maturity: bundle.maturity,
+      },
+    ],
+  });
+
+  return root;
+}
+
+test("validate plugins: passes when manifests and marketplaces match bundle metadata", async () => {
+  const root = await makePluginMetadataRepo({ packageVersion: "1.2.3" });
+  const result = await runValidatePluginsCommand(await createCatalogService(root));
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /Checked 1 plugin\(s\)\. 0 error\(s\).*OK/i);
+});
+
+test("validate plugins: fails when emitted plugin version drifts from package.json", async () => {
+  const root = await makePluginMetadataRepo({ packageVersion: "1.2.3", emittedVersion: "0.1.0" });
+  const result = await runValidatePluginsCommand(await createCatalogService(root));
+
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stdout, /version "0\.1\.0" != "1\.2\.3"/i);
 });

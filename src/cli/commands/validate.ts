@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import type { CatalogService } from "../utils/catalog.js";
 import { fieldAsString, parseFrontmatter as parseSharedFrontmatter } from "../utils/frontmatter.js";
+import { getPluginBundles, validatePlugin } from "../utils/plugins.js";
 import { createResult, type ExecutionResult } from "../utils/result.js";
 
 const disallowedTopLevelSectionTags = [
@@ -328,4 +329,35 @@ export async function runValidateMetadataCommand(
   );
 
   return createResult({ exitCode: 0, stdout: lines.join("\n") });
+}
+
+// D-13 plugin metadata validator: plugin-bundles.json owns per-plugin metadata
+// and package.json owns the plugin version. Manifest and marketplace copies must
+// match those sources exactly.
+export async function runValidatePluginsCommand(
+  service: CatalogService,
+): Promise<ExecutionResult> {
+  const errors: string[] = [];
+  let checkedCount = 0;
+
+  for (const bundle of await getPluginBundles(service.repoRoot)) {
+    if (!bundle.name) continue;
+    checkedCount++;
+    const result = await validatePlugin(service.repoRoot, bundle.name);
+    for (const error of result.errors) {
+      errors.push(`[${bundle.name}] ${error}`);
+    }
+  }
+
+  const lines: string[] = [];
+  if (errors.length) {
+    lines.push(`Errors (${errors.length}):`);
+    for (const e of errors) lines.push(`  ERROR ${e}`);
+  }
+  const ok = errors.length === 0;
+  lines.push(
+    `Checked ${checkedCount} plugin(s). ${errors.length} error(s). ${ok ? "OK." : "FAILED."}`,
+  );
+
+  return createResult({ exitCode: ok ? 0 : 1, stdout: lines.join("\n") });
 }

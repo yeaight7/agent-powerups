@@ -1,6 +1,6 @@
 {
   "name": "context-efficiency",
-  "version": "0.1.0",
+  "version": "0.6.1",
   "description": "Context-efficient routing: dispatch tables for workflow, review, and codebase-intelligence commands.",
   "maturity": "beta"
 }

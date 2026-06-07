@@ -1,6 +1,6 @@
 {
   "name": "skill-authoring",
-  "version": "0.1.0",
+  "version": "0.6.1",
   "description": "Skill creation and extraction workflows for reusable agent guidance.",
   "maturity": "beta",
   "contextFileName": "GEMINI.md"

@@ -1,6 +1,6 @@
 {
   "name": "security-guardrails",
-  "version": "0.1.0",
+  "version": "0.6.1",
   "description": "Security review guidance for agent configs, MCP and filesystem exposure, red-team scenarios, and audit prompts.",
   "maturity": "experimental"
 }

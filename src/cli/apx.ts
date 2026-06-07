@@ -41,7 +41,7 @@ import {
   runReviewRouteCommand,
   runContextRouteCommand,
 } from "./commands/phase-workflows.js";
-import { runValidateCatalogCommand, runValidateDriftCommand, runValidateMetadataCommand, runValidateSkillsCommand } from "./commands/validate.js";
+import { runValidateCatalogCommand, runValidateDriftCommand, runValidateMetadataCommand, runValidatePluginsCommand, runValidateSkillsCommand } from "./commands/validate.js";
 import { hasFlag, parseOption, parseOptions } from "./utils/args.js";
 import { ALLOWED_TYPES, CatalogError, createCatalogService } from "./utils/catalog.js";
 import { INSTALL_TARGETS, type InstallTarget } from "./utils/paths.js";
@@ -111,6 +111,7 @@ apx validate skills
 apx validate catalog
 apx validate drift
 apx validate metadata
+apx validate plugins
 apx relay init <session-name>
 apx relay start <session-name> [--provider <gemini|claude|codex>] [--model <model>] [--json]
 apx relay status <session-name> [--json]
@@ -565,8 +566,11 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
       if (subcommand === "metadata") {
         return writeExecutionResult(io, await runValidateMetadataCommand(service), json);
       }
+      if (subcommand === "plugins") {
+        return writeExecutionResult(io, await runValidatePluginsCommand(service), json);
+      }
       throw new Error(
-        "Unknown validate subcommand. Use: apx validate skills | apx validate catalog | apx validate drift | apx validate metadata",
+        "Unknown validate subcommand. Use: apx validate skills | apx validate catalog | apx validate drift | apx validate metadata | apx validate plugins",
       );
     }
 

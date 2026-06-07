@@ -1,6 +1,6 @@
 {
   "name": "documentation-systems",
-  "version": "0.1.0",
+  "version": "0.6.1",
   "description": "Documentation architecture, API reference authoring, ADR writing, readme hardening, and doc quality.",
   "author": {
     "name": "Javier Rivero Iglesias",
