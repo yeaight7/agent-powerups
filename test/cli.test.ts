@@ -379,7 +379,9 @@ test("install gemini writes root skills and Gemini extension plugin directories"
 
   const manifestPath = path.join(agentRoot, "extensions", "dev-vitals", "gemini-extension.json");
   const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
+  const packageJson = JSON.parse(await fs.readFile(path.join(repoRoot, "package.json"), "utf8"));
   assert.equal(manifest.name, "dev-vitals");
+  assert.equal(manifest.version, packageJson.version);
   assert.equal(manifest.contextFileName, "GEMINI.md");
 });
 
@@ -1099,6 +1101,9 @@ test("plugin build --write mirrors catalog-backed assets", async () => {
   const result = await execute(["plugin", "build", "--dest", dest, "--write", "--json"]);
 
   assert.equal(result.exitCode, 0);
+  const pluginJson = JSON.parse(await fs.readFile(path.join(dest, ".codex-plugin", "plugin.json"), "utf8"));
+  const packageJson = JSON.parse(await fs.readFile(path.join(repoRoot, "package.json"), "utf8"));
+  assert.equal(pluginJson.version, packageJson.version);
   await fs.access(path.join(dest, ".codex-plugin", "plugin.json"));
   await fs.access(path.join(dest, "skills", "systematic-debugging", "SKILL.md"));
   await fs.access(path.join(dest, "skills", "ask-claude", "SKILL.md"));
