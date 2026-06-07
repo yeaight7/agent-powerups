@@ -7,6 +7,7 @@ import { runAgentsMdListCommand, runAgentsMdPrintCommand } from "./commands/agen
 import { runAskCommand } from "./commands/ask.js";
 import { runTypedAssetListCommand, runTypedAssetPrintCommand } from "./commands/assets.js";
 import { runCheckCommand } from "./commands/check.js";
+import { runDiscoverCommand, runInventoryCommand } from "./commands/discovery.js";
 import { runDoctorCommand } from "./commands/doctor.js";
 import { runNoSecretsPreflightCommand } from "./commands/hooks.js";
 import { runInfoCommand } from "./commands/info.js";
@@ -55,8 +56,10 @@ export interface CliIO {
 const HELP_TEXT = `apx help
 apx version
 apx list
-apx list --type <${ALLOWED_TYPES.join("|")}>
+apx list --type <${ALLOWED_TYPES.join("|")}> [--json] [--verbose]
 apx info <asset-name>
+apx inventory --target <codex|claude-code|gemini|generic> [--agent-root <path>] [--json]
+apx discover "<task>" --target <codex|claude-code|gemini|generic> [--agent-root <path>] [--json]
 apx check [asset-name] [--install-missing] [--dry-run|--yes]
 apx doctor [--full] [--json]
 apx ask <claude|gemini|codex> <prompt> [--artifact-dir <path>] [--json]
@@ -190,6 +193,21 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
 
     if (command === "list") {
       const type = parseOption(argv, "--type");
+      if (json) {
+        const assets = service.listAssets(type);
+        io.stdout(
+          formatResult(
+            createResult({
+              stdout: "success",
+              data: hasFlag(argv, "--verbose")
+                ? assets
+                : assets.map((asset) => ({ name: asset.name, type: asset.type })),
+            }),
+            true,
+          ),
+        );
+        return 0;
+      }
       io.stdout(runListCommand(service, type));
       return 0;
     }
@@ -201,6 +219,14 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
       }
       io.stdout(await runInfoCommand(service, assetName));
       return 0;
+    }
+
+    if (command === "inventory") {
+      return await runInventoryCommand(argv, service, io);
+    }
+
+    if (command === "discover") {
+      return await runDiscoverCommand(argv, service, io);
     }
 
     if (command === "check") {
