@@ -27,7 +27,7 @@ export async function runCheckCommand(
   for (const asset of assets) {
     const statuses = checkRequirements(asset.requires);
     if (statuses.length === 0) {
-      blocks.push(`${asset.name}: OK\n  no external requirements declared`);
+      blocks.push(`${asset.name}: SKIP\n  no dependency check needed; this does not validate usage`);
       continue;
     }
 
