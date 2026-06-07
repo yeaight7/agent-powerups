@@ -1,7 +1,7 @@
 {
   "$schema": "./docs/plugin-bundles-schema.json",
   "_comment": "Active plugin bundle manifest for the shipped plugin packs under plugins/.",
-  "version": "0.3.0",
+  "version": "0.6.0",
   "plugins": [
     {
       "name": "dev-vitals",
