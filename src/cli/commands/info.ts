@@ -42,7 +42,8 @@ function nextActionHint(asset: CatalogEntry, entrypoint: string): string {
     return `Run apx mcp check ${asset.name} --target <agent>, then smoke/install only with approval.`;
   }
   if (asset.type === "hook") {
-    return `Print/read this hook; treat it as review-before-use and do not enable automatically.`;
+    // return `Print/read this hook; treat it as review-before-use and do not enable automatically.`;
+    return `Print/read hook ${asset.name}; treat it as review-before-use and do not enable automatically.`;
   }
   if (hasRequires) {
     return `Read ${entrypoint}; run apx check ${asset.name} only if this workflow needs its external tool.`;
@@ -52,6 +53,9 @@ function nextActionHint(asset: CatalogEntry, entrypoint: string): string {
   }
   if (asset.type === "command") {
     return `Print/read command ${asset.name} before invoking its workflow.`;
+  }
+  if (asset.type === "agents-md-template") {
+    return `Use agent prompt ${asset.name} only if delegation is available and useful.`;
   }
   return `Inspect ${entrypoint} before use.`;
 }
