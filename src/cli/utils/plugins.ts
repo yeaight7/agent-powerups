@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { InstallTarget } from "./paths.js";
+import { fieldAsString, parseFrontmatter } from "./frontmatter.js";
 
 export interface PluginInfo {
   name: string;
@@ -12,7 +13,24 @@ export interface PluginInfo {
   agents: string[];
   commands: string[];
   templates: string[];
+  assets: {
+    skills: PluginAssetInfo[];
+    agents: PluginAssetInfo[];
+    commands: PluginAssetInfo[];
+    templates: PluginAssetInfo[];
+  };
   path: string;
+}
+
+export interface PluginAssetInfo {
+  name: string;
+  type: "skill" | "agent" | "command" | "template";
+  summary?: string;
+  path?: string;
+  origin?: string;
+  use_when?: string[];
+  signals?: string[];
+  capabilities?: string[];
 }
 
 const PLUGINS_DIR = "plugins";
@@ -104,11 +122,105 @@ export async function listPlugins(cwd: string): Promise<PluginInfo[]> {
       agents: bundle.agents?.map((a: any) => a.name) || [],
       commands: bundle.commands?.map((c: any) => c.name) || [],
       templates: bundle.templates?.map((t: any) => t.name) || [],
+      assets: await pluginAssetInfo(pluginPath, bundle),
       path: pluginPath
     });
   }
 
   return result;
+}
+
+async function readOptional(filePath: string): Promise<string | null> {
+  try {
+    return await fs.readFile(filePath, "utf8");
+  } catch {
+    return null;
+  }
+}
+
+function firstHeadingOrLine(content: string): string | undefined {
+  const heading = /^#\s+(.+)$/m.exec(content)?.[1]?.trim();
+  if (heading) return heading;
+  return content.split(/\r?\n/).map((line) => line.trim()).find(Boolean);
+}
+
+function parseAssetMetadata(content: string | null): Pick<PluginAssetInfo, "summary" | "use_when" | "signals" | "capabilities"> {
+  if (!content) {
+    return {};
+  }
+  const parsed = parseFrontmatter(content);
+  return {
+    summary: fieldAsString(parsed.fields, "description") ?? firstHeadingOrLine(parsed.body),
+    use_when: asArray(parsed.fields["use_when"]),
+    signals: asArray(parsed.fields["signals"]),
+    capabilities: asArray(parsed.fields["capabilities"]),
+  };
+}
+
+function asArray(value: string | string[] | undefined): string[] | undefined {
+  if (!value) {
+    return undefined;
+  }
+  if (Array.isArray(value)) {
+    return value;
+  }
+  return value.split(/[,;]/).map((item) => item.trim()).filter(Boolean);
+}
+
+async function pluginAssetInfo(pluginPath: string, bundle: any): Promise<PluginInfo["assets"]> {
+  const skills: PluginAssetInfo[] = [];
+  const agents: PluginAssetInfo[] = [];
+  const commands: PluginAssetInfo[] = [];
+  const templates: PluginAssetInfo[] = [];
+
+  for (const ref of bundle.skills ?? []) {
+    const assetPath = path.join(pluginPath, "skills", ref.name, "SKILL.md");
+    const metadata = parseAssetMetadata(await readOptional(assetPath));
+    skills.push({
+      name: ref.name,
+      type: "skill",
+      origin: ref.origin,
+      path: path.relative(pluginPath, path.dirname(assetPath)).replaceAll("\\", "/"),
+      ...metadata,
+    });
+  }
+
+  for (const ref of bundle.agents ?? []) {
+    const assetPath = path.join(pluginPath, "agents", `${ref.name}.md`);
+    const metadata = parseAssetMetadata(await readOptional(assetPath));
+    agents.push({
+      name: ref.name,
+      type: "agent",
+      origin: ref.origin,
+      path: path.relative(pluginPath, assetPath).replaceAll("\\", "/"),
+      ...metadata,
+    });
+  }
+
+  for (const ref of bundle.commands ?? []) {
+    const assetPath = path.join(pluginPath, "commands", `${ref.name}.md`);
+    const metadata = parseAssetMetadata(await readOptional(assetPath));
+    commands.push({
+      name: ref.name,
+      type: "command",
+      origin: ref.origin,
+      path: path.relative(pluginPath, assetPath).replaceAll("\\", "/"),
+      ...metadata,
+    });
+  }
+
+  for (const ref of bundle.templates ?? []) {
+    const assetPath = path.join(pluginPath, "templates", `${ref.name}.md`);
+    const metadata = parseAssetMetadata(await readOptional(assetPath));
+    templates.push({
+      name: ref.name,
+      type: "template",
+      path: path.relative(pluginPath, assetPath).replaceAll("\\", "/"),
+      ...metadata,
+    });
+  }
+
+  return { skills, agents, commands, templates };
 }
 
 export async function getPluginInfo(cwd: string, name: string): Promise<PluginInfo | null> {
@@ -291,6 +403,23 @@ export async function installPlugin(
     if (!dryRun) {
       await fs.mkdir(destPath, { recursive: true });
       copiedFiles.push(...await copyRecursive(pluginInfo.path, destPath));
+      const indexPath = path.join(destPath, "discovery-index.json");
+      await fs.writeFile(
+        indexPath,
+        `${JSON.stringify(
+          {
+            generated_by: "agent-powerups",
+            plugin: pluginInfo.name,
+            description: pluginInfo.description,
+            maturity: pluginInfo.maturity,
+            assets: pluginInfo.assets,
+          },
+          null,
+          2,
+        )}\n`,
+        "utf8",
+      );
+      copiedFiles.push(indexPath);
     }
 
     return {
