@@ -37,7 +37,9 @@
 <p align="center">
   <a href="#quickstart">Quickstart</a>
   ·
-  <a href="#plugin-bundles">Plugin Bundles</a>
+  <a href="#agent-quickstart">Agent Quickstart</a>
+  ·
+  <a href="#plugins">Plugins</a>
   ·
   <a href="./docs/installation.md">Installation</a>
   ·
@@ -56,7 +58,7 @@ Today, this repo ships:
 - validation and requirement-check scripts
 - verified local GitHub MCP check, smoke, and install flow
 - command, hook, workflow, examples, and AGENTS.md templates
-- 21 plugin bundles (3 stable, 13 beta, 5 experimental) with native install, marketplace metadata, and `apx plugins` inspection
+- plugins with native install, marketplace metadata, and `apx plugins` inspection (`apx plugins list`)
 - user-intent profiles with `apx profiles` for curated skill/plugin sets
 
 Native install is direct for humans. Safety boundaries stay around external tools, secrets, shell profiles, and MCP enablement.
@@ -71,9 +73,24 @@ Native install is direct for humans. Safety boundaries stay around external tool
 |  `commands/`  | shipped | Review-first command prompts plus safe runnable checks |
 |  `hooks/`  | shipped | Review-before-use hook recipes plus safe runnable checks |
 |  `workflows/`  | shipped | Scenario guides |
-|  `plugins/`  | shipped | 21 plugin bundles (3 stable, 13 beta, 5 experimental) with local-first discovery, validation, native install, and marketplace metadata |
+|  `plugins/`  | shipped | Plugins with local-first discovery, validation, native install, and marketplace metadata (`apx plugins list`) |
 |  `scripts/`  | shipped | Validation and tool-check helpers for this repo |
 |  `examples/`  | shipped | Minimal safe setup examples |
+
+## Agent Quickstart
+
+If you are an agent working in a repo with Agent Powerups available, route tasks to capabilities yourself instead of waiting to be told:
+
+1. **Match first.** On Claude Code the host already lists skills natively — match the task to the narrowest fitting skill (plus obvious fits like `no-fluff`). On Codex, Gemini, or generic agents, start with `apx discover`.
+2. **Discover the rest** — anything not natively loaded (MCP configs, hooks, AGENTS.md templates, installed-only assets):
+
+   ```sh
+   apx discover "<the user's task>" --target <codex|claude-code|gemini|generic> --json
+   apx info <chosen-asset>     # what it is, when to use it, source path, next action
+   ```
+
+3. **Read, apply, verify.** Read the asset's `SKILL.md` (or file) before applying it; run `apx check <asset>` only if it declares external requirements; then verify the result against the task.
+4. **Gate risky assets.** MCP configs and hooks are review-before-use — surface them for approval, never auto-enable.
 
 ## Quickstart
 
@@ -136,9 +153,9 @@ apx install codex --full
 apx install codex --verbose
 ```
 
-Default native install copies all root skills and plugin bundles into the selected agent root and writes a `discovery-index.json` beside them. Human output shows counts by default; use `--verbose` for per-file paths. `--full` also stages support assets and another discovery index under `agent-powerups/`, then updates existing global instructions with a backup.
+Default native install copies all root skills and plugins into the selected agent root and writes a `discovery-index.json` beside them. Human output shows counts by default; use `--verbose` for per-file paths. `--full` also stages support assets and another discovery index under `agent-powerups/`, then updates existing global instructions with a backup.
 
-6. Work with plugin bundles:
+6. Work with plugins:
 
 ```sh
 apx plugins list
@@ -216,8 +233,8 @@ apx install <codex|claude|claude-code|gemini> --full [--verbose]
 Default manual install:
 
 - root `skills/` -> `<agent-root>/skills/`
-- Codex/Claude plugin bundles -> `<agent-root>/plugins/`
-- Gemini plugin bundles -> `<agent-root>/extensions/`
+- Codex/Claude plugins -> `<agent-root>/plugins/`
+- Gemini plugins -> `<agent-root>/extensions/`
 
 #### Agent-Managed Setup
 
@@ -248,259 +265,20 @@ python scripts/check-requirements.py
 
 ## Catalog Overview
 
-Current shipped skills:
+The shipped catalog changes often, so it is not enumerated here. Browse it from the CLI — these
+surfaces are always current:
 
-- `agent-config-security-audit`
-- `agent-harness-design`
-- `agent-readable-docs`
-- `agent-runtime-patterns`
-- `agent-session-forensics`
-- `ai-regression-testing`
-- `ai-slop-cleaner`
-- `api-doc-review`
-- `architecture-decision-records`
-- `architecture-simplification`
-- `ask-claude`
-- `ask-codex`
-- `ask-gemini`
-- `autonomous-delivery-pipeline`
-- `baseline-comparison-review`
-- `bigquery-cost-audit`
-- `brainstorming`
-- `browser-automation-safety`
-- `bug-hunt`
-- `build-fix-minimal-diff`
-- `canonical-advisor-routing`
-- `change-impact-check`
-- `changelog-generator`
-- `ci-failure-readout`
-- `codebase-migration-batches`
-- `context-compression`
-- `context-docs`
-- `context-minimization`
-- `context-retrieval-loop`
-- `data-quality`
-- `dataset-split-review`
-- `dbt-incremental-strategy-audit`
-- `dbt-preflight`
-- `dbt-strategy`
-- `dead-code-removal`
-- `defuddle`
-- `dependency-cleanup`
-- `deploy-pipeline-runbook`
-- `dispatching-parallel-agents`
-- `doc-consistency-check`
-- `environment-doctor`
-- `experiment-tracking-review`
-- `failure-triage`
-- `filesystem-mcp-guardrails`
-- `finishing-a-development-branch`
-- `flaky-test-investigation`
-- `gh-address-comments`
-- `github-ci-failure-triage`
-- `graphify`
-- `handoff-discipline`
-- `hard-won-skill-extractor`
-- `hook-safety-review`
-- `incident-readout`
-- `incremental-migration`
-- `json-canvas`
-- `local-rag-mcp`
-- `log-driven-diagnosis`
-- `managed-codebase-context`
-- `markitdown-file-intake`
-- `mcp-risk-review`
-- `mcp-server-builder`
-- `memory-build-workflow`
-- `memory-optimization-workflow`
-- `memory-query-workflow`
-- `metric-impact-analyzer`
-- `minimal-reproduction`
-- `ml-leakage-check`
-- `model-evaluation-reporting`
-- `model-routing`
-- `naming-and-structure-cleanup`
-- `no-fluff`
-- `parallel-execution-engine`
-- `persistent-completion-loop`
-- `pr-review-ci-loop`
-- `pr-triage`
-- `pre-release-verification`
-- `prompt-evaluation-runner`
-- `readme-hardening`
-- `receiving-code-review`
-- `red-team-eval-authoring`
-- `regression-bisecting`
-- `relay-claude`
-- `relay-codex`
-- `relay-gemini`
-- `release-readiness-protocol`
-- `repo-map`
-- `reproducible-training-runs`
-- `requesting-code-review`
-- `requirements-clarifier`
-- `review-comment-style-mining`
-- `risk-based-review`
-- `safe-refactor`
-- `search-before-building`
-- `secret-leak-preflight`
-- `semantic-layer-change-review`
-- `skill-authoring-guide`
-- `skill-evaluation-workbench`
-- `sql-business-logic-review`
-- `strategic-context-compaction`
-- `structured-code-search-mcp`
-- `subagent-team-orchestration`
-- `systematic-debugging`
-- `task-intake`
-- `test-driven-development`
-- `test-preserving-refactor`
-- `training-pipeline-debugging`
-- `tri-model-review`
-- `using-git-worktrees`
-- `using-powerups`
-- `verification-before-completion`
-- `webapp-visual-testing`
-- `writing-plans`
-- `writing-skills`
+```sh
+apx list                       # compact human browse of everything shipped
+apx list --type skill          # filter by category (skill, command, plugin, hook, mcp-config, ...)
+apx discover "<your task>"     # task-based: what should I use for this?
+apx plugins list               # available plugins
+apx mcp list                   # available MCP configs
+```
 
-Current shipped scripts:
-
-- `scripts/validate-skills.py`
-- `scripts/validate-catalog.py`
-- `scripts/validate-mirrors.py`
-- `scripts/check-requirements.py`
-
-Current shipped MCP configs:
-
-- `github-local`
-- `github-remote`
-- `context7`
-- `sequential-thinking`
-- `playwright`
-- `filesystem-repo-scoped`
-- `memory`
-- `fetch`
-- `time`
-- `git-local`
-- `postgres-readonly`
-- `supabase`
-- `vercel`
-- `cloudflare-docs`
-- `exa-search`
-- `atlassian`
-- `browserbase`
-- `e2b-sandbox`
-
-Current shipped AGENTS.md templates:
-
-- `typescript-app`
-- `python-library`
-- `dbt-project`
-- `ml-project`
-- `open-source-maintainer`
-
-Current shipped command packs:
-
-- `build-fix`
-- `changelog`
-- `debug`
-- `doctor`
-- `implement`
-- `mcp-check`
-- `mcp-smoke`
-- `plan`
-- `release`
-- `review`
-- `ship-check`
-- `triage`
-- `using-powerups`
-- `visual-review`
-
-Current shipped hook examples:
-
-Safety:
-- `no-secrets-preflight`
-- `destructive-bash-guard`
-- `env-file-mutation-approval`
-- `dependency-review`
-
-Quality:
-- `validation-required`
-- `test-gate`
-- `lint-check`
-- `console-log-check`
-- `generated-file-warning`
-- `large-diff-warning`
-- `build-analysis-post`
-- `design-quality-check`
-- `migration-review-required`
-- `todo-fixme-blocker`
-- `pre-commit-quality-check`
-- `quality-gate-after-edit`
-- `typescript-post-edit-check`
-- `doc-file-warning`
-
-Productivity:
-- `handoff-summary`
-- `handoff-completeness-check`
-- `session-context-restore`
-- `session-log`
-- `session-compaction-helper`
-- `session-lifecycle-state`
-- `auto-commit-message`
-- `dev-server-tmux-guard`
-
-Cloud:
-- `cloud-cli-guard`
-
-MCP:
-- `mcp-config-change-approval`
-- `mcp-write-guard`
-- `mcp-elicitation-guard`
-
-Current shipped examples:
-
-- `minimal-setup-example`
-- `codex-setup-example`
-- `claude-code-setup-example`
-
-Current shipped workflows:
-
-- `feature-iteration`
-- `agent-relay`
-
-Current shipped plugin bundles (stable):
-
-- `dev-vitals`
-- `debugging-diagnostics`
-- `quality-gates`
-
-Current shipped plugin bundles (beta):
-
-- `codebase-maintenance`
-- `data-engineering`
-- `documentation-systems`
-- `machine-learning-ops`
-- `codebase-intelligence`
-- `spec-driven-development`
-- `mcp-development`
-- `skill-authoring`
-- `github-ops`
-- `spec-quality-gates`
-- `context-efficiency`
-- `tool-integrations`
-- `memory-optimization`
-
-Current shipped plugin bundles (experimental):
-
-- `software-engineering`
-- `agentic-systems`
-- `security-guardrails`
-- `connected-apps`
-- `agent-evaluation-lab`
-
-Schema details: [`docs/catalog-schema.md`](./docs/catalog-schema.md)
+Human-facing categories: **skills**, **commands**, **plugins**, **MCP configs**, **hooks**, and
+**AGENTS.md templates** (scripts, examples, and workflows are internal). See the taxonomy and
+field definitions in [`docs/catalog-schema.md`](./docs/catalog-schema.md).
 
 ## Compatibility Matrix
 
@@ -509,12 +287,12 @@ Compatibility claims in this repo are intentionally narrow:
 | Asset class | Shipped today | Compatibility claim |
 |-------------|---------------|---------------------|
 | Root `skills/` | yes | Generic text-based skills; some also mention known agent surfaces |
-| `mcp/` | yes | 18 MCP configs for local and remote servers (GitHub, Supabase, Vercel, Cloudflare, Exa, Atlassian, Browserbase, E2B, and more); `github-local` has a full check/smoke/install flow |
+| `mcp/` | yes | MCP configs for local and remote servers (GitHub, Supabase, Vercel, Cloudflare, Exa, Atlassian, Browserbase, E2B, and more); `github-local` has a full check/smoke/install flow |
 | `agents-md/` | yes | Plain text templates |
 | `commands/` | yes | Review-first markdown command prompts; Claude Code and Codex targets where provided |
 | `hooks/` | yes | Documentation recipes only; not installed automatically |
 | `workflows/` | yes | Plain text scenario guides |
-| `plugins/` | yes | 21 plugin bundles (3 stable, 13 beta, 5 experimental) with native install, marketplace metadata, and `apx plugins` inspection |
+| `plugins/` | yes | Plugins with native install, marketplace metadata, and `apx plugins` inspection |
 | `scripts/` | yes | Generic Python scripts |
 | `examples/` | yes | Plain text setup examples only |
 
@@ -627,16 +405,16 @@ To explicitly copy a skill into a local Codex-visible folder, choose the destina
 apx install ask-claude --target codex --dest .agent-powerups/installed/ask-claude
 ```
 
-## Plugin Bundles
+## Plugins
 
-Plugin bundles ship under [`plugins/`](./plugins/). They are registered in both [`.claude-plugin/marketplace.json`](./.claude-plugin/marketplace.json) and [`.codex-plugin/marketplace.json`](./.codex-plugin/marketplace.json). Gemini CLI uses local extensions; each plugin bundle includes `gemini-extension.json` and `GEMINI.md`.
+Plugins ship under [`plugins/`](./plugins/). They are registered in both [`.claude-plugin/marketplace.json`](./.claude-plugin/marketplace.json) and [`.codex-plugin/marketplace.json`](./.codex-plugin/marketplace.json). Gemini CLI uses local extensions; each plugin includes `gemini-extension.json` and `GEMINI.md`.
 
-- use `apx plugins list` to discover bundles
-- use `apx plugins info <name>` to inspect a single bundle
+- use `apx plugins list` to discover plugins
+- use `apx plugins info <name>` to inspect a single plugin
 - use `apx plugins info <name> --json` to inspect contained skill, command, agent, and template metadata
-- use `apx plugins validate --all` to verify bundle structure
+- use `apx plugins validate --all` to verify plugin structure
 - use `apx plugins install <name> --target <codex|claude-code|generic> --dry-run` before any write
-- installed plugin bundles include `discovery-index.json` so contained assets are queryable directly
+- installed plugins include `discovery-index.json` so contained assets are queryable directly
 - use `apx install <codex|claude|gemini>` for full manual native install
 
 ## Safety Warning
