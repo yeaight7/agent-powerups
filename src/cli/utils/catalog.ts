@@ -27,6 +27,7 @@ const catalogEntrySchema = z.object({
   avoid_when: z.union([z.string().min(1), z.array(z.string().min(1))]).optional(),
   signals: z.array(z.string().min(1)).optional(),
   capabilities: z.array(z.string().min(1)).optional(),
+  routing_priority: z.number().int().optional(),
   activation: z.string().min(1).optional(),
   check_policy: z.enum(["none", "requires-only", "mcp-only", "manual"]).optional(),
   requires: z
