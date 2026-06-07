@@ -202,7 +202,7 @@ test("info prints asset details", async () => {
   assert.match(result.stdout, /Microsoft MarkItDown/);
 });
 
-test("using-powerups is discoverable and has no external requirements", async () => {
+test("using-powerups is discoverable and does not need dependency validation", async () => {
   const info = await execute(["info", "using-powerups"]);
   const check = await execute(["check", "using-powerups"]);
 
@@ -210,7 +210,7 @@ test("using-powerups is discoverable and has no external requirements", async ()
   assert.match(info.stdout, /using-powerups/);
   assert.match(info.stdout, /agent-powerups/);
   assert.equal(check.exitCode, 0);
-  assert.match(check.stdout, /no external requirements declared/);
+  assert.match(check.stdout, /no dependency check needed; this does not validate usage/);
 });
 
 test.skip("check reports missing requirements without installing", async () => {
