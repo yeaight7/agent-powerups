@@ -1,6 +1,6 @@
 # Installation
 
-Agent Powerups ships reusable skills, plugin bundles, and support assets for local coding agents. Manual install is intentionally direct: choose an agent and copy the native assets into that agent's root.
+Agent Powerups ships reusable skills, plugins, and support assets for local coding agents. Manual install is intentionally direct: choose an agent and copy the native assets into that agent's root.
 
 ## Install The CLI
 
@@ -42,7 +42,7 @@ Default native install writes immediately and installs:
 
 Existing identical files are skipped. Existing changed files are not overwritten unless `--force` is passed.
 
-Native install also writes `discovery-index.json` beside native skills and plugin bundles so agents and tools can inspect installed capabilities without scanning every file.
+Native install also writes `discovery-index.json` beside native skills and plugins so agents and tools can inspect installed capabilities without scanning every file.
 
 Preview first:
 
@@ -124,7 +124,7 @@ apx install ask-claude --target codex --dry-run
 apx install ask-claude --target codex --dest .agent-powerups\installed\ask-claude
 ```
 
-Plugin bundle commands remain useful for inspection and targeted install:
+Plugin commands remain useful for inspection and targeted install:
 
 ```powershell
 apx plugins list
@@ -134,7 +134,7 @@ apx plugins validate --all
 apx plugins install dev-vitals --target codex --dry-run
 ```
 
-Plugin bundles are registered for Claude and Codex marketplace-style discovery. Gemini uses local extensions under `.gemini/extensions/`; each bundle includes `gemini-extension.json` and `GEMINI.md`.
+Plugins are registered for Claude and Codex marketplace-style discovery. Gemini uses local extensions under `.gemini/extensions/`; each plugin includes `gemini-extension.json` and `GEMINI.md`.
 
 Use discovery commands when an agent or user wants task-based selection rather than a raw catalog list:
 
