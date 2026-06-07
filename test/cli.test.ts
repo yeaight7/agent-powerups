@@ -206,8 +206,15 @@ test("info surfaces when-to-use and a next action from unified metadata", async 
   const result = await execute(["info", "systematic-debugging"]);
 
   assert.equal(result.exitCode, 0);
-  assert.match(result.stdout, /when_to_use/);
-  assert.match(result.stdout, /next_action/);
+  // assert.match(result.stdout, /when_to_use/);
+  // assert.match(result.stdout, /next_action/);
+
+  // From catalog.json `use_when`
+  assert.match(result.stdout, /when_to_use:[\s\S]*root-cause diagnosis before a fix\./);
+  // From SKILL.md "## When to Use" section
+  assert.match(result.stdout, /when_to_use:[\s\S]*Use for ANY technical issue:/);
+  // From next-action hint generation for skills
+  assert.match(result.stdout, /next_action:\s*Read .*systematic-debugging.*SKILL\.md before applying it\./);
 });
 
 test("using-powerups is discoverable and does not need dependency validation", async () => {
