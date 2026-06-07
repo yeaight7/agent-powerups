@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { CatalogService } from "../utils/catalog.js";
+import { fieldAsString, parseFrontmatter as parseSharedFrontmatter } from "../utils/frontmatter.js";
 import { createResult, type ExecutionResult } from "../utils/result.js";
 
 const disallowedTopLevelSectionTags = [
@@ -228,4 +229,103 @@ export async function runValidateCatalogCommand(
   );
 
   return createResult({ exitCode: ok ? 0 : 1, stdout: lines.join("\n") });
+}
+
+// D-04 drift validator (scoped to skills). catalog.name vs frontmatter `name` is a hard
+// ERROR — that invariant is held and must stay held. catalog.summary vs frontmatter
+// `description` is an informational WARNING: in practice these are complementary surfaces
+// (short registry label vs the longer "Use when…" trigger), so a difference is reported
+// but does not fail. use_when/signals drift is out of scope until those fields are
+// migrated into frontmatter (D-12). (Severity choice recorded in the SX-09 tracker entry.)
+export async function runValidateDriftCommand(
+  service: CatalogService,
+): Promise<ExecutionResult> {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+  let checkedCount = 0;
+
+  for (const entry of service.listAssets("skill")) {
+    const skillMdPath = path.join(service.repoRoot, entry.path, "SKILL.md");
+    let content: string;
+    try {
+      content = await fs.readFile(skillMdPath, "utf8");
+    } catch {
+      warnings.push(`[${entry.name}] drift check skipped — SKILL.md not found`);
+      continue;
+    }
+
+    const { fields } = parseSharedFrontmatter(content);
+    const fmName = fieldAsString(fields, "name");
+    const fmDescription = fieldAsString(fields, "description");
+    if (!fmName && !fmDescription) {
+      errors.push(`[${entry.name}] SKILL.md has no parseable frontmatter`);
+      continue;
+    }
+
+    checkedCount++;
+    if (fmName && fmName !== entry.name) {
+      errors.push(`[${entry.name}] catalog.name "${entry.name}" != frontmatter.name "${fmName}"`);
+    }
+    if (fmDescription && fmDescription.trim() !== entry.summary.trim()) {
+      warnings.push(`[${entry.name}] catalog.summary differs from frontmatter.description (registry label vs trigger; informational)`);
+    }
+  }
+
+  const lines: string[] = [];
+  if (warnings.length) {
+    lines.push(`Warnings (${warnings.length}):`);
+    for (const w of warnings) lines.push(`  WARN  ${w}`);
+  }
+  if (errors.length) {
+    lines.push(`Errors (${errors.length}):`);
+    for (const e of errors) lines.push(`  ERROR ${e}`);
+  }
+  const ok = errors.length === 0;
+  lines.push(
+    `Checked ${checkedCount} skill(s). ${errors.length} error(s), ${warnings.length} warning(s). ${ok ? "OK." : "FAILED."}`,
+  );
+
+  return createResult({ exitCode: ok ? 0 : 1, stdout: lines.join("\n") });
+}
+
+const ROUTABLE_METADATA_TYPES = new Set(["skill", "command", "workflow"]);
+
+function hasNonEmptyMetadata(value: unknown): boolean {
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === "string") return value.trim().length > 0;
+  return false;
+}
+
+// D-12 completeness validator: every routable asset (skill/command/workflow) should
+// carry use_when + signals so the metadata-driven discover scorer can route it, OR opt
+// out explicitly (check_policy: none / activation: approval-required). Gaps are warnings
+// (exit 0) — a worklist for future backfill, not a CI blocker yet.
+export async function runValidateMetadataCommand(
+  service: CatalogService,
+): Promise<ExecutionResult> {
+  const warnings: string[] = [];
+  let checkedCount = 0;
+
+  for (const entry of service.listAssets()) {
+    if (!ROUTABLE_METADATA_TYPES.has(entry.type)) continue;
+    if (entry.check_policy === "none" || entry.activation === "approval-required") continue;
+
+    checkedCount++;
+    if (!hasNonEmptyMetadata(entry.use_when) && !hasNonEmptyMetadata(entry.signals)) {
+      warnings.push(
+        `[${entry.name}] (${entry.type}) missing use_when and signals — add routing metadata or set check_policy: none`,
+      );
+    }
+  }
+
+  const lines: string[] = [];
+  if (warnings.length) {
+    lines.push(`Warnings (${warnings.length}):`);
+    for (const w of warnings) lines.push(`  WARN  ${w}`);
+  }
+  lines.push(
+    `Checked ${checkedCount} routable asset(s). ${warnings.length} warning(s). ${warnings.length === 0 ? "OK." : "WARNED."}`,
+  );
+
+  return createResult({ exitCode: 0, stdout: lines.join("\n") });
 }
