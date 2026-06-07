@@ -116,6 +116,7 @@ test("plugins command: install failure on existing dir without force", async () 
 
 test("plugin marketplaces list every plugin bundle for Claude and Codex", async () => {
   const bundles = await readJson(path.join(repoRoot, "plugin-bundles.json"));
+  const packageJson = await readJson(path.join(repoRoot, "package.json"));
   const expectedNames = bundles.plugins.map((plugin: any) => plugin.name).sort();
 
   const claude = await readJson(path.join(repoRoot, ".claude-plugin", "marketplace.json"));
@@ -132,7 +133,8 @@ test("plugin marketplaces list every plugin bundle for Claude and Codex", async 
     assert.ok(claudeEntry, `missing Claude marketplace entry: ${bundle.name}`);
     assert.equal(claudeEntry.source, `./plugins/${bundle.name}`);
     assert.equal(claudeEntry.description, bundle.description);
-    assert.equal(claudeEntry.version, "0.1.0");
+    assert.equal(claudeEntry.version, packageJson.version);
+    assert.equal(claudeEntry.maturity, bundle.maturity);
     assert.equal(claudeEntry.license, "Apache-2.0");
     assert.equal(claudeEntry.category, "Developer Tools");
     await fs.access(path.join(repoRoot, claudeEntry.source));
@@ -141,6 +143,9 @@ test("plugin marketplaces list every plugin bundle for Claude and Codex", async 
     assert.ok(codexEntry, `missing Codex marketplace entry: ${bundle.name}`);
     assert.equal(codexEntry.source.source, "local");
     assert.equal(codexEntry.source.path, `./plugins/${bundle.name}`);
+    assert.equal(codexEntry.description, bundle.description);
+    assert.equal(codexEntry.version, packageJson.version);
+    assert.equal(codexEntry.maturity, bundle.maturity);
     assert.equal(codexEntry.policy.installation, "AVAILABLE");
     assert.equal(codexEntry.policy.authentication, "NONE");
     assert.equal(codexEntry.category, "Developer Tools");
@@ -150,13 +155,14 @@ test("plugin marketplaces list every plugin bundle for Claude and Codex", async 
 
 test("every plugin bundle has a Gemini extension manifest", async () => {
   const bundles = await readJson(path.join(repoRoot, "plugin-bundles.json"));
+  const packageJson = await readJson(path.join(repoRoot, "package.json"));
 
   for (const plugin of bundles.plugins) {
     const manifestPath = path.join(repoRoot, "plugins", plugin.name, "gemini-extension.json");
     const manifest = await readJson(manifestPath);
     assert.equal(manifest.name, plugin.name);
     assert.equal(manifest.description, plugin.description);
-    assert.equal(manifest.version, "0.1.0");
+    assert.equal(manifest.version, packageJson.version);
     assert.equal(manifest.maturity, plugin.maturity);
     assert.equal(manifest.contextFileName, "GEMINI.md");
     await fs.access(path.join(repoRoot, "plugins", plugin.name, manifest.contextFileName));
