@@ -5,7 +5,7 @@ import path from "node:path";
 import type { CatalogService } from "../utils/catalog.js";
 import { copyAsset } from "../utils/copy.js";
 import { buildDiscoveryIndexJson } from "../utils/discovery.js";
-import { getPluginBundles } from "../utils/plugins.js";
+import { getPluginBundles, getPluginPackageVersion } from "../utils/plugins.js";
 import { defaultInstallDestination, resolveAssetPath, type InstallTarget } from "../utils/paths.js";
 import { createResult, type ExecutionResult } from "../utils/result.js";
 
@@ -349,11 +349,11 @@ async function updateInstructionFile(
   return { modifiedFiles: [instructionPath], backupFiles: [backupPath], skippedFiles: [] };
 }
 
-function geminiExtensionManifest(bundle: any): string {
+function geminiExtensionManifest(bundle: any, version: string): string {
   return `${JSON.stringify(
     {
       name: bundle.name,
-      version: "0.1.0",
+      version,
       description: bundle.description ?? `Agent Powerups plugin bundle: ${bundle.name}`,
       maturity: bundle.maturity ?? "experimental",
       contextFileName: "GEMINI.md",
@@ -382,6 +382,7 @@ async function collectNativePluginInstalls(
   const copiedFiles: string[] = [];
   const skippedFiles: string[] = [];
   const bundles = await getPluginBundles(service.repoRoot);
+  const version = await getPluginPackageVersion(service.repoRoot);
 
   for (const bundle of bundles) {
     if (!bundle.name) {
@@ -398,7 +399,7 @@ async function collectNativePluginInstalls(
     if (profile.agent === "gemini" && !(await pathExists(path.join(sourceDir, "gemini-extension.json")))) {
       const result = await writeTextFile(
         path.join(destDir, "gemini-extension.json"),
-        geminiExtensionManifest(bundle),
+        geminiExtensionManifest(bundle, version),
         options,
       );
       if (result.copied) copiedFiles.push(result.copied);
