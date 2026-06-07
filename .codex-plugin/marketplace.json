@@ -14,7 +14,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Core developer workflow skills: planning, execution, communication, and powerup discovery.",
+      "version": "0.6.1",
+      "maturity": "stable"
     },
     {
       "name": "debugging-diagnostics",
@@ -26,7 +29,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Error diagnosis, fault isolation, log forensics, and incident investigation.",
+      "version": "0.6.1",
+      "maturity": "stable"
     },
     {
       "name": "codebase-maintenance",
@@ -38,7 +44,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Safe refactoring, dead-code removal, legacy modernization, and dependency hygiene.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "data-engineering",
@@ -50,7 +59,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Analytics engineering, dbt patterns, BigQuery optimization, data quality, and pipeline workflows.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "documentation-systems",
@@ -62,7 +74,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Documentation architecture, API reference authoring, ADR writing, readme hardening, and doc quality.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "machine-learning-ops",
@@ -74,7 +89,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "ML pipeline design, experiment tracking, model evaluation, training debugging, and reproducibility.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "quality-gates",
@@ -86,7 +104,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Quality enforcement: TDD discipline, code review workflows, release verification, and CI failure analysis.",
+      "version": "0.6.1",
+      "maturity": "stable"
     },
     {
       "name": "software-engineering",
@@ -98,7 +119,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Subagent orchestration, wave execution, persistent completion, autonomous delivery, and migration batching.",
+      "version": "0.6.1",
+      "maturity": "experimental"
     },
     {
       "name": "agentic-systems",
@@ -110,7 +134,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Multi-model orchestration and advisor routing: tri-model review and canonical advisor routing.",
+      "version": "0.6.1",
+      "maturity": "experimental"
     },
     {
       "name": "security-guardrails",
@@ -122,7 +149,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Security review guidance for agent configs, MCP and filesystem exposure, red-team scenarios, and audit prompts.",
+      "version": "0.6.1",
+      "maturity": "experimental"
     },
     {
       "name": "codebase-intelligence",
@@ -134,7 +164,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Search-first codebase understanding, context retrieval, mapping, pattern detection, and living project intelligence.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "spec-driven-development",
@@ -146,7 +179,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Requirements clarification, phase planning, workstreams, and wave-based execution for reviewable delivery.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "mcp-development",
@@ -158,7 +194,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Workflow-first MCP server design with schema-first tools, context-aware outputs, and evaluation discipline.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "skill-authoring",
@@ -170,7 +209,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Skill creation and extraction workflows for reusable agent guidance.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "github-ops",
@@ -182,7 +224,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "GitHub review, comment handling, and CI triage workflows with approval-gated write actions.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "connected-apps",
@@ -194,7 +239,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Review-first runbooks for connected-app workflows and multi-system deployment sequencing.",
+      "version": "0.6.1",
+      "maturity": "experimental"
     },
     {
       "name": "spec-quality-gates",
@@ -206,7 +254,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Quality gates for spec-driven development: adversarial plan verification and structured code review.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "context-efficiency",
@@ -218,7 +269,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Context-efficient routing: dispatch tables for workflow, review, and codebase-intelligence commands.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "tool-integrations",
@@ -230,7 +284,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "memory-optimization",
@@ -242,7 +299,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Graph-backed memory and context optimization workflows with graphify first and document conversion helpers second.",
+      "version": "0.6.1",
+      "maturity": "beta"
     },
     {
       "name": "agent-evaluation-lab",
@@ -254,7 +314,10 @@
         "installation": "AVAILABLE",
         "authentication": "NONE"
       },
-      "category": "Developer Tools"
+      "category": "Developer Tools",
+      "description": "Prompt, skill, red-team, and agent behavior evaluation workflows.",
+      "version": "0.6.1",
+      "maturity": "experimental"
     }
   ]
 }
