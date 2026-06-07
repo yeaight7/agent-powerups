@@ -13,11 +13,11 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/agent-powerups">
-    <img alt="npm version" src="https://img.shields.io/npm/v/agent-powerups?logo=npm&label=npm" />
+  <a href="https://www.npmjs.com/package/agent-powerups/v/latest">
+    <img alt="npm version" src="https://img.shields.io/npm/v/agent-powerups?logo=npm&logoColor=white&label=npm" />
   </a>
-  <a href="https://www.npmjs.com/package/agent-powerups">
-    <img alt="npm weekly downloads" src="https://img.shields.io/npm/dw/agent-powerups?logo=npm&label=downloads&maxAge=3600" />
+  <a href="https://www.npmjs.com/package/agent-powerups/v/latest">
+    <img alt="npm weekly downloads" src="https://img.shields.io/npm/dm/agent-powerups?style=flat&logo=npm&logoColor=white&logoSize=auto&cacheSeconds=86400" />
   </a>
   <a href="https://github.com/yeaight7/agent-powerups/actions/workflows/ci.yml">
     <img alt="CI" src="https://github.com/yeaight7/agent-powerups/actions/workflows/ci.yml/badge.svg" />
