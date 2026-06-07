@@ -41,7 +41,7 @@ import {
   runReviewRouteCommand,
   runContextRouteCommand,
 } from "./commands/phase-workflows.js";
-import { runValidateCatalogCommand, runValidateSkillsCommand } from "./commands/validate.js";
+import { runValidateCatalogCommand, runValidateDriftCommand, runValidateMetadataCommand, runValidateSkillsCommand } from "./commands/validate.js";
 import { hasFlag, parseOption, parseOptions } from "./utils/args.js";
 import { ALLOWED_TYPES, CatalogError, createCatalogService } from "./utils/catalog.js";
 import { INSTALL_TARGETS, type InstallTarget } from "./utils/paths.js";
@@ -109,6 +109,8 @@ apx audit target <codex|claude-code|gemini-cli|cursor|generic> [--json]
 apx quality-gate --scope <repo|plugins|release> [--json]
 apx validate skills
 apx validate catalog
+apx validate drift
+apx validate metadata
 apx relay init <session-name>
 apx relay start <session-name> [--provider <gemini|claude|codex>] [--model <model>] [--json]
 apx relay status <session-name> [--json]
@@ -557,7 +559,15 @@ export async function runCli(argv: string[], io: CliIO): Promise<number> {
       if (subcommand === "catalog") {
         return writeExecutionResult(io, await runValidateCatalogCommand(service), json);
       }
-      throw new Error("Unknown validate subcommand. Use: apx validate skills | apx validate catalog");
+      if (subcommand === "drift") {
+        return writeExecutionResult(io, await runValidateDriftCommand(service), json);
+      }
+      if (subcommand === "metadata") {
+        return writeExecutionResult(io, await runValidateMetadataCommand(service), json);
+      }
+      throw new Error(
+        "Unknown validate subcommand. Use: apx validate skills | apx validate catalog | apx validate drift | apx validate metadata",
+      );
     }
 
     if (command === "relay") {

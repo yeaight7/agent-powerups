@@ -22,7 +22,11 @@
       "bug",
       "failing test",
       "regression",
+      "stack trace",
+      "crash",
       "unexpected behavior",
+      "broken",
+      "error",
       "root cause"
     ],
     "capabilities": [
@@ -30,7 +34,8 @@
       "isolate cause",
       "verify hypothesis"
     ],
-    "check_policy": "none"
+    "check_policy": "none",
+    "routing_priority": 3
   },
   {
     "name": "no-fluff",
@@ -56,12 +61,17 @@
       "concise",
       "brief",
       "less tokens",
-      "compress"
+      "fewer tokens",
+      "compress output",
+      "terse",
+      "short answer",
+      "be concise"
     ],
     "capabilities": [
       "compressed communication"
     ],
-    "check_policy": "none"
+    "check_policy": "none",
+    "routing_priority": 2
   },
   {
     "name": "writing-plans",
@@ -80,21 +90,25 @@
     ],
     "maturity": "stable",
     "use_when": [
-      "A multi-step implementation needs an executable plan before code changes."
+      "A multi-step implementation or a conceptual design/redesign needs an explicit plan before code changes."
     ],
     "signals": [
       "plan",
       "implementation plan",
-      "multi-step",
-      "spec",
-      "requirements"
+      "design the architecture",
+      "conceptual redesign",
+      "multi-step plan",
+      "staged plan",
+      "plan the feature",
+      "write a plan",
+      "plan a redesign"
     ],
     "capabilities": [
       "implementation planning",
-      "test plan",
-      "acceptance criteria"
+      "architecture planning"
     ],
-    "check_policy": "none"
+    "check_policy": "none",
+    "routing_priority": 3
   },
   {
     "name": "ai-slop-cleaner",
@@ -128,7 +142,13 @@
       "quality",
       "merging"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "request code review",
+      "prepare for review",
+      "ready for review",
+      "submit for review"
+    ]
   },
   {
     "name": "receiving-code-review",
@@ -145,7 +165,13 @@
       "feedback",
       "collaboration"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "address review feedback",
+      "respond to review",
+      "review comments",
+      "received code review"
+    ]
   },
   {
     "name": "pr-triage",
@@ -179,7 +205,14 @@
       "onboarding",
       "exploration"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "repo map",
+      "map the codebase",
+      "unfamiliar codebase",
+      "orient in the repo",
+      "explore repository"
+    ]
   },
   {
     "name": "bug-hunt",
@@ -198,21 +231,20 @@
     ],
     "maturity": "stable",
     "use_when": [
-      "A specific bug needs a minimal reproduce-isolate-fix loop."
+      "Reproduce, isolate, and fix a bug with the smallest safe change."
     ],
     "signals": [
       "bug",
-      "fix",
       "reproduce",
-      "failing test",
-      "broken behavior"
+      "isolate",
+      "smallest fix",
+      "reproduce and isolate"
     ],
     "capabilities": [
-      "minimal fix",
-      "reproduction",
-      "targeted validation"
+      "reproduce-isolate-fix"
     ],
-    "check_policy": "none"
+    "check_policy": "none",
+    "routing_priority": 2
   },
   {
     "name": "safe-refactor",
@@ -229,7 +261,20 @@
       "safety",
       "testing"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "refactor",
+      "behavior-preserving refactor",
+      "restructure code",
+      "safe refactor",
+      "extract function"
+    ],
+    "use_when": [
+      "Code needs restructuring while preserving behavior, with tests as the safety net."
+    ],
+    "capabilities": [
+      "behavior-preserving refactor"
+    ]
   },
   {
     "name": "defuddle",
@@ -249,15 +294,17 @@
       "A web page or HTML source should be extracted into clean Markdown context."
     ],
     "signals": [
-      "web page",
-      "html",
       "url",
-      "extract markdown",
-      "defuddle"
+      "web page",
+      "webpage",
+      "extract article",
+      "clean markdown from url",
+      "html to markdown",
+      "web content",
+      "extract from url"
     ],
     "capabilities": [
-      "web to markdown",
-      "content extraction"
+      "web content extraction"
     ],
     "check_policy": "requires-only",
     "requires": {
@@ -287,17 +334,19 @@
       "A document file should be converted into Markdown for agent-readable context."
     ],
     "signals": [
-      "file intake",
-      "document",
       "pdf",
       "docx",
       "pptx",
       "xlsx",
-      "convert to markdown"
+      "convert to markdown",
+      "document intake",
+      "convert file",
+      "spreadsheet",
+      "slide deck",
+      "markdown context"
     ],
     "capabilities": [
-      "document conversion",
-      "markdown extraction"
+      "document conversion"
     ],
     "check_policy": "requires-only",
     "requires": {
@@ -307,7 +356,8 @@
       "python_packages": [
         "markitdown"
       ]
-    }
+    },
+    "routing_priority": 2
   },
   {
     "name": "ask-claude",
@@ -425,7 +475,15 @@
       "analytics",
       "review"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "bigquery cost",
+      "bigquery costs",
+      "query cost",
+      "cost hotspot",
+      "partition optimization",
+      "bigquery usage"
+    ]
   },
   {
     "name": "data-quality",
@@ -441,7 +499,14 @@
       "testing",
       "data-quality"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "data quality test",
+      "dbt test",
+      "assert sql",
+      "accepted values",
+      "referential integrity"
+    ]
   },
   {
     "name": "dbt-incremental-strategy-audit",
@@ -457,7 +522,14 @@
       "review",
       "performance"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "dbt incremental",
+      "incremental strategy",
+      "incremental models",
+      "incremental model",
+      "dbt incremental strategy"
+    ]
   },
   {
     "name": "dbt-preflight",
@@ -473,7 +545,15 @@
       "blast-radius",
       "review"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "dbt",
+      "changed dbt",
+      "dbt model change",
+      "dbt blast radius",
+      "dbt preflight",
+      "dbt asset"
+    ]
   },
   {
     "name": "dbt-strategy",
@@ -489,7 +569,16 @@
       "modeling",
       "architecture"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "dbt model",
+      "fact table",
+      "dimension table",
+      "staging model",
+      "warehouse model",
+      "build dbt",
+      "dimensional model"
+    ]
   },
   {
     "name": "metric-impact-analyzer",
@@ -505,7 +594,14 @@
       "bi",
       "review"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "metric change",
+      "metric impact",
+      "reporting breakage",
+      "bi metric",
+      "metric and semantic"
+    ]
   },
   {
     "name": "sql-business-logic-review",
@@ -521,7 +617,15 @@
       "analytics",
       "review"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "sql business logic",
+      "review sql",
+      "sql query review",
+      "business logic in sql",
+      "sql correctness",
+      "sql model"
+    ]
   },
   {
     "name": "github-local",
@@ -960,7 +1064,14 @@
       "python_packages": [
         "graphifyy"
       ]
-    }
+    },
+    "signals": [
+      "knowledge graph",
+      "graph the codebase",
+      "graphify",
+      "community detection",
+      "graph memory"
+    ]
   },
   {
     "name": "brainstorming",
@@ -978,7 +1089,24 @@
       "ideation",
       "process"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "brainstorm",
+      "explore design",
+      "ideate",
+      "design a new feature",
+      "explore approaches",
+      "design space",
+      "brainstorm ideas",
+      "brainstorm approaches"
+    ],
+    "use_when": [
+      "Before any creative work \u2014 designing a new feature, component, or behavior \u2014 the intent and design space should be explored first."
+    ],
+    "capabilities": [
+      "design-space exploration"
+    ],
+    "routing_priority": 3
   },
   {
     "name": "dispatching-parallel-agents",
@@ -1016,22 +1144,22 @@
     ],
     "maturity": "beta",
     "use_when": [
-      "New behavior or risky logic should be implemented test-first with RED/GREEN/REFACTOR discipline."
+      "A new behavior or bugfix should be driven by a failing test before implementation."
     ],
     "signals": [
       "tdd",
       "test first",
-      "test-first",
       "red green refactor",
-      "new behavior",
-      "failing test first"
+      "failing test first",
+      "write test before",
+      "test driven",
+      "write a failing test"
     ],
     "capabilities": [
-      "test-first implementation",
-      "regression coverage",
-      "red green refactor"
+      "red-green-refactor discipline"
     ],
-    "check_policy": "none"
+    "check_policy": "none",
+    "routing_priority": 3
   },
   {
     "name": "verification-before-completion",
@@ -1054,11 +1182,10 @@
       "Before claiming work is complete, requirements and validation evidence must be checked explicitly."
     ],
     "signals": [
-      "verify",
-      "complete",
-      "done",
-      "handoff",
-      "validation"
+      "verify before done",
+      "verification before completion",
+      "confirm change works",
+      "before marking complete"
     ],
     "capabilities": [
       "completion gate",
@@ -1366,7 +1493,14 @@
       "dependencies",
       "process"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "search before building",
+      "reuse existing",
+      "find existing implementation",
+      "avoid duplicate code",
+      "already exists"
+    ]
   },
   {
     "name": "context-retrieval-loop",
@@ -1420,7 +1554,20 @@
       "config",
       "agents"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "agent config security",
+      "audit settings json",
+      "mcp config security",
+      "insecure hook",
+      "agent security audit",
+      "agent configuration files",
+      "permission misconfiguration"
+    ],
+    "use_when": [
+      "Agent configuration files (settings.json, .mcp.json, config.toml, hooks) need a security audit."
+    ],
+    "routing_priority": 2
   },
   {
     "name": "hook-safety-review",
@@ -1456,7 +1603,21 @@
       "risk",
       "preflight"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "mcp server",
+      "enable mcp",
+      "add mcp server",
+      "mcp config review",
+      "mcp configuration",
+      "third-party server",
+      "new mcp",
+      "review mcp"
+    ],
+    "use_when": [
+      "An MCP server is about to be enabled, added, or upgraded."
+    ],
+    "routing_priority": 2
   },
   {
     "name": "secret-leak-preflight",
@@ -1474,7 +1635,25 @@
       "git",
       "preflight"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "leaked secrets",
+      "hardcoded credentials",
+      "secret scan",
+      "api key in code",
+      "credential leak",
+      "secrets audit",
+      "exposed api keys",
+      "exposed tokens",
+      "scan for secrets"
+    ],
+    "use_when": [
+      "Code or config must be scanned for leaked secrets or hardcoded credentials before commit."
+    ],
+    "capabilities": [
+      "secret detection"
+    ],
+    "routing_priority": 2
   },
   {
     "name": "model-routing",
@@ -1510,7 +1689,21 @@
       "spec",
       "clarity"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "clarify requirements",
+      "vague request",
+      "ambiguous requirements",
+      "testable requirements",
+      "clarify scope",
+      "nail down the requirements",
+      "interview me",
+      "gather requirements"
+    ],
+    "use_when": [
+      "A vague or ambiguous implementation request must be turned into testable requirements before coding."
+    ],
+    "routing_priority": 2
   },
   {
     "name": "hard-won-skill-extractor",
@@ -1618,7 +1811,16 @@
       "refactor",
       "batching"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "migration batches",
+      "large migration",
+      "codemod",
+      "migrate the codebase",
+      "batch migration",
+      "wide refactor",
+      "safe batches"
+    ]
   },
   {
     "name": "mcp-server-builder",
@@ -2078,7 +2280,15 @@
       "ui",
       "safety"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "browser automation",
+      "playwright",
+      "headless browser",
+      "screenshot the page",
+      "automate the browser",
+      "browser safety"
+    ]
   },
   {
     "name": "managed-codebase-context",
@@ -2168,7 +2378,14 @@
       "security",
       "safety"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "filesystem mcp",
+      "allowed roots",
+      "path boundaries",
+      "filesystem access",
+      "file mcp server"
+    ]
   },
   {
     "name": "local-rag-mcp",
@@ -2426,7 +2643,13 @@
       "codex": "mcp/codex/playwright.toml",
       "claude-code": "mcp/claude-code/playwright.json",
       "generic": "mcp/generic/playwright.json"
-    }
+    },
+    "signals": [
+      "playwright",
+      "browser automation",
+      "browser mcp",
+      "automate the browser"
+    ]
   },
   {
     "name": "filesystem-repo-scoped",
@@ -2464,7 +2687,12 @@
       "codex": "mcp/codex/filesystem-repo-scoped.toml",
       "claude-code": "mcp/claude-code/filesystem-repo-scoped.json",
       "generic": "mcp/generic/filesystem-repo-scoped.json"
-    }
+    },
+    "signals": [
+      "filesystem mcp",
+      "file access mcp",
+      "scoped filesystem"
+    ]
   },
   {
     "name": "memory",
@@ -2648,7 +2876,15 @@
       "publishing",
       "changelog"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "release readiness",
+      "cut a release",
+      "release protocol",
+      "ready to release",
+      "tagging and publishing",
+      "publish the version"
+    ]
   },
   {
     "name": "changelog-generator",
@@ -2666,7 +2902,14 @@
       "git",
       "documentation"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "changelog",
+      "release notes",
+      "breaking change scan",
+      "what changed for release",
+      "generate a changelog"
+    ]
   },
   {
     "name": "build-fix-minimal-diff",
@@ -2684,7 +2927,15 @@
       "testing",
       "minimal-diff"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "build broken",
+      "type errors",
+      "build failure",
+      "smallest diff",
+      "fix the build",
+      "broken build"
+    ]
   },
   {
     "name": "environment-doctor",
@@ -2760,12 +3011,10 @@
       "A code review, plan review, or self-review needs attention allocated by risk and blast radius."
     ],
     "signals": [
-      "review",
-      "code review",
-      "plan review",
-      "risk",
-      "blast radius",
-      "pr"
+      "ai generated code",
+      "regression test after fix",
+      "deterministic checks",
+      "anti-slop testing"
     ],
     "capabilities": [
       "risk-based review",
@@ -2789,7 +3038,15 @@
       "architecture",
       "docs"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "api docs",
+      "openapi",
+      "swagger",
+      "endpoint matches spec",
+      "api reference",
+      "api documentation"
+    ]
   },
   {
     "name": "architecture-decision-records",
@@ -2806,7 +3063,14 @@
       "architecture",
       "docs"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "adr",
+      "architecture decision record",
+      "record the decision",
+      "why this design",
+      "decision record"
+    ]
   },
   {
     "name": "architecture-simplification",
@@ -2823,7 +3087,23 @@
       "maintenance",
       "cleanup"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "simplify",
+      "over-engineered",
+      "collapse abstractions",
+      "remove unnecessary layers",
+      "consolidate redundant logic",
+      "reduce indirection",
+      "too many layers",
+      "simplify the architecture"
+    ],
+    "use_when": [
+      "Over-engineered abstractions or redundant layers should be collapsed or consolidated."
+    ],
+    "capabilities": [
+      "abstraction collapse"
+    ]
   },
   {
     "name": "baseline-comparison-review",
@@ -2874,7 +3154,15 @@
       "ci",
       "review"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "change impact",
+      "blast radius",
+      "before submitting pr",
+      "impact of changes",
+      "what does this change affect",
+      "before merging"
+    ]
   },
   {
     "name": "ci-failure-readout",
@@ -2925,7 +3213,15 @@
       "context",
       "process"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "minimize context",
+      "read less",
+      "keep context lean",
+      "reduce tokens read",
+      "fewer tokens",
+      "compress the response"
+    ]
   },
   {
     "name": "dataset-split-review",
@@ -2959,7 +3255,19 @@
       "maintenance",
       "cleanup"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "dead code",
+      "unused function",
+      "unused export",
+      "remove dead code",
+      "delete unused",
+      "unreachable code",
+      "unused code"
+    ],
+    "use_when": [
+      "Unused functions, classes, exports, or files should be identified and safely deleted."
+    ]
   },
   {
     "name": "dependency-cleanup",
@@ -2976,7 +3284,18 @@
       "maintenance",
       "cleanup"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "unused dependency",
+      "redundant dependency",
+      "remove dependency",
+      "unused dependencies",
+      "prune dependencies",
+      "dependency cleanup"
+    ],
+    "use_when": [
+      "Unused or redundant third-party dependencies should be audited and removed."
+    ]
   },
   {
     "name": "doc-consistency-check",
@@ -2993,7 +3312,14 @@
       "architecture",
       "docs"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "docs consistency",
+      "broken file paths in docs",
+      "outdated commands",
+      "documentation audit",
+      "stale docs"
+    ]
   },
   {
     "name": "experiment-tracking-review",
@@ -3027,7 +3353,14 @@
       "diagnostics",
       "testing"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "unknown failure",
+      "triage failure",
+      "categorize failure",
+      "ci failure",
+      "failure category"
+    ]
   },
   {
     "name": "flaky-test-investigation",
@@ -3044,7 +3377,14 @@
       "diagnostics",
       "testing"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "flaky test",
+      "intermittent failure",
+      "passes locally fails ci",
+      "nondeterministic test",
+      "intermittently"
+    ]
   },
   {
     "name": "handoff-discipline",
@@ -3061,7 +3401,15 @@
       "context",
       "process"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "handoff",
+      "handoff notes",
+      "resume work",
+      "pass to the next session",
+      "out of context",
+      "context handoff"
+    ]
   },
   {
     "name": "incident-readout",
@@ -3095,7 +3443,18 @@
       "maintenance",
       "cleanup"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "incremental migration",
+      "migrate",
+      "migrate api",
+      "migrate library",
+      "migrate pattern",
+      "migrate codebase",
+      "step-by-step migration",
+      "framework migration",
+      "upgrade library"
+    ]
   },
   {
     "name": "log-driven-diagnosis",
@@ -3112,7 +3471,14 @@
       "diagnostics",
       "testing"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "logs",
+      "runtime failure",
+      "distributed systems",
+      "log diagnosis",
+      "trace logs"
+    ]
   },
   {
     "name": "memory-build-workflow",
@@ -3129,7 +3495,13 @@
       "context",
       "workflow"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "build memory",
+      "persistent graph memory",
+      "refresh memory",
+      "ingest corpus"
+    ]
   },
   {
     "name": "memory-optimization-workflow",
@@ -3180,7 +3552,14 @@
       "diagnostics",
       "testing"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "minimal reproduction",
+      "standalone repro",
+      "isolate bug",
+      "single test case",
+      "reproduce in isolation"
+    ]
   },
   {
     "name": "ml-leakage-check",
@@ -3231,7 +3610,16 @@
       "maintenance",
       "cleanup"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "inconsistent naming",
+      "reorganize files",
+      "naming cleanup",
+      "rename variables",
+      "rename symbols",
+      "restructure folders",
+      "rename inconsistent"
+    ]
   },
   {
     "name": "pre-release-verification",
@@ -3248,7 +3636,14 @@
       "ci",
       "review"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "release readiness",
+      "pre-release",
+      "before release",
+      "release checklist",
+      "verify the release"
+    ]
   },
   {
     "name": "readme-hardening",
@@ -3265,7 +3660,14 @@
       "architecture",
       "docs"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "readme",
+      "harden readme",
+      "readme accuracy",
+      "onboarding docs",
+      "readme setup commands"
+    ]
   },
   {
     "name": "regression-bisecting",
@@ -3316,7 +3718,23 @@
       "ci",
       "review"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "code review",
+      "review changes",
+      "risky changes",
+      "review the diff",
+      "pull request review",
+      "review this pr",
+      "risky code changes"
+    ],
+    "use_when": [
+      "A change set or pull request needs risk-prioritized review."
+    ],
+    "capabilities": [
+      "risk-ranked review"
+    ],
+    "routing_priority": 2
   },
   {
     "name": "semantic-layer-change-review",
@@ -3333,7 +3751,13 @@
       "metrics",
       "review"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "semantic layer",
+      "semantic model change",
+      "metric definition change",
+      "semantic model"
+    ]
   },
   {
     "name": "strategic-context-compaction",
@@ -3367,7 +3791,14 @@
       "context",
       "process"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "signals": [
+      "task intake",
+      "triage task",
+      "scope the task",
+      "unclear task",
+      "what should i work on"
+    ]
   },
   {
     "name": "test-preserving-refactor",
@@ -3384,7 +3815,13 @@
       "maintenance",
       "cleanup"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "signals": [
+      "refactor without changing tests",
+      "keep tests passing",
+      "test-preserving refactor",
+      "refactor with tests"
+    ]
   },
   {
     "name": "training-pipeline-debugging",
@@ -3733,7 +4170,13 @@
       "codex": "mcp/codex/postgres-readonly.toml",
       "claude-code": "mcp/claude-code/postgres-readonly.json",
       "generic": "mcp/generic/postgres-readonly.json"
-    }
+    },
+    "signals": [
+      "postgres",
+      "postgres mcp",
+      "database mcp",
+      "postgres server"
+    ]
   },
   {
     "name": "github-remote",

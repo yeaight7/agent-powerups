@@ -33,6 +33,7 @@ export interface PowerupAsset {
   avoid_when: string[];
   signals: string[];
   capabilities: string[];
+  routing_priority?: number;
   activation?: string;
   check_policy?: string;
 }
@@ -145,6 +146,7 @@ function catalogAsset(entry: CatalogEntry, service: CatalogService): PowerupAsse
     avoid_when?: string[] | string;
     signals?: string[] | string;
     capabilities?: string[] | string;
+    routing_priority?: number;
     activation?: string;
     check_policy?: string;
   };
@@ -171,6 +173,7 @@ function catalogAsset(entry: CatalogEntry, service: CatalogService): PowerupAsse
     avoid_when: arrayFromUnknown(metadata.avoid_when),
     signals: arrayFromUnknown(metadata.signals),
     capabilities: arrayFromUnknown(metadata.capabilities),
+    routing_priority: metadata.routing_priority,
     activation: metadata.activation,
     check_policy: metadata.check_policy,
   };
@@ -246,6 +249,7 @@ function mergeAssets(existing: PowerupAsset, incoming: PowerupAsset): PowerupAss
     avoid_when: uniq(existing.avoid_when.concat(incoming.avoid_when)),
     signals: uniq(existing.signals.concat(incoming.signals)),
     capabilities: uniq(existing.capabilities.concat(incoming.capabilities)),
+    routing_priority: existing.routing_priority ?? incoming.routing_priority,
     activation: existing.activation ?? incoming.activation,
     check_policy: existing.check_policy ?? incoming.check_policy,
   };
@@ -397,20 +401,60 @@ export async function buildInventory(
   };
 }
 
-function textForAsset(asset: PowerupAsset): string {
-  return [
-    asset.name,
-    asset.type,
-    asset.summary,
-    asset.tags.join(" "),
-    asset.use_when.join(" "),
-    asset.signals.join(" "),
-    asset.capabilities.join(" "),
-    asset.plugins.join(" "),
-  ]
-    .join(" ")
-    .toLowerCase();
+// Common filler words. Removed only from the "lean" task token set used for weak
+// name/summary/tag/capability/use_when overlap — NOT from signal-phrase matching —
+// so a stray "and"/"new" can no longer pull an asset into primary (e.g.
+// "naming-and-structure-cleanup" matching the token "and").
+const STOPWORDS = new Set([
+  "the", "and", "for", "new", "this", "that", "into", "with", "from", "your", "our",
+  "are", "was", "has", "have", "had", "can", "will", "you", "use", "using", "old",
+  "all", "any", "but", "not", "out", "via", "per", "its", "their", "them", "they",
+  "then", "than", "when", "what", "which", "who", "how", "why", "where", "some",
+  "more", "most", "such", "only", "also", "onto", "over", "under", "about", "before",
+  "after", "while", "between", "across", "let", "lets", "make", "made", "get", "got",
+  "want", "need", "needs", "like", "just", "now", "here", "there", "please", "give",
+  "tell", "show", "help", "should", "would", "could", "able", "add", "set", "run",
+]);
+
+function tokenize(text: string): string[] {
+  return text
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((token) => token.length > 2);
 }
+
+interface TaskIndex {
+  full: Set<string>;
+  lean: Set<string>;
+}
+
+function buildTaskIndex(task: string): TaskIndex {
+  const full = tokenize(task);
+  return {
+    full: new Set(full),
+    lean: new Set(full.filter((token) => !STOPWORDS.has(token))),
+  };
+}
+
+// A metadata phrase matches when every word of the phrase is present as a whole
+// task token (word-aware, order-independent). Word-aware matching is what fixes the
+// "auth" inside "authentication" false-trigger: "auth" is not a token of the task.
+function phraseMatches(phrase: string, tokens: Set<string>): boolean {
+  const words = tokenize(phrase);
+  return words.length > 0 && words.every((word) => tokens.has(word));
+}
+
+const WEIGHTS = {
+  signal: 18,
+  useWhenPerToken: 2,
+  useWhenCap: 8,
+  name: 3,
+  capabilities: 4,
+  tagPerHit: 3,
+  tagCap: 6,
+  summaryPerToken: 1,
+  mcpTool: 14,
+} as const;
 
 function hasRequires(asset: PowerupAsset): boolean {
   const req = asset.requires;
@@ -421,104 +465,78 @@ function needsApproval(asset: PowerupAsset): boolean {
   return asset.type === "mcp-config" || asset.type === "hook" || hasRequires(asset) || asset.activation === "approval-required";
 }
 
-function addNameBoost(asset: PowerupAsset, names: string[], value: number, reason: string, score: { value: number; rationale: string[] }): void {
-  if (names.includes(asset.name)) {
-    score.value += value;
-    score.rationale.push(reason);
-  }
-}
-
-function scoreAsset(asset: PowerupAsset, task: string): { value: number; rationale: string[] } {
-  const lower = task.toLowerCase();
-  const haystack = textForAsset(asset);
+function scoreAsset(asset: PowerupAsset, index: TaskIndex): { value: number; rationale: string[] } {
   const score = { value: 0, rationale: [] as string[] };
-  const taskTokens = uniq(lower.split(/[^a-z0-9]+/).filter((token) => token.length > 2));
 
-  for (const token of taskTokens) {
-    if (haystack.includes(token)) {
-      score.value += 1;
+  // STRONG: each declared signal the task names is a high-weight, asset-owned hit.
+  // Routing strength lives in per-asset metadata (catalog/frontmatter `signals`),
+  // never in this file — adding or retuning discovery is a catalog edit, not a code
+  // edit (decision D-12). Two co-signaled assets are ordered by routing_priority.
+  let signalHits = 0;
+  for (const signal of asset.signals) {
+    if (phraseMatches(signal, index.full)) {
+      score.value += WEIGHTS.signal;
+      signalHits += 1;
     }
   }
-  if (score.value > 0) {
+  if (signalHits > 0) {
+    score.rationale.push(signalHits === 1 ? "task names a declared signal" : `task names ${signalHits} declared signals`);
+  }
+
+  // MEDIUM: use_when prose overlap (capped), via the stopword-filtered token set.
+  let useWhenPts = 0;
+  for (const token of index.lean) {
+    if (asset.use_when.some((entry) => entry.toLowerCase().includes(token))) {
+      useWhenPts += WEIGHTS.useWhenPerToken;
+    }
+  }
+  if (useWhenPts > 0) {
+    score.value += Math.min(useWhenPts, WEIGHTS.useWhenCap);
+    score.rationale.push("use_when overlaps task");
+  }
+
+  // MEDIUM: literally-named intents self-route (e.g. "brainstorm" -> brainstorming).
+  const nameWords = tokenize(asset.name).filter((word) => !STOPWORDS.has(word));
+  if (nameWords.some((word) => index.lean.has(word))) {
+    score.value += WEIGHTS.name;
+    score.rationale.push("name matches task term");
+  }
+
+  // WEAK: capabilities + tags + summary overlap (word-aware, capped) — keeps the
+  // legacy "incidental term overlap" surfacing without letting it dominate signals.
+  if (asset.capabilities.some((capability) => tokenize(capability).some((word) => index.lean.has(word)))) {
+    score.value += WEIGHTS.capabilities;
+  }
+  let tagPts = 0;
+  for (const tag of asset.tags) {
+    if (index.lean.has(tag.toLowerCase())) {
+      tagPts += WEIGHTS.tagPerHit;
+    }
+  }
+  score.value += Math.min(tagPts, WEIGHTS.tagCap);
+  const summaryTokens = new Set(tokenize(asset.summary));
+  for (const token of index.lean) {
+    if (summaryTokens.has(token)) {
+      score.value += WEIGHTS.summaryPerToken;
+    }
+  }
+  if (score.value > 0 && score.rationale.length === 0) {
     score.rationale.push("metadata overlaps with task terms");
   }
 
-  if (/bug|failing|failure|error|regression|unexpected|broken|flaky|crash|stack trace/.test(lower)) {
-    addNameBoost(asset, ["systematic-debugging"], 24, "task is a bug/failure signal", score);
-    addNameBoost(asset, ["bug-hunt"], 20, "task needs reproduce-isolate-fix workflow", score);
-    addNameBoost(asset, ["minimal-reproduction", "failure-triage", "log-driven-diagnosis", "flaky-test-investigation"], 12, "debugging diagnostic support", score);
-    if (asset.type === "agent" && /debug|diagnos|repro|flaky|failure/.test(asset.name)) {
-      score.value += 10;
-      score.rationale.push("debugging agent matches failure task");
-    }
+  // PRESERVED: MCP configs that match their own declared tool/server vocabulary
+  // (the boost now keys off the asset's own tags/signals, not a hardcoded regex).
+  if (
+    asset.type === "mcp-config" &&
+    [...index.lean].some(
+      (token) => asset.tags.includes(token) || asset.signals.some((signal) => tokenize(signal).includes(token)),
+    )
+  ) {
+    score.value += WEIGHTS.mcpTool;
+    score.rationale.push("MCP config matches tool/server task");
   }
 
-  if (/tdd|test first|test-first|red.?green|failing test first|write.*test/.test(lower)) {
-    addNameBoost(asset, ["test-driven-development"], 26, "task requests test-first workflow", score);
-    addNameBoost(asset, ["ai-regression-testing", "verification-before-completion"], 10, "testing/verification support", score);
-    if (asset.type === "agent" && /test/.test(asset.name)) {
-      score.value += 12;
-      score.rationale.push("test agent matches task");
-    }
-  }
-
-  if (/implement|build|feature|careful|multi-step|plan|architecture|design/.test(lower)) {
-    addNameBoost(asset, ["writing-plans"], 16, "task benefits from implementation planning", score);
-    addNameBoost(asset, ["search-before-building", "repo-map", "verification-before-completion"], 9, "implementation support workflow", score);
-    addNameBoost(asset, ["test-driven-development"], 8, "implementation may need test coverage", score);
-  }
-
-  if (/review|pull request|pr|diff|code review|quality|merge/.test(lower)) {
-    addNameBoost(asset, ["risk-based-review", "requesting-code-review", "receiving-code-review", "change-impact-check"], 18, "task is review-oriented", score);
-    if (asset.type === "agent" && /review|quality|gate|critic/.test(asset.name)) {
-      score.value += 14;
-      score.rationale.push("review agent matches task");
-    }
-    if (asset.type === "command" && /review|quality/.test(asset.name)) {
-      score.value += 10;
-      score.rationale.push("review command matches task");
-    }
-  }
-
-  if (/file|document|docx|pdf|ppt|pptx|xlsx|csv|markdown|convert|intake|url|web page|webpage|html|extract/.test(lower)) {
-    addNameBoost(asset, ["markitdown-file-intake"], 22, "task involves external file/document intake", score);
-    addNameBoost(asset, ["defuddle"], 18, "task involves web content extraction", score);
-    addNameBoost(asset, ["graphify", "memory-build-workflow"], 8, "document context can feed memory/graph workflows", score);
-  }
-
-  if (/concise|brief|short|focused|no fluff|less tokens|compress/.test(lower)) {
-    addNameBoost(asset, ["no-fluff"], 24, "task asks for compressed communication", score);
-    addNameBoost(asset, ["context-minimization"], 10, "task may need context discipline", score);
-  }
-
-  if (/mcp|tool|server|filesystem|browser|playwright|github|postgres|vercel|supabase/.test(lower)) {
-    if (asset.type === "mcp-config") {
-      score.value += 14;
-      score.rationale.push("MCP config matches tool/server task");
-    }
-    addNameBoost(asset, ["mcp-risk-review", "filesystem-mcp-guardrails", "browser-automation-safety"], 12, "tool integration safety support", score);
-  }
-
-  if (/security|secret|vulnerab|owasp|credential|token|auth|permission/.test(lower)) {
-    addNameBoost(asset, ["secret-leak-preflight", "agent-config-security-audit", "mcp-risk-review", "risk-based-review"], 18, "task has security risk signal", score);
-    if (asset.type === "agent" && /security/.test(asset.name)) {
-      score.value += 14;
-      score.rationale.push("security agent matches task");
-    }
-  }
-
-  if (/dbt|sql|bigquery|warehouse|semantic|metric|analytics|data quality/.test(lower)) {
-    addNameBoost(asset, ["dbt-preflight", "dbt-strategy", "sql-business-logic-review", "semantic-layer-change-review", "metric-impact-analyzer", "data-quality"], 20, "task matches data engineering workflow", score);
-  }
-
-  if (/refactor|cleanup|dead code|dependency|rename|migration|simplify|legacy/.test(lower)) {
-    addNameBoost(asset, ["safe-refactor", "test-preserving-refactor", "dead-code-removal", "dependency-cleanup", "naming-and-structure-cleanup", "architecture-simplification"], 18, "task matches maintenance/refactor workflow", score);
-  }
-
-  if (/readme|docs|documentation|adr|api reference|handoff|changelog/.test(lower)) {
-    addNameBoost(asset, ["readme-hardening", "doc-consistency-check", "architecture-decision-records", "api-doc-review", "handoff-discipline", "changelog-generator"], 18, "task matches documentation workflow", score);
-  }
-
+  // PRESERVED: de-rank non-routable types.
   if (asset.type === "pack") {
     score.value -= 4;
   }
@@ -560,9 +578,10 @@ export async function discoverPowerups(
   cwd = service.repoRoot,
 ): Promise<DiscoverData> {
   const inventory = await buildInventory(service, options, cwd);
+  const index = buildTaskIndex(options.task);
   const ranked = inventory.assets
     .map((asset) => {
-      const scored = scoreAsset(asset, options.task);
+      const scored = scoreAsset(asset, index);
       return {
         asset,
         score: scored.value,
@@ -571,7 +590,13 @@ export async function discoverPowerups(
       };
     })
     .filter((candidate) => candidate.score >= 4)
-    .sort((left, right) => right.score - left.score || left.asset.type.localeCompare(right.asset.type) || left.asset.name.localeCompare(right.asset.name));
+    .sort(
+      (left, right) =>
+        right.score - left.score ||
+        (right.asset.routing_priority ?? 0) - (left.asset.routing_priority ?? 0) ||
+        left.asset.type.localeCompare(right.asset.type) ||
+        left.asset.name.localeCompare(right.asset.name),
+    );
 
   const approvalRequired = ranked.filter((candidate) => needsApproval(candidate.asset)).slice(0, 8);
   const normal = ranked.filter((candidate) => !needsApproval(candidate.asset));
