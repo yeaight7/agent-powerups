@@ -17,7 +17,7 @@
     <img alt="npm version" src="https://img.shields.io/npm/v/agent-powerups?logo=npm&label=npm" />
   </a>
   <a href="https://www.npmjs.com/package/agent-powerups">
-    <img alt="npm weekly downloads" src="https://img.shields.io/npm/dw/agent-powerups?logo=npm&label=downloads" />
+    <img alt="npm weekly downloads" src="https://img.shields.io/npm/dw/agent-powerups?logo=npm&label=downloads&maxAge=3600" />
   </a>
   <a href="https://github.com/yeaight7/agent-powerups/actions/workflows/ci.yml">
     <img alt="CI" src="https://github.com/yeaight7/agent-powerups/actions/workflows/ci.yml/badge.svg" />
