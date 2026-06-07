@@ -6,7 +6,7 @@ import { promisify } from "node:util";
 import { runPluginValidateCommand } from "./plugin.js";
 import { runValidateCatalogCommand, runValidateSkillsCommand } from "./validate.js";
 import type { CatalogService } from "../utils/catalog.js";
-import { getPluginBundles } from "../utils/plugins.js";
+import { getPluginBundles, getPluginPackageVersion } from "../utils/plugins.js";
 import { checkRequirements } from "../utils/requirements.js";
 import { createResult, type ExecutionResult } from "../utils/result.js";
 
@@ -47,6 +47,20 @@ async function fileExists(filePath: string): Promise<boolean> {
     return true;
   } catch {
     return false;
+  }
+}
+
+async function readJsonForCheck(filePath: string, label: string, issues: string[]): Promise<any | null> {
+  if (!(await fileExists(filePath))) {
+    issues.push(`missing ${label}`);
+    return null;
+  }
+  try {
+    return await readJson(filePath);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    issues.push(`invalid ${label}: ${message}`);
+    return null;
   }
 }
 
@@ -121,6 +135,12 @@ async function checkPluginMirrorSync(repoRoot: string): Promise<DoctorCheck> {
   }
 
   const issues: string[] = [];
+  const expectedVersion = await getPluginPackageVersion(repoRoot);
+  const claudeMarketplace = await readJsonForCheck(path.join(repoRoot, ".claude-plugin", "marketplace.json"), ".claude-plugin/marketplace.json", issues);
+  const codexMarketplace = await readJsonForCheck(path.join(repoRoot, ".codex-plugin", "marketplace.json"), ".codex-plugin/marketplace.json", issues);
+  const claudeEntries = Array.isArray(claudeMarketplace?.plugins) ? claudeMarketplace.plugins : [];
+  const codexEntries = Array.isArray(codexMarketplace?.plugins) ? codexMarketplace.plugins : [];
+
   for (const bundle of bundles) {
     if (!bundle.name) {
       continue;
@@ -146,12 +166,35 @@ async function checkPluginMirrorSync(repoRoot: string): Promise<DoctorCheck> {
       if (manifest.description !== bundle.description) {
         issues.push(`${bundle.name}: manifest description mismatch`);
       }
-      if (manifest.version !== "0.1.0") {
+      if (manifest.maturity !== bundle.maturity) {
+        issues.push(`${bundle.name}: manifest maturity mismatch`);
+      }
+      if (manifest.version !== expectedVersion) {
         issues.push(`${bundle.name}: manifest version mismatch`);
       }
     }
     if (gemini.contextFileName !== "GEMINI.md") {
       issues.push(`${bundle.name}: Gemini contextFileName mismatch`);
+    }
+    const claudeEntry = claudeEntries.find((plugin: any) => plugin?.name === bundle.name);
+    if (!claudeEntry) {
+      issues.push(`${bundle.name}: missing Claude marketplace entry`);
+    } else if (
+      claudeEntry.description !== bundle.description ||
+      claudeEntry.maturity !== bundle.maturity ||
+      claudeEntry.version !== expectedVersion
+    ) {
+      issues.push(`${bundle.name}: Claude marketplace metadata mismatch`);
+    }
+    const codexEntry = codexEntries.find((plugin: any) => plugin?.name === bundle.name);
+    if (!codexEntry) {
+      issues.push(`${bundle.name}: missing Codex marketplace entry`);
+    } else if (
+      codexEntry.description !== bundle.description ||
+      codexEntry.maturity !== bundle.maturity ||
+      codexEntry.version !== expectedVersion
+    ) {
+      issues.push(`${bundle.name}: Codex marketplace metadata mismatch`);
     }
   }
 
