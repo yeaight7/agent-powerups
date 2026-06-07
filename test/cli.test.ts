@@ -202,6 +202,14 @@ test("info prints asset details", async () => {
   assert.match(result.stdout, /Microsoft MarkItDown/);
 });
 
+test("info surfaces when-to-use and a next action from unified metadata", async () => {
+  const result = await execute(["info", "systematic-debugging"]);
+
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /when_to_use/);
+  assert.match(result.stdout, /next_action/);
+});
+
 test("using-powerups is discoverable and does not need dependency validation", async () => {
   const info = await execute(["info", "using-powerups"]);
   const check = await execute(["check", "using-powerups"]);
