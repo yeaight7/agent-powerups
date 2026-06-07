@@ -56,7 +56,7 @@ Today, this repo ships:
 - validation and requirement-check scripts
 - verified local GitHub MCP check, smoke, and install flow
 - command, hook, workflow, examples, and AGENTS.md templates
-- 17 plugin bundles (3 stable, 10 beta, 4 experimental) with native install, marketplace metadata, and `apx plugins` inspection
+- 21 plugin bundles (3 stable, 13 beta, 5 experimental) with native install, marketplace metadata, and `apx plugins` inspection
 - user-intent profiles with `apx profiles` for curated skill/plugin sets
 
 Native install is direct for humans. Safety boundaries stay around external tools, secrets, shell profiles, and MCP enablement.
@@ -484,6 +484,9 @@ Current shipped plugin bundles (beta):
 - `machine-learning-ops`
 - `codebase-intelligence`
 - `spec-driven-development`
+- `mcp-development`
+- `skill-authoring`
+- `github-ops`
 - `spec-quality-gates`
 - `context-efficiency`
 - `tool-integrations`
@@ -494,6 +497,7 @@ Current shipped plugin bundles (experimental):
 - `software-engineering`
 - `agentic-systems`
 - `security-guardrails`
+- `connected-apps`
 - `agent-evaluation-lab`
 
 Schema details: [`docs/catalog-schema.md`](./docs/catalog-schema.md)
@@ -510,7 +514,7 @@ Compatibility claims in this repo are intentionally narrow:
 | `commands/` | yes | Review-first markdown command prompts; Claude Code and Codex targets where provided |
 | `hooks/` | yes | Documentation recipes only; not installed automatically |
 | `workflows/` | yes | Plain text scenario guides |
-| `plugins/` | yes | 17 plugin bundles (3 stable, 10 beta, 4 experimental) with native install, marketplace metadata, and `apx plugins` inspection |
+| `plugins/` | yes | 21 plugin bundles (3 stable, 13 beta, 5 experimental) with native install, marketplace metadata, and `apx plugins` inspection |
 | `scripts/` | yes | Generic Python scripts |
 | `examples/` | yes | Plain text setup examples only |
 

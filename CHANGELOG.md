@@ -5,6 +5,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.6.1] — 2026-06-07
+
+### Added — Task-based auto-discovery
+
+- Added `apx inventory --target <codex|claude-code|gemini|generic> --json` to build a normalized asset inventory across catalog entries, plugin-contained assets, installed native skill directories, and staged `agent-powerups/` directories.
+- Added `apx discover "<task>" --target <...> --json` with deterministic task routing into `primary`, `supporting`, and `approval_required` recommendations.
+- Added `apx list --json --verbose` for machine-readable catalog browsing without changing the default human list output.
+- Added frontmatter parsing helpers and discovery metadata support (`use_when`, `avoid_when`, `signals`, `capabilities`, `activation`, `check_policy`) so assets can describe when they should be selected.
+
+### Changed — Plugin and install exposure
+
+- `apx plugins info --json` now exposes contained skill, command, agent, and template metadata instead of only bundle-level information.
+- Plugin installs and native agent installs now write `discovery-index.json` files so installed assets are queryable without scanning entire bundles.
+- `using-powerups` guidance and command mirrors now route agents through discovery/inventory first and clarify that listing or checking an asset is not the same as using it.
+
+### Fixed — Dependency-check semantics
+
+- `apx check <asset>` now reports `SKIP` with "no dependency check needed; this does not validate usage" for assets without external requirements, reducing the chance that agents mistake a dependency check for successful skill use.
+- Updated README and installation/tool-requirement docs to treat `apx check` as dependency-only.
+- Corrected README plugin-bundle counts and npm badge URLs.
+
+---
+
 ## [0.6.0] — 2026-06-06
 
 This release closes the catalog-wide skill quality campaign (18 audit-driven fix batches) and adds a new CI gate that prevents the root-vs-plugin skill drift that the campaign spent much of its effort repairing.
