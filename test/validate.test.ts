@@ -6,7 +6,12 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { createCatalogService } from "../src/cli/utils/catalog.js";
-import { runValidateCatalogCommand, runValidateSkillsCommand } from "../src/cli/commands/validate.js";
+import {
+  runValidateCatalogCommand,
+  runValidateDriftCommand,
+  runValidateMetadataCommand,
+  runValidateSkillsCommand,
+} from "../src/cli/commands/validate.js";
 
 const execFileAsync = promisify(execFile);
 const repoRoot = path.resolve(import.meta.dirname, "..", "..");
@@ -186,4 +191,124 @@ test("validate catalog: fails when package.json license mismatches root LICENSE"
   assert.equal(result.exitCode, 1);
   assert.match(result.stdout, /license/i);
   assert.match(result.stdout, /package\.json/i);
+});
+
+// Build a temp repo from catalog entries (creating each referenced path dir) plus
+// optional repo-relative files. Mirrors the createCatalogService contract.
+async function makeCatalogRepo(entries: any[], files: Record<string, string> = {}): Promise<string> {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "apx-validateb-"));
+  await fs.writeFile(path.join(root, "catalog.json"), JSON.stringify(entries), "utf8");
+  for (const entry of entries) {
+    await fs.mkdir(path.join(root, entry.path), { recursive: true });
+  }
+  for (const [rel, content] of Object.entries(files)) {
+    const full = path.join(root, rel);
+    await fs.mkdir(path.dirname(full), { recursive: true });
+    await fs.writeFile(full, content, "utf8");
+  }
+  return root;
+}
+
+const skillEntry = (name: string, summary: string, extra: Record<string, unknown> = {}) => ({
+  name,
+  type: "skill",
+  summary,
+  path: `skills/${name}`,
+  compatible_with: ["generic"],
+  tags: [],
+  maturity: "stable",
+  ...extra,
+});
+
+const skillMd = (name: string, description: string) => `---\nname: ${name}\ndescription: ${description}\n---\n\n# ${name}\n`;
+
+test("validate drift: passes when catalog name and summary match frontmatter", async () => {
+  const root = await makeCatalogRepo([skillEntry("myskill", "Use when testing X.")], {
+    "skills/myskill/SKILL.md": skillMd("myskill", "Use when testing X."),
+  });
+  const result = await runValidateDriftCommand(await createCatalogService(root));
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /0 error/i);
+});
+
+test("validate drift: errors when catalog.name mismatches frontmatter.name", async () => {
+  const root = await makeCatalogRepo([skillEntry("real-skill", "Shared summary.")], {
+    "skills/real-skill/SKILL.md": skillMd("stale-name", "Shared summary."),
+  });
+  const result = await runValidateDriftCommand(await createCatalogService(root));
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stdout, /catalog\.name.*!=.*frontmatter\.name/i);
+});
+
+test("validate drift: summary/description difference is a warning, not an error", async () => {
+  const root = await makeCatalogRepo([skillEntry("mskill", "Find root cause.")], {
+    "skills/mskill/SKILL.md": skillMd("mskill", "Use when compressing output."),
+  });
+  const result = await runValidateDriftCommand(await createCatalogService(root));
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /differs from frontmatter\.description/i);
+  assert.match(result.stdout, /0 error/i);
+});
+
+test("validate drift: warns (exit 0) when SKILL.md is missing", async () => {
+  const root = await makeCatalogRepo([skillEntry("noskill", "Summary.")]);
+  const result = await runValidateDriftCommand(await createCatalogService(root));
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /drift check skipped/i);
+});
+
+test("validate drift: errors when SKILL.md has no parseable frontmatter", async () => {
+  const root = await makeCatalogRepo([skillEntry("raw", "Summary.")], {
+    "skills/raw/SKILL.md": "# no frontmatter here\n",
+  });
+  const result = await runValidateDriftCommand(await createCatalogService(root));
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stdout, /no parseable frontmatter/i);
+});
+
+test("validate drift: ignores non-skill catalog entries", async () => {
+  const root = await makeCatalogRepo(
+    [
+      skillEntry("ok", "Use when X."),
+      { name: "cmd", type: "command", summary: "c", path: "commands/cmd", compatible_with: ["generic"], tags: [], maturity: "stable" },
+    ],
+    { "skills/ok/SKILL.md": skillMd("ok", "Use when X.") },
+  );
+  const result = await runValidateDriftCommand(await createCatalogService(root));
+  assert.equal(result.exitCode, 0);
+  assert.doesNotMatch(result.stdout, /\[cmd\]/);
+});
+
+test("validate metadata: passes when routable assets carry use_when", async () => {
+  const root = await makeCatalogRepo([skillEntry("a", "s", { use_when: ["A task signal."] })]);
+  const result = await runValidateMetadataCommand(await createCatalogService(root));
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /0 warning/i);
+});
+
+test("validate metadata: warns (exit 0) when a skill lacks both use_when and signals", async () => {
+  const root = await makeCatalogRepo([skillEntry("b", "s")]);
+  const result = await runValidateMetadataCommand(await createCatalogService(root));
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /WARN.*missing use_when and signals/i);
+});
+
+test("validate metadata: does not warn for assets that opt out via check_policy or activation", async () => {
+  const root = await makeCatalogRepo([
+    skillEntry("c", "s", { check_policy: "none" }),
+    skillEntry("d", "s", { activation: "approval-required" }),
+  ]);
+  const result = await runValidateMetadataCommand(await createCatalogService(root));
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /0 warning/i);
+});
+
+test("validate metadata: skips non-routable types (hook, mcp-config, pack)", async () => {
+  const root = await makeCatalogRepo([
+    { name: "h", type: "hook", summary: "s", path: "hooks/h", compatible_with: ["generic"], tags: [], maturity: "stable" },
+    { name: "p", type: "pack", summary: "s", path: "plugins/p", compatible_with: ["generic"], tags: [], maturity: "stable" },
+  ]);
+  const result = await runValidateMetadataCommand(await createCatalogService(root));
+  assert.equal(result.exitCode, 0);
+  assert.match(result.stdout, /Checked 0 routable asset\(s\)\. 0 warning/i);
 });
