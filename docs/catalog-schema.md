@@ -33,6 +33,7 @@ Each entry must include:
 ## Allowed `maturity`
 
 - `draft`
+- `experimental`
 - `beta`
 - `stable`
 
@@ -67,6 +68,29 @@ Rules:
 - Omit `requires` when no external tool is needed.
 - Keep requirement names literal and machine-checkable.
 - Document matching check/install/fallback behavior in the asset itself when the dependency is workflow-critical.
+
+## Optional Discovery Metadata
+
+Use these fields to help deterministic task-based discovery rank assets without loading every file:
+
+```json
+{
+  "use_when": ["The user asks to fix a failing test, bug, regression, or unexpected behavior."],
+  "avoid_when": ["The task is only a prose rewrite with no diagnostic work."],
+  "signals": ["bug", "failing test", "regression", "stack trace"],
+  "capabilities": ["debugging", "root-cause-analysis", "verification"],
+  "activation": "read-skill-and-apply-workflow",
+  "check_policy": "requires-only"
+}
+```
+
+Rules:
+
+- `use_when`, `avoid_when`, `signals`, and `capabilities` must be arrays of strings.
+- `activation` is a short instruction for the next action, not a full prompt.
+- `check_policy` is one of `none`, `requires-only`, `mcp-only`, or `manual`.
+- Use `requires-only` for assets that should run `apx check` only when external requirements are declared.
+- Omit discovery fields rather than adding vague synonyms.
 
 ## Optional `targets`
 
