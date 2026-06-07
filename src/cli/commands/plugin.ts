@@ -3,6 +3,7 @@ import path from "node:path";
 
 import type { CatalogEntry, CatalogService } from "../utils/catalog.js";
 import { copyAsset } from "../utils/copy.js";
+import { getPluginPackageVersion } from "../utils/plugins.js";
 import { createResult, type ExecutionResult } from "../utils/result.js";
 
 const PLACEHOLDER_PATTERN = /\b(YOUR_[A-Z0-9_]+|TODO|TBD)\b/i;
@@ -77,10 +78,10 @@ function pluginJsonPath(pluginPath: string): string {
   return path.join(pluginPath, ".codex-plugin", "plugin.json");
 }
 
-function defaultPluginJson() {
+function defaultPluginJson(version: string) {
   return {
     name: "agent-powerups",
-    version: "0.1.0",
+    version,
     description: "Local-first Agent Powerups bundle.",
     author: {
       name: "Agent Powerups",
@@ -193,6 +194,7 @@ export async function runPluginBuildCommand(
   options: { dest: string; write: boolean },
 ): Promise<ExecutionResult<PluginBuildData>> {
   const dest = path.resolve(options.dest);
+  const version = await getPluginPackageVersion(service.repoRoot);
   const actions: string[] = [];
   const pluginJsonDestination = pluginJsonPath(dest);
   actions.push(`write ${path.relative(dest, pluginJsonDestination).replaceAll("\\", "/")}`);
@@ -203,7 +205,7 @@ export async function runPluginBuildCommand(
 
   if (options.write) {
     await fs.mkdir(path.dirname(pluginJsonDestination), { recursive: true });
-    await fs.writeFile(pluginJsonDestination, `${JSON.stringify(defaultPluginJson(), null, 2)}\n`, "utf8");
+    await fs.writeFile(pluginJsonDestination, `${JSON.stringify(defaultPluginJson(version), null, 2)}\n`, "utf8");
     for (const copy of pluginAssetCopies(service, dest)) {
       await fs.rm(copy.destination, { recursive: true, force: true });
       await copyAsset(copy.source, copy.destination);
@@ -226,8 +228,9 @@ export async function runPluginDiffCommand(
   pluginPathInput: string,
 ): Promise<ExecutionResult<PluginDiffData>> {
   const pluginPath = path.resolve(pluginPathInput);
+  const version = await getPluginPackageVersion(service.repoRoot);
   const diffs: string[] = [];
-  const expectedPluginJson = `${JSON.stringify(defaultPluginJson(), null, 2)}\n`;
+  const expectedPluginJson = `${JSON.stringify(defaultPluginJson(version), null, 2)}\n`;
   const actualPluginJsonPath = pluginJsonPath(pluginPath);
 
   if (!(await fileExists(actualPluginJsonPath))) {
