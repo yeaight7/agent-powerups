@@ -7,6 +7,7 @@ import { fieldAsString, parseFrontmatter } from "./frontmatter.js";
 
 export interface PluginInfo {
   name: string;
+  version?: string;
   description?: string;
   maturity?: string;
   skills: string[];
@@ -87,6 +88,33 @@ async function resolvePluginRoot(cwd: string): Promise<string> {
   return fromPkg ?? cwd;
 }
 
+async function readJson(filePath: string): Promise<any> {
+  const data = await fs.readFile(filePath, "utf8");
+  return JSON.parse(data);
+}
+
+async function pathExists(filePath: string): Promise<boolean> {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function getPluginPackageVersion(cwd: string): Promise<string> {
+  const root = await resolvePluginRoot(cwd);
+  try {
+    const parsed = await readJson(path.join(root, "package.json"));
+    if (typeof parsed.version === "string" && parsed.version.trim()) {
+      return parsed.version;
+    }
+  } catch {
+    // Fall through to an explicit sentinel so validators fail with a useful mismatch.
+  }
+  return "unknown";
+}
+
 export async function getPluginBundles(cwd: string): Promise<any[]> {
   const root = await resolvePluginRoot(cwd);
   try {
@@ -101,6 +129,7 @@ export async function getPluginBundles(cwd: string): Promise<any[]> {
 export async function listPlugins(cwd: string): Promise<PluginInfo[]> {
   const root = await resolvePluginRoot(cwd);
   const bundles = await getPluginBundles(cwd);
+  const version = await getPluginPackageVersion(cwd);
   const result: PluginInfo[] = [];
 
   for (const bundle of bundles) {
@@ -116,6 +145,7 @@ export async function listPlugins(cwd: string): Promise<PluginInfo[]> {
 
     result.push({
       name: bundle.name,
+      version,
       description: bundle.description,
       maturity: bundle.maturity,
       skills: bundle.skills?.map((s: any) => s.name) || [],
@@ -128,6 +158,109 @@ export async function listPlugins(cwd: string): Promise<PluginInfo[]> {
   }
 
   return result;
+}
+
+async function readJsonForValidation(filePath: string, label: string, errors: string[]): Promise<Record<string, any> | null> {
+  try {
+    const parsed = await readJson(filePath);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      errors.push(`${label} must contain a JSON object`);
+      return null;
+    }
+    return parsed;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    errors.push(`Missing or invalid ${label}: ${message}`);
+    return null;
+  }
+}
+
+function assertField(
+  errors: string[],
+  label: string,
+  field: string,
+  actual: unknown,
+  expected: unknown,
+): void {
+  if (actual !== expected) {
+    errors.push(`${label} ${field} ${JSON.stringify(actual)} != ${JSON.stringify(expected)}`);
+  }
+}
+
+function marketplacePlugins(manifest: Record<string, any> | null, label: string, errors: string[]): any[] {
+  if (!manifest) return [];
+  if (!Array.isArray(manifest.plugins)) {
+    errors.push(`${label} plugins must be an array`);
+    return [];
+  }
+  return manifest.plugins;
+}
+
+async function validatePluginMetadataFiles(root: string, bundle: any, pluginPath: string): Promise<string[]> {
+  const errors: string[] = [];
+  const version = await getPluginPackageVersion(root);
+  const expected = {
+    name: bundle.name,
+    version,
+    description: bundle.description,
+    maturity: bundle.maturity,
+  };
+
+  const manifests = [
+    { rel: ".codex-plugin/plugin.json", label: ".codex-plugin/plugin.json" },
+    { rel: ".claude-plugin/plugin.json", label: ".claude-plugin/plugin.json" },
+    { rel: "gemini-extension.json", label: "gemini-extension.json" },
+  ];
+  for (const manifest of manifests) {
+    const parsed = await readJsonForValidation(path.join(pluginPath, manifest.rel), manifest.label, errors);
+    if (!parsed) continue;
+    for (const [field, expectedValue] of Object.entries(expected)) {
+      assertField(errors, manifest.label, field, parsed[field], expectedValue);
+    }
+    if (manifest.rel === "gemini-extension.json") {
+      assertField(errors, manifest.label, "contextFileName", parsed.contextFileName, "GEMINI.md");
+    }
+  }
+
+  if (!(await pathExists(path.join(pluginPath, "GEMINI.md")))) {
+    errors.push("Missing required file: GEMINI.md");
+  }
+
+  const claudeMarketplace = await readJsonForValidation(
+    path.join(root, ".claude-plugin", "marketplace.json"),
+    ".claude-plugin/marketplace.json",
+    errors,
+  );
+  const codexMarketplace = await readJsonForValidation(
+    path.join(root, ".codex-plugin", "marketplace.json"),
+    ".codex-plugin/marketplace.json",
+    errors,
+  );
+
+  const claudeEntry = marketplacePlugins(claudeMarketplace, ".claude-plugin/marketplace.json", errors)
+    .find((plugin: any) => plugin?.name === bundle.name);
+  if (!claudeEntry) {
+    errors.push(`.claude-plugin/marketplace.json missing entry for ${bundle.name}`);
+  } else {
+    assertField(errors, ".claude-plugin/marketplace.json", `${bundle.name}.source`, claudeEntry.source, `./plugins/${bundle.name}`);
+    for (const [field, expectedValue] of Object.entries(expected)) {
+      assertField(errors, ".claude-plugin/marketplace.json", `${bundle.name}.${field}`, claudeEntry[field], expectedValue);
+    }
+  }
+
+  const codexEntry = marketplacePlugins(codexMarketplace, ".codex-plugin/marketplace.json", errors)
+    .find((plugin: any) => plugin?.name === bundle.name);
+  if (!codexEntry) {
+    errors.push(`.codex-plugin/marketplace.json missing entry for ${bundle.name}`);
+  } else {
+    assertField(errors, ".codex-plugin/marketplace.json", `${bundle.name}.source.source`, codexEntry.source?.source, "local");
+    assertField(errors, ".codex-plugin/marketplace.json", `${bundle.name}.source.path`, codexEntry.source?.path, `./plugins/${bundle.name}`);
+    for (const [field, expectedValue] of Object.entries(expected)) {
+      assertField(errors, ".codex-plugin/marketplace.json", `${bundle.name}.${field}`, codexEntry[field], expectedValue);
+    }
+  }
+
+  return errors;
 }
 
 async function readOptional(filePath: string): Promise<string | null> {
@@ -247,18 +380,7 @@ export async function validatePlugin(cwd: string, name: string): Promise<{ valid
     return { valid: false, errors };
   }
 
-  // Validate manifest files
-  const requiredFiles = [
-    ".codex-plugin/plugin.json",
-    ".claude-plugin/plugin.json"
-  ];
-  for (const file of requiredFiles) {
-    try {
-      await fs.stat(path.join(pluginPath, file));
-    } catch {
-      errors.push(`Missing required file: ${file}`);
-    }
-  }
+  errors.push(...await validatePluginMetadataFiles(root, bundle, pluginPath));
 
   // Validate skills (only if declared)
   const skills: any[] = bundle.skills && Array.isArray(bundle.skills) ? bundle.skills : [];
