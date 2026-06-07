@@ -1,6 +1,6 @@
 # Compatibility
 
-Agent Powerups currently ships generic skills, Python helper scripts, one verified local GitHub MCP flow, starter AGENTS.md templates, review-first command prompts, hook recipes, workflow guides, setup examples, and seven local-first plugin bundles. It still does not ship executable hook installers or broad platform integrations.
+Agent Powerups currently ships generic skills, Python helper scripts, one verified local GitHub MCP flow, starter AGENTS.md templates, review-first command prompts, hook recipes, workflow guides, setup examples, and local-first plugins. It still does not ship executable hook installers or broad platform integrations.
 
 ## Compatibility Rules
 
@@ -35,9 +35,9 @@ Platform-specific labels (`claude-code`, `codex`) are additive signals. A skill 
 
 | Surface | Concrete shipped assets | Claim level |
 |---------|-------------------------|-------------|
-| Claude Code | native `apx install claude`, root skills, plugin bundles, marketplace metadata, `github-local` MCP check/smoke/install flow, `ship-check` command variant, setup example | limited |
-| Codex | native `apx install codex`, root skills, plugin bundles, Codex marketplace metadata, repo scripts, local advisor flows, `github-local` MCP check/smoke/install flow, setup example | limited |
-| Gemini CLI | native `apx install gemini`, root skills, plugin bundles as `.gemini/extensions/`, generic setup example; `ask-gemini` invokes Gemini CLI from another local agent | limited |
+| Claude Code | native `apx install claude`, root skills, plugins, marketplace metadata, `github-local` MCP check/smoke/install flow, `ship-check` command variant, setup example | limited |
+| Codex | native `apx install codex`, root skills, plugins, Codex marketplace metadata, repo scripts, local advisor flows, `github-local` MCP check/smoke/install flow, setup example | limited |
+| Gemini CLI | native `apx install gemini`, root skills, plugins as `.gemini/extensions/`, generic setup example; `ask-gemini` invokes Gemini CLI from another local agent | limited |
 | Cursor | generic root skills only | limited |
 | Generic | root skills, Python scripts, AGENTS.md templates, generic MCP explicit writes, command prompts, hook recipes, workflows, setup examples | primary |
 
@@ -53,6 +53,6 @@ Examples:
 
 ## Limited Areas
 
-- Plugin bundles ship under `plugins/<name>` and are intended for local install flows driven by `apx plugins`.
+- Plugins ship under `plugins/<name>` and are intended for local install flows driven by `apx plugins`.
 - MCP support is intentionally limited to the Docker-backed official GitHub MCP server.
 - `hooks/` content is review-before-use documentation, not active hook installation.
