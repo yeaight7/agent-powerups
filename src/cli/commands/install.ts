@@ -40,6 +40,7 @@ export interface NativeInstallData {
   full: boolean;
   createdDirectories: string[];
   copiedFiles: string[];
+  refreshedFiles: string[];
   skippedFiles: string[];
   modifiedFiles: string[];
   backupFiles: string[];
@@ -159,8 +160,8 @@ async function ensureDirectory(
 async function copyOneFile(
   source: string,
   dest: string,
-  options: { dryRun: boolean; force: boolean; createdDirectorySet: Set<string> },
-): Promise<{ copied?: string; skipped?: string }> {
+  options: { dryRun: boolean; force: boolean; refreshIfChanged?: boolean; createdDirectorySet: Set<string> },
+): Promise<{ copied?: string; refreshed?: string; skipped?: string }> {
   await ensureDirectory(path.dirname(dest), options.dryRun, options.createdDirectorySet);
 
   if (!(await pathExists(dest))) {
@@ -174,40 +175,61 @@ async function copyOneFile(
     return { skipped: `${dest} (already current)` };
   }
 
+  if (options.refreshIfChanged || options.force) {
+    if (!options.dryRun) {
+      await fs.copyFile(source, dest);
+    }
+    return { refreshed: dest };
+  }
+
   if (!options.force) {
     return { skipped: `${dest} (exists; not overwritten)` };
   }
 
-  if (!options.dryRun) {
-    await fs.copyFile(source, dest);
-  }
-  return { copied: dest };
+  return { refreshed: dest };
+}
+
+function isPowerupsGuidanceRelativePath(relativePath: string): boolean {
+  const normalized = relativePath.replaceAll("\\", "/");
+  return (
+    normalized === "using-powerups/SKILL.md" ||
+    normalized === "skills/using-powerups/SKILL.md" ||
+    normalized === "using-powerups.md" ||
+    normalized === "commands/using-powerups.md" ||
+    normalized.endsWith("/skills/using-powerups/SKILL.md") ||
+    normalized.endsWith("/commands/using-powerups.md")
+  );
 }
 
 async function copyDirectoryContents(
   sourceDir: string,
   destDir: string,
   options: { dryRun: boolean; force: boolean; createdDirectorySet: Set<string> },
-): Promise<{ copiedFiles: string[]; skippedFiles: string[] }> {
+): Promise<{ copiedFiles: string[]; refreshedFiles: string[]; skippedFiles: string[] }> {
   const copiedFiles: string[] = [];
+  const refreshedFiles: string[] = [];
   const skippedFiles: string[] = [];
   for (const sourceFile of await listFiles(sourceDir)) {
     if (path.basename(sourceFile) === ".gitkeep") {
       continue;
     }
     const relative = path.relative(sourceDir, sourceFile);
-    const result = await copyOneFile(sourceFile, path.join(destDir, relative), options);
+    const result = await copyOneFile(sourceFile, path.join(destDir, relative), {
+      ...options,
+      refreshIfChanged: isPowerupsGuidanceRelativePath(relative),
+    });
     if (result.copied) copiedFiles.push(result.copied);
+    if (result.refreshed) refreshedFiles.push(result.refreshed);
     if (result.skipped) skippedFiles.push(result.skipped);
   }
-  return { copiedFiles, skippedFiles };
+  return { copiedFiles, refreshedFiles, skippedFiles };
 }
 
 async function writeTextFile(
   dest: string,
   content: string,
-  options: { dryRun: boolean; force: boolean; createdDirectorySet: Set<string> },
-): Promise<{ copied?: string; skipped?: string }> {
+  options: { dryRun: boolean; force: boolean; refreshIfChanged?: boolean; createdDirectorySet: Set<string> },
+): Promise<{ copied?: string; refreshed?: string; skipped?: string }> {
   await ensureDirectory(path.dirname(dest), options.dryRun, options.createdDirectorySet);
   if (!(await pathExists(dest))) {
     if (!options.dryRun) {
@@ -221,14 +243,18 @@ async function writeTextFile(
     return { skipped: `${dest} (already current)` };
   }
 
+  if (options.refreshIfChanged || options.force) {
+    if (!options.dryRun) {
+      await fs.writeFile(dest, content, "utf8");
+    }
+    return { refreshed: dest };
+  }
+
   if (!options.force) {
     return { skipped: `${dest} (exists; not overwritten)` };
   }
 
-  if (!options.dryRun) {
-    await fs.writeFile(dest, content, "utf8");
-  }
-  return { copied: dest };
+  return { refreshed: dest };
 }
 
 function instructionBlock(agentRoot: string): string {
@@ -241,11 +267,12 @@ function instructionBlock(agentRoot: string): string {
     `Agent Powerups assets are installed at \`${normalizedRoot}\`.`,
     "",
     "Use these local assets when relevant:",
-    "- Run `apx discover \"<task>\" --target <agent>` for task-based powerup suggestions.",
-    "- Run `apx inventory --target <agent> --json` to inspect available skills, plugin contents, staged assets, and installed-only skills.",
+    "- Claude Code: match the task against native skills first; use `apx discover` when uncertain or when the task may need non-skill assets.",
+    "- Codex, Gemini, and generic agents: run `apx discover \"<task>\" --target <agent>` for task-based powerup suggestions.",
+    "- Run `apx inventory --target <agent> --json` to inspect available skills, plugin contents, MCP configs, hooks, staged assets, and installed-only skills.",
     "- Read `skills/using-powerups/SKILL.md` or `agent-powerups/skills/using-powerups/SKILL.md` before first use.",
     "- Native skills are installed at `<agent-root>/skills/`; full support copies are staged at `agent-powerups/skills/`.",
-    "- Plugin bundles are installed under the native plugin directory and staged at `agent-powerups/plugins/` in full mode.",
+    "- Plugins are installed under the native plugin directory and staged at `agent-powerups/plugins/` in full mode.",
     "- Run `apx profiles list` to see curated skill sets for specific workflows.",
     "- Treat hooks in `agent-powerups/hooks/` as review-before-use recipes, not active hooks.",
     "- `apx check` is dependency-only. Do not use it as proof that a skill was read or applied.",
@@ -283,7 +310,7 @@ async function writeGeneratedInstructions(
   dryRun: boolean,
   force: boolean,
   createdDirectorySet: Set<string>,
-): Promise<{ copiedFiles: string[]; skippedFiles: string[] }> {
+): Promise<{ copiedFiles: string[]; refreshedFiles: string[]; skippedFiles: string[] }> {
   const instructionsPath = path.join(agentRoot, "agent-powerups", "instructions", "agent-powerups.md");
   const content = [
     "# Agent Powerups Instructions",
@@ -293,9 +320,10 @@ async function writeGeneratedInstructions(
     block,
     "",
   ].join("\n");
-  const result = await writeTextFile(instructionsPath, content, { dryRun, force, createdDirectorySet });
+  const result = await writeTextFile(instructionsPath, content, { dryRun, force, refreshIfChanged: true, createdDirectorySet });
   return {
     copiedFiles: result.copied ? [result.copied] : [],
+    refreshedFiles: result.refreshed ? [result.refreshed] : [],
     skippedFiles: result.skipped ? [result.skipped] : [],
   };
 }
@@ -308,7 +336,7 @@ async function writeDiscoveryIndexes(
   force: boolean,
   full: boolean,
   createdDirectorySet: Set<string>,
-): Promise<{ copiedFiles: string[]; skippedFiles: string[] }> {
+): Promise<{ copiedFiles: string[]; refreshedFiles: string[]; skippedFiles: string[] }> {
   const content = await buildDiscoveryIndexJson(service, profile.agent === "gemini" ? "gemini" : profile.agent);
   const destinations = [path.join(agentRoot, "discovery-index.json")];
   if (full) {
@@ -316,28 +344,30 @@ async function writeDiscoveryIndexes(
   }
 
   const copiedFiles: string[] = [];
+  const refreshedFiles: string[] = [];
   const skippedFiles: string[] = [];
   for (const destination of destinations) {
-    const result = await writeTextFile(destination, content, { dryRun, force, createdDirectorySet });
+    const result = await writeTextFile(destination, content, { dryRun, force, refreshIfChanged: true, createdDirectorySet });
     if (result.copied) copiedFiles.push(result.copied);
+    if (result.refreshed) refreshedFiles.push(result.refreshed);
     if (result.skipped) skippedFiles.push(result.skipped);
   }
-  return { copiedFiles, skippedFiles };
+  return { copiedFiles, refreshedFiles, skippedFiles };
 }
 
 async function updateInstructionFile(
   instructionPath: string,
   block: string,
   dryRun: boolean,
-): Promise<{ modifiedFiles: string[]; backupFiles: string[]; skippedFiles: string[] }> {
+): Promise<{ modifiedFiles: string[]; refreshedFiles: string[]; backupFiles: string[]; skippedFiles: string[] }> {
   if (!(await pathExists(instructionPath))) {
-    return { modifiedFiles: [], backupFiles: [], skippedFiles: [`${instructionPath} (missing; manual edit required)`] };
+    return { modifiedFiles: [], refreshedFiles: [], backupFiles: [], skippedFiles: [`${instructionPath} (missing; manual edit required)`] };
   }
 
   const current = await fs.readFile(instructionPath, "utf8");
   const next = replaceInstructionBlock(current, block);
   if (!next.changed) {
-    return { modifiedFiles: [], backupFiles: [], skippedFiles: [`${instructionPath} (agent-powerups block already present)`] };
+    return { modifiedFiles: [], refreshedFiles: [], backupFiles: [], skippedFiles: [`${instructionPath} (agent-powerups block already present)`] };
   }
 
   const backupPath = backupPathFor(instructionPath);
@@ -346,7 +376,7 @@ async function updateInstructionFile(
     await fs.writeFile(instructionPath, next.content, "utf8");
   }
 
-  return { modifiedFiles: [instructionPath], backupFiles: [backupPath], skippedFiles: [] };
+  return { modifiedFiles: [instructionPath], refreshedFiles: [instructionPath], backupFiles: [backupPath], skippedFiles: [] };
 }
 
 function geminiExtensionManifest(bundle: any, version: string): string {
@@ -378,8 +408,9 @@ async function collectNativePluginInstalls(
   agentRoot: string,
   profile: NativeProfile,
   options: { dryRun: boolean; force: boolean; createdDirectorySet: Set<string> },
-): Promise<{ copiedFiles: string[]; skippedFiles: string[] }> {
+): Promise<{ copiedFiles: string[]; refreshedFiles: string[]; skippedFiles: string[] }> {
   const copiedFiles: string[] = [];
+  const refreshedFiles: string[] = [];
   const skippedFiles: string[] = [];
   const bundles = await getPluginBundles(service.repoRoot);
   const version = await getPluginPackageVersion(service.repoRoot);
@@ -394,6 +425,7 @@ async function collectNativePluginInstalls(
     const destDir = path.join(destBase, bundle.name);
     const copied = await copyDirectoryContents(sourceDir, destDir, options);
     copiedFiles.push(...copied.copiedFiles);
+    refreshedFiles.push(...copied.refreshedFiles);
     skippedFiles.push(...copied.skippedFiles);
 
     if (profile.agent === "gemini" && !(await pathExists(path.join(sourceDir, "gemini-extension.json")))) {
@@ -403,11 +435,12 @@ async function collectNativePluginInstalls(
         options,
       );
       if (result.copied) copiedFiles.push(result.copied);
+      if (result.refreshed) refreshedFiles.push(result.refreshed);
       if (result.skipped) skippedFiles.push(result.skipped);
     }
   }
 
-  return { copiedFiles, skippedFiles };
+  return { copiedFiles, refreshedFiles, skippedFiles };
 }
 
 async function copyFullSupportAssets(
@@ -415,7 +448,7 @@ async function copyFullSupportAssets(
   agentRoot: string,
   profile: NativeProfile,
   options: { dryRun: boolean; force: boolean; createdDirectorySet: Set<string> },
-): Promise<{ copiedFiles: string[]; skippedFiles: string[] }> {
+): Promise<{ copiedFiles: string[]; refreshedFiles: string[]; skippedFiles: string[] }> {
   const installRoot = path.join(agentRoot, "agent-powerups");
   const directories = [
     { source: path.join(service.repoRoot, "skills"), dest: path.join(installRoot, "skills") },
@@ -442,13 +475,15 @@ async function copyFullSupportAssets(
   }
 
   const copiedFiles: string[] = [];
+  const refreshedFiles: string[] = [];
   const skippedFiles: string[] = [];
   for (const directory of directories) {
     const copied = await copyDirectoryContents(directory.source, directory.dest, options);
     copiedFiles.push(...copied.copiedFiles);
+    refreshedFiles.push(...copied.refreshedFiles);
     skippedFiles.push(...copied.skippedFiles);
   }
-  return { copiedFiles, skippedFiles };
+  return { copiedFiles, refreshedFiles, skippedFiles };
 }
 
 function formatNativeInstallOutput(data: NativeInstallData, verbose: boolean): string {
@@ -461,6 +496,7 @@ function formatNativeInstallOutput(data: NativeInstallData, verbose: boolean): s
   const sections: Array<[string, string[]]> = [
     ["created directories", data.createdDirectories],
     ["copied files", data.copiedFiles],
+    ["refreshed files", data.refreshedFiles],
     ["skipped files", data.skippedFiles],
     ["modified files", data.modifiedFiles],
     ["backup files", data.backupFiles],
@@ -530,6 +566,7 @@ export async function runNativeInstallCommand(
   const agentRoot = path.resolve(options.agentRoot ?? defaultNativeAgentRoot(profile));
   const createdDirectorySet = new Set<string>();
   const copiedFiles: string[] = [];
+  const refreshedFiles: string[] = [];
   const skippedFiles: string[] = [];
   const modifiedFiles: string[] = [];
   const backupFiles: string[] = [];
@@ -550,10 +587,12 @@ export async function runNativeInstallCommand(
 
   const skills = await copyDirectoryContents(path.join(service.repoRoot, "skills"), path.join(agentRoot, "skills"), copyOptions);
   copiedFiles.push(...skills.copiedFiles);
+  refreshedFiles.push(...skills.refreshedFiles);
   skippedFiles.push(...skills.skippedFiles);
 
   const plugins = await collectNativePluginInstalls(service, agentRoot, profile, copyOptions);
   copiedFiles.push(...plugins.copiedFiles);
+  refreshedFiles.push(...plugins.refreshedFiles);
   skippedFiles.push(...plugins.skippedFiles);
 
   const discoveryIndexes = await writeDiscoveryIndexes(
@@ -566,22 +605,26 @@ export async function runNativeInstallCommand(
     createdDirectorySet,
   );
   copiedFiles.push(...discoveryIndexes.copiedFiles);
+  refreshedFiles.push(...discoveryIndexes.refreshedFiles);
   skippedFiles.push(...discoveryIndexes.skippedFiles);
 
   if (options.full) {
     const block = instructionBlock(agentRoot);
     const generatedInstructions = await writeGeneratedInstructions(agentRoot, block, options.dryRun, options.force, createdDirectorySet);
     copiedFiles.push(...generatedInstructions.copiedFiles);
+    refreshedFiles.push(...generatedInstructions.refreshedFiles);
     skippedFiles.push(...generatedInstructions.skippedFiles);
 
     const support = await copyFullSupportAssets(service, agentRoot, profile, copyOptions);
     copiedFiles.push(...support.copiedFiles);
+    refreshedFiles.push(...support.refreshedFiles);
     skippedFiles.push(...support.skippedFiles);
 
     const candidateInstructionFile = path.join(agentRoot, profile.instructionFileName);
     const instructionFile = path.resolve(options.instructionsFile ?? candidateInstructionFile);
     const instructionUpdate = await updateInstructionFile(instructionFile, block, options.dryRun);
     modifiedFiles.push(...instructionUpdate.modifiedFiles);
+    refreshedFiles.push(...instructionUpdate.refreshedFiles);
     backupFiles.push(...instructionUpdate.backupFiles);
     skippedFiles.push(...instructionUpdate.skippedFiles);
   }
@@ -600,6 +643,7 @@ export async function runNativeInstallCommand(
     full: options.full,
     createdDirectories: [...createdDirectorySet],
     copiedFiles,
+    refreshedFiles,
     skippedFiles,
     modifiedFiles,
     backupFiles,
@@ -612,6 +656,7 @@ export async function runNativeInstallCommand(
     actions: [
       `mkdir ${data.createdDirectories.length} directorie(s)`,
       `copy ${data.copiedFiles.length} file(s)`,
+      `refresh ${data.refreshedFiles.length} file(s)`,
       `skip ${data.skippedFiles.length} file(s)`,
       `modify ${data.modifiedFiles.length} file(s)`,
       `backup ${data.backupFiles.length} file(s)`,
