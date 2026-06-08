@@ -1,6 +1,6 @@
 {
   "name": "spec-quality-gates",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Quality gates for spec-driven development: adversarial plan verification and structured code review.",
   "author": {
     "name": "Javier Rivero Iglesias",
