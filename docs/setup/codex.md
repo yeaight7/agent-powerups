@@ -1,6 +1,6 @@
 # Codex Setup
 
-Status: compatibility and agent-curated setup path. For manual install, prefer `apx install codex` or `apx install codex --full`. This document describes what `apx setup codex` still does; it is not an official Codex integration claim.
+Status: legacy compatibility and agent-curated setup path. For manual install, prefer `apx install codex` or `apx install codex --full`. This document describes what `apx setup codex` still does; it is not an official Codex integration claim. `apx setup` remains supported through at least `v0.8.0`; removal or aliasing requires a separate batch.
 
 ## Setup Modes
 
