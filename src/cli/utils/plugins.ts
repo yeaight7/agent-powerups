@@ -215,13 +215,11 @@ async function validatePluginMetadataFiles(root: string, bundle: any, pluginPath
     const parsed = await readJsonForValidation(path.join(pluginPath, manifest.rel), manifest.label, errors);
     if (!parsed) continue;
     for (const [field, expectedValue] of Object.entries(expected)) {
+      if (manifest.rel === "gemini-extension.json" && field === "maturity") continue;
       assertField(errors, manifest.label, field, parsed[field], expectedValue);
     }
-    if (manifest.rel === "gemini-extension.json") {
-      assertField(errors, manifest.label, "contextFileName", parsed.contextFileName, "GEMINI.md");
-    }
+    // Removed contextFileName check for marketplace compliance
   }
-
   if (!(await pathExists(path.join(pluginPath, "GEMINI.md")))) {
     errors.push("Missing required file: GEMINI.md");
   }
