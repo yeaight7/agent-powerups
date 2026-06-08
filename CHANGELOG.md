@@ -5,6 +5,34 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## Unreleased
+
+### Added — Validation and discovery
+
+- Added `apx validate drift` to compare skill catalog entries with `SKILL.md` frontmatter, treating `name` drift as an error and `summary`/`description` drift as an informational warning.
+- Added `apx validate metadata` to warn when routable skills, commands, or workflows lack `use_when` or `signals` metadata and have not explicitly opted out.
+- Added `apx validate plugins` as a dedicated plugin metadata consistency gate, backed by tests for manifest, marketplace, and package-version drift.
+- Added discovery regression fixtures covering task-routing behavior and added `routing_priority` as an optional catalog field for deterministic tie-breaking.
+
+### Changed — Discovery and asset metadata
+
+- Reworked discovery scoring to use per-asset metadata (`signals`, `use_when`, `capabilities`, tags, summaries, and `routing_priority`) instead of hardcoded name-boost rules in code.
+- Backfilled catalog routing metadata for the assets covered by the discovery regression table.
+- `apx info` now enriches catalog output with asset frontmatter details and clearer next-action hints from the same parser used by inventory/discovery.
+
+### Changed — Plugin metadata model
+
+- Plugin version metadata now derives from `package.json`, including plugin build/diff output, Gemini extension manifests, plugin manifests, and marketplace validation.
+- Plugin validation now treats `plugin-bundles.json` as canonical for per-plugin name, description, maturity, and composition.
+- Marketplace metadata for Claude and Codex now carries aligned plugin descriptions, versions, and maturity values.
+
+### Changed — Docs and setup exposure
+
+- Simplified README, compatibility, and installation docs around the current product vocabulary and primary CLI paths, replacing static catalog-style detail with CLI-driven discovery pointers.
+- `apx setup` now reports itself as legacy compatibility for agent-curated setup. Manual native install remains `apx install <agent>`; `setup` stays supported through at least `v0.8.0`, and removal or aliasing requires a separate batch.
+
+---
+
 ## [0.6.1] — 2026-06-07
 
 ### Added — Task-based auto-discovery
