@@ -895,9 +895,23 @@ test("setup dry-run is default and reports planned Codex actions without writing
   assert.equal(json.data.agent, "codex");
   assert.equal(json.data.dryRun, true);
   assert.match(json.stdout, /setup dry-run \[mode: \w+\]: codex/);
+  assert.match(json.stdout, /warning: apx setup is legacy compatibility/);
+  assert.ok(json.warnings.some((item: string) => item.includes("apx setup is legacy compatibility")));
   assert.ok(json.data.createdDirectories.some((item: string) => item.endsWith("agent-powerups")));
   assert.ok(json.data.manualSteps.some((item: string) => item.includes("AGENTS.md")));
   await assert.rejects(fs.access(path.join(agentRoot, "agent-powerups")));
+});
+
+test("setup human output and help mark setup as legacy compatibility", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-setup-legacy-"));
+  const setup = await execute(["setup", "codex", "--agent-root", agentRoot, "--dry-run"]);
+
+  assert.equal(setup.exitCode, 0);
+  assert.match(setup.stdout, /warning: apx setup is legacy compatibility/);
+
+  const help = await execute(["help"]);
+  assert.equal(help.exitCode, 0);
+  assert.match(help.stdout, /apx setup .*legacy compatibility/);
 });
 
 test("setup dry-run supports Claude Code and Gemini", async () => {
@@ -924,6 +938,7 @@ test("setup --yes creates agent directories and copies assets", async () => {
   const json = parseJson(result.stdout);
   assert.equal(json.data.dryRun, false);
   assert.match(json.stdout, /setup complete \[mode: \w+\]: codex/);
+  assert.ok(json.warnings.some((item: string) => item.includes("apx setup is legacy compatibility")));
   await fs.access(path.join(agentRoot, "agent-powerups", "skills", "systematic-debugging", "SKILL.md"));
   await fs.access(path.join(agentRoot, "agent-powerups", "commands", "generic", "ship-check.md"));
   await fs.access(path.join(agentRoot, "agent-powerups", "mcp", "codex", "github-local.toml"));

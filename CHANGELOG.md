@@ -9,7 +9,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed — Setup and install workflow
 
-- SX-06: Clarify the legacy `apx setup` compatibility path and support window.
+- `apx setup` now reports itself as legacy compatibility for agent-curated setup. Manual native install remains `apx install <agent>`; `setup` stays supported through at least `v0.8.0`, and removal or aliasing requires a separate batch.
 - SX-07: Refresh stale Agent Powerups-owned install guidance and discovery indexes during native agent installs.
 
 ---

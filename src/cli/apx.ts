@@ -71,7 +71,7 @@ apx no-secrets-preflight [--path <path> | --all] [--json]
 apx using-powerups
 apx install <codex|claude|claude-code|gemini> [--full] [--dry-run] [--agent-root <path>] [--instructions-file <path>] [--force] [--verbose] [--json]
 apx install <asset-name> --target <${INSTALL_TARGETS.join("|")}> [--dry-run] [--dest <path>]
-apx setup <codex|claude-code|gemini> [--mode minimal|recommended|full] [--dry-run|--yes] [--agent-root <path>] [--instructions-file <path>] [--json]
+apx setup <codex|claude-code|gemini> [--mode minimal|recommended|full] [--dry-run|--yes] [--agent-root <path>] [--instructions-file <path>] [--json]  # legacy compatibility
 apx mcp list
 apx mcp print <config-name> --target <${INSTALL_TARGETS.join("|")}>
 apx mcp smoke <config-name> [--json]

@@ -87,6 +87,9 @@ const MINIMAL_COMMANDS_GENERIC = ["ship-check.md", "using-powerups.md"] as const
 
 const RECOMMENDED_PLUGIN_BUNDLES = ["dev-vitals", "debugging-diagnostics", "quality-gates"] as const;
 
+export const SETUP_LEGACY_WARNING =
+  "warning: apx setup is legacy compatibility; prefer apx install <agent> for manual native install. Use setup only for agent-curated minimal/recommended/full staging.";
+
 function isSetupAgent(value: string | undefined): value is SetupAgent {
   return value === "codex" || value === "claude-code" || value === "gemini";
 }
@@ -460,7 +463,11 @@ async function updateInstructionFile(
 }
 
 function formatSetupOutput(data: SetupData, mode: SetupMode): string {
-  const lines = [data.dryRun ? `setup dry-run [mode: ${mode}]: ${data.agent}` : `setup complete [mode: ${mode}]: ${data.agent}`, `agent root: ${data.agentRoot}`];
+  const lines = [
+    SETUP_LEGACY_WARNING,
+    data.dryRun ? `setup dry-run [mode: ${mode}]: ${data.agent}` : `setup complete [mode: ${mode}]: ${data.agent}`,
+    `agent root: ${data.agentRoot}`,
+  ];
   const sections: Array<[string, string[]]> = [
     ["created directories", data.createdDirectories],
     ["copied files", data.copiedFiles],
@@ -607,7 +614,10 @@ export async function runSetupCommand(
 
   return createResult({
     stdout: formatSetupOutput(data, mode),
-    warnings: skippedFiles.filter((item) => item.includes("not overwritten") || item.includes("manual edit")),
+    warnings: [
+      SETUP_LEGACY_WARNING,
+      ...skippedFiles.filter((item) => item.includes("not overwritten") || item.includes("manual edit")),
+    ],
     actions: [
       ...data.createdDirectories.map((item) => `mkdir ${item}`),
       ...data.copiedFiles.map((item) => `copy ${item}`),

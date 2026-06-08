@@ -1,6 +1,6 @@
 # Claude Code Setup
 
-Status: compatibility and agent-curated setup path. For manual install, prefer `apx install claude` or `apx install claude --full`. This document describes what `apx setup claude-code` still does; it is not an official Claude Code integration claim.
+Status: legacy compatibility and agent-curated setup path. For manual install, prefer `apx install claude` or `apx install claude --full`. This document describes what `apx setup claude-code` still does; it is not an official Claude Code integration claim. `apx setup` remains supported through at least `v0.8.0`; removal or aliasing requires a separate batch.
 
 ## Setup Modes
 
