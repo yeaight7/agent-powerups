@@ -99,7 +99,7 @@ Full mode also writes a staged `<agent-root>\agent-powerups\discovery-index.json
 
 ## Agent-Curated Setup
 
-`apx setup <agent>` remains for compatibility and for agent-delegated curated setups. It is dry-run by default and still supports minimal, recommended, and full modes:
+`apx setup <agent>` is legacy compatibility for agent-delegated curated setups. It is dry-run by default and still supports minimal, recommended, and full modes:
 
 ```powershell
 apx setup codex --dry-run
@@ -107,7 +107,7 @@ apx setup codex --mode recommended --yes
 apx setup codex --mode full --yes
 ```
 
-Use it when an agent is deciding which subset/profile to install. Use `apx install <agent>` for manual default install.
+Use it only when an agent is deciding which subset/profile to install. Use `apx install <agent>` for manual default install. `apx setup` remains supported through at least `v0.8.0`; removal or aliasing requires a separate batch.
 
 Per-agent references:
 
