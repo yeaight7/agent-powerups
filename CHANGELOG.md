@@ -30,6 +30,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Simplified README, compatibility, and installation docs around the current product vocabulary and primary CLI paths, replacing static catalog-style detail with CLI-driven discovery pointers.
 - `apx setup` now reports itself as legacy compatibility for agent-curated setup. Manual native install remains `apx install <agent>`; `setup` stays supported through at least `v0.8.0`, and removal or aliasing requires a separate batch.
+- `apx install <agent>` now refreshes stale Agent Powerups-owned guidance and discovery indexes by default, including installed `using-powerups` guidance, generated install instructions, and marked global instruction blocks.
 
 ---
 
