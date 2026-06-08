@@ -1,6 +1,6 @@
 {
   "name": "skill-authoring",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Skill creation and extraction workflows for reusable agent guidance.",
   "author": {
     "name": "Javier Rivero Iglesias",
