@@ -1,6 +1,6 @@
 # Gemini Setup
 
-Status: compatibility and agent-curated setup path. For manual install, prefer `apx install gemini` or `apx install gemini --full`. This document describes what `apx setup gemini` still does; it is not an official Gemini CLI integration claim.
+Status: legacy compatibility and agent-curated setup path. For manual install, prefer `apx install gemini` or `apx install gemini --full`. This document describes what `apx setup gemini` still does; it is not an official Gemini CLI integration claim. `apx setup` remains supported through at least `v0.8.0`; removal or aliasing requires a separate batch.
 
 ## Setup Modes
 
