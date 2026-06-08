@@ -1,6 +1,6 @@
 {
   "name": "context-efficiency",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Context-efficient routing: dispatch tables for workflow, review, and codebase-intelligence commands.",
   "maturity": "beta",
   "contextFileName": "GEMINI.md"
