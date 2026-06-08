@@ -2,6 +2,6 @@
   "name": "software-engineering",
   "version": "0.6.2",
   "description": "Subagent orchestration, wave execution, persistent completion, autonomous delivery, and migration batching.",
-  "maturity": "experimental",
-  "contextFileName": "GEMINI.md"
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yeaight7/agent-powerups"
 }

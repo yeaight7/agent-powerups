@@ -2,6 +2,6 @@
   "name": "data-engineering",
   "version": "0.6.2",
   "description": "Analytics engineering, dbt patterns, BigQuery optimization, data quality, and pipeline workflows.",
-  "maturity": "beta",
-  "contextFileName": "GEMINI.md"
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yeaight7/agent-powerups"
 }

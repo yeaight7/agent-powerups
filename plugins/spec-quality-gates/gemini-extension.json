@@ -2,6 +2,6 @@
   "name": "spec-quality-gates",
   "version": "0.6.2",
   "description": "Quality gates for spec-driven development: adversarial plan verification and structured code review.",
-  "maturity": "beta",
-  "contextFileName": "GEMINI.md"
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yeaight7/agent-powerups"
 }

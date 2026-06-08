@@ -2,6 +2,6 @@
   "name": "dev-vitals",
   "version": "0.6.2",
   "description": "Core developer workflow skills: planning, execution, communication, and powerup discovery.",
-  "maturity": "stable",
-  "contextFileName": "GEMINI.md"
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yeaight7/agent-powerups"
 }

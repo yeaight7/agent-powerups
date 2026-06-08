@@ -2,6 +2,6 @@
   "name": "codebase-maintenance",
   "version": "0.6.2",
   "description": "Safe refactoring, dead-code removal, legacy modernization, and dependency hygiene.",
-  "maturity": "beta",
-  "contextFileName": "GEMINI.md"
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yeaight7/agent-powerups"
 }
