@@ -1,6 +1,6 @@
 {
   "name": "security-guardrails",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Security review guidance for agent configs, MCP and filesystem exposure, red-team scenarios, and audit prompts.",
   "author": {
     "name": "Javier Rivero Iglesias",

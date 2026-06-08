@@ -1,6 +1,6 @@
 {
   "name": "connected-apps",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Review-first runbooks for connected-app workflows and multi-system deployment sequencing.",
   "maturity": "experimental",
   "contextFileName": "GEMINI.md"

@@ -1,6 +1,6 @@
 {
   "name": "machine-learning-ops",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "ML pipeline design, experiment tracking, model evaluation, training debugging, and reproducibility.",
   "author": {
     "name": "Javier Rivero Iglesias",

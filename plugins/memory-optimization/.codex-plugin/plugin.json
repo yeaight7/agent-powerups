@@ -1,6 +1,6 @@
 {
   "name": "memory-optimization",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Graph-backed memory and context optimization workflows with graphify first and document conversion helpers second.",
   "maturity": "beta"
 }

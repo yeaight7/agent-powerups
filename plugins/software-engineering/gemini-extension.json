@@ -1,6 +1,6 @@
 {
   "name": "software-engineering",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Subagent orchestration, wave execution, persistent completion, autonomous delivery, and migration batching.",
   "maturity": "experimental",
   "contextFileName": "GEMINI.md"

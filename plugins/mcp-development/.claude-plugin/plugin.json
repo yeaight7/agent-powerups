@@ -1,6 +1,6 @@
 {
   "name": "mcp-development",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Workflow-first MCP server design with schema-first tools, context-aware outputs, and evaluation discipline.",
   "author": {
     "name": "Javier Rivero Iglesias",
