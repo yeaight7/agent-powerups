@@ -1,6 +1,6 @@
 {
   "name": "codebase-maintenance",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Safe refactoring, dead-code removal, legacy modernization, and dependency hygiene.",
   "maturity": "beta"
 }
