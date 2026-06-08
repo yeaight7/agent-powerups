@@ -214,7 +214,7 @@ apx install markitdown-file-intake --target codex --dry-run
 apx install ask-claude --target codex --dry-run
 ```
 
-11. Agent-curated setup compatibility path:
+11. Legacy agent-curated setup compatibility path:
 
 ```sh
 apx setup codex --dry-run
@@ -222,6 +222,8 @@ apx setup codex --mode minimal --yes    # bootstrap only
 apx setup codex --mode recommended --yes  # main agent setup (recommended)
 apx setup codex --mode full --yes       # broad staging
 ```
+
+`apx setup` is legacy compatibility and remains supported through at least `v0.8.0`. Prefer `apx install <agent>` for manual native install.
 
 #### Manual Setup (Primary)
 
@@ -246,7 +248,7 @@ apx profiles list
 apx setup <codex|claude-code|gemini> --mode recommended --yes
 ```
 
-Agent will inspect available skills/plugins, propose a plan, and apply it.
+Agent will inspect available skills/plugins, propose a plan, and apply it. This is the legacy compatibility path for agent-curated setup; manual setup should use `apx install <agent>`.
 
 Agent setup docs:
 
@@ -363,7 +365,7 @@ apx setup gemini --mode recommended --yes
 
 ### Migration note (v0.x)
 
-`apx install <agent>` is now the primary manual install path and writes native skills/plugins by default. `apx setup <agent>` remains for compatibility and agent-curated setup; it is still dry-run by default unless `--yes` is passed.
+`apx install <agent>` is now the primary manual install path and writes native skills/plugins by default. `apx setup <agent>` is legacy compatibility for agent-curated setup, remains dry-run by default unless `--yes` is passed, and remains supported through at least `v0.8.0`; removal or aliasing requires a separate batch.
 
 Extra surfaces:
 
