@@ -153,7 +153,7 @@ apx install codex --full
 apx install codex --verbose
 ```
 
-Default native install copies all root skills and plugins into the selected agent root and writes a `discovery-index.json` beside them. Human output shows counts by default; use `--verbose` for per-file paths. `--full` also stages support assets and another discovery index under `agent-powerups/`, then updates existing global instructions with a backup.
+Default native install copies all root skills and plugins into the selected agent root and writes a `discovery-index.json` beside them. Human output shows counts by default; use `--verbose` for per-file paths. If installed Agent Powerups guidance or discovery indexes are stale, `apx install <agent>` refreshes them by default. `--full` also stages support assets and another discovery index under `agent-powerups/`, then updates existing global instructions with a backup.
 
 6. Work with plugins:
 
