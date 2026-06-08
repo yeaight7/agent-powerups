@@ -10,7 +10,7 @@
       "name": "dev-vitals",
       "source": "./plugins/dev-vitals",
       "description": "Core developer workflow skills: planning, execution, communication, and powerup discovery.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "planning",
@@ -26,7 +26,7 @@
       "name": "debugging-diagnostics",
       "source": "./plugins/debugging-diagnostics",
       "description": "Error diagnosis, fault isolation, log forensics, and incident investigation.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "debugging",
@@ -42,7 +42,7 @@
       "name": "codebase-maintenance",
       "source": "./plugins/codebase-maintenance",
       "description": "Safe refactoring, dead-code removal, legacy modernization, and dependency hygiene.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "refactoring",
@@ -58,7 +58,7 @@
       "name": "data-engineering",
       "source": "./plugins/data-engineering",
       "description": "Analytics engineering, dbt patterns, BigQuery optimization, data quality, and pipeline workflows.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "dbt",
@@ -74,7 +74,7 @@
       "name": "documentation-systems",
       "source": "./plugins/documentation-systems",
       "description": "Documentation architecture, API reference authoring, ADR writing, readme hardening, and doc quality.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "documentation",
@@ -90,7 +90,7 @@
       "name": "machine-learning-ops",
       "source": "./plugins/machine-learning-ops",
       "description": "ML pipeline design, experiment tracking, model evaluation, training debugging, and reproducibility.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "machine-learning",
@@ -106,7 +106,7 @@
       "name": "quality-gates",
       "source": "./plugins/quality-gates",
       "description": "Quality enforcement: TDD discipline, code review workflows, release verification, and CI failure analysis.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "tdd",
@@ -122,7 +122,7 @@
       "name": "software-engineering",
       "source": "./plugins/software-engineering",
       "description": "Subagent orchestration, wave execution, persistent completion, autonomous delivery, and migration batching.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "software-engineering",
@@ -138,7 +138,7 @@
       "name": "agentic-systems",
       "source": "./plugins/agentic-systems",
       "description": "Multi-model orchestration and advisor routing: tri-model review and canonical advisor routing.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "multi-agent",
@@ -154,7 +154,7 @@
       "name": "security-guardrails",
       "source": "./plugins/security-guardrails",
       "description": "Security review guidance for agent configs, MCP and filesystem exposure, red-team scenarios, and audit prompts.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "security",
@@ -170,7 +170,7 @@
       "name": "codebase-intelligence",
       "source": "./plugins/codebase-intelligence",
       "description": "Search-first codebase understanding, context retrieval, mapping, pattern detection, and living project intelligence.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "codebase-mapping",
@@ -186,7 +186,7 @@
       "name": "spec-driven-development",
       "source": "./plugins/spec-driven-development",
       "description": "Requirements clarification, phase planning, workstreams, and wave-based execution for reviewable delivery.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "spec",
@@ -202,7 +202,7 @@
       "name": "mcp-development",
       "source": "./plugins/mcp-development",
       "description": "Workflow-first MCP server design with schema-first tools, context-aware outputs, and evaluation discipline.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "mcp",
@@ -218,7 +218,7 @@
       "name": "skill-authoring",
       "source": "./plugins/skill-authoring",
       "description": "Skill creation and extraction workflows for reusable agent guidance.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "skills",
@@ -234,7 +234,7 @@
       "name": "github-ops",
       "source": "./plugins/github-ops",
       "description": "GitHub review, comment handling, and CI triage workflows with approval-gated write actions.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "github",
@@ -250,7 +250,7 @@
       "name": "connected-apps",
       "source": "./plugins/connected-apps",
       "description": "Review-first runbooks for connected-app workflows and multi-system deployment sequencing.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "deploy",
@@ -266,7 +266,7 @@
       "name": "spec-quality-gates",
       "source": "./plugins/spec-quality-gates",
       "description": "Quality gates for spec-driven development: adversarial plan verification and structured code review.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "spec",
@@ -282,7 +282,7 @@
       "name": "context-efficiency",
       "source": "./plugins/context-efficiency",
       "description": "Context-efficient routing: dispatch tables for workflow, review, and codebase-intelligence commands.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "context",
@@ -298,7 +298,7 @@
       "name": "tool-integrations",
       "source": "./plugins/tool-integrations",
       "description": "Browser, MCP, retrieval, and agent runtime integration skills with conservative setup and safety boundaries.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "browser",
@@ -314,7 +314,7 @@
       "name": "memory-optimization",
       "source": "./plugins/memory-optimization",
       "description": "Graph-backed memory and context optimization workflows with graphify first and document conversion helpers second.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "graphify",
@@ -330,7 +330,7 @@
       "name": "agent-evaluation-lab",
       "source": "./plugins/agent-evaluation-lab",
       "description": "Prompt, skill, red-team, and agent behavior evaluation workflows.",
-      "version": "0.6.1",
+      "version": "0.6.2",
       "license": "Apache-2.0",
       "keywords": [
         "evaluation",
