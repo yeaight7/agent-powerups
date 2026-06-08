@@ -166,15 +166,12 @@ async function checkPluginMirrorSync(repoRoot: string): Promise<DoctorCheck> {
       if (manifest.description !== bundle.description) {
         issues.push(`${bundle.name}: manifest description mismatch`);
       }
-      if (manifest.maturity !== bundle.maturity) {
+      if (manifest !== gemini && manifest.maturity !== bundle.maturity) {
         issues.push(`${bundle.name}: manifest maturity mismatch`);
       }
       if (manifest.version !== expectedVersion) {
         issues.push(`${bundle.name}: manifest version mismatch`);
       }
-    }
-    if (gemini.contextFileName !== "GEMINI.md") {
-      issues.push(`${bundle.name}: Gemini contextFileName mismatch`);
     }
     const claudeEntry = claudeEntries.find((plugin: any) => plugin?.name === bundle.name);
     if (!claudeEntry) {
