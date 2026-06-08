@@ -40,9 +40,9 @@ Default native install writes immediately and installs:
 
 `claude` and `claude-code` are aliases for the same target.
 
-Existing identical files are skipped. Existing changed files are not overwritten unless `--force` is passed.
+Existing identical files are skipped. Existing changed files are not overwritten unless `--force` is passed, except for Agent Powerups-owned guidance and discovery indexes, which refresh by default when stale.
 
-Native install also writes `discovery-index.json` beside native skills and plugins so agents and tools can inspect installed capabilities without scanning every file.
+Native install also writes `discovery-index.json` beside native skills and plugins so agents and tools can inspect installed capabilities without scanning every file. This index is a derived installed snapshot; command-time `apx inventory` remains the source of truth for current local state.
 
 Preview first:
 
@@ -95,7 +95,7 @@ apx install codex --full --instructions-file C:\path\AGENTS.md
 ```
 
 MCP snippets are staged for review only. No MCP server is enabled automatically.
-Full mode also writes a staged `<agent-root>\agent-powerups\discovery-index.json` for agents that inspect the support directory rather than native skill/plugin directories.
+Full mode also writes a staged `<agent-root>\agent-powerups\discovery-index.json` for agents that inspect the support directory rather than native skill/plugin directories. Stale staged instructions and indexes are refreshed by later `apx install <agent> --full` runs.
 
 ## Agent-Curated Setup
 
