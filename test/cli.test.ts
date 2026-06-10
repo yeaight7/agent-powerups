@@ -382,7 +382,6 @@ test("install gemini writes root skills and Gemini extension plugin directories"
   const packageJson = JSON.parse(await fs.readFile(path.join(repoRoot, "package.json"), "utf8"));
   assert.equal(manifest.name, "dev-vitals");
   assert.equal(manifest.version, packageJson.version);
-  assert.equal(manifest.contextFileName, "GEMINI.md");
 });
 
 test("native install human output is concise unless --verbose is passed", async () => {

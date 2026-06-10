@@ -1,7 +1,7 @@
 {
   "name": "security-guardrails",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Security review guidance for agent configs, MCP and filesystem exposure, red-team scenarios, and audit prompts.",
-  "maturity": "experimental",
-  "contextFileName": "GEMINI.md"
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yeaight7/agent-powerups"
 }

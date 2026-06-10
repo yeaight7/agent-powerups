@@ -1,7 +1,7 @@
 {
   "name": "github-ops",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "GitHub review, comment handling, and CI triage workflows with approval-gated write actions.",
-  "maturity": "beta",
-  "contextFileName": "GEMINI.md"
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yeaight7/agent-powerups"
 }

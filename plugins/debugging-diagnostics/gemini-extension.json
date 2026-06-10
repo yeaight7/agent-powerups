@@ -1,7 +1,7 @@
 {
   "name": "debugging-diagnostics",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Error diagnosis, fault isolation, log forensics, and incident investigation.",
-  "maturity": "stable",
-  "contextFileName": "GEMINI.md"
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yeaight7/agent-powerups"
 }

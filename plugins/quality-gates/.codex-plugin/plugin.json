@@ -1,6 +1,6 @@
 {
   "name": "quality-gates",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Quality enforcement: TDD discipline, code review workflows, release verification, and CI failure analysis.",
   "maturity": "stable"
 }

@@ -1,7 +1,7 @@
 {
   "name": "machine-learning-ops",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "ML pipeline design, experiment tracking, model evaluation, training debugging, and reproducibility.",
-  "maturity": "beta",
-  "contextFileName": "GEMINI.md"
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yeaight7/agent-powerups"
 }

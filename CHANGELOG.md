@@ -7,30 +7,37 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Unreleased
 
+### Changed — Setup and install workflow
+
+- `apx setup` now reports itself as legacy compatibility for agent-curated setup. Manual native install remains `apx install <agent>`; `setup` stays supported through at least `v0.8.0`, and removal or aliasing requires a separate batch.
+- SX-07: Refresh stale Agent Powerups-owned install guidance and discovery indexes during native agent installs.
+
+---
+
+## [0.6.2] — 2026-06-08
+
 ### Added — Validation and discovery
 
-- Added `apx validate drift` to compare skill catalog entries with `SKILL.md` frontmatter, treating `name` drift as an error and `summary`/`description` drift as an informational warning.
-- Added `apx validate metadata` to warn when routable skills, commands, or workflows lack `use_when` or `signals` metadata and have not explicitly opted out.
-- Added `apx validate plugins` as a dedicated plugin metadata consistency gate, backed by tests for manifest, marketplace, and package-version drift.
-- Added discovery regression fixtures covering task-routing behavior and added `routing_priority` as an optional catalog field for deterministic tie-breaking.
+- Added `apx validate drift` and `apx validate metadata` for skill and discovery metadata consistency checks.
+- Added `apx validate plugins` for plugin bundle and marketplace metadata consistency.
+- Added discovery-routing regression fixtures and `routing_priority` support for more deterministic task-based recommendations.
 
 ### Changed — Discovery and asset metadata
 
-- Reworked discovery scoring to use per-asset metadata (`signals`, `use_when`, `capabilities`, tags, summaries, and `routing_priority`) instead of hardcoded name-boost rules in code.
-- Backfilled catalog routing metadata for the assets covered by the discovery regression table.
-- `apx info` now enriches catalog output with asset frontmatter details and clearer next-action hints from the same parser used by inventory/discovery.
+- Discovery scoring now uses per-asset metadata instead of hardcoded name boost rules.
+- Backfilled catalog routing metadata across high-value assets so task matching has richer signals.
+- `apx info` now enriches catalog output with frontmatter-derived details and next-action hints.
 
 ### Changed — Plugin metadata model
 
-- Plugin version metadata now derives from `package.json`, including plugin build/diff output, Gemini extension manifests, plugin manifests, and marketplace validation.
-- Plugin validation now treats `plugin-bundles.json` as canonical for per-plugin name, description, maturity, and composition.
-- Marketplace metadata for Claude and Codex now carries aligned plugin descriptions, versions, and maturity values.
+- Plugin version handling now derives from `package.json` instead of duplicated literals in generation paths.
+- `plugin-bundles.json` is treated as the canonical source for plugin name, description, maturity, and composition metadata.
+- Claude and Codex marketplace metadata now stays aligned with plugin bundle descriptions, versions, and maturity levels.
 
-### Changed — Docs and setup exposure
+### Changed — Documentation
 
-- Simplified README, compatibility, and installation docs around the current product vocabulary and primary CLI paths, replacing static catalog-style detail with CLI-driven discovery pointers.
-- `apx setup` now reports itself as legacy compatibility for agent-curated setup. Manual native install remains `apx install <agent>`; `setup` stays supported through at least `v0.8.0`, and removal or aliasing requires a separate batch.
-- `apx install <agent>` now refreshes stale Agent Powerups-owned guidance and discovery indexes by default, including installed `using-powerups` guidance, generated install instructions, and marked global instruction blocks.
+- Simplified README, compatibility, and installation docs around product vocabulary and primary CLI paths.
+- Replaced more static catalog detail with CLI-driven pointers so documentation is less likely to drift.
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "name": "mcp-development",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Workflow-first MCP server design with schema-first tools, context-aware outputs, and evaluation discipline.",
-  "maturity": "beta",
-  "contextFileName": "GEMINI.md"
+  "license": "Apache-2.0",
+  "repository": "https://github.com/yeaight7/agent-powerups"
 }
