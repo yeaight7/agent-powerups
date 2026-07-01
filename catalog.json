@@ -15,6 +15,7 @@
       "testing"
     ],
     "maturity": "stable",
+    "tier": "core",
     "use_when": [
       "A bug, failing test, regression, or unexpected behavior needs root-cause diagnosis before a fix."
     ],
@@ -53,6 +54,7 @@
       "tokens"
     ],
     "maturity": "stable",
+    "tier": "core",
     "use_when": [
       "The user asks for concise, compressed, focused, or no-fluff communication."
     ],
@@ -89,6 +91,7 @@
       "spec"
     ],
     "maturity": "stable",
+    "tier": "core",
     "use_when": [
       "A multi-step implementation or a conceptual design/redesign needs an explicit plan before code changes."
     ],
@@ -125,7 +128,17 @@
       "refactoring",
       "code-quality"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "tier": "common",
+    "use_when": "Use when asked to clean up, refactor, or 'deslop' AI-generated code that is bloated, noisy, or over-abstracted.",
+    "avoid_when": "Do not use for implementing new features or making broad architectural rewrites without tests.",
+    "signals": [
+      "clean up code",
+      "deslop",
+      "refactor ai slop",
+      "remove bloat",
+      "anti-slop pass"
+    ]
   },
   {
     "name": "requesting-code-review",
@@ -143,6 +156,7 @@
       "merging"
     ],
     "maturity": "stable",
+    "tier": "core",
     "signals": [
       "request code review",
       "prepare for review",
@@ -166,6 +180,7 @@
       "collaboration"
     ],
     "maturity": "stable",
+    "tier": "core",
     "signals": [
       "address review feedback",
       "respond to review",
@@ -188,7 +203,17 @@
       "pull-requests",
       "triage"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "tier": "common",
+    "use_when": "Use when open pull requests, stale branches, or review bottlenecks need prioritization from the current repository state.",
+    "avoid_when": "Do not use for deep code review of a single PR or CI debugging.",
+    "signals": [
+      "triage prs",
+      "prioritize reviews",
+      "stale branches",
+      "review backlog",
+      "pr triage"
+    ]
   },
   {
     "name": "repo-map",
@@ -206,6 +231,7 @@
       "exploration"
     ],
     "maturity": "stable",
+    "tier": "core",
     "signals": [
       "repo map",
       "map the codebase",
@@ -230,6 +256,7 @@
       "bug-fix"
     ],
     "maturity": "stable",
+    "tier": "core",
     "use_when": [
       "Reproduce, isolate, and fix a bug with the smallest safe change."
     ],
@@ -262,6 +289,7 @@
       "testing"
     ],
     "maturity": "beta",
+    "tier": "core",
     "signals": [
       "refactor",
       "behavior-preserving refactor",
@@ -290,6 +318,7 @@
       "content-extraction"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "use_when": [
       "A web page or HTML source should be extracted into clean Markdown context."
     ],
@@ -330,6 +359,7 @@
       "documents"
     ],
     "maturity": "stable",
+    "tier": "specialized",
     "use_when": [
       "A document file should be converted into Markdown for agent-readable context."
     ],
@@ -375,11 +405,19 @@
       "artifacts"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "claude"
       ]
-    }
+    },
+    "use_when": "Use when a local agent needs a focused second opinion from the Claude CLI without MCP routing.",
+    "avoid_when": "Do not use when Claude CLI is missing or for tasks that require interactive back-and-forth.",
+    "signals": [
+      "ask claude",
+      "claude second opinion",
+      "delegate to claude"
+    ]
   },
   {
     "name": "ask-gemini",
@@ -397,11 +435,19 @@
       "artifacts"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "gemini"
       ]
-    }
+    },
+    "use_when": "Use when a local agent needs a focused second opinion or brainstorming from the Gemini CLI without MCP routing.",
+    "avoid_when": "Do not use for multi-turn advisory sessions where context must persist across follow-ups; use relay-gemini instead.",
+    "signals": [
+      "ask gemini",
+      "gemini second opinion",
+      "delegate to gemini"
+    ]
   },
   {
     "name": "ask-codex",
@@ -419,11 +465,19 @@
       "artifacts"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "codex"
       ]
-    }
+    },
+    "use_when": "Use when an agent needs to delegate a focused question, subtask, or review to a local Codex instance.",
+    "avoid_when": "Do not use for tasks requiring interactive back-and-forth; output is captured once.",
+    "signals": [
+      "ask codex",
+      "codex second opinion",
+      "delegate to codex"
+    ]
   },
   {
     "name": "using-powerups",
@@ -444,6 +498,7 @@
       "setup"
     ],
     "maturity": "stable",
+    "tier": "core",
     "use_when": [
       "A task may benefit from installed Agent Powerups and needs task-based discovery before choosing a workflow."
     ],
@@ -476,6 +531,7 @@
       "review"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "bigquery cost",
       "bigquery costs",
@@ -500,6 +556,7 @@
       "data-quality"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "data quality test",
       "dbt test",
@@ -523,6 +580,7 @@
       "performance"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "dbt incremental",
       "incremental strategy",
@@ -546,6 +604,7 @@
       "review"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "dbt",
       "changed dbt",
@@ -570,6 +629,7 @@
       "architecture"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "dbt model",
       "fact table",
@@ -595,6 +655,7 @@
       "review"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "metric change",
       "metric impact",
@@ -618,6 +679,7 @@
       "review"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "sql business logic",
       "review sql",
@@ -644,6 +706,7 @@
       "docker"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "docker"
@@ -680,7 +743,8 @@
       "typescript",
       "template"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental"
   },
   {
     "name": "python-library",
@@ -695,7 +759,8 @@
       "python",
       "template"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental"
   },
   {
     "name": "dbt-project",
@@ -710,7 +775,8 @@
       "dbt",
       "template"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental"
   },
   {
     "name": "ml-project",
@@ -725,7 +791,8 @@
       "ml",
       "template"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental"
   },
   {
     "name": "open-source-maintainer",
@@ -740,7 +807,8 @@
       "maintainer",
       "template"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental"
   },
   {
     "name": "ship-check",
@@ -757,6 +825,7 @@
       "handoff"
     ],
     "maturity": "draft",
+    "tier": "core",
     "run": {
       "kind": "ship-check"
     },
@@ -764,7 +833,15 @@
       "codex": "commands/codex/ship-check.md",
       "generic": "commands/generic/ship-check.md",
       "claude-code": "commands/claude-code/ship-check.md"
-    }
+    },
+    "use_when": "Use to prepare a change for handoff manually by inspecting diffs, running tests, and validating assets.",
+    "avoid_when": "Do not use to actually commit, push, open PRs, or edit config.",
+    "signals": [
+      "ship check",
+      "prepare for handoff",
+      "check before shipping",
+      "ready to ship"
+    ]
   },
   {
     "name": "using-powerups-command",
@@ -779,7 +856,15 @@
       "discovery",
       "powerups"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "core",
+    "use_when": "Use when starting non-trivial work in a repo to discover and apply installed Agent Powerups.",
+    "avoid_when": "Do not use if the user already specified exactly which powerup or tool to use.",
+    "signals": [
+      "find powerups",
+      "use powerups",
+      "discover agent powerups"
+    ]
   },
   {
     "name": "no-secrets-preflight",
@@ -794,7 +879,8 @@
       "safety",
       "secrets"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "core"
   },
   {
     "name": "handoff-summary",
@@ -809,7 +895,8 @@
       "productivity",
       "handoff"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "validation-required",
@@ -824,7 +911,8 @@
       "quality",
       "validation"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "core"
   },
   {
     "name": "minimal-setup-example",
@@ -839,7 +927,8 @@
       "setup",
       "dry-run"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "codex-setup-example",
@@ -854,7 +943,8 @@
       "codex",
       "setup"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "claude-code-setup-example",
@@ -869,7 +959,8 @@
       "claude-code",
       "setup"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "feature-iteration",
@@ -884,7 +975,15 @@
       "planning",
       "testing"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use to iterate on adding a single Agent Powerups asset or CLI feature using a small, testable loop.",
+    "avoid_when": "Do not use for massive rewrites or broad compatibility changes.",
+    "signals": [
+      "feature iteration",
+      "add cli feature",
+      "new powerup asset"
+    ]
   },
   {
     "name": "agent-relay",
@@ -903,7 +1002,15 @@
       "gemini",
       "acp"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use to keep a secondary agent process active (a local persistent relay) for delegated multi-turn tasks.",
+    "avoid_when": "Do not use for single-shot questions where ask-gemini, ask-claude, or ask-codex are faster.",
+    "signals": [
+      "agent relay",
+      "start relay",
+      "persistent agent daemon"
+    ]
   },
   {
     "name": "validate-skills",
@@ -918,7 +1025,8 @@
       "skills",
       "metadata"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "validate-catalog",
@@ -933,7 +1041,8 @@
       "catalog",
       "metadata"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "validate-mirrors",
@@ -949,7 +1058,8 @@
       "plugins",
       "mirrors"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "check-requirements",
@@ -964,7 +1074,8 @@
       "dependencies",
       "tooling"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "relay-gemini",
@@ -983,11 +1094,19 @@
       "artifacts"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "gemini"
       ]
-    }
+    },
+    "use_when": "Use when a persistent local Gemini ACP session should keep context across multiple advisory turns.",
+    "avoid_when": "Do not use for single focused questions with no follow-up; use ask-gemini instead.",
+    "signals": [
+      "relay gemini",
+      "gemini persistent session",
+      "multi-turn gemini"
+    ]
   },
   {
     "name": "relay-claude",
@@ -1006,11 +1125,19 @@
       "artifacts"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "claude"
       ]
-    }
+    },
+    "use_when": "Use when another local agent needs a one-shot Claude CLI answer without cross-turn relay memory.",
+    "avoid_when": "Do not use for multi-turn advisory context; use relay-gemini or a dedicated session workflow.",
+    "signals": [
+      "relay claude",
+      "claude relay",
+      "one shot claude"
+    ]
   },
   {
     "name": "relay-codex",
@@ -1029,11 +1156,19 @@
       "artifacts"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "codex"
       ]
-    }
+    },
+    "use_when": "Use when another local agent needs a one-shot Codex CLI answer and interactive behavior is acceptable.",
+    "avoid_when": "Do not use when an interactive TUI would block automation.",
+    "signals": [
+      "relay codex",
+      "codex relay",
+      "codex one shot"
+    ]
   },
   {
     "name": "graphify",
@@ -1057,6 +1192,7 @@
       "graphify"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "graphify"
@@ -1090,6 +1226,7 @@
       "process"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "brainstorm",
       "explore design",
@@ -1101,7 +1238,7 @@
       "brainstorm approaches"
     ],
     "use_when": [
-      "Before any creative work \u2014 designing a new feature, component, or behavior \u2014 the intent and design space should be explored first."
+      "Before any creative work — designing a new feature, component, or behavior — the intent and design space should be explored first."
     ],
     "capabilities": [
       "design-space exploration"
@@ -1124,12 +1261,21 @@
       "orchestration",
       "subagents"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when facing multiple independent tasks (e.g. unrelated failures) that can be worked on without shared state or sequential dependencies.",
+    "avoid_when": "Do not use for dependent tasks that must be resolved in order.",
+    "signals": [
+      "parallel agents",
+      "dispatch agents",
+      "concurrent investigation",
+      "multiple failures"
+    ]
   },
   {
     "name": "test-driven-development",
     "type": "skill",
-    "summary": "Enforce RED\u00e2\u2020\u2019GREEN\u00e2\u2020\u2019REFACTOR discipline with an Iron Law that prevents test-after or skip patterns.",
+    "summary": "Enforce REDâ†’GREENâ†’REFACTOR discipline with an Iron Law that prevents test-after or skip patterns.",
     "path": "skills/test-driven-development",
     "compatible_with": [
       "claude-code",
@@ -1143,6 +1289,7 @@
       "process"
     ],
     "maturity": "beta",
+    "tier": "core",
     "use_when": [
       "A new behavior or bugfix should be driven by a failing test before implementation."
     ],
@@ -1178,6 +1325,7 @@
       "process"
     ],
     "maturity": "beta",
+    "tier": "core",
     "use_when": [
       "Before claiming work is complete, requirements and validation evidence must be checked explicitly."
     ],
@@ -1210,7 +1358,17 @@
       "documentation",
       "authoring"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when creating new skills, editing existing skills, or verifying skills work before deployment using Test-Driven Development.",
+    "avoid_when": "Do not use when simply reading or applying an existing skill.",
+    "signals": [
+      "write skill",
+      "create skill",
+      "edit skill",
+      "author skill",
+      "test skill"
+    ]
   },
   {
     "name": "finishing-a-development-branch",
@@ -1228,7 +1386,16 @@
       "merging",
       "handoff"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work (merge, PR, or cleanup).",
+    "avoid_when": "Do not use if tests are still failing or implementation is incomplete.",
+    "signals": [
+      "finish branch",
+      "complete feature",
+      "branch is done",
+      "ready to merge"
+    ]
   },
   {
     "name": "using-git-worktrees",
@@ -1246,7 +1413,15 @@
       "isolation",
       "branching"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when starting feature work that needs isolated workspaces sharing the same repository without switching branches.",
+    "avoid_when": "Do not use for simple single-file edits that do not require checkout isolation.",
+    "signals": [
+      "git worktree",
+      "isolated workspace",
+      "create worktree"
+    ]
   },
   {
     "name": "json-canvas",
@@ -1264,7 +1439,16 @@
       "diagrams",
       "spec"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when working with .canvas files to create visual canvases, mind maps, or flowcharts, especially for Obsidian.",
+    "avoid_when": "Do not use for drawing HTML canvases or generic image generation.",
+    "signals": [
+      "json canvas",
+      "create canvas",
+      "obsidian canvas",
+      "edit canvas"
+    ]
   },
   {
     "name": "gh-address-comments",
@@ -1281,11 +1465,20 @@
       "gh"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "gh"
       ]
-    }
+    },
+    "use_when": "Use when addressing actionable GitHub pull request review feedback, inspecting review threads, or implementing fixes.",
+    "avoid_when": "Do not use for creating a new PR or when review comments are not actionable.",
+    "signals": [
+      "address pr comments",
+      "github review feedback",
+      "fix pr comments",
+      "resolve review threads"
+    ]
   },
   {
     "name": "dependency-review",
@@ -1301,7 +1494,8 @@
       "dependencies",
       "supply-chain"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "test-gate",
@@ -1317,7 +1511,8 @@
       "testing",
       "gate"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "core"
   },
   {
     "name": "lint-check",
@@ -1333,7 +1528,8 @@
       "linting",
       "style"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental"
   },
   {
     "name": "session-context-restore",
@@ -1349,7 +1545,8 @@
       "context",
       "memory"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental"
   },
   {
     "name": "auto-commit-message",
@@ -1365,7 +1562,8 @@
       "git",
       "conventional-commits"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental"
   },
   {
     "name": "plan",
@@ -1383,11 +1581,20 @@
       "pre-task"
     ],
     "maturity": "beta",
+    "tier": "core",
     "targets": {
       "codex": "commands/codex/plan.md",
       "generic": "commands/generic/plan.md",
       "claude-code": "commands/claude-code/plan.md"
-    }
+    },
+    "use_when": "Use to structure a task by mapping the affected area, reading current state, and writing atomic steps before starting.",
+    "avoid_when": "Do not use to actually write or modify code directly without user approval of the plan.",
+    "signals": [
+      "plan task",
+      "create plan",
+      "write plan",
+      "structure task"
+    ]
   },
   {
     "name": "review",
@@ -1405,11 +1612,20 @@
       "quality"
     ],
     "maturity": "beta",
+    "tier": "core",
     "targets": {
       "codex": "commands/codex/review.md",
       "generic": "commands/generic/review.md",
       "claude-code": "commands/claude-code/review.md"
-    }
+    },
+    "use_when": "Use when the user wants a systematic code review of a diff or branch, checking correctness, tests, and style.",
+    "avoid_when": "Do not use for executing tests or applying fixes directly.",
+    "signals": [
+      "code review",
+      "review diff",
+      "review branch",
+      "check my code"
+    ]
   },
   {
     "name": "debug",
@@ -1427,11 +1643,20 @@
       "bug-fix"
     ],
     "maturity": "beta",
+    "tier": "core",
     "targets": {
       "codex": "commands/codex/debug.md",
       "generic": "commands/generic/debug.md",
       "claude-code": "commands/claude-code/debug.md"
-    }
+    },
+    "use_when": "Use to systematically reproduce, isolate, and fix a bug using a reproduce-isolate-fix loop rather than speculative patching.",
+    "avoid_when": "Do not use for adding new features or broad refactoring.",
+    "signals": [
+      "debug code",
+      "reproduce bug",
+      "isolate issue",
+      "fix bug"
+    ]
   },
   {
     "name": "implement",
@@ -1449,11 +1674,20 @@
       "tdd"
     ],
     "maturity": "beta",
+    "tier": "core",
     "targets": {
       "codex": "commands/codex/implement.md",
       "generic": "commands/generic/implement.md",
       "claude-code": "commands/claude-code/implement.md"
-    }
+    },
+    "use_when": "Use to guide test-first feature implementation that stays strictly scoped to an agreed specification.",
+    "avoid_when": "Do not use for exploratory coding or before ambiguities in the spec have been clarified.",
+    "signals": [
+      "implement feature",
+      "test first implementation",
+      "write code for spec",
+      "execute implementation"
+    ]
   },
   {
     "name": "triage",
@@ -1471,11 +1705,20 @@
       "prioritization"
     ],
     "maturity": "beta",
+    "tier": "core",
     "targets": {
       "codex": "commands/codex/triage.md",
       "generic": "commands/generic/triage.md",
       "claude-code": "commands/claude-code/triage.md"
-    }
+    },
+    "use_when": "Use to turn a backlog (issues, tasks, PRs) into a clear, ranked action list grouped by type and scored by impact/effort.",
+    "avoid_when": "Do not use to actually close, assign, or modify the issues yourself.",
+    "signals": [
+      "triage backlog",
+      "prioritize issues",
+      "rank tasks",
+      "sort backlog"
+    ]
   },
   {
     "name": "search-before-building",
@@ -1494,6 +1737,7 @@
       "process"
     ],
     "maturity": "beta",
+    "tier": "core",
     "signals": [
       "search before building",
       "reuse existing",
@@ -1518,7 +1762,16 @@
       "subagents",
       "multi-agent"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when starting work in an unfamiliar area of a codebase or spawning a subagent that needs targeted file context.",
+    "avoid_when": "Do not use if the exact files needed are already known and verified.",
+    "signals": [
+      "retrieve context",
+      "find related files",
+      "search codebase context",
+      "broad search"
+    ]
   },
   {
     "name": "agent-harness-design",
@@ -1536,7 +1789,16 @@
       "design",
       "architecture"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when designing tool definitions for an agent, observing high retry rates/ambiguous invocations, or reviewing an existing harness.",
+    "avoid_when": "Do not use for designing standard application features; this is strictly for agent tooling.",
+    "signals": [
+      "design agent tools",
+      "agent harness",
+      "fix tool invocations",
+      "agent tool schema"
+    ]
   },
   {
     "name": "agent-config-security-audit",
@@ -1555,6 +1817,7 @@
       "agents"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "agent config security",
       "audit settings json",
@@ -1585,7 +1848,17 @@
       "review",
       "preflight"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when a hook is about to be enabled or modified (e.g., pre-commit, agent lifecycle hook, or third-party snippet).",
+    "avoid_when": "Do not use for broad agent-config audits or reviewing regular application code.",
+    "signals": [
+      "review hook",
+      "check hook safety",
+      "enable hook",
+      "add hook",
+      "pre-commit"
+    ]
   },
   {
     "name": "mcp-risk-review",
@@ -1604,6 +1877,7 @@
       "preflight"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "mcp server",
       "enable mcp",
@@ -1636,6 +1910,7 @@
       "preflight"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "leaked secrets",
       "hardcoded credentials",
@@ -1671,7 +1946,16 @@
       "cost",
       "planning"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when selecting the right model tier (fast/standard/deep) for a task, subagent, or multi-agent pipeline.",
+    "avoid_when": "Do not use when the model choice is already hardcoded or restricted by the user.",
+    "signals": [
+      "select model",
+      "model routing",
+      "choose model tier",
+      "escalate model"
+    ]
   },
   {
     "name": "requirements-clarifier",
@@ -1690,6 +1974,7 @@
       "clarity"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "clarify requirements",
       "vague request",
@@ -1721,7 +2006,16 @@
       "workflow",
       "reuse"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when a tricky bug, workaround, or undocumented behavior took real debugging effort and should be captured as a reusable skill.",
+    "avoid_when": "Do not use for simple copy-paste snippets or things that could be Googled in 5 minutes.",
+    "signals": [
+      "extract skill",
+      "capture learned skill",
+      "document workaround",
+      "save debugging knowledge"
+    ]
   },
   {
     "name": "persistent-completion-loop",
@@ -1739,7 +2033,16 @@
       "persistence",
       "delivery"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental",
+    "use_when": "Use when a task must run to verified completion (e.g. user says 'don't stop' or 'keep going until done') across retries.",
+    "avoid_when": "Do not use for a quick one-shot fix or when the user wants manual control over completion.",
+    "signals": [
+      "persistent loop",
+      "don't stop",
+      "keep going until done",
+      "run to completion"
+    ]
   },
   {
     "name": "autonomous-delivery-pipeline",
@@ -1757,7 +2060,16 @@
       "planning",
       "verification"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental",
+    "use_when": "Use for end-to-end autonomous execution from a brief idea to working, verified code spanning planning, coding, testing, and validation.",
+    "avoid_when": "Do not use for brainstorming, single focused changes, or quick bug fixes.",
+    "signals": [
+      "autonomous delivery",
+      "end to end pipeline",
+      "idea to code",
+      "full lifecycle execution"
+    ]
   },
   {
     "name": "subagent-team-orchestration",
@@ -1775,7 +2087,16 @@
       "waves",
       "execution"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental",
+    "use_when": "Use when a task is too large for one agent and splits cleanly into stages (planning, implementation, review) requiring different specialties.",
+    "avoid_when": "Do not use when the task fits one focused agent or is purely sequential with no parallel branches.",
+    "signals": [
+      "subagent team",
+      "orchestrate agents",
+      "delegate to team",
+      "multi-part task"
+    ]
   },
   {
     "name": "parallel-execution-engine",
@@ -1793,7 +2114,16 @@
       "subagents",
       "latency"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when latency matters and multiple independent tasks can run at once in concurrent waves without complex stage-based orchestration.",
+    "avoid_when": "Do not use when dependencies are complex, requiring stage-based orchestration, or when guaranteed persistence across retries is needed.",
+    "signals": [
+      "parallel execution",
+      "concurrent tasks",
+      "run in parallel",
+      "waves of workers"
+    ]
   },
   {
     "name": "codebase-migration-batches",
@@ -1812,6 +2142,7 @@
       "batching"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "migration batches",
       "large migration",
@@ -1838,7 +2169,16 @@
       "tooling",
       "design"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when designing or implementing a new MCP server, or refactoring an existing MCP tool surface.",
+    "avoid_when": "Do not use for merely installing, configuring, or checking an existing MCP server.",
+    "signals": [
+      "build mcp server",
+      "create mcp server",
+      "design mcp",
+      "refactor mcp"
+    ]
   },
   {
     "name": "skill-authoring-guide",
@@ -1856,7 +2196,16 @@
       "documentation",
       "workflow"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when creating or refactoring a reusable agent skill to ensure high quality, lean frontmatter, and progressive disclosure.",
+    "avoid_when": "Do not use when simply reading or applying an existing skill.",
+    "signals": [
+      "author skill",
+      "create skill guide",
+      "skill format",
+      "write agent skill"
+    ]
   },
   {
     "name": "github-ci-failure-triage",
@@ -1874,7 +2223,16 @@
       "triage",
       "debugging"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when a GitHub PR shows failing checks and a clean failure readout/triage is needed before changing any code.",
+    "avoid_when": "Do not use to actually fix the code directly without presenting the triage readout first.",
+    "signals": [
+      "ci failure triage",
+      "pr checks failing",
+      "why is ci failing",
+      "triage pr failure"
+    ]
   },
   {
     "name": "pr-review-ci-loop",
@@ -1892,7 +2250,16 @@
       "ci",
       "workflow"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental",
+    "use_when": "Use when a pull request needs one bounded review and CI triage cycle with explicit approval before edits.",
+    "avoid_when": "Do not use when the user only asked for a review without CI context or has not approved edits.",
+    "signals": [
+      "review pr",
+      "triage ci",
+      "pr ci loop",
+      "fix pr failing ci"
+    ]
   },
   {
     "name": "deploy-pipeline-runbook",
@@ -1910,7 +2277,15 @@
       "release",
       "approval"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental",
+    "use_when": "Use when a release spans multiple systems or vendors, and the order of operations and rollback planning matter.",
+    "avoid_when": "Do not use for simple single-system deployments or when explicit human approval is not required.",
+    "signals": [
+      "deploy pipeline runbook",
+      "multi system release",
+      "production deploy plan"
+    ]
   },
   {
     "name": "security-audit",
@@ -1928,7 +2303,16 @@
       "audit",
       "config"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use to audit agent configuration files (e.g., .claude, .mcp.json, AGENTS.md) for security vulnerabilities.",
+    "avoid_when": "Do not use for general application security scanning or code security review.",
+    "signals": [
+      "security audit",
+      "audit config",
+      "check agent security",
+      "scan config"
+    ]
   },
   {
     "name": "model-route",
@@ -1946,7 +2330,16 @@
       "routing",
       "cost"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use to recommend the best model tier (fast, standard, deep) for a specific task based on complexity, risk, and budget.",
+    "avoid_when": "Do not use when the model is already predetermined or the user explicitly specified the model.",
+    "signals": [
+      "model route",
+      "recommend model",
+      "which model to use",
+      "evaluate model tier"
+    ]
   },
   {
     "name": "quality-gate",
@@ -1964,7 +2357,17 @@
       "linting",
       "formatting"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use to run format, lint, and type checks on demand to mirror CI quality gates.",
+    "avoid_when": "Do not use for deep logic review or fixing complex architectural issues.",
+    "signals": [
+      "quality gate",
+      "run linter",
+      "run formatter",
+      "type check",
+      "lint code"
+    ]
   },
   {
     "name": "bug-check",
@@ -1982,7 +2385,16 @@
       "debugging",
       "regression"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use to mandate automated checks (tests, build) before agent code review, and propose regression tests for bugs.",
+    "avoid_when": "Do not use to skip automated testing or directly patch bugs speculatively.",
+    "signals": [
+      "bug check",
+      "automated bug review",
+      "run tests for bug",
+      "propose regression test"
+    ]
   },
   {
     "name": "dev-vitals",
@@ -1999,7 +2411,8 @@
       "core",
       "workflow"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "tier": "core"
   },
   {
     "name": "debugging-diagnostics",
@@ -2016,7 +2429,8 @@
       "debugging",
       "diagnostics"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "tier": "core"
   },
   {
     "name": "codebase-maintenance",
@@ -2033,7 +2447,8 @@
       "refactoring",
       "maintenance"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "data-engineering",
@@ -2051,7 +2466,8 @@
       "dbt",
       "bigquery"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "documentation-systems",
@@ -2068,7 +2484,8 @@
       "documentation",
       "architecture"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "machine-learning-ops",
@@ -2086,7 +2503,8 @@
       "ops",
       "experiments"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "quality-gates",
@@ -2103,7 +2521,8 @@
       "quality",
       "ci"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "tier": "core"
   },
   {
     "name": "software-engineering",
@@ -2120,7 +2539,8 @@
       "software-engineering",
       "delivery"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "agentic-systems",
@@ -2137,7 +2557,8 @@
       "agentic-systems",
       "orchestration"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "security-guardrails",
@@ -2154,7 +2575,8 @@
       "security",
       "guardrails"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "codebase-intelligence",
@@ -2172,7 +2594,8 @@
       "mapping",
       "architecture"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "spec-driven-development",
@@ -2190,7 +2613,8 @@
       "planning",
       "workflow"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "mcp-development",
@@ -2208,7 +2632,8 @@
       "server",
       "tooling"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "skill-authoring",
@@ -2226,7 +2651,8 @@
       "authoring",
       "workflow"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "github-ops",
@@ -2244,7 +2670,8 @@
       "review",
       "ci"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "connected-apps",
@@ -2262,7 +2689,8 @@
       "runbook",
       "integrations"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental"
   },
   {
     "name": "browser-automation-safety",
@@ -2281,6 +2709,7 @@
       "safety"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "browser automation",
       "playwright",
@@ -2306,7 +2735,15 @@
       "context",
       "sessions"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when connecting to a persistent managed codebase-context MCP service to retrieve broad architectural context or symbol inventory.",
+    "avoid_when": "Do not use to start ephemeral server processes blindly or if standard grep is sufficient.",
+    "signals": [
+      "managed codebase context",
+      "codebase mcp",
+      "architectural context service"
+    ]
   },
   {
     "name": "context-compression",
@@ -2324,7 +2761,16 @@
       "tokens",
       "workflow"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when conversation context is bloated, constraints are forgotten, or a compact handoff artifact is needed to resume work.",
+    "avoid_when": "Do not use at the very beginning of a task before context has accumulated.",
+    "signals": [
+      "compress context",
+      "context bloat",
+      "summarize state",
+      "handoff artifact"
+    ]
   },
   {
     "name": "prompt-evaluation-runner",
@@ -2342,7 +2788,16 @@
       "testing",
       "models"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when evaluating prompts, LLM outputs, or red-team suites using local eval configurations and cost controls.",
+    "avoid_when": "Do not use to arbitrarily install unvetted remote runners without checking local toolchains first.",
+    "signals": [
+      "prompt evaluation",
+      "run evals",
+      "test prompt",
+      "red team target"
+    ]
   },
   {
     "name": "agent-runtime-patterns",
@@ -2360,7 +2815,15 @@
       "mcp",
       "performance"
     ],
-    "maturity": "draft"
+    "maturity": "draft",
+    "tier": "experimental",
+    "use_when": "Use when optimizing slow agent loops, designing multi-agent topologies, or managing MCP session lifecycles.",
+    "avoid_when": "Do not use for basic single-agent, clear-scope tasks that do not benefit from advanced orchestration.",
+    "signals": [
+      "agent runtime patterns",
+      "optimize agent loop",
+      "multi agent topology"
+    ]
   },
   {
     "name": "filesystem-mcp-guardrails",
@@ -2379,6 +2842,7 @@
       "safety"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "filesystem mcp",
       "allowed roots",
@@ -2403,7 +2867,16 @@
       "retrieval",
       "privacy"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when querying, ingesting, or maintaining a local RAG MCP corpus for semantic document retrieval.",
+    "avoid_when": "Do not use for simple grep/glob pattern matching across files.",
+    "signals": [
+      "local rag",
+      "rag mcp",
+      "semantic search corpus",
+      "ingest documents"
+    ]
   },
   {
     "name": "review-comment-style-mining",
@@ -2421,7 +2894,16 @@
       "writing",
       "review"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when mining PR review comments and text diffs to extract reusable writing, documentation, and editorial improvement patterns.",
+    "avoid_when": "Do not use for deep logic bugs or mechanical code reviews.",
+    "signals": [
+      "mine review comments",
+      "extract writing feedback",
+      "pr feedback patterns",
+      "editorial improvements"
+    ]
   },
   {
     "name": "structured-code-search-mcp",
@@ -2439,7 +2921,16 @@
       "symbols",
       "context"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when an agent needs to search, navigate, or extract code using structural queries via an MCP-backed server.",
+    "avoid_when": "Do not use if standard text search (grep) or regex is sufficient and faster.",
+    "signals": [
+      "structured search",
+      "ast query",
+      "search mcp",
+      "symbol lookup"
+    ]
   },
   {
     "name": "red-team-eval-authoring",
@@ -2457,7 +2948,16 @@
       "red-team",
       "graders"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when creating or reviewing red-team eval plugins, attack templates, grader rubrics, or model-risk test metadata.",
+    "avoid_when": "Do not use to run unvetted networked evals or paid model graders without explicit user approval.",
+    "signals": [
+      "red team eval",
+      "attack templates",
+      "grader rubrics",
+      "model risk test"
+    ]
   },
   {
     "name": "agent-session-forensics",
@@ -2475,7 +2975,16 @@
       "sessions",
       "forensics"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when diagnosing agent session history, interrupted tool loops, or missing tool results by inspecting session files.",
+    "avoid_when": "Do not use to actively modify or truncate session histories unless explicitly requested.",
+    "signals": [
+      "agent forensics",
+      "debug session history",
+      "interrupted tool loop",
+      "slow llm calls"
+    ]
   },
   {
     "name": "skill-evaluation-workbench",
@@ -2493,7 +3002,16 @@
       "testing",
       "workbench"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when designing, running, or debugging deterministic eval suites for agent skills, prompts, or MCP-backed cases.",
+    "avoid_when": "Do not use to blindly execute Docker or remote models without reviewing the runner configuration first.",
+    "signals": [
+      "skill evaluation",
+      "run evals",
+      "debug eval suite",
+      "deterministic grader"
+    ]
   },
   {
     "name": "tool-integrations",
@@ -2511,7 +3029,8 @@
       "browser",
       "tools"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "agent-evaluation-lab",
@@ -2529,7 +3048,8 @@
       "quality",
       "red-team"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "context7",
@@ -2548,6 +3068,7 @@
       "retrieval"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "npx"
@@ -2586,6 +3107,7 @@
       "thinking"
     ],
     "maturity": "stable",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "npx"
@@ -2624,6 +3146,7 @@
       "testing"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "npx"
@@ -2668,6 +3191,7 @@
       "scoped"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "npx"
@@ -2711,6 +3235,7 @@
       "persistence"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "npx"
@@ -2746,7 +3271,8 @@
       "bash",
       "guard"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "tier": "core"
   },
   {
     "name": "mcp-write-guard",
@@ -2762,7 +3288,8 @@
       "safety",
       "approval"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "mcp-config-change-approval",
@@ -2778,7 +3305,8 @@
       "safety",
       "config"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "env-file-mutation-approval",
@@ -2794,7 +3322,8 @@
       "secrets",
       "env"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "generated-file-warning",
@@ -2810,7 +3339,8 @@
       "generated",
       "code-generation"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "console-log-check",
@@ -2826,7 +3356,8 @@
       "debugging",
       "cleanup"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "large-diff-warning",
@@ -2842,7 +3373,8 @@
       "quality",
       "review"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "session-log",
@@ -2858,7 +3390,8 @@
       "logging",
       "audit"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "release-readiness-protocol",
@@ -2877,6 +3410,7 @@
       "changelog"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "release readiness",
       "cut a release",
@@ -2903,6 +3437,7 @@
       "documentation"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "changelog",
       "release notes",
@@ -2914,7 +3449,7 @@
   {
     "name": "build-fix-minimal-diff",
     "type": "skill",
-    "summary": "Fix broken builds, type errors, or test failures with the smallest safe diff \u00e2\u20ac\u201d no opportunistic refactors, no cleanup.",
+    "summary": "Fix broken builds, type errors, or test failures with the smallest safe diff â€” no opportunistic refactors, no cleanup.",
     "path": "skills/build-fix-minimal-diff",
     "compatible_with": [
       "claude-code",
@@ -2928,6 +3463,7 @@
       "minimal-diff"
     ],
     "maturity": "beta",
+    "tier": "core",
     "signals": [
       "build broken",
       "type errors",
@@ -2940,7 +3476,7 @@
   {
     "name": "environment-doctor",
     "type": "skill",
-    "summary": "Diagnose local agent and project setup problems \u00e2\u20ac\u201d missing commands, broken MCP configs, stale generated assets, bad paths, and missing env vars.",
+    "summary": "Diagnose local agent and project setup problems â€” missing commands, broken MCP configs, stale generated assets, bad paths, and missing env vars.",
     "path": "skills/environment-doctor",
     "compatible_with": [
       "claude-code",
@@ -2954,7 +3490,16 @@
       "mcp",
       "environment"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "core",
+    "use_when": "Use when an agent's commands fail with missing dependencies, MCP servers fail to start, or setup works inconsistently.",
+    "avoid_when": "Do not use for debugging application logic or test failures that are unrelated to environment setup.",
+    "signals": [
+      "environment doctor",
+      "commands failing",
+      "mcp server failed",
+      "stale generated assets"
+    ]
   },
   {
     "name": "webapp-visual-testing",
@@ -2972,7 +3517,16 @@
       "accessibility",
       "visual"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when a browser-facing UI needs visual verification, layout bug checking, or an end-to-end browser workflow test.",
+    "avoid_when": "Do not use for testing standard REST APIs or headless background jobs.",
+    "signals": [
+      "visual testing",
+      "browser automation",
+      "layout bug",
+      "test web ui"
+    ]
   },
   {
     "name": "agent-readable-docs",
@@ -2989,7 +3543,15 @@
       "architecture",
       "docs"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when writing or validating technical documentation in the Human-AI Document Standard (HADS) format.",
+    "avoid_when": "Do not use when generating standard user-facing documentation that doesn't target AI consumption.",
+    "signals": [
+      "hads",
+      "agent readable docs",
+      "ai documentation standard"
+    ]
   },
   {
     "name": "ai-regression-testing",
@@ -3007,6 +3569,7 @@
       "review"
     ],
     "maturity": "stable",
+    "tier": "common",
     "use_when": [
       "A code review, plan review, or self-review needs attention allocated by risk and blast radius."
     ],
@@ -3039,6 +3602,7 @@
       "docs"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "api docs",
       "openapi",
@@ -3064,6 +3628,7 @@
       "docs"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "adr",
       "architecture decision record",
@@ -3088,6 +3653,7 @@
       "cleanup"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "simplify",
       "over-engineered",
@@ -3120,7 +3686,15 @@
       "ops",
       "experiments"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when a new complex ML model is proposed and its value over a naive baseline must be demonstrated before approval.",
+    "avoid_when": "Do not use for reviewing standard web application feature code.",
+    "signals": [
+      "baseline comparison",
+      "review ml model",
+      "compare model baseline"
+    ]
   },
   {
     "name": "canonical-advisor-routing",
@@ -3137,7 +3711,15 @@
       "orchestration",
       "advisors"
     ],
-    "maturity": "experimental"
+    "maturity": "experimental",
+    "tier": "experimental",
+    "use_when": "Use when routing a prompt to a local provider CLI (Codex/Gemini/Claude) for a second opinion and wanting an artifact.",
+    "avoid_when": "Do not use if you are looking for an interactive conversational session.",
+    "signals": [
+      "canonical advisor",
+      "route prompt to provider",
+      "persist advisor artifact"
+    ]
   },
   {
     "name": "change-impact-check",
@@ -3155,6 +3737,7 @@
       "review"
     ],
     "maturity": "stable",
+    "tier": "core",
     "signals": [
       "change impact",
       "blast radius",
@@ -3179,7 +3762,15 @@
       "ci",
       "review"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "tier": "common",
+    "use_when": "Use when a CI pipeline fails and the true error needs to be extracted from noisy logs before writing a fix.",
+    "avoid_when": "Do not use to actually write the code fix directly; this is for triaging and summarizing the failure first.",
+    "signals": [
+      "ci failure readout",
+      "extract ci error",
+      "debug ci logs"
+    ]
   },
   {
     "name": "context-docs",
@@ -3196,7 +3787,16 @@
       "architecture",
       "docs"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "common",
+    "use_when": "Use when a subsystem needs decentralized, module-specific persistent context documentation for future agents.",
+    "avoid_when": "Do not use for repo-wide architecture documentation; keep module knowledge inside the module.",
+    "signals": [
+      "context docs",
+      "module context",
+      "subsystem documentation",
+      "persistent context file"
+    ]
   },
   {
     "name": "context-minimization",
@@ -3214,6 +3814,7 @@
       "process"
     ],
     "maturity": "stable",
+    "tier": "common",
     "signals": [
       "minimize context",
       "read less",
@@ -3238,7 +3839,16 @@
       "ops",
       "experiments"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when reviewing how data is split into train/validation/test sets, especially with time-series data, repeated entities, or class imbalance.",
+    "avoid_when": "Do not use for non-ML data partitioning or basic standard train_test_split on simple tabular data.",
+    "signals": [
+      "dataset split",
+      "train test split",
+      "time series split",
+      "group leakage"
+    ]
   },
   {
     "name": "dead-code-removal",
@@ -3256,6 +3866,7 @@
       "cleanup"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "dead code",
       "unused function",
@@ -3285,6 +3896,7 @@
       "cleanup"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "unused dependency",
       "redundant dependency",
@@ -3313,6 +3925,7 @@
       "docs"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "docs consistency",
       "broken file paths in docs",
@@ -3336,7 +3949,16 @@
       "ops",
       "experiments"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when reviewing ML training code to confirm a run could be reconstructed later, checking hyperparameter, metric, and data tracking.",
+    "avoid_when": "Do not use for trivial scripts where strict tracking is overkill, or standard web application logging.",
+    "signals": [
+      "experiment tracking",
+      "mlflow",
+      "wandb",
+      "reconstruct training run"
+    ]
   },
   {
     "name": "failure-triage",
@@ -3354,6 +3976,7 @@
       "testing"
     ],
     "maturity": "stable",
+    "tier": "common",
     "signals": [
       "unknown failure",
       "triage failure",
@@ -3378,6 +4001,7 @@
       "testing"
     ],
     "maturity": "stable",
+    "tier": "common",
     "signals": [
       "flaky test",
       "intermittent failure",
@@ -3402,6 +4026,7 @@
       "process"
     ],
     "maturity": "stable",
+    "tier": "core",
     "signals": [
       "handoff",
       "handoff notes",
@@ -3426,7 +4051,16 @@
       "diagnostics",
       "testing"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "tier": "common",
+    "use_when": "Use when a bug fix or complex debugging session concludes and a blameless post-mortem summary is needed for human review.",
+    "avoid_when": "Do not use in the middle of active debugging or when the issue is trivial.",
+    "signals": [
+      "incident readout",
+      "blameless post mortem",
+      "debugging summary",
+      "fix report"
+    ]
   },
   {
     "name": "incremental-migration",
@@ -3444,6 +4078,7 @@
       "cleanup"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "incremental migration",
       "migrate",
@@ -3472,6 +4107,7 @@
       "testing"
     ],
     "maturity": "stable",
+    "tier": "common",
     "signals": [
       "logs",
       "runtime failure",
@@ -3496,6 +4132,7 @@
       "workflow"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "build memory",
       "persistent graph memory",
@@ -3518,7 +4155,15 @@
       "context",
       "workflow"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when deciding the lowest-cost context path for a mixed corpus (direct read, graph build, graph query) to minimize token spend.",
+    "avoid_when": "Do not use for tiny single-file questions where direct reading is already cheapest.",
+    "signals": [
+      "memory optimization",
+      "graphify build",
+      "cheapest inspection path"
+    ]
   },
   {
     "name": "memory-query-workflow",
@@ -3535,7 +4180,15 @@
       "context",
       "workflow"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when a graph memory already exists and you need retrieval, tracing, or gap detection before reopening the full corpus.",
+    "avoid_when": "Do not use if the graph is missing, stale, or the query requires exact line-by-line source reading.",
+    "signals": [
+      "memory query",
+      "query graph",
+      "retrieve from graph memory"
+    ]
   },
   {
     "name": "minimal-reproduction",
@@ -3553,6 +4206,7 @@
       "testing"
     ],
     "maturity": "stable",
+    "tier": "common",
     "signals": [
       "minimal reproduction",
       "standalone repro",
@@ -3576,7 +4230,15 @@
       "ops",
       "experiments"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when reviewing ML preprocessing or feature pipelines for target leakage, especially if validation metrics look suspiciously good.",
+    "avoid_when": "Do not use for checking memory leaks in standard software applications.",
+    "signals": [
+      "target leakage",
+      "ml leakage check",
+      "preprocessing leakage"
+    ]
   },
   {
     "name": "model-evaluation-reporting",
@@ -3593,7 +4255,16 @@
       "ops",
       "experiments"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when writing or reviewing a model evaluation report to explain business trade-offs, failure modes, and segment performance instead of just raw accuracy.",
+    "avoid_when": "Do not use for generic software testing reports.",
+    "signals": [
+      "model evaluation report",
+      "business trade-offs",
+      "confusion matrix",
+      "failure modes"
+    ]
   },
   {
     "name": "naming-and-structure-cleanup",
@@ -3611,6 +4282,7 @@
       "cleanup"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "inconsistent naming",
       "reorganize files",
@@ -3637,6 +4309,7 @@
       "review"
     ],
     "maturity": "stable",
+    "tier": "core",
     "signals": [
       "release readiness",
       "pre-release",
@@ -3661,6 +4334,7 @@
       "docs"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "readme",
       "harden readme",
@@ -3684,7 +4358,16 @@
       "diagnostics",
       "testing"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "tier": "common",
+    "use_when": "Use when a bug was recently introduced but you don't know which commit caused it, using binary search (git bisect) to find it.",
+    "avoid_when": "Do not use if the offending commit is already known or if no deterministic reproduction command exists.",
+    "signals": [
+      "regression bisecting",
+      "git bisect",
+      "find bug commit",
+      "binary search git"
+    ]
   },
   {
     "name": "reproducible-training-runs",
@@ -3701,7 +4384,15 @@
       "ops",
       "experiments"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when reviewing ML training scripts to enforce seed setting, deterministic operations, and environment tracking for reproducibility.",
+    "avoid_when": "Do not use for non-ML randomized processes unless exact seed reproducibility is explicitly requested.",
+    "signals": [
+      "reproducible training",
+      "set random seed",
+      "deterministic operations"
+    ]
   },
   {
     "name": "risk-based-review",
@@ -3719,6 +4410,7 @@
       "review"
     ],
     "maturity": "stable",
+    "tier": "core",
     "signals": [
       "code review",
       "review changes",
@@ -3752,6 +4444,7 @@
       "review"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "signals": [
       "semantic layer",
       "semantic model change",
@@ -3774,7 +4467,16 @@
       "context",
       "process"
     ],
-    "maturity": "stable"
+    "maturity": "stable",
+    "tier": "common",
+    "use_when": "Use when deciding whether to compact agent context at logical boundaries (phase transitions) to preserve high-value context while clearing noise.",
+    "avoid_when": "Do not use for arbitrary mid-task compaction that drops critical state.",
+    "signals": [
+      "compact context",
+      "phase boundary",
+      "context compaction",
+      "clear noise"
+    ]
   },
   {
     "name": "task-intake",
@@ -3792,6 +4494,7 @@
       "process"
     ],
     "maturity": "stable",
+    "tier": "core",
     "signals": [
       "task intake",
       "triage task",
@@ -3816,6 +4519,7 @@
       "cleanup"
     ],
     "maturity": "beta",
+    "tier": "common",
     "signals": [
       "refactor without changing tests",
       "keep tests passing",
@@ -3838,7 +4542,16 @@
       "ops",
       "experiments"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": "Use when an ML training run fails or misbehaves with mathematical errors (NaN losses, out-of-memory, shape mismatches, or failure to fit a single batch).",
+    "avoid_when": "Do not use for basic syntax errors or missing dependencies; this is for mathematical/training bugs.",
+    "signals": [
+      "training pipeline debugging",
+      "nan loss",
+      "out of memory ml",
+      "model not learning"
+    ]
   },
   {
     "name": "tri-model-review",
@@ -3855,7 +4568,16 @@
       "orchestration",
       "advisors"
     ],
-    "maturity": "experimental"
+    "maturity": "experimental",
+    "tier": "experimental",
+    "use_when": "Use when a request needs parallel external perspectives from multiple advisor CLIs (e.g., combined backend/UI work or cross-validation).",
+    "avoid_when": "Do not use for simple, single-domain code review where one model tier is sufficient.",
+    "signals": [
+      "tri model review",
+      "parallel perspectives",
+      "cross validation",
+      "multiple advisors"
+    ]
   },
   {
     "name": "release",
@@ -3874,11 +4596,20 @@
       "versioning"
     ],
     "maturity": "beta",
+    "tier": "common",
     "targets": {
       "codex": "commands/codex/release.md",
       "generic": "commands/generic/release.md",
       "claude-code": "commands/claude-code/release.md"
-    }
+    },
+    "use_when": "Use to run a release-readiness checklist and produce a go/no-go report before tagging or publishing.",
+    "avoid_when": "Do not use to actually tag, publish, or push without explicit approval.",
+    "signals": [
+      "release checklist",
+      "go no-go",
+      "publish readiness",
+      "release readiness"
+    ]
   },
   {
     "name": "changelog",
@@ -3897,11 +4628,20 @@
       "git"
     ],
     "maturity": "beta",
+    "tier": "common",
     "targets": {
       "codex": "commands/codex/changelog.md",
       "generic": "commands/generic/changelog.md",
       "claude-code": "commands/claude-code/changelog.md"
-    }
+    },
+    "use_when": "Use to generate user-facing release notes or an internal changelog from git commits, PRs, or a diff range.",
+    "avoid_when": "Do not use to blindly write to CHANGELOG.md without presenting the output first.",
+    "signals": [
+      "generate changelog",
+      "release notes",
+      "git log range",
+      "breaking change scan"
+    ]
   },
   {
     "name": "build-fix",
@@ -3920,11 +4660,20 @@
       "testing"
     ],
     "maturity": "beta",
+    "tier": "common",
     "targets": {
       "codex": "commands/codex/build-fix.md",
       "generic": "commands/generic/build-fix.md",
       "claude-code": "commands/claude-code/build-fix.md"
-    }
+    },
+    "use_when": "Use to fix a failing build, type check, or test suite with the smallest targeted safe diff.",
+    "avoid_when": "Do not use for exploratory coding, opportunistic refactoring, or adjacent issues outside the immediate failure.",
+    "signals": [
+      "build fix",
+      "fix build failure",
+      "fix type check",
+      "minimal diff fix"
+    ]
   },
   {
     "name": "doctor",
@@ -3943,11 +4692,20 @@
       "environment"
     ],
     "maturity": "beta",
+    "tier": "common",
     "targets": {
       "codex": "commands/codex/doctor.md",
       "generic": "commands/generic/doctor.md",
       "claude-code": "commands/claude-code/doctor.md"
-    }
+    },
+    "use_when": "Use to diagnose environment, tooling, and agent setup problems, and produce a structured diagnostic report.",
+    "avoid_when": "Do not use to actually modify configs or install tools automatically without approval.",
+    "signals": [
+      "environment doctor",
+      "tooling setup",
+      "diagnose agent environment",
+      "agent asset paths"
+    ]
   },
   {
     "name": "visual-review",
@@ -3966,11 +4724,20 @@
       "visual"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "targets": {
       "codex": "commands/codex/visual-review.md",
       "generic": "commands/generic/visual-review.md",
       "claude-code": "commands/claude-code/visual-review.md"
-    }
+    },
+    "use_when": "Use to inspect a web UI with browser evidence (screenshots, console, accessibility, network) and produce structured findings.",
+    "avoid_when": "Do not use against production environments without explicit approval.",
+    "signals": [
+      "visual review",
+      "inspect web ui",
+      "browser evidence",
+      "accessibility snapshot"
+    ]
   },
   {
     "name": "mcp-check",
@@ -3989,11 +4756,19 @@
       "prerequisites"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "targets": {
       "codex": "commands/codex/mcp-check.md",
       "generic": "commands/generic/mcp-check.md",
       "claude-code": "commands/claude-code/mcp-check.md"
-    }
+    },
+    "use_when": "Use to check MCP server prerequisites and configuration before activating or using a server.",
+    "avoid_when": "Do not use to test if the server actually responds; use mcp-smoke for that.",
+    "signals": [
+      "check mcp",
+      "mcp prerequisites",
+      "verify mcp config"
+    ]
   },
   {
     "name": "mcp-smoke",
@@ -4012,11 +4787,20 @@
       "smoke"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "targets": {
       "codex": "commands/codex/mcp-smoke.md",
       "generic": "commands/generic/mcp-smoke.md",
       "claude-code": "commands/claude-code/mcp-smoke.md"
-    }
+    },
+    "use_when": "Use to test that an MCP server starts and responds before adding it to an agent configuration.",
+    "avoid_when": "Do not use before verifying prerequisites with mcp-check.",
+    "signals": [
+      "smoke test mcp",
+      "test mcp",
+      "mcp smoke",
+      "ping mcp"
+    ]
   },
   {
     "name": "fetch",
@@ -4035,6 +4819,7 @@
       "web"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "npx"
@@ -4073,6 +4858,7 @@
       "utilities"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "npx"
@@ -4111,6 +4897,7 @@
       "repository"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "uvx"
@@ -4119,7 +4906,7 @@
     "mcp": {
       "required_env": [],
       "server_package": "mcp-server-git",
-      "warning": "Replace ${REPO_ROOT} with the absolute path of the repository root before use. Git tools can mutate local repository state \u00e2\u20ac\u201d review enabled operations before activating write capabilities.",
+      "warning": "Replace ${REPO_ROOT} with the absolute path of the repository root before use. Git tools can mutate local repository state â€” review enabled operations before activating write capabilities.",
       "output_hints": {
         "generic": ".mcp.json",
         "claude-code": ".mcp.json",
@@ -4149,6 +4936,7 @@
       "readonly"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "npx"
@@ -4159,7 +4947,7 @@
         "POSTGRES_READONLY_DSN"
       ],
       "server_package": "@modelcontextprotocol/server-postgres",
-      "warning": "Set POSTGRES_READONLY_DSN to a SELECT-only connection string. Never use production write credentials, a superuser role, or a role with DDL permissions. The MCP server executes queries on behalf of the agent \u00e2\u20ac\u201d scope access strictly.",
+      "warning": "Set POSTGRES_READONLY_DSN to a SELECT-only connection string. Never use production write credentials, a superuser role, or a role with DDL permissions. The MCP server executes queries on behalf of the agent â€” scope access strictly.",
       "output_hints": {
         "generic": ".mcp.json",
         "claude-code": ".mcp.json",
@@ -4195,13 +4983,14 @@
       "http"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {},
     "mcp": {
       "required_env": [
         "GITHUB_MCP_PAT"
       ],
       "server_package": "github/github-mcp-server (remote endpoint)",
-      "warning": "Uses the hosted GitHub MCP endpoint. Set GITHUB_MCP_PAT to a narrow-scope PAT \u00e2\u20ac\u201d prefer read-only scopes unless write is explicitly required. Token is sent in every request header. Codex TOML HTTP-type format may require verification against current Codex documentation.",
+      "warning": "Uses the hosted GitHub MCP endpoint. Set GITHUB_MCP_PAT to a narrow-scope PAT â€” prefer read-only scopes unless write is explicitly required. Token is sent in every request header. Codex TOML HTTP-type format may require verification against current Codex documentation.",
       "output_hints": {
         "generic": ".mcp.json",
         "claude-code": ".mcp.json",
@@ -4228,7 +5017,8 @@
       "safety",
       "infrastructure"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "migration-review-required",
@@ -4244,7 +5034,8 @@
       "database",
       "migrations"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "todo-fixme-blocker",
@@ -4260,7 +5051,8 @@
       "cleanup",
       "technical-debt"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "session-compaction-helper",
@@ -4276,7 +5068,8 @@
       "context",
       "compaction"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "build-analysis-post",
@@ -4292,7 +5085,8 @@
       "build",
       "testing"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "design-quality-check",
@@ -4308,7 +5102,8 @@
       "frontend",
       "visual"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "dev-server-tmux-guard",
@@ -4324,7 +5119,8 @@
       "dev-server",
       "background"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "supabase",
@@ -4343,6 +5139,7 @@
       "auth"
     ],
     "maturity": "experimental",
+    "tier": "experimental",
     "requires": {
       "commands": [
         "npx"
@@ -4383,6 +5180,7 @@
       "hosting"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {},
     "mcp": {
       "required_env": [
@@ -4419,6 +5217,7 @@
       "http"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {},
     "mcp": {
       "required_env": [],
@@ -4453,6 +5252,7 @@
       "web"
     ],
     "maturity": "beta",
+    "tier": "specialized",
     "requires": {
       "commands": [
         "npx"
@@ -4493,6 +5293,7 @@
       "confluence"
     ],
     "maturity": "experimental",
+    "tier": "experimental",
     "requires": {
       "commands": [
         "npx"
@@ -4535,6 +5336,7 @@
       "testing"
     ],
     "maturity": "experimental",
+    "tier": "experimental",
     "requires": {
       "commands": [
         "npx"
@@ -4576,6 +5378,7 @@
       "code-runner"
     ],
     "maturity": "experimental",
+    "tier": "experimental",
     "requires": {
       "commands": [
         "npx"
@@ -4613,7 +5416,8 @@
       "pre-commit",
       "aggregator"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "doc-file-warning",
@@ -4629,7 +5433,8 @@
       "documentation",
       "sprawl"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "quality-gate-after-edit",
@@ -4645,7 +5450,8 @@
       "validation",
       "post-edit"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "typescript-post-edit-check",
@@ -4661,7 +5467,8 @@
       "typescript",
       "typecheck"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "handoff-completeness-check",
@@ -4677,7 +5484,8 @@
       "handoff",
       "completeness"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   },
   {
     "name": "mcp-elicitation-guard",
@@ -4693,7 +5501,8 @@
       "security",
       "elicitation"
     ],
-    "maturity": "experimental"
+    "maturity": "experimental",
+    "tier": "experimental"
   },
   {
     "name": "session-lifecycle-state",
@@ -4709,6 +5518,7 @@
       "session",
       "state"
     ],
-    "maturity": "beta"
+    "maturity": "beta",
+    "tier": "specialized"
   }
 ]
