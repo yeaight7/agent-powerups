@@ -69,6 +69,7 @@ export async function runInfoCommand(service: CatalogService, assetName: string)
       ["name", asset.name],
       ["type", asset.type],
       ["maturity", asset.maturity],
+      ["tier", asset.tier ?? "unclassified"],
       ["path", asset.path],
       ["summary", asset.summary],
       ["compatible_with", asset.compatible_with.join(", ")],
