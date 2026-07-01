@@ -20,3 +20,4 @@ docs/feature*
 .agent-session.log
 quality-audit/
 staging/refactor/
+research/
