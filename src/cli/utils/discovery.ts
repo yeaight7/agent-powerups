@@ -21,6 +21,7 @@ export interface PowerupAsset {
   compatible_with: string[];
   tags: string[];
   maturity?: string;
+  tier?: string;
   requires?: CatalogEntry["requires"];
   plugin?: string;
   plugins: string[];
@@ -163,6 +164,7 @@ function catalogAsset(entry: CatalogEntry, service: CatalogService): PowerupAsse
     compatible_with: entry.compatible_with,
     tags: entry.tags,
     maturity: entry.maturity,
+    tier: entry.tier,
     requires: entry.requires,
     plugins: [],
     installed: false,
@@ -238,6 +240,7 @@ function mergeAssets(existing: PowerupAsset, incoming: PowerupAsset): PowerupAss
     sources,
     compatible_with: uniq(existing.compatible_with.concat(incoming.compatible_with)),
     tags: uniq(existing.tags.concat(incoming.tags)),
+    tier: existing.tier ?? incoming.tier,
     requires: existing.requires ?? incoming.requires,
     plugin: existing.plugin ?? incoming.plugin,
     plugins,
