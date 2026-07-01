@@ -175,7 +175,7 @@ test("list prints catalog assets", async () => {
   const result = await execute(["list"]);
 
   assert.equal(result.exitCode, 0);
-  assert.match(result.stdout, /systematic-debugging/);
+  assert.match(result.stdout, /systematic-debugging \(skill, core\)/);
 });
 
 test("list works from outside the repository", async () => {
@@ -199,6 +199,7 @@ test("info prints asset details", async () => {
 
   assert.equal(result.exitCode, 0);
   assert.match(result.stdout, /markitdown-file-intake/);
+  assert.match(result.stdout, /tier: specialized/);
   assert.match(result.stdout, /Microsoft MarkItDown/);
 });
 
