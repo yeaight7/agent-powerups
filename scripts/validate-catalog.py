@@ -35,6 +35,7 @@ ALLOWED_TYPES = {
     "pack",
 }
 ALLOWED_MATURITY = {"draft", "beta", "stable", "experimental"}
+ALLOWED_TIERS = {"core", "common", "specialized", "experimental"}
 ALLOWED_COMPATIBLE = {"claude-code", "codex", "gemini-cli", "cursor", "generic"}
 ALLOWED_REQUIRE_KEYS = {"commands", "python_packages", "npm_packages"}
 ALLOWED_TARGET_KEYS = {"codex", "claude-code", "generic"}
@@ -214,6 +215,10 @@ def validate_entry(index: int, entry: dict, seen_names: dict[str, int]) -> None:
     maturity = entry.get("maturity")
     if maturity and maturity not in ALLOWED_MATURITY:
         errors.append(f"[{label}] invalid maturity '{maturity}'")
+
+    tier = entry.get("tier")
+    if tier and tier not in ALLOWED_TIERS:
+        errors.append(f"[{label}] invalid tier '{tier}'")
 
     compatible = entry.get("compatible_with")
     if compatible is not None and not isinstance(compatible, list):
