@@ -280,7 +280,8 @@ apx mcp list                   # available MCP configs
 
 Human-facing categories: **skills**, **commands**, **plugins**, **MCP configs**, **hooks**, and
 **AGENTS.md templates** (scripts, examples, and workflows are internal). See the taxonomy and
-field definitions in [`docs/catalog-schema.md`](./docs/catalog-schema.md).
+field definitions in [`docs/catalog-schema.md`](./docs/catalog-schema.md). Catalog assets also carry
+a browsing tier: **core**, **common**, **specialized**, or **experimental**.
 
 ## Compatibility Matrix
 
