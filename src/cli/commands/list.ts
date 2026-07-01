@@ -7,5 +7,5 @@ export function runListCommand(service: CatalogService, type?: string): string {
     return type ? `No assets found for type '${type}'.` : "No assets found.";
   }
 
-  return formatList(assets.map((asset) => `${asset.name} (${asset.type})`));
+  return formatList(assets.map((asset) => `${asset.name} (${asset.type}${asset.tier ? `, ${asset.tier}` : ""})`));
 }
