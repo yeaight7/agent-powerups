@@ -1,7 +1,7 @@
 {
   "name": "agent-powerups",
   "version": "0.6.2",
-  "description": "Curated power-ups for coding agents: skills, slash commands, MCP configs, hooks, and workflows for Claude Code, Codex, and Gemini CLI.",
+  "description": "Curated powerups for coding agents: skills, commands, MCP config, hooks, and workflows for Antigravity/Gemini CLI.",
   "license": "Apache-2.0",
   "repository": "https://github.com/yeaight7/agent-powerups"
 }
