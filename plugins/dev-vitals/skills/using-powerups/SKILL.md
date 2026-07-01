@@ -22,11 +22,18 @@ Do not force a powerup when none fits. Say no matching powerup applies and proce
 - User task.
 - Current repo or agent root.
 - Installed `agent-powerups` location, usually `agent-powerups/` under the agent root or the package repo.
-- Optional CLI access to `apx` for discovery only.
+- Optional CLI access to `apx` for discovery and inventory.
+- Optional installed discovery index file; treat it as a derived snapshot, not the source of truth.
 
 ## Workflow
 
-1. Discover available assets.
+1. Discover or match available assets.
+
+Use target-specific routing:
+
+- Claude Code: start with native skill discovery when skills are already exposed by the host. Use `apx discover` when the task is uncertain, when no native skill clearly fits, or when the task may need non-skill assets.
+- Codex, Gemini, and generic agents: start with `apx discover`.
+- All targets: use `apx inventory` for MCP configs, hooks, AGENTS.md templates, plugin-contained assets, staged assets, and installed-only assets.
 
 ```sh
 apx discover "<user task>" --target <codex|claude-code|gemini|generic>

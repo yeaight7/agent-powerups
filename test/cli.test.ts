@@ -406,6 +406,7 @@ test("native install json keeps data detail but actions are concise", async () =
   const json = parseJson(result.stdout);
   assert.ok(json.data.copiedFiles.some((item: string) => item.includes(path.join("skills", "using-powerups", "SKILL.md"))));
   assert.ok(json.actions.includes(`copy ${json.data.copiedFiles.length} file(s)`));
+  assert.ok(json.actions.includes(`refresh ${json.data.refreshedFiles.length} file(s)`));
   assert.ok(json.actions.every((item: string) => !item.includes(path.join("skills", "using-powerups", "SKILL.md"))));
 });
 
@@ -433,18 +434,117 @@ test("install --full stages support assets and updates existing global instructi
 
 test("install skips changed existing files unless --force is provided", async () => {
   const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-force-"));
-  const skillPath = path.join(agentRoot, "skills", "using-powerups", "SKILL.md");
+  const skillPath = path.join(agentRoot, "skills", "systematic-debugging", "SKILL.md");
   await fs.mkdir(path.dirname(skillPath), { recursive: true });
   await fs.writeFile(skillPath, "custom local skill\n", "utf8");
 
   const first = await execute(["install", "codex", "--agent-root", agentRoot, "--json"]);
   assert.equal(first.exitCode, 0);
   assert.equal(await fs.readFile(skillPath, "utf8"), "custom local skill\n");
-  assert.ok(parseJson(first.stdout).data.skippedFiles.some((item: string) => item.includes("using-powerups")));
+  assert.ok(parseJson(first.stdout).data.skippedFiles.some((item: string) => item.includes("systematic-debugging")));
 
   const second = await execute(["install", "codex", "--agent-root", agentRoot, "--force", "--json"]);
   assert.equal(second.exitCode, 0);
-  assert.match(await fs.readFile(skillPath, "utf8"), /name: using-powerups/);
+  assert.match(await fs.readFile(skillPath, "utf8"), /name: systematic-debugging/);
+});
+
+test("native install refreshes stale SX-07-owned files for all agents", async () => {
+  for (const agent of ["codex", "claude-code", "gemini"]) {
+    const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), `apx-native-refresh-${agent}-`));
+    const first = await execute(["install", agent, "--agent-root", agentRoot, "--json"]);
+    assert.equal(first.exitCode, 0);
+
+    const indexPath = path.join(agentRoot, "discovery-index.json");
+    const guidancePath = path.join(agentRoot, "skills", "using-powerups", "SKILL.md");
+    const unrelatedPath = path.join(agentRoot, "skills", "systematic-debugging", "SKILL.md");
+    const pluginBase = agent === "claude-code"
+      ? path.join(agentRoot, "plugins", "cache", "agent-powerups", "dev-vitals")
+      : agent === "gemini"
+        ? path.join(agentRoot, "extensions", "dev-vitals")
+        : path.join(agentRoot, "plugins", "dev-vitals");
+    const pluginGuidancePath = path.join(pluginBase, "skills", "using-powerups", "SKILL.md");
+    const pluginCommandPath = path.join(pluginBase, "commands", "using-powerups.md");
+    await fs.writeFile(indexPath, "stale index\n", "utf8");
+    await fs.writeFile(guidancePath, "stale guidance\n", "utf8");
+    await fs.writeFile(pluginGuidancePath, "stale plugin guidance\n", "utf8");
+    await fs.writeFile(pluginCommandPath, "stale plugin command\n", "utf8");
+    await fs.writeFile(unrelatedPath, "custom unrelated skill\n", "utf8");
+
+    const second = await execute(["install", agent, "--agent-root", agentRoot, "--json"]);
+    assert.equal(second.exitCode, 0);
+    const json = parseJson(second.stdout);
+    assert.ok(json.data.refreshedFiles.includes(indexPath));
+    assert.ok(json.data.refreshedFiles.includes(guidancePath));
+    assert.ok(json.data.refreshedFiles.includes(pluginGuidancePath));
+    assert.ok(json.data.refreshedFiles.includes(pluginCommandPath));
+    assert.equal(await fs.readFile(unrelatedPath, "utf8"), "custom unrelated skill\n");
+    assert.ok(json.data.skippedFiles.some((item: string) => item.includes("systematic-debugging")));
+
+    const index = JSON.parse(await fs.readFile(indexPath, "utf8"));
+    assert.equal(index.generated_by, "agent-powerups");
+    assert.match(await fs.readFile(guidancePath, "utf8"), /Claude Code: start with native skill discovery/i);
+    assert.match(await fs.readFile(pluginGuidancePath, "utf8"), /Claude Code: start with native skill discovery/i);
+    assert.match(await fs.readFile(pluginCommandPath, "utf8"), /Claude Code: start with native skill discovery/i);
+  }
+});
+
+test("native install dry-run reports stale SX-07-owned refreshes without writing", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-refresh-dry-run-"));
+  const first = await execute(["install", "codex", "--agent-root", agentRoot, "--json"]);
+  assert.equal(first.exitCode, 0);
+
+  const indexPath = path.join(agentRoot, "discovery-index.json");
+  const guidancePath = path.join(agentRoot, "skills", "using-powerups", "SKILL.md");
+  await fs.writeFile(indexPath, "stale index\n", "utf8");
+  await fs.writeFile(guidancePath, "stale guidance\n", "utf8");
+
+  const dryRun = await execute(["install", "codex", "--agent-root", agentRoot, "--dry-run", "--json"]);
+  assert.equal(dryRun.exitCode, 0);
+  const json = parseJson(dryRun.stdout);
+  assert.ok(json.data.refreshedFiles.includes(indexPath));
+  assert.ok(json.data.refreshedFiles.includes(guidancePath));
+  assert.equal(await fs.readFile(indexPath, "utf8"), "stale index\n");
+  assert.equal(await fs.readFile(guidancePath, "utf8"), "stale guidance\n");
+});
+
+test("install --full refreshes staged index generated guidance and marked instruction block", async () => {
+  const agentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "apx-native-full-refresh-"));
+  const instructionFile = path.join(agentRoot, "AGENTS.md");
+  await fs.writeFile(instructionFile, "# Existing instructions\n", "utf8");
+  const first = await execute(["install", "codex", "--agent-root", agentRoot, "--full", "--json"]);
+  assert.equal(first.exitCode, 0);
+
+  const stagedIndex = path.join(agentRoot, "agent-powerups", "discovery-index.json");
+  const generatedInstructions = path.join(agentRoot, "agent-powerups", "instructions", "agent-powerups.md");
+  await fs.writeFile(stagedIndex, "stale staged index\n", "utf8");
+  await fs.writeFile(generatedInstructions, "stale generated instructions\n", "utf8");
+  await fs.writeFile(
+    instructionFile,
+    [
+      "# Existing instructions",
+      "",
+      "<!-- BEGIN agent-powerups -->",
+      "stale marked block",
+      "<!-- END agent-powerups -->",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+
+  const second = await execute(["install", "codex", "--agent-root", agentRoot, "--full", "--json"]);
+  assert.equal(second.exitCode, 0);
+  const json = parseJson(second.stdout);
+  assert.ok(json.data.refreshedFiles.includes(stagedIndex));
+  assert.ok(json.data.refreshedFiles.includes(generatedInstructions));
+  assert.ok(json.data.refreshedFiles.includes(instructionFile));
+  assert.ok(json.data.modifiedFiles.includes(instructionFile));
+  assert.equal(json.data.backupFiles.length, 1);
+  await fs.access(json.data.backupFiles[0]);
+
+  const staged = JSON.parse(await fs.readFile(stagedIndex, "utf8"));
+  assert.equal(staged.generated_by, "agent-powerups");
+  assert.match(await fs.readFile(generatedInstructions, "utf8"), /Codex, Gemini, and generic agents/i);
+  assert.match(await fs.readFile(instructionFile, "utf8"), /Claude Code: match the task against native skills first/i);
 });
 
 test("mcp list prints available configs", async () => {
@@ -683,6 +783,7 @@ test("flat using-powerups alias prints the command prompt", async () => {
   assert.equal(result.exitCode, 0);
   assert.match(result.stdout, /command: using-powerups-command/);
   assert.match(result.stdout, /Find and apply installed Agent Powerups/);
+  assert.match(result.stdout, /Claude Code: start with native skill discovery/);
 });
 
 test("ask requires a prompt", async () => {

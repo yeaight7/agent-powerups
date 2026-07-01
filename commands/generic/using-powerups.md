@@ -6,7 +6,11 @@ Use this prompt when starting non-trivial work in a repo where Agent Powerups ma
 
 Steps:
 
-1. List available assets:
+1. Discover or match available assets:
+   - Claude Code: start with native skill discovery when skills are already exposed by the host.
+   - Codex, Gemini, and generic agents: start with `apx discover`.
+   - Use `apx discover` when uncertain or when the task may need non-skill assets.
+   - Use `apx inventory` for MCP configs, hooks, AGENTS.md templates, plugin-contained assets, staged assets, and installed-only assets.
    - `apx discover "<user task>" --target <codex|claude-code|gemini|generic>`
    - `apx inventory --target <codex|claude-code|gemini|generic> --json`
    - `apx list --json --verbose`
