@@ -14,7 +14,8 @@ Each entry must include:
   "path": "skills/asset-name",
   "compatible_with": ["generic"],
   "tags": ["tag"],
-  "maturity": "draft"
+  "maturity": "draft",
+  "tier": "common"
 }
 ```
 
@@ -36,6 +37,21 @@ Each entry must include:
 - `experimental`
 - `beta`
 - `stable`
+
+## Optional `tier`
+
+`tier` is user-facing scope metadata. It helps humans browse a broad catalog without changing routing or install behavior.
+
+- `core`: foundational assets that are useful in most coding-agent sessions, such as task routing, debugging, planning, review, verification, and baseline safety.
+- `common`: broadly reusable software-development workflows that are not foundational enough to be core.
+- `specialized`: domain-, tool-, platform-, or review-before-use assets, including most MCP configs, hooks, plugin packs, scripts, examples, and domain-specific skills.
+- `experimental`: early or explicitly experimental assets. Use only when the task clearly needs them and the risk is acceptable.
+
+Rules:
+
+- Keep `tier` independent from `maturity`: maturity is readiness; tier is audience/scope.
+- Do not use `tier` as a routing score. Discovery should still rely on `signals`, `use_when`, and `capabilities`.
+- Installed-only assets may be unclassified; catalog entries should carry a tier when known.
 
 ## `compatible_with`
 
