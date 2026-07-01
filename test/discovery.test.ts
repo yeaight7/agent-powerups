@@ -60,6 +60,9 @@ test("inventory merges catalog assets with installed-only native skills", async 
   assert.equal(local.installedOnly, true);
   assert.equal(local.installed, true);
   assert.ok(local.installedPaths.some((item: string) => item.includes(agentRoot)));
+
+  const systematic = data.assets.find((asset: any) => asset.name === "systematic-debugging");
+  assert.equal(systematic.tier, "core");
 });
 
 test("discover ranks debugging skills for bug and failing-test tasks", async () => {
