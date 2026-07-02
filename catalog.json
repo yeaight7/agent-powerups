@@ -2987,6 +2987,46 @@
     ]
   },
   {
+    "name": "ax-workflow-recall",
+    "type": "skill",
+    "summary": "Use ax CLI session history to reconstruct how a coding-agent result was produced.",
+    "path": "skills/ax-workflow-recall",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "sessions",
+      "forensics",
+      "workflow",
+      "memory"
+    ],
+    "maturity": "beta",
+    "use_when": [
+      "The user wants to reconstruct the prompts, tools, checks, and repairs that produced a prior coding-agent result."
+    ],
+    "signals": [
+      "how did this result happen",
+      "reconstruct workflow",
+      "extract this workflow",
+      "repeat this agent workflow",
+      "what prompts produced this",
+      "what tools and checks were used"
+    ],
+    "capabilities": [
+      "local session recall",
+      "workflow reconstruction",
+      "evidence-backed agent forensics"
+    ],
+    "check_policy": "requires-only",
+    "requires": {
+      "commands": [
+        "ax"
+      ]
+    }
+  },
+  {
     "name": "skill-evaluation-workbench",
     "type": "skill",
     "summary": "Design deterministic eval suites with a minimal-case structure, grader-type selection table, and failure-classification guide before editing.",
