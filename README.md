@@ -312,6 +312,7 @@ Current optional external tools used by shipped skills:
 | `ask-codex` | Codex CLI (`codex`) | yes for local advisor workflow | install/configure Codex CLI |
 | `ask-claude` | Claude Code CLI (`claude`) | yes for local advisor workflow | install/configure Claude Code CLI |
 | `ask-gemini` | Gemini CLI (`gemini`) | yes for local advisor workflow | install/configure Gemini CLI |
+| `ax-workflow-recall` | ax CLI (`ax`) | required for local session recall/workflow reconstruction | `curl -fsSL ax.necmttn.com/install \| sh` |
 | `markitdown-file-intake` | Microsoft MarkItDown (`markitdown`) | yes for conversion workflow | `python -m pip install markitdown` |
 | `defuddle` | Defuddle CLI (`defuddle`) | yes for Defuddle workflow | `npm install -g defuddle` |
 | `graphify` | Upstream Graphify CLI + Python package (`graphify`, `graphifyy`) | yes for graph workflow | `uv tool install graphifyy` or `pipx install graphifyy` or `python -m pip install graphifyy` |
