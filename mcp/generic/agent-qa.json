@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "agent-qa": {
+      "command": "npx",
+      "args": [
+        "--no-install",
+        "agent-qa@0.1.21",
+        "mcp"
+      ]
+    }
+  }
+}
