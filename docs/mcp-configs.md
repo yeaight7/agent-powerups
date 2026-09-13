@@ -81,6 +81,19 @@ Browser automation and web testing via Playwright.
 
 ---
 
+### `agent-qa`
+
+Natural-language web and mobile application testing with execution memory.
+
+**Runtime:** Node.js 24+; `npx --no-install agent-qa@0.1.21 mcp` after a project-local install
+**Required env:** None in the template; model credentials belong in the test workspace
+**Risk:** Can write test files and run application workflows through the dashboard API
+**Maturity:** Beta
+**Target:** Generic stdio configuration
+**Setup:** [Agent QA installation, configuration, and verification](mcp-agent-qa.md)
+
+---
+
 ### `filesystem-repo-scoped`
 
 Filesystem access scoped to the current repository root.

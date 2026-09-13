@@ -5520,5 +5520,44 @@
     ],
     "maturity": "beta",
     "tier": "specialized"
+  },
+  {
+    "name": "agent-qa",
+    "type": "mcp-config",
+    "summary": "Connect an MCP client to Agent QA for web and mobile test schemas, authoring, runs, and failure triage.",
+    "path": "mcp/generic/agent-qa.json",
+    "compatible_with": [
+      "generic"
+    ],
+    "tags": [
+      "mcp",
+      "testing",
+      "web",
+      "mobile",
+      "qa"
+    ],
+    "maturity": "beta",
+    "tier": "specialized",
+    "requires": {
+      "commands": [
+        "node",
+        "npx"
+      ],
+      "npm_packages": [
+        "agent-qa"
+      ]
+    },
+    "check_policy": "requires-only",
+    "mcp": {
+      "required_env": [],
+      "server_package": "agent-qa@0.1.21",
+      "warning": "Requires Node.js 24+ and a prior project-local install of agent-qa@0.1.21. Launch from that workspace. Dashboard-backed tools require dashboardUrl; model or device providers may charge. Source-available under FSL-1.1-ALv2. See docs/mcp-agent-qa.md.",
+      "output_hints": {
+        "generic": ".mcp.json"
+      }
+    },
+    "targets": {
+      "generic": "mcp/generic/agent-qa.json"
+    }
   }
 ]
