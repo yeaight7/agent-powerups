@@ -811,6 +811,23 @@
     "tier": "experimental"
   },
   {
+    "name": "marketing-site",
+    "type": "agents-md-template",
+    "summary": "Starter AGENTS.md template for a marketing site with growth experiments.",
+    "path": "agents-md/marketing-site/AGENTS.md",
+    "compatible_with": [
+      "generic"
+    ],
+    "tags": [
+      "agents-md",
+      "marketing",
+      "template",
+      "experiments"
+    ],
+    "maturity": "draft",
+    "tier": "experimental"
+  },
+  {
     "name": "ship-check",
     "type": "command",
     "summary": "Manual pre-handoff command checklist for validating and reporting changes.",
