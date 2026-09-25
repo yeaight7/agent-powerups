@@ -316,6 +316,7 @@ Current optional external tools used by shipped skills:
 | `defuddle` | Defuddle CLI (`defuddle`) | yes for Defuddle workflow | `npm install -g defuddle` |
 | `graphify` | Upstream Graphify CLI + Python package (`graphify`, `graphifyy`) | yes for graph workflow | `uv tool install graphifyy` or `pipx install graphifyy` or `python -m pip install graphifyy` |
 | `pr-triage` | GitHub CLI (`gh`) | optional | platform package manager |
+| `plan-ledger-tasks-yylo` | YYLO CLI (`yy`) | yes for Ledger planning workflow | `npm install -g @yylo/cli` |
 
 Tool policy:
 

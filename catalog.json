@@ -5576,5 +5576,50 @@
     "targets": {
       "generic": "mcp/generic/agent-qa.json"
     }
+  },
+  {
+    "name": "plan-ledger-tasks-yylo",
+    "type": "skill",
+    "summary": "Plan work as a concise requirement plus implementation-sized YYLO Ledger tasks with an immutable artifact receipt.",
+    "path": "skills/plan-ledger-tasks-yylo",
+    "compatible_with": [
+      "claude-code",
+      "codex",
+      "generic"
+    ],
+    "tags": [
+      "planning",
+      "tasks",
+      "kanban",
+      "requirements"
+    ],
+    "maturity": "beta",
+    "tier": "specialized",
+    "use_when": [
+      "The user explicitly asks to plan or register work as tracked tasks before implementation starts."
+    ],
+    "avoid_when": [
+      "Immediate small edits, or the YYLO CLI is not installed and the user declines installation."
+    ],
+    "signals": [
+      "plan work",
+      "register tasks",
+      "break down work",
+      "product development requirement",
+      "kanban tasks"
+    ],
+    "capabilities": [
+      "task planning",
+      "requirement capture"
+    ],
+    "check_policy": "requires-only",
+    "requires": {
+      "commands": [
+        "yy"
+      ],
+      "npm_packages": [
+        "@yylo/cli"
+      ]
+    }
   }
 ]
