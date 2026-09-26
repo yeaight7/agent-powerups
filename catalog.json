@@ -5615,10 +5615,14 @@
     "check_policy": "requires-only",
     "requires": {
       "commands": [
-        "yy"
+        "yy",
+        "yylo-ledger"
       ],
       "npm_packages": [
         "@yylo/cli"
+      ],
+      "python_packages": [
+        "yylo-ledger"
       ]
     }
   }
