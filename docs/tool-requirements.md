@@ -140,3 +140,31 @@ gh auth status
 Fallback:
 - Use local git state or connector data.
 - Mark PR metadata as partial or stale when `gh` is unavailable.
+
+### `plan-ledger-tasks-yylo`
+
+Required tools:
+- YYLO CLI (`yy`)
+- YYLO Ledger CLI (`yylo-ledger`) — `yy ledger` delegates to this separately installed CLI; it is not bundled with `@yylo/cli`
+
+Check:
+
+```powershell
+Get-Command yy -ErrorAction SilentlyContinue
+yy --version
+Get-Command yylo-ledger -ErrorAction SilentlyContinue
+yylo-ledger --version
+```
+
+Install:
+
+```powershell
+npm install -g @yylo/cli
+python -m pip install yylo-ledger
+apx check plan-ledger-tasks-yylo --install-missing --dry-run
+```
+
+Fallback:
+- Keep the drafted requirement as a plain external Markdown file.
+- Never fake task IDs, receipts, or digests.
+- Planning-only requests stay external drafts; Ledger records and tasks are created only on an explicit request to register.
